@@ -1,0 +1,19 @@
+{
+  "name": "atom-repl",
+  "main": "./lib/atom-repl",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationCommands": {
+    "atom-workspace": "atom-repl:run"
+  },
+  "repository": "https://github.com/atom/atom-repl",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+    "portfinder": "^0.4.0",
+    "uuid": "^2.0.1",
+    "zmq": "^2.11.0"
+  }
+}

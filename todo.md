@@ -1,0 +1,5 @@
+- start kernels based on file type
+- find and execute the current/preceding block
+    - maybe look at atom's folding code
+- UI for showing results
+- deal with multiple callbacks
