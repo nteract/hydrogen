@@ -98,45 +98,44 @@ module.exports = AtomRepl =
         editor.insertText('# ' + result)
         editor.insertNewlineBelow()
 
-    getContents: (msg) ->
+    getMessageContents: (msg) ->
         i = 0
         while msg[i].toString('utf8') != '<IDS|MSG>'
             i++
         return msg[i+5].toString('utf8')
 
     run: ->
-        console.log process.env['HOME']
-        # debugger;
         editor = atom.workspace.getActiveEditor()
         language = editor.getGrammar().name.toLowerCase()
 
-        # if KernelManager.runningKernels[language]?
-            # KernelManager.execute language,
-        # else
+        @startKernelIfNeeded language, =>
+            code = @findCodeBlock(editor)
+            if code != null
+                KernelManager.execute language, code
 
-        if not KernelManager.runningKernels[language]?
-            kernelInfo = KernelManager.getKernelInfoForLanguage language
-            if kernelInfo?
-                [filepath, config] = ConfigManager.writeConfigFile()
-                KernelManager.startKernel(kernelInfo, config, filepath)
-            else
-                throw "No kernel for this language!"
-
-
-        code = @findCodeBlock(editor)
-        if code != null
-            KernelManager.execute language, code
             # @ioSocket.on 'message', (msg...) =>
             #     if msg[0].toString('utf8') == 'pyout'
-            #         responseMessage = @getContents(msg)
+            #         responseMessage = @getMessageContents(msg)
             #         response = JSON.parse responseMessage
             #         @insertResult editor, response.data['text/plain']
             #     else if msg[0].toString('utf8') == 'stdout'
-            #         responseMessage = @getContents(msg)
+            #         responseMessage = @getMessageContents(msg)
             #         response = JSON.parse responseMessage
             #         @insertResult editor, response.data
 
             # @sendExecuteRequest(text)
+
+    startKernelIfNeeded: (language, onStarted) ->
+        if not KernelManager.runningKernels[language]?
+            kernelInfo = KernelManager.getKernelInfoForLanguage language
+            if kernelInfo?
+                ConfigManager.writeConfigFile (filepath, config) ->
+                    KernelManager.startKernel(kernelInfo, config, filepath)
+                    onStarted()
+            else
+                throw "No kernel for this language!"
+        else
+            onStarted()
 
     findCodeBlock: (editor, row)->
         buffer = editor.getBuffer()

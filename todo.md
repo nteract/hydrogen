@@ -1,5 +1,8 @@
 - [x] start kernels based on file type
 - [x] find and execute the current/preceding block
-- [ ] UI for showing results
-- [ ] deal with multiple callbacks
-- [ ] find a free port
+- [ ] insert placeholder UI on run command
+    - [ ] add ID to execute request metadata to identify corresponding UI
+    - [ ] update UI when messages received with that ID
+- [x] add a setup function with a callback to building kernels/configs
+- [x] find a free port automatically
+- [ ] shut down kernel and ports
