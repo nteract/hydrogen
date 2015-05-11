@@ -3,4 +3,4 @@ npm-debug.log
 node_modules
 .ipynb_checkpoints
 *.ipynb
-lib/kernel-*.json
+kernel-configs/

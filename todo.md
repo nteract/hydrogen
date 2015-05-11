@@ -6,3 +6,5 @@
 - [x] add a setup function with a callback to building kernels/configs
 - [x] find a free port automatically
 - [ ] shut down kernel and ports
+
+- [ ] image support

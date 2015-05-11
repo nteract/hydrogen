@@ -15,7 +15,8 @@ module.exports = AtomRepl =
     ioSocket: null
 
     activate: (state) ->
-        # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+        # Events subscribed to in atom's system can be easily cleaned up
+        # with a CompositeDisposable
         @subscriptions = new CompositeDisposable
 
         # Register command that toggles this view
@@ -52,18 +53,6 @@ module.exports = AtomRepl =
             if code != null
                 KernelManager.execute language, code, (result) =>
                     @insertResult editor, result
-
-            # @ioSocket.on 'message', (msg...) =>
-            #     if msg[0].toString('utf8') == 'pyout'
-            #         responseMessage = @getMessageContents(msg)
-            #         response = JSON.parse responseMessage
-            #         @insertResult editor, response.data['text/plain']
-            #     else if msg[0].toString('utf8') == 'stdout'
-            #         responseMessage = @getMessageContents(msg)
-            #         response = JSON.parse responseMessage
-            #         @insertResult editor, response.data
-
-            # @sendExecuteRequest(text)
 
     startKernelIfNeeded: (language, onStarted) ->
         if not KernelManager.runningKernels[language]?
@@ -156,8 +145,9 @@ module.exports = AtomRepl =
 
     getFoldRange: (editor, row) ->
         range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
-        if @getRow(editor, range[1] + 1).trim == 'end'
+        if @getRow(editor, range[1] + 1).trim() == 'end'
             range[1] = range[1] + 1
+        console.log "fold range:", range
         return range
 
     getFoldContents: (editor, row) ->

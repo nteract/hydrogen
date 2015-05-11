@@ -52,7 +52,9 @@ class Kernel
         else if message.type == 'stdout'
             return message.contents.data
         else if message.type == 'pyerr'
-            stack = message.contents.traceback.join('')
+            stack = message.contents.traceback
+            stack = _.map stack, (item) -> item.trim()
+            stack = stack.join('\n')
             return stack
 
 

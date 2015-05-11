@@ -5,7 +5,7 @@ path = require 'path'
 portfinder = require './find-port'
 
 module.exports = ConfigManager =
-    fileStoragePath: __dirname
+    fileStoragePath: path.join(__dirname, '../kernel-configs')
 
     writeConfigFile: (onCompleted) ->
         filename = 'kernel-' + uuid.v4() + '.json'
