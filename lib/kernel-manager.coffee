@@ -39,8 +39,8 @@ module.exports = KernelManager =
         kernel = new Kernel(kernelInfo, config, configFilePath)
         @runningKernels[language] = kernel
 
-    execute: (language, code) ->
+    execute: (language, code, onResults) ->
         if @runningKernels[language]?
-            @runningKernels[language].execute(code)
+            @runningKernels[language].execute(code, onResults)
         else
             throw "No such kernel!"

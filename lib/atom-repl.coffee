@@ -21,67 +21,6 @@ module.exports = AtomRepl =
         # Register command that toggles this view
         @subscriptions.add atom.commands.add 'atom-workspace', 'atom-repl:run': => @run()
 
-        # @shellSocket = zmq.socket 'dealer'
-        # @ioSocket    = zmq.socket 'sub'
-        #
-        # @shellSocket.identity = 'dealer' + process.pid
-        # @ioSocket.identity = 'sub' + process.pid
-        #
-        # console.log "made sockets"
-        #
-        # kernel_file_name = 'kernel-5666.json'
-        # kernel_file_path = '/Users/will/Library/Jupyter/runtime/' + kernel_file_name
-        # kernel_info = JSON.parse fs.readFileSync(kernel_file_path)
-        #
-        # console.log "parsed config"
-        #
-        # shell_port = kernel_info.shell_port
-        # io_port = kernel_info.iopub_port
-        #
-        # @shellSocket.connect('tcp://127.0.0.1:' + shell_port)
-        # @ioSocket.connect('tcp://127.0.0.1:' + io_port)
-        # @ioSocket.subscribe('')
-        # console.log "done activating"
-
-        # language = "julia"
-        #
-        # if not KernelManager.runningKernels[language]?
-        #     kernelInfo = KernelManager.getKernelInfoForLanguage language
-        #     if kernelInfo?
-        #         [filepath, config] = ConfigManager.writeConfigFile()
-        #         KernelManager.startKernel(kernelInfo, config, filepath)
-        #     else
-        #         throw "No kernel for this language!"
-
-
-    sendExecuteRequest: (code) ->
-        console.log "sending execute"
-        header = JSON.stringify({
-                msg_id: 0,
-                username: "will",
-                session: 0,
-                msg_type: "execute_request",
-                version: "5.0"
-            })
-
-        contents = JSON.stringify({
-                code: code
-                silent: false
-                store_history: true
-                user_expressions: {}
-                allow_stdin: false
-            })
-
-        console.log contents
-        @shellSocket.send(
-            [
-                '<IDS|MSG>',
-                '',
-                header,
-                '{}',
-                '{}',
-                contents
-            ])
 
     deactivate: ->
         @subscriptions.dispose()
@@ -91,12 +30,12 @@ module.exports = AtomRepl =
         atomReplViewState: @atomReplView.serialize()
 
     insertResult: (editor, result) ->
-        @ioSocket.removeAllListeners()
         cursor = editor.getCursor()
         row = cursor.getBufferRow()
         editor.insertNewlineBelow()
-        editor.insertText('# ' + result)
-        editor.insertNewlineBelow()
+        editor.insertText('#= ' + result)
+        # editor.insertNewlineBelow()
+        editor.insertText(' =#')
 
     getMessageContents: (msg) ->
         i = 0
@@ -111,7 +50,8 @@ module.exports = AtomRepl =
         @startKernelIfNeeded language, =>
             code = @findCodeBlock(editor)
             if code != null
-                KernelManager.execute language, code
+                KernelManager.execute language, code, (result) =>
+                    @insertResult editor, result
 
             # @ioSocket.on 'message', (msg...) =>
             #     if msg[0].toString('utf8') == 'pyout'
@@ -175,7 +115,8 @@ module.exports = AtomRepl =
         while previousRow >= 0
             sameIndent = editor.indentationForBufferRow(previousRow) <= indentLevel
             console.log "previousRow:", previousRow
-            blank = buffer.isRowBlank(previousRow) or editor.languageMode.isLineCommentedAtBufferRow(previousRow)
+            blank = buffer.isRowBlank(previousRow) or
+                    editor.languageMode.isLineCommentedAtBufferRow(previousRow)
             console.log "previousRow blank:", blank
             isEnd = @getRow(editor, previousRow).trim() == "end"
             if sameIndent and not blank and not isEnd
@@ -222,4 +163,4 @@ module.exports = AtomRepl =
     getFoldContents: (editor, row) ->
         buffer = editor.getBuffer()
         range = @getFoldRange(editor, row)
-        return @getRows(range[0], range[1])
+        return @getRows(editor, range[0], range[1])

@@ -3,10 +3,12 @@ path = require 'path'
 zmq = require 'zmq'
 _ = require 'lodash'
 exec = require('child_process').exec
+uuid = require 'uuid'
 
 class Kernel
     constructor: (@kernelInfo, @config, @configPath) ->
         @language = @kernelInfo.language.toLowerCase()
+        @executionCallbacks = {}
 
         commandString = ""
         for arg in @kernelInfo.argv
@@ -34,15 +36,47 @@ class Kernel
         @ioSocket.connect('tcp://127.0.0.1:' + @config.iopub_port)
         @ioSocket.subscribe('')
 
-        @ioSocket.on('message', (msg...) ->
-            console.log "new IO message"
-            _.forEach(msg, (item) ->
-                console.log "io received:", item.toString('utf8')))
+        @ioSocket.on 'message', @onIOMessage.bind(this)
 
-    execute: (code) ->
+    onIOMessage: (msgArray...) ->
+        message = @parseMessage msgArray
+        if message.parent_header.msg_id?
+            if @executionCallbacks[message.parent_header.msg_id]?
+                messageString = @getMessageString message
+                if messageString?
+                    @executionCallbacks[message.parent_header.msg_id](messageString)
+
+    getMessageString: (message) ->
+        if message.type == 'pyout'
+            return message.contents.data['text/plain']
+        else if message.type == 'stdout'
+            return message.contents.data
+        else if message.type == 'pyerr'
+            stack = message.contents.traceback.join('')
+            return stack
+
+
+    parseMessage: (msg) ->
+        i = 0
+        while msg[i].toString('utf8') != '<IDS|MSG>'
+            i++
+
+        return {
+                type: msg[0].toString('utf8')
+                header: JSON.parse msg[i+2].toString('utf8')
+                parent_header: JSON.parse msg[i+3].toString('utf8')
+                metadata: JSON.parse msg[i+4].toString('utf8')
+                contents: JSON.parse msg[i+5].toString('utf8')
+            }
+
+    # onResults is a callback that may be called multiple times
+    # as results come in from the kernel
+    execute: (code, onResults) ->
+        requestId = uuid.v4()
+
         console.log "sending execute"
         header = JSON.stringify({
-                msg_id: 0,
+                msg_id: requestId,
                 username: "",
                 session: 0,
                 msg_type: "execute_request",
@@ -57,15 +91,17 @@ class Kernel
                 allow_stdin: false
             })
 
-        console.log contents
-        @shellSocket.send(
-            [
+        message =  [
                 '<IDS|MSG>',
                 '',
                 header,
                 '{}',
                 '{}',
                 contents
-            ])
+            ]
+        console.log message
+
+        @executionCallbacks[requestId] = onResults
+        @shellSocket.send message
 
 module.exports = Kernel
