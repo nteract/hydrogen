@@ -3,7 +3,7 @@ fs = require 'fs'
 path = require 'path'
 
 module.exports = ConfigManager =
-    startingPort: 3478
+    startingPort: 4587
     fileStoragePath: __dirname
 
     writeConfigFile: ->
