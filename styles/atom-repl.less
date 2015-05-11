@@ -4,5 +4,16 @@
 // for a full listing of what's available.
 @import "ui-variables";
 
-.atom-repl {
+.atom-repl.output-bubble {
+    position: relative;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-color: @background-color-selected;
+    border: 1px solid lighten(@background-color-selected, 5%);
+    border-radius: 3px;
+    margin-left: 20px;
+    // top: -1 * @component-line-height + 1em;
+    // width: 50px;
+    // height: 50px;
+    // background-color: blue;
 }

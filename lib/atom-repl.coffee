@@ -1,4 +1,4 @@
-AtomReplView = require './atom-repl-view'
+# AtomReplView = require './atom-repl-view'
 {CompositeDisposable} = require 'atom'
 
 fs = require 'fs'
@@ -7,12 +7,11 @@ _ = require 'lodash'
 
 KernelManager = require './kernel-manager'
 ConfigManager = require './config-manager'
+ResultView = require './result-view'
 
 module.exports = AtomRepl =
-    atomReplView: null
     subscriptions: null
-    shellSocket: null
-    ioSocket: null
+    views: null
 
     activate: (state) ->
         # Events subscribed to in atom's system can be easily cleaned up
@@ -20,23 +19,54 @@ module.exports = AtomRepl =
         @subscriptions = new CompositeDisposable
 
         # Register command that toggles this view
-        @subscriptions.add atom.commands.add 'atom-workspace', 'atom-repl:run': => @run()
+        @subscriptions.add atom.commands.add 'atom-workspace',
+                                             'atom-repl:run': => @run()
 
 
     deactivate: ->
         @subscriptions.dispose()
-        @atomReplView.destroy()
+        _.forEach @views, (view) -> view.destroy()
 
-    serialize: ->
-        atomReplViewState: @atomReplView.serialize()
+    insertResultBubble: (editor, row) ->
 
-    insertResult: (editor, result) ->
-        cursor = editor.getCursor()
-        row = cursor.getBufferRow()
-        editor.insertNewlineBelow()
-        editor.insertText('#= ' + result)
-        # editor.insertNewlineBelow()
-        editor.insertText(' =#')
+        view = new ResultView()
+        element = view.getElement()
+
+        buffer = editor.getBuffer()
+        lineLength = buffer.lineLengthForRow(row)
+
+        topOffset = editor.getLineHeightInPixels() + 2
+        element.setAttribute('style', 'top: -' + topOffset + 'px;')
+
+        marker = editor.markBufferPosition {
+                row: row
+                column: lineLength
+            }, {
+                invalidate: 'touch'
+            }
+        # marker = editor.markBufferRange {
+        #     start:
+        #         row: row
+        #         column: lineLength
+        #     end:
+        #         row: row
+        #         column: lineLength + 1
+        #     }, {
+        #         invalidate: 'inside'
+        #     }
+
+        editor.decorateMarker marker, {
+                type: 'overlay'
+                item: element
+                position: 'tail'
+            }
+
+        marker.onDidChange (event) ->
+            console.log event
+            if not event.isValid
+                view.destroy()
+
+        return view
 
     getMessageContents: (msg) ->
         i = 0
@@ -49,10 +79,11 @@ module.exports = AtomRepl =
         language = editor.getGrammar().name.toLowerCase()
 
         @startKernelIfNeeded language, =>
-            code = @findCodeBlock(editor)
+            [code, row] = @findCodeBlock(editor)
             if code != null
-                KernelManager.execute language, code, (result) =>
-                    @insertResult editor, result
+                view = @insertResultBubble editor, row
+                KernelManager.execute language, code, (result) ->
+                    view.append(result)
 
     startKernelIfNeeded: (language, onStarted) ->
         if not KernelManager.runningKernels[language]?
@@ -88,7 +119,7 @@ module.exports = AtomRepl =
         if foldable
             console.log "foldable"
             return @getFoldContents(editor, row)
-        else if buffer.isRowBlank(row) or editor.languageMode.isLineCommentedAtBufferRow(row)
+        else if @blank(editor, row)
             console.log "blank"
             return @findPrecedingBlock(editor, row, indentLevel)
         else if @getRow(editor, row).trim() == "end"
@@ -96,22 +127,27 @@ module.exports = AtomRepl =
             return @findPrecedingBlock(editor, row, indentLevel)
         else
             console.log "this row is it"
-            return @getRow(editor, row)
+            return [@getRow(editor, row), row]
 
     findPrecedingBlock: (editor, row, indentLevel) ->
         buffer = editor.getBuffer()
         previousRow = row - 1
         while previousRow >= 0
             sameIndent = editor.indentationForBufferRow(previousRow) <= indentLevel
-            console.log "previousRow:", previousRow
-            blank = buffer.isRowBlank(previousRow) or
-                    editor.languageMode.isLineCommentedAtBufferRow(previousRow)
-            console.log "previousRow blank:", blank
+            blank = @blank(editor, previousRow)
             isEnd = @getRow(editor, previousRow).trim() == "end"
+            # if blank
+                # row = previousRow
+            if @blank(editor, row)
+                row = previousRow
             if sameIndent and not blank and not isEnd
-                return @getRows(editor, previousRow, row)
+                return [@getRows(editor, previousRow, row), row]
             previousRow--
         return null
+
+    blank: (editor, row) ->
+        return editor.getBuffer().isRowBlank(row) or
+               editor.languageMode.isLineCommentedAtBufferRow(row)
 
     # findPrecedingFoldRange: (editor, row) ->
     #     buffer = editor.getBuffer()
@@ -123,25 +159,23 @@ module.exports = AtomRepl =
 
     getRow: (editor, row) ->
         buffer = editor.getBuffer()
-        return buffer.getTextInRange {
-                start:
-                    row: row
-                    column: 0
-                end:
-                    row: row + 1
-                    column: 0
-            }
+        return buffer.getTextInRange
+                    start:
+                        row: row
+                        column: 0
+                    end:
+                        row: row
+                        column: 9999999
 
     getRows: (editor, startRow, endRow) ->
         buffer = editor.getBuffer()
-        return buffer.getTextInRange {
-                start:
-                    row: startRow
-                    column: 0
-                end:
-                    row: endRow + 1
-                    column: 0
-            }
+        return buffer.getTextInRange
+                    start:
+                        row: startRow
+                        column: 0
+                    end:
+                        row: endRow
+                        column: 9999999
 
     getFoldRange: (editor, row) ->
         range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
@@ -153,4 +187,7 @@ module.exports = AtomRepl =
     getFoldContents: (editor, row) ->
         buffer = editor.getBuffer()
         range = @getFoldRange(editor, row)
-        return @getRows(editor, range[0], range[1])
+        return [
+                @getRows(editor, range[0], range[1]),
+                range[1]
+            ]

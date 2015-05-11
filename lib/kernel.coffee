@@ -5,6 +5,7 @@ _ = require 'lodash'
 exec = require('child_process').exec
 uuid = require 'uuid'
 
+module.exports =
 class Kernel
     constructor: (@kernelInfo, @config, @configPath) ->
         @language = @kernelInfo.language.toLowerCase()
@@ -105,5 +106,3 @@ class Kernel
 
         @executionCallbacks[requestId] = onResults
         @shellSocket.send message
-
-module.exports = Kernel
