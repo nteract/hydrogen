@@ -1,21 +1,22 @@
-# atom = require 'atom'
 _ = require 'lodash'
 
 module.exports =
-class ResultView extends HTMLElement
+class ResultView
     @element = null
 
     constructor:  ->
         @element = document.createElement('div')
         @element.classList.add('atom-repl')
         @element.classList.add('output-bubble')
-        @element.classList.add('native-key-bindings')
-        @element.setAttribute('tabindex', -1)
 
-        atom.views.addViewProvider {
-                modelConstructor: this
-                viewConstructor: this
-            }
+        @spinner = @buildSpinner()
+        @element.appendChild(@spinner)
+
+        @resultContainer = document.createElement('div')
+        @element.appendChild(@resultContainer)
+        # @element.classList.add('native-key-bindings')
+        # @element.setAttribute('tabindex', -1)
+
         return this
 
     addResult: (result) ->
@@ -53,6 +54,28 @@ class ResultView extends HTMLElement
             @element.classList.add('error')
         else
             throw "Not a type this bubble can be!"
+
+
+    buildSpinner: ->
+        container = document.createElement('div')
+        container.classList.add('spinner')
+
+        bounce1 = document.createElement('div')
+        bounce1.classList.add('double-bounce1')
+        bounce2 = document.createElement('div')
+        bounce2.classList.add('double-bounce2')
+
+        container.appendChild(bounce1)
+        container.appendChild(bounce2)
+
+        return container
+
+    spin: (shouldSpin) ->
+        if shouldSpin
+            @spinner.style.display = 'block'
+        else
+            @spinner.style.display = 'none'
+
 
     destroy: ->
         @element.innerHTML = ''

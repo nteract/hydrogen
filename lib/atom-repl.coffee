@@ -11,7 +11,7 @@ ResultView = require './result-view'
 
 module.exports = AtomRepl =
     subscriptions: null
-    views: null
+    statusBarElement: null
 
     activate: (state) ->
         # Events subscribed to in atom's system can be easily cleaned up
@@ -25,18 +25,30 @@ module.exports = AtomRepl =
 
     deactivate: ->
         @subscriptions.dispose()
-        _.forEach @views, (view) -> view.destroy()
+        # _.forEach @views, (view) -> view.destroy()
+
+    consumeStatusBar: (statusBar) ->
+        @statusBarElement = document.createElement('div')
+        @statusBarElement.classList.add('atom-repl')
+        @statusBarElement.classList.add('status-container')
+        @statusBarTile = statusBar.addLeftTile(item: @statusBarElement, priority: 100)
 
     insertResultBubble: (editor, row) ->
 
         view = new ResultView()
+        view.spin(true)
         element = view.getElement()
 
         buffer = editor.getBuffer()
         lineLength = buffer.lineLengthForRow(row)
 
-        topOffset = editor.getLineHeightInPixels() + 2
-        element.setAttribute('style', 'top: -' + topOffset + 'px;')
+        lineHeight = editor.getLineHeightInPixels()
+        topOffset = lineHeight + 1
+        element.setAttribute('style', "top: -#{topOffset}px;")
+        view.spinner.setAttribute('style', "width: #{lineHeight}px; height: #{lineHeight}px;")
+        #  = lineHeight + "px;"
+        # view.spinner.style.width = lineHeight + "px;"
+
 
         marker = editor.markBufferPosition {
                 row: row
@@ -80,11 +92,20 @@ module.exports = AtomRepl =
         language = editor.getGrammar().name.toLowerCase()
 
         @startKernelIfNeeded language, =>
+            kernel = KernelManager.getRunningKernelForLanguage(language)
+            statusView = kernel.statusView
+
+            while @statusBarElement.hasChildNodes()
+                @statusBarElement.removeChild(@statusBarElement.lastChild)
+            @statusBarElement.appendChild(statusView.getElement())
+
             [code, row] = @findCodeBlock(editor)
             if code != null
                 view = @insertResultBubble editor, row
                 KernelManager.execute language, code, (result) ->
+                    view.spin(false)
                     view.addResult(result)
+
 
     startKernelIfNeeded: (language, onStarted) ->
         if not KernelManager.runningKernels[language]?

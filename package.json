@@ -14,5 +14,13 @@
   "dependencies": {
     "uuid": "^2.0.1",
     "zmq": "^2.11.0"
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
   }
+
 }

@@ -34,6 +34,12 @@ module.exports = KernelManager =
         else
             return matchingKernels[0]
 
+    getRunningKernelForLanguage: (language) ->
+        if @runningKernels[language]?
+            return @runningKernels[language]
+        else
+            return null
+
     startKernel: (kernelInfo, config, configFilePath) ->
         language = kernelInfo.language.toLowerCase()
         kernel = new Kernel(kernelInfo, config, configFilePath)

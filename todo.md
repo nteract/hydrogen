@@ -12,14 +12,15 @@
 - [x] support more kinds of images
 - [x] figure out what to do with stderr
     - not really "solved", but IPython just swallows it
+- [x] status spinner and checkmark (in status bar?)
 
 
 - [ ] shut down kernel and ports
 
-- [ ] status spinner and checkmark (in status bar?)
+- [ ] listen for active editor change and swap status bar component
+
 - [ ] close button on larger results
 - [ ] expandable/shrinkable multiline
-
 
 - [ ] ensure support for other languages
 - [ ] support interactive HTML widgets like Gadfly

@@ -5,11 +5,15 @@ _ = require 'lodash'
 exec = require('child_process').exec
 uuid = require 'uuid'
 
+StatusView = require './status-view'
+
 module.exports =
 class Kernel
     constructor: (@kernelInfo, @config, @configPath) ->
         @language = @kernelInfo.language.toLowerCase()
         @executionCallbacks = {}
+        # @status = ""
+        @statusView = new StatusView()
 
         commandString = ""
         for arg in @kernelInfo.argv
@@ -44,11 +48,27 @@ class Kernel
     onIOMessage: (msgArray...) ->
         message = @parseMessage msgArray
         console.log message
-        if message.parent_header.msg_id?
-            if @executionCallbacks[message.parent_header.msg_id]?
+
+        callback = @executionCallbacks[message.parent_header.msg_id]
+
+        if message.type == 'status'
+            status = message.contents.execution_state
+            @statusView.setStatus(status)
+            if message.parent_header.msg_id?
+                    if callback?
+                        if status == 'idle'
+                            callback {
+                                data: "✓"
+                                type: 'text'
+                                stream: 'pyout'
+                            }
+
+
+        else if message.parent_header.msg_id?
+            if callback?
                 resultObject = @getResultObject message
                 if resultObject?
-                    @executionCallbacks[message.parent_header.msg_id](resultObject)
+                    callback(resultObject)
 
     getResultObject: (message) ->
         if message.type == 'pyout'
