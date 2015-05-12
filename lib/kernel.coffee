@@ -193,3 +193,5 @@ class Kernel
                 content
             ]
         @shellSocket.send message
+        @shellSocket.close()
+        @ioSocket.close()
