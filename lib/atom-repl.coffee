@@ -48,8 +48,6 @@ module.exports = AtomRepl =
         topOffset = lineHeight + 1
         element.setAttribute('style', "top: -#{topOffset}px;")
         view.spinner.setAttribute('style', "width: #{lineHeight}px; height: #{lineHeight}px;")
-        #  = lineHeight + "px;"
-        # view.spinner.style.width = lineHeight + "px;"
 
 
         marker = editor.markBufferPosition {

@@ -28,6 +28,7 @@ class ResultView
 
 
         else
+            @indicateStatus(false)
             if result.stream == 'stderr' or result.stream == 'error'
                 @setType 'error'
 
@@ -76,13 +77,22 @@ class ResultView
         container = document.createElement('div')
         container.classList.add('spinner')
 
-        bounce1 = document.createElement('div')
-        bounce1.classList.add('double-bounce1')
-        bounce2 = document.createElement('div')
-        bounce2.classList.add('double-bounce2')
+        rect1 = document.createElement('div')
+        rect1.classList.add('rect1')
+        rect2 = document.createElement('div')
+        rect2.classList.add('rect2')
+        rect3 = document.createElement('div')
+        rect3.classList.add('rect3')
+        rect4 = document.createElement('div')
+        rect4.classList.add('rect4')
+        rect5 = document.createElement('div')
+        rect5.classList.add('rect5')
 
-        container.appendChild(bounce1)
-        container.appendChild(bounce2)
+        container.appendChild(rect1)
+        container.appendChild(rect2)
+        container.appendChild(rect3)
+        container.appendChild(rect4)
+        container.appendChild(rect5)
 
         return container
 
