@@ -13,9 +13,9 @@
 - [x] figure out what to do with stderr
     - not really "solved", but IPython just swallows it
 - [x] status spinner and checkmark (in status bar?)
+- [x] shut down kernel and ports
 
 
-- [ ] shut down kernel and ports
 - [ ] UI in status bar to shut down/interrupt/restart
 
 - [ ] listen for active editor change and swap status bar component

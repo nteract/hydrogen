@@ -43,32 +43,35 @@ class Kernel
         @ioSocket.connect('tcp://127.0.0.1:' + @config.iopub_port)
         @ioSocket.subscribe('')
 
+
+        @shellSocket.on 'message', @onShellMessage.bind(this)
+
         @ioSocket.on 'message', @onIOMessage.bind(this)
+
+    # really just for getting :ok statuses for commands with no output
+    onShellMessage: (msgArray...) ->
+        message = @parseMessage msgArray
+        console.log "shell message:", message
+
+        callback = @executionCallbacks[message.parent_header.msg_id]
+        if callback? and _.has(message, ['contents', 'status'])
+            if message.contents.status == 'ok'
+                callback {
+                    data: "✓"
+                    type: 'text'
+                    stream: 'status'
+                }
+
 
     onIOMessage: (msgArray...) ->
         message = @parseMessage msgArray
         console.log message
 
         callback = @executionCallbacks[message.parent_header.msg_id]
-
-        if message.type == 'status'
-            status = message.contents.execution_state
-            @statusView.setStatus(status)
-            if message.parent_header.msg_id?
-                    if callback?
-                        if status == 'idle'
-                            callback {
-                                data: "✓"
-                                type: 'text'
-                                stream: 'status'
-                            }
-
-
-        else if message.parent_header.msg_id?
-            if callback?
-                resultObject = @getResultObject message
-                if resultObject?
-                    callback(resultObject)
+        if message.parent_header.msg_id? and callback?
+            resultObject = @getResultObject message
+            if resultObject?
+                callback(resultObject)
 
     getResultObject: (message) ->
         if message.type == 'pyout'
@@ -103,14 +106,14 @@ class Kernel
                 type: 'text'
                 stream: 'stdout'
             }
-        else if message.type == 'pyerr'
+        else if message.type == 'pyerr' or message.type == 'error'
             stack = message.contents.traceback
             stack = _.map stack, (item) -> item.trim()
             stack = stack.join('\n')
             return {
                 data: stack
                 type: 'text'
-                stream: 'pyerr'
+                stream: 'error'
             }
         # else if message.type == 'stderr'
         #     return {
@@ -147,7 +150,7 @@ class Kernel
                 version: "5.0"
             })
 
-        content = JSON.stringify({
+        contents = JSON.stringify({
                 code: code
                 silent: false
                 store_history: true
@@ -161,7 +164,7 @@ class Kernel
                 header,
                 '{}',
                 '{}',
-                content
+                contents
             ]
         console.log message
 
@@ -180,7 +183,7 @@ class Kernel
                 version: "5.0"
             })
 
-        content = JSON.stringify({
+        contents = JSON.stringify({
                 restart: false
             })
 
@@ -190,7 +193,7 @@ class Kernel
                 header,
                 '{}',
                 '{}',
-                content
+                contents
             ]
         @shellSocket.send message
         @shellSocket.close()

@@ -28,7 +28,7 @@ class ResultView
 
 
         else
-            if result.stream == 'pyerr' or result.stream == 'stderr'
+            if result.stream == 'stderr' or result.stream == 'error'
                 @setType 'error'
 
             if result.type == 'text/html'
