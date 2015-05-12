@@ -65,6 +65,7 @@ module.exports = AtomRepl =
             console.log event
             if not event.isValid
                 view.destroy()
+                marker.destroy()
 
         return view
 

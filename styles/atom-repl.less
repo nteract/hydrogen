@@ -5,13 +5,14 @@
 @import "ui-variables";
 
 .atom-repl.output-bubble {
-    position: relative;
+    position: absolute;
     padding-left: 2px;
     padding-right: 2px;
     background-color: @background-color-selected;
     border: 1px solid lighten(@background-color-selected, 5%);
     border-radius: 3px;
     margin-left: 20px;
+    white-space: nowrap;
     -webkit-user-select: initial;
 
     &.error {

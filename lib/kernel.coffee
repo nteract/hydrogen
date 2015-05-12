@@ -92,12 +92,12 @@ class Kernel
                 type: 'text'
                 stream: 'pyerr'
             }
-        else if message.type == 'stderr'
-            return {
-                data: message.data
-                type: 'text'
-                stream: 'stderr'
-            }
+        # else if message.type == 'stderr'
+        #     return {
+        #         data: message.data
+        #         type: 'text'
+        #         stream: 'stderr'
+        #     }
 
 
     parseMessage: (msg) ->

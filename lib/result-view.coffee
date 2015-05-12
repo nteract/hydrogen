@@ -33,14 +33,18 @@ class ResultView extends HTMLElement
             image = document.createElement('img')
             image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
             @element.appendChild(image)
-        else if result.type == 'image/png' or
-            console.log "rendering as PNG"
+        else if result.type.startsWith('image')
+            console.log "rendering as image"
             @element.classList.add('rich')
             image = document.createElement('img')
-            image.setAttribute('src', "data:image/png;base64," + result.data)
+            image.setAttribute('src', "data:#{result.type};base64," + result.data)
             @element.appendChild(image)
         else
-            @element.innerText = @element.innerText + result.data
+            console.log "rendering as text"
+            if @element.innerText.length > 0
+                @element.innerText = @element.innerText + (" " + result.data)
+            else
+                @element.innerText = @element.innerText + result.data
 
     setType: (type) ->
         if type == 'result'
