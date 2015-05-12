@@ -83,7 +83,7 @@ module.exports = AtomRepl =
             if code != null
                 view = @insertResultBubble editor, row
                 KernelManager.execute language, code, (result) ->
-                    view.append(result)
+                    view.addResult(result)
 
     startKernelIfNeeded: (language, onStarted) ->
         if not KernelManager.runningKernels[language]?

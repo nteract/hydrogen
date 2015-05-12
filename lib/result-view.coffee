@@ -18,10 +18,20 @@ class ResultView extends HTMLElement
             }
         return this
 
-    append: (result) ->
-        if result.type == 'pyerr'
+    addResult: (result) ->
+        if result.stream == 'pyerr'
             @setType 'error'
-        @element.innerText = @element.innerText + result.text
+
+        if result.type == "html"
+            @element.classList.add('html')
+            # buffer = new Buffer(result.data)
+            # image = document.createElement('img')
+            # image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
+            # @element.appendChild(image)
+            # @element.innerHTML = "<img src='data:image/svg+xml;base64,#{buffer.toString('base64')}'>"
+            @element.innerHTML = @element.innerHTML + result.data
+        else
+            @element.innerText = @element.innerText + result.data
 
     setType: (type) ->
         if type == 'result'
@@ -32,6 +42,7 @@ class ResultView extends HTMLElement
             throw "Not a type this bubble can be!"
 
     destroy: ->
+        @element.innerHTML = ''
         @element.remove()
 
     getElement: ->

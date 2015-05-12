@@ -41,6 +41,7 @@ class Kernel
 
     onIOMessage: (msgArray...) ->
         message = @parseMessage msgArray
+        console.log message
         if message.parent_header.msg_id?
             if @executionCallbacks[message.parent_header.msg_id]?
                 messageString = @getResultObject message
@@ -49,22 +50,33 @@ class Kernel
 
     getResultObject: (message) ->
         if message.type == 'pyout'
-            return {
-                text: message.contents.data['text/plain']
-                type: 'pyout'
-            }
+            if message.contents.data['text/html']?
+                return {
+                    # data: message.contents.data['image/svg+xml']
+                    data: message.contents.data['text/html']
+                    type: 'html'
+                    stream: 'pyout'
+                }
+            else
+                return {
+                    data: message.contents.data['text/plain']
+                    type: 'text'
+                    stream: 'pyout'
+                }
         else if message.type == 'stdout'
             return {
-                text: message.contents.data
-                type: 'stdout'
+                data: message.contents.data
+                type: 'text'
+                stream: 'stdout'
             }
         else if message.type == 'pyerr'
             stack = message.contents.traceback
             stack = _.map stack, (item) -> item.trim()
             stack = stack.join('\n')
             return {
-                text: stack
-                type: 'pyerr'
+                data: stack
+                type: 'text'
+                stream: 'pyerr'
             }
 
 

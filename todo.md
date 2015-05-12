@@ -5,9 +5,10 @@
     - [x] update UI when messages received with that ID
 - [x] add a setup function with a callback to building kernels/configs
 - [x] find a free port automatically
+- [x] error styling
 
 
 - [ ] shut down kernel and ports
 
-- [x] error styling
+- [ ] status spinner and checkmark
 - [ ] image support
