@@ -50,3 +50,6 @@ module.exports = KernelManager =
             @runningKernels[language].execute(code, onResults)
         else
             throw "No such kernel!"
+
+    destroy: ->
+        _.forEach @runningKernels, (kernel) -> kernel.destroy()

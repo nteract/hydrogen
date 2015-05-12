@@ -147,7 +147,7 @@ class Kernel
                 version: "5.0"
             })
 
-        contents = JSON.stringify({
+        content = JSON.stringify({
                 code: code
                 silent: false
                 store_history: true
@@ -161,9 +161,35 @@ class Kernel
                 header,
                 '{}',
                 '{}',
-                contents
+                content
             ]
         console.log message
 
         @executionCallbacks[requestId] = onResults
+        @shellSocket.send message
+
+    destroy: ->
+        requestId = uuid.v4()
+
+        console.log "sending shutdown"
+        header = JSON.stringify({
+                msg_id: requestId,
+                username: "",
+                session: 0,
+                msg_type: "shutdown_request",
+                version: "5.0"
+            })
+
+        content = JSON.stringify({
+                restart: false
+            })
+
+        message =  [
+                '<IDS|MSG>',
+                '',
+                header,
+                '{}',
+                '{}',
+                content
+            ]
         @shellSocket.send message

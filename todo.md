@@ -16,6 +16,7 @@
 
 
 - [ ] shut down kernel and ports
+- [ ] UI in status bar to shut down/interrupt/restart
 
 - [ ] listen for active editor change and swap status bar component
 

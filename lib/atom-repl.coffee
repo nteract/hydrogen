@@ -12,6 +12,7 @@ ResultView = require './result-view'
 module.exports = AtomRepl =
     subscriptions: null
     statusBarElement: null
+    statusBarTile: null
 
     activate: (state) ->
         # Events subscribed to in atom's system can be easily cleaned up
@@ -25,7 +26,8 @@ module.exports = AtomRepl =
 
     deactivate: ->
         @subscriptions.dispose()
-        # _.forEach @views, (view) -> view.destroy()
+        KernelManager.destroy()
+        @statusBarTile.destroy()
 
     consumeStatusBar: (statusBar) ->
         @statusBarElement = document.createElement('div')
