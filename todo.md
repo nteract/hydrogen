@@ -1,3 +1,25 @@
+# To do
+
+## Current
+
+- [ ] listen for active editor change and swap status bar component
+- [ ] close button on larger results
+- [ ] UI in status bar to shut down/interrupt/restart
+- [ ] ensure support for other languages
+
+
+## Soon
+
+- [ ] expandable/shrinkable multiline
+
+
+## Someday
+
+- [ ] support interactive HTML widgets like Gadfly
+
+
+
+## Done
 - [x] start kernels based on file type
 - [x] find and execute the current/preceding block
 - [x] insert placeholder UI on run command
@@ -14,14 +36,3 @@
     - not really "solved", but IPython just swallows it
 - [x] status spinner and checkmark (in status bar?)
 - [x] shut down kernel and ports
-
-
-- [ ] UI in status bar to shut down/interrupt/restart
-
-- [ ] listen for active editor change and swap status bar component
-
-- [ ] close button on larger results
-- [ ] expandable/shrinkable multiline
-
-- [ ] ensure support for other languages
-- [ ] support interactive HTML widgets like Gadfly
