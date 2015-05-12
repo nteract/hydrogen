@@ -12,8 +12,11 @@
     border: 1px solid lighten(@background-color-selected, 5%);
     border-radius: 3px;
     margin-left: 20px;
-    // top: -1 * @component-line-height + 1em;
-    // width: 50px;
-    // height: 50px;
-    // background-color: blue;
+    -webkit-user-select: initial;
+
+    &.error {
+        color: @text-color-error;
+        // background-color: @background-color-warning;
+        // border: 1px solid lighten(@background-color-warning, 10%);
+    }
 }

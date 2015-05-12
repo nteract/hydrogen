@@ -9,6 +9,8 @@ class ResultView extends HTMLElement
         @element = document.createElement('div')
         @element.classList.add('atom-repl')
         @element.classList.add('output-bubble')
+        @element.classList.add('native-key-bindings')
+        @element.setAttribute('tabindex', -1)
 
         atom.views.addViewProvider {
                 modelConstructor: this
@@ -16,16 +18,18 @@ class ResultView extends HTMLElement
             }
         return this
 
-    append: (text) ->
-        @element.innerText = @element.innerText + text
+    append: (result) ->
+        if result.type == 'pyerr'
+            @setType 'error'
+        @element.innerText = @element.innerText + result.text
 
-    # setType: (type) ->
-    #     if type == 'result'
-    #         @element.classList.remove('error')
-    #     else if type == 'error'
-    #         @element.classList.add('error')
-    #     else
-    #         throw "Not a type this bubble can be!"
+    setType: (type) ->
+        if type == 'result'
+            @element.classList.remove('error')
+        else if type == 'error'
+            @element.classList.add('error')
+        else
+            throw "Not a type this bubble can be!"
 
     destroy: ->
         @element.remove()

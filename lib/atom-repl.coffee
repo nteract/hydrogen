@@ -102,7 +102,8 @@ module.exports = AtomRepl =
         selectedText = editor.getSelectedText()
 
         if selectedText != ''
-            return selectedText
+            selectedRange = editor.getSelectedBufferRange()
+            return [selectedText, selectedRange.end.row]
 
         cursor = editor.getCursor()
 

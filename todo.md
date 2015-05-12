@@ -9,5 +9,5 @@
 
 - [ ] shut down kernel and ports
 
-- [ ] selectable text
+- [x] error styling
 - [ ] image support

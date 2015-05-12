@@ -43,20 +43,29 @@ class Kernel
         message = @parseMessage msgArray
         if message.parent_header.msg_id?
             if @executionCallbacks[message.parent_header.msg_id]?
-                messageString = @getMessageString message
+                messageString = @getResultObject message
                 if messageString?
                     @executionCallbacks[message.parent_header.msg_id](messageString)
 
-    getMessageString: (message) ->
+    getResultObject: (message) ->
         if message.type == 'pyout'
-            return message.contents.data['text/plain']
+            return {
+                text: message.contents.data['text/plain']
+                type: 'pyout'
+            }
         else if message.type == 'stdout'
-            return message.contents.data
+            return {
+                text: message.contents.data
+                type: 'stdout'
+            }
         else if message.type == 'pyerr'
             stack = message.contents.traceback
             stack = _.map stack, (item) -> item.trim()
             stack = stack.join('\n')
-            return stack
+            return {
+                text: stack
+                type: 'pyerr'
+            }
 
 
     parseMessage: (msg) ->
