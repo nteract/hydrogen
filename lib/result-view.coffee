@@ -19,17 +19,26 @@ class ResultView extends HTMLElement
         return this
 
     addResult: (result) ->
-        if result.stream == 'pyerr'
+        if result.stream == 'pyerr' or result.stream == 'stderr'
             @setType 'error'
 
-        if result.type == "html"
-            @element.classList.add('html')
-            # buffer = new Buffer(result.data)
-            # image = document.createElement('img')
-            # image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
-            # @element.appendChild(image)
-            # @element.innerHTML = "<img src='data:image/svg+xml;base64,#{buffer.toString('base64')}'>"
+        if result.type == 'text/html'
+            console.log "rendering as HTML"
+            @element.classList.add('rich')
             @element.innerHTML = @element.innerHTML + result.data
+        else if result.type == 'image/svg+xml'
+            console.log "rendering as SVG"
+            @element.classList.add('rich')
+            buffer = new Buffer(result.data)
+            image = document.createElement('img')
+            image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
+            @element.appendChild(image)
+        else if result.type == 'image/png' or
+            console.log "rendering as PNG"
+            @element.classList.add('rich')
+            image = document.createElement('img')
+            image.setAttribute('src', "data:image/png;base64," + result.data)
+            @element.appendChild(image)
         else
             @element.innerText = @element.innerText + result.data
 

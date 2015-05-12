@@ -20,11 +20,13 @@ class Kernel
 
         console.log "launching kernel:", commandString
         @connect()
-        exec commandString, (error, stdout, stderr) ->
-            console.log 'stdout: ', stdout
-            console.log 'stderr: ', stderr
-            if error != null
-                console.log 'exec error: ', error
+        exec commandString
+
+        # exec commandString, (error, stdout, stderr) ->
+        #     console.log 'stdout: ', stdout
+        #     console.log 'stderr: ', stderr
+        #     if error != null
+        #         console.log 'exec error: ', error
 
     connect: () ->
         @shellSocket = zmq.socket 'dealer'
@@ -44,9 +46,9 @@ class Kernel
         console.log message
         if message.parent_header.msg_id?
             if @executionCallbacks[message.parent_header.msg_id]?
-                messageString = @getResultObject message
-                if messageString?
-                    @executionCallbacks[message.parent_header.msg_id](messageString)
+                resultObject = @getResultObject message
+                if resultObject?
+                    @executionCallbacks[message.parent_header.msg_id](resultObject)
 
     getResultObject: (message) ->
         if message.type == 'pyout'
@@ -54,7 +56,19 @@ class Kernel
                 return {
                     # data: message.contents.data['image/svg+xml']
                     data: message.contents.data['text/html']
-                    type: 'html'
+                    type: 'text/html'
+                    stream: 'pyout'
+                }
+            else if message.contents.data['image/svg+xml']?
+                return {
+                    data: message.contents.data['image/svg+xml']
+                    type: 'image/svg+xml'
+                    stream: 'pyout'
+                }
+            else if message.contents.data['image/png']?
+                return {
+                    data: message.contents.data['image/png']
+                    type: 'image/png'
                     stream: 'pyout'
                 }
             else
@@ -77,6 +91,12 @@ class Kernel
                 data: stack
                 type: 'text'
                 stream: 'pyerr'
+            }
+        else if message.type == 'stderr'
+            return {
+                data: message.data
+                type: 'text'
+                stream: 'stderr'
             }
 
 

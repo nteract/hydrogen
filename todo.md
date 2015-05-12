@@ -6,9 +6,10 @@
 - [x] add a setup function with a callback to building kernels/configs
 - [x] find a free port automatically
 - [x] error styling
+- [x] image support
 
 
 - [ ] shut down kernel and ports
 
-- [ ] status spinner and checkmark
-- [ ] image support
+- [ ] status spinner and checkmark (in status bar?)
+- [ ] support more kinds of images
