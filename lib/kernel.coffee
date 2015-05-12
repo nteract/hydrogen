@@ -60,7 +60,7 @@ class Kernel
                             callback {
                                 data: "✓"
                                 type: 'text'
-                                stream: 'pyout'
+                                stream: 'status'
                             }
 
 

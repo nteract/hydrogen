@@ -2,7 +2,6 @@ _ = require 'lodash'
 
 module.exports =
 class ResultView
-    @element = null
 
     constructor:  ->
         @element = document.createElement('div')
@@ -14,47 +13,64 @@ class ResultView
 
         @resultContainer = document.createElement('div')
         @element.appendChild(@resultContainer)
-        # @element.classList.add('native-key-bindings')
-        # @element.setAttribute('tabindex', -1)
+
+        @statusContainer = document.createElement('div')
+        @element.appendChild(@statusContainer)
 
         return this
 
     addResult: (result) ->
-        if result.stream == 'pyerr' or result.stream == 'stderr'
-            @setType 'error'
+        if result.stream == 'status'
+            hasResults = @resultContainer.innerHTML.length == 0
+            @indicateStatus(hasResults)
+            @statusContainer.innerText = result.data
 
-        if result.type == 'text/html'
-            console.log "rendering as HTML"
-            @element.classList.add('rich')
-            @element.innerHTML = @element.innerHTML + result.data
-        else if result.type == 'image/svg+xml'
-            console.log "rendering as SVG"
-            @element.classList.add('rich')
-            buffer = new Buffer(result.data)
-            image = document.createElement('img')
-            image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
-            @element.appendChild(image)
-        else if result.type.startsWith('image')
-            console.log "rendering as image"
-            @element.classList.add('rich')
-            image = document.createElement('img')
-            image.setAttribute('src', "data:#{result.type};base64," + result.data)
-            @element.appendChild(image)
+
+
         else
-            console.log "rendering as text"
-            if @element.innerText.length > 0
-                @element.innerText = @element.innerText + (" " + result.data)
+            if result.stream == 'pyerr' or result.stream == 'stderr'
+                @setType 'error'
+
+            if result.type == 'text/html'
+                console.log "rendering as HTML"
+                @resultContainer.classList.add('rich')
+                @resultContainer.innerHTML = @resultContainer.innerHTML + result.data
+
+            else if result.type == 'image/svg+xml'
+                console.log "rendering as SVG"
+                @resultContainer.classList.add('rich')
+                buffer = new Buffer(result.data)
+                image = document.createElement('img')
+                image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
+                @resultContainer.appendChild(image)
+
+            else if result.type.startsWith('image')
+                console.log "rendering as image"
+                @resultContainer.classList.add('rich')
+                image = document.createElement('img')
+                image.setAttribute('src', "data:#{result.type};base64," + result.data)
+                @resultContainer.appendChild(image)
+
             else
-                @element.innerText = @element.innerText + result.data
+                console.log "rendering as text"
+                if @resultContainer.innerText.length > 0
+                    @resultContainer.innerText = @resultContainer.innerText + (" " + result.data)
+                else
+                    @resultContainer.innerText = @resultContainer.innerText + result.data
 
     setType: (type) ->
         if type == 'result'
-            @element.classList.remove('error')
+            @resultContainer.classList.remove('error')
         else if type == 'error'
-            @element.classList.add('error')
+            @resultContainer.classList.add('error')
         else
             throw "Not a type this bubble can be!"
 
+    indicateStatus: (shouldIndicate) ->
+        if shouldIndicate
+            @statusContainer.style.display = 'inline-block'
+        else
+            @statusContainer.style.display = 'none'
 
     buildSpinner: ->
         container = document.createElement('div')
