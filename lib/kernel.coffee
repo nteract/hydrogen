@@ -67,6 +67,10 @@ class Kernel
         message = @parseMessage msgArray
         console.log message
 
+        if message.type == 'status'
+            status = message.contents.execution_state
+            @statusView.setStatus(status)
+
         callback = @executionCallbacks[message.parent_header.msg_id]
         if message.parent_header.msg_id? and callback?
             resultObject = @getResultObject message
