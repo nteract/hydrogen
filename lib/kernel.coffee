@@ -53,7 +53,8 @@ class Kernel
         message = @parseMessage msgArray
         console.log "shell message:", message
 
-        callback = @executionCallbacks[message.parent_header.msg_id]
+        if _.has(message, ['parent_header', 'msg_id'])
+            callback = @executionCallbacks[message.parent_header.msg_id]
         if callback? and _.has(message, ['contents', 'status'])
             if message.contents.status == 'ok'
                 callback {
@@ -64,6 +65,9 @@ class Kernel
 
 
     onIOMessage: (msgArray...) ->
+        console.log "IO message"
+        _.forEach msgArray, (msg) -> console.log "io:", msg.toString('utf8')
+
         message = @parseMessage msgArray
         console.log message
 
@@ -71,14 +75,15 @@ class Kernel
             status = message.contents.execution_state
             @statusView.setStatus(status)
 
-        callback = @executionCallbacks[message.parent_header.msg_id]
-        if message.parent_header.msg_id? and callback?
+        if _.has(message, ['parent_header', 'msg_id'])
+            callback = @executionCallbacks[message.parent_header.msg_id]
+        if callback? and message.parent_header.msg_id?
             resultObject = @getResultObject message
             if resultObject?
                 callback(resultObject)
 
     getResultObject: (message) ->
-        if message.type == 'pyout'
+        if message.type == 'pyout' or message.type == 'display_data'
             if message.contents.data['text/html']?
                 return {
                     # data: message.contents.data['image/svg+xml']
@@ -86,16 +91,21 @@ class Kernel
                     type: 'text/html'
                     stream: 'pyout'
                 }
-            else if message.contents.data['image/svg+xml']?
+            if message.contents.data['image/svg+xml']?
                 return {
                     data: message.contents.data['image/svg+xml']
                     type: 'image/svg+xml'
                     stream: 'pyout'
                 }
-            else if message.contents.data['image/png']?
+
+            imageKeys = _.filter _.keys(message.contents.data), (key) ->
+                return key.startsWith('image')
+            imageKey = imageKeys[0]
+
+            if imageKey?
                 return {
-                    data: message.contents.data['image/png']
-                    type: 'image/png'
+                    data: message.contents.data[imageKey]
+                    type: imageKey
                     stream: 'pyout'
                 }
             else
@@ -119,26 +129,21 @@ class Kernel
                 type: 'text'
                 stream: 'error'
             }
-        # else if message.type == 'stderr'
-        #     return {
-        #         data: message.data
-        #         type: 'text'
-        #         stream: 'stderr'
-        #     }
-
 
     parseMessage: (msg) ->
         i = 0
         while msg[i].toString('utf8') != '<IDS|MSG>'
             i++
 
-        return {
-                type: msg[0].toString('utf8')
+        msgObject = {
+                # type: msg[0].toString('utf8')
                 header: JSON.parse msg[i+2].toString('utf8')
                 parent_header: JSON.parse msg[i+3].toString('utf8')
                 metadata: JSON.parse msg[i+4].toString('utf8')
                 contents: JSON.parse msg[i+5].toString('utf8')
             }
+        msgObject.type = msgObject.header.msg_type
+        return msgObject
 
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel

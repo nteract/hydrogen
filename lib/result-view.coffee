@@ -17,6 +17,8 @@ class ResultView
         @statusContainer = document.createElement('div')
         @element.appendChild(@statusContainer)
 
+        @resultType = null
+
         return this
 
     addResult: (result) ->
@@ -34,11 +36,14 @@ class ResultView
 
             if result.type == 'text/html'
                 console.log "rendering as HTML"
+                @resultType = 'html'
                 @resultContainer.classList.add('rich')
                 @resultContainer.innerHTML = @resultContainer.innerHTML + result.data
 
             else if result.type == 'image/svg+xml'
                 console.log "rendering as SVG"
+
+                @resultType = 'image'
                 @resultContainer.classList.add('rich')
                 buffer = new Buffer(result.data)
                 image = document.createElement('img')
@@ -47,6 +52,8 @@ class ResultView
 
             else if result.type.startsWith('image')
                 console.log "rendering as image"
+
+                @resultType = 'image'
                 @resultContainer.classList.add('rich')
                 image = document.createElement('img')
                 image.setAttribute('src', "data:#{result.type};base64," + result.data)
@@ -54,10 +61,13 @@ class ResultView
 
             else
                 console.log "rendering as text"
-                if @resultContainer.innerText.length > 0
-                    @resultContainer.innerText = @resultContainer.innerText + (" " + result.data)
-                else
-                    @resultContainer.innerText = @resultContainer.innerText + result.data
+
+                if not @resultType or @resultType == 'text'
+                    @resultType = 'text'
+                    if @resultContainer.innerText.length > 0
+                        @resultContainer.innerText = @resultContainer.innerText + (" " + result.data)
+                    else
+                        @resultContainer.innerText = @resultContainer.innerText + result.data
 
     setType: (type) ->
         if type == 'result'

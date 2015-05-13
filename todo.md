@@ -2,7 +2,6 @@
 
 ## Current
 
-- [ ] listen for active editor change and swap status bar component
 - [ ] close button on larger results
 - [ ] UI in status bar to shut down/interrupt/restart
 - [ ] ensure support for other languages
@@ -36,3 +35,4 @@
     - not really "solved", but IPython just swallows it
 - [x] status spinner and checkmark (in status bar?)
 - [x] shut down kernel and ports
+- [x] listen for active editor change and swap status bar component
