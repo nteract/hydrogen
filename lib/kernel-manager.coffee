@@ -27,12 +27,15 @@ module.exports = KernelManager =
     getKernelInfoForLanguage: (language) ->
         kernels = @getAvailableKernels()
         matchingKernels = _.filter kernels, (kernel) ->
-            return language.toLowerCase() == kernel.language.toLowerCase()
+            return kernel? and language.toLowerCase() == kernel.language.toLowerCase()
 
         if matchingKernels.length == 0
             return null
         else
             return matchingKernels[0]
+
+    languageHasKernel: (language) ->
+        return @getKernelInfoForLanguage(language)?
 
     getRunningKernelForLanguage: (language) ->
         if @runningKernels[language]?
@@ -44,6 +47,7 @@ module.exports = KernelManager =
         language = kernelInfo.language.toLowerCase()
         kernel = new Kernel(kernelInfo, config, configFilePath)
         @runningKernels[language] = kernel
+        return kernel
 
     execute: (language, code, onResults) ->
         if @runningKernels[language]?

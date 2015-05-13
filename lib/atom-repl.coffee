@@ -13,6 +13,7 @@ module.exports = AtomRepl =
     subscriptions: null
     statusBarElement: null
     statusBarTile: null
+    editor: null
 
     activate: (state) ->
         # Events subscribed to in atom's system can be easily cleaned up
@@ -23,6 +24,8 @@ module.exports = AtomRepl =
         @subscriptions.add atom.commands.add 'atom-workspace',
                                              'atom-repl:run': => @run()
 
+        @subscriptions.add atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this))
+
 
     deactivate: ->
         @subscriptions.dispose()
@@ -30,13 +33,25 @@ module.exports = AtomRepl =
         @statusBarTile.destroy()
 
     consumeStatusBar: (statusBar) ->
+        console.log "making status bar"
         @statusBarElement = document.createElement('div')
         @statusBarElement.classList.add('atom-repl')
         @statusBarElement.classList.add('status-container')
         @statusBarTile = statusBar.addLeftTile(item: @statusBarElement, priority: 100)
 
-    insertResultBubble: (editor, row) ->
+    updateCurrentEditor: (currentPaneItem) ->
+        console.log "Updating current editor to:", currentPaneItem
+        return if not currentPaneItem? or currentPaneItem is @editor
+        @editor = currentPaneItem
+        language = @editor.getGrammar().name.toLowerCase()
 
+        kernel = KernelManager.getRunningKernelForLanguage(language)
+        if kernel?
+            @setStatusBarElement(kernel.statusView.getElement())
+        else
+            @removeStatusBarElement()
+
+    insertResultBubble: (editor, row) ->
         view = new ResultView()
         view.spin(true)
         element = view.getElement()
@@ -56,16 +71,6 @@ module.exports = AtomRepl =
             }, {
                 invalidate: 'touch'
             }
-        # marker = editor.markBufferRange {
-        #     start:
-        #         row: row
-        #         column: lineLength
-        #     end:
-        #         row: row
-        #         column: lineLength + 1
-        #     }, {
-        #         invalidate: 'inside'
-        #     }
 
         editor.decorateMarker marker, {
                 type: 'overlay'
@@ -91,35 +96,44 @@ module.exports = AtomRepl =
         editor = atom.workspace.getActiveEditor()
         language = editor.getGrammar().name.toLowerCase()
 
-        @startKernelIfNeeded language, =>
-            kernel = KernelManager.getRunningKernelForLanguage(language)
-            statusView = kernel.statusView
+        if KernelManager.languageHasKernel(language)
+            @startKernelIfNeeded language, (kernel) =>
+                statusView = kernel.statusView
+                @setStatusBarElement(statusView.getElement())
 
+                [code, row] = @findCodeBlock(editor)
+                if code != null
+                    view = @insertResultBubble editor, row
+                    KernelManager.execute language, code, (result) ->
+                        view.spin(false)
+                        view.addResult(result)
+
+    removeStatusBarElement: ->
+        if @statusBarElement?
             while @statusBarElement.hasChildNodes()
                 @statusBarElement.removeChild(@statusBarElement.lastChild)
-            @statusBarElement.appendChild(statusView.getElement())
 
-            [code, row] = @findCodeBlock(editor)
-            if code != null
-                view = @insertResultBubble editor, row
-                KernelManager.execute language, code, (result) ->
-                    view.spin(false)
-                    view.addResult(result)
-
+    setStatusBarElement: (element) ->
+        if @statusBarElement?
+            @removeStatusBarElement()
+            @statusBarElement.appendChild(element)
+        else
+            console.error "No status bar element. Can't set it."
 
     startKernelIfNeeded: (language, onStarted) ->
-        if not KernelManager.runningKernels[language]?
-            kernelInfo = KernelManager.getKernelInfoForLanguage language
-            if kernelInfo?
-                ConfigManager.writeConfigFile (filepath, config) ->
-                    KernelManager.startKernel(kernelInfo, config, filepath)
-                    onStarted()
+        runningKernel = KernelManager.getRunningKernelForLanguage(language)
+        if not runningKernel?
+            if KernelManager.languageHasKernel(language)
+                kernelInfo = KernelManager.getKernelInfoForLanguage language
+                ConfigManager.writeConfigFile (filepath, config) =>
+                    kernel = KernelManager.startKernel(kernelInfo, config, filepath)
+                    onStarted(kernel)
             else
-                throw "No kernel for this language!"
+                console.error "No kernel for this language!"
         else
-            onStarted()
+            onStarted(runningKernel)
 
-    findCodeBlock: (editor, row)->
+    findCodeBlock: (editor, row) ->
         buffer = editor.getBuffer()
         selectedText = editor.getSelectedText()
 
