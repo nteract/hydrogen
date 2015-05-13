@@ -41,3 +41,4 @@
 - [x] close button on larger results
 - [x] ensure support for other languages
 - [x] UI in status bar to shut down/interrupt/restart
+- [x] command to clear all the bubbles
