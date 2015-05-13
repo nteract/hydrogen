@@ -48,7 +48,6 @@ class Kernel
 
         @ioSocket.on 'message', @onIOMessage.bind(this)
 
-    # really just for getting :ok statuses for commands with no output
     onShellMessage: (msgArray...) ->
         message = @parseMessage msgArray
         console.log "shell message:", message
@@ -61,6 +60,15 @@ class Kernel
                     data: "✓"
                     type: 'text'
                     stream: 'status'
+                }
+            else if message.contents.status == 'error'
+                errorString = message.contents.ename
+                if message.contents.evalue.length > 0
+                    errorString = errorString + "\n" + message.contents.evalue
+                callback {
+                    data: errorString
+                    type: 'text'
+                    stream: 'error'
                 }
 
 

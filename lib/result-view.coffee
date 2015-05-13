@@ -12,9 +12,11 @@ class ResultView
         @element.appendChild(@spinner)
 
         @resultContainer = document.createElement('div')
+        @resultContainer.classList.add('bubble-result-container')
         @element.appendChild(@resultContainer)
 
         @statusContainer = document.createElement('div')
+        @statusContainer.classList.add('bubble-status-container')
         @element.appendChild(@statusContainer)
 
         @resultType = null
@@ -37,14 +39,18 @@ class ResultView
             if result.type == 'text/html'
                 console.log "rendering as HTML"
                 @resultType = 'html'
-                @resultContainer.classList.add('rich')
-                @resultContainer.innerHTML = @resultContainer.innerHTML + result.data
+                @element.classList.add('rich')
+
+                # container = document.createElement('div')
+                # container.innerHTML = result.data
+                # @resultContainer.appendChild(container)
+                @resultContainer.innerHTML = result.data
 
             else if result.type == 'image/svg+xml'
                 console.log "rendering as SVG"
 
                 @resultType = 'image'
-                @resultContainer.classList.add('rich')
+                @element.classList.add('rich')
                 buffer = new Buffer(result.data)
                 image = document.createElement('img')
                 image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
@@ -54,7 +60,7 @@ class ResultView
                 console.log "rendering as image"
 
                 @resultType = 'image'
-                @resultContainer.classList.add('rich')
+                @element.classList.add('rich')
                 image = document.createElement('img')
                 image.setAttribute('src', "data:#{result.type};base64," + result.data)
                 @resultContainer.appendChild(image)

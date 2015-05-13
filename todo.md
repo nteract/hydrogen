@@ -5,6 +5,7 @@
 - [ ] close button on larger results
 - [ ] UI in status bar to shut down/interrupt/restart
 - [ ] ensure support for other languages
+- [ ] python support
 
 
 ## Soon
