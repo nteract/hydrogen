@@ -3,7 +3,7 @@ _ = require 'lodash'
 module.exports =
 class ResultView
 
-    constructor:  ->
+    constructor: (@marker) ->
         @element = document.createElement('div')
         @element.classList.add('atom-repl')
         @element.classList.add('output-bubble')
@@ -19,20 +19,24 @@ class ResultView
         @statusContainer.classList.add('bubble-status-container')
         @element.appendChild(@statusContainer)
 
+        @closeButton = document.createElement('div')
+        @closeButton.classList.add('close-button')
+        @closeButton.onclick = => @destroy()
+        @element.appendChild(@closeButton)
+
         @resultType = null
+        @setMultiline(false)
 
         return this
 
     addResult: (result) ->
         if result.stream == 'status'
             hasResults = @resultContainer.innerHTML.length == 0
-            @indicateStatus(hasResults)
+            @shouldIndicateStatus(hasResults)
             @statusContainer.innerText = result.data
 
-
-
         else
-            @indicateStatus(false)
+            @shouldIndicateStatus(false)
             if result.stream == 'stderr' or result.stream == 'error'
                 @setType 'error'
 
@@ -41,13 +45,21 @@ class ResultView
                 @resultType = 'html'
                 @element.classList.add('rich')
 
+                # if result.data.trim().startsWith('<br>')
+                #     result.data = result.data.trim().replace('<br>', '')
+
+
                 # container = document.createElement('div')
                 # container.innerHTML = result.data
                 # @resultContainer.appendChild(container)
                 @resultContainer.innerHTML = result.data
+                @setMultiline(true)
 
             else if result.type == 'image/svg+xml'
                 console.log "rendering as SVG"
+
+
+                @resultContainer.innerHTML = @resultContainer.innerHTML.trim().replace('<br>', '')
 
                 @resultType = 'image'
                 @element.classList.add('rich')
@@ -56,15 +68,19 @@ class ResultView
                 image = document.createElement('img')
                 image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
                 @resultContainer.appendChild(image)
+                @setMultiline(true)
 
             else if result.type.startsWith('image')
                 console.log "rendering as image"
+
+                @resultContainer.innerHTML = @resultContainer.innerHTML.trim().replace('<br>', '')
 
                 @resultType = 'image'
                 @element.classList.add('rich')
                 image = document.createElement('img')
                 image.setAttribute('src', "data:#{result.type};base64," + result.data)
                 @resultContainer.appendChild(image)
+                @setMultiline(true)
 
             else
                 console.log "rendering as text"
@@ -76,6 +92,9 @@ class ResultView
                     else
                         @resultContainer.innerText = @resultContainer.innerText + result.data
 
+                    if /\r|\n/.exec(@resultContainer.innerText.trim())
+                        @setMultiline(true)
+
     setType: (type) ->
         if type == 'result'
             @resultContainer.classList.remove('error')
@@ -84,7 +103,17 @@ class ResultView
         else
             throw "Not a type this bubble can be!"
 
-    indicateStatus: (shouldIndicate) ->
+    setMultiline: (multiline) ->
+        @multiline = multiline
+        if @multiline
+            @element.classList.add('multiline')
+            # @closeButton.style.display = 'block'
+        else
+            @element.classList.remove('multiline')
+            # @closeButton.style.display = 'none'
+
+
+    shouldIndicateStatus: (shouldIndicate) ->
         if shouldIndicate
             @statusContainer.style.display = 'inline-block'
         else
@@ -121,6 +150,7 @@ class ResultView
 
 
     destroy: ->
+        @marker.destroy()
         @element.innerHTML = ''
         @element.remove()
 

@@ -52,18 +52,8 @@ module.exports = AtomRepl =
             @removeStatusBarElement()
 
     insertResultBubble: (editor, row) ->
-        view = new ResultView()
-        view.spin(true)
-        element = view.getElement()
-
         buffer = editor.getBuffer()
         lineLength = buffer.lineLengthForRow(row)
-
-        lineHeight = editor.getLineHeightInPixels()
-        topOffset = lineHeight + 1
-        element.setAttribute('style', "top: -#{topOffset}px;")
-        view.spinner.setAttribute('style', "width: #{lineHeight}px; height: #{lineHeight}px;")
-
 
         marker = editor.markBufferPosition {
                 row: row
@@ -71,6 +61,15 @@ module.exports = AtomRepl =
             }, {
                 invalidate: 'touch'
             }
+
+        view = new ResultView(marker)
+        view.spin(true)
+        element = view.getElement()
+
+        lineHeight = editor.getLineHeightInPixels()
+        topOffset = lineHeight + 1
+        element.setAttribute('style', "top: -#{topOffset}px;")
+        view.spinner.setAttribute('style', "width: #{lineHeight}px; height: #{lineHeight}px;")
 
         editor.decorateMarker marker, {
                 type: 'overlay'

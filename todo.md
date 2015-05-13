@@ -2,9 +2,7 @@
 
 ## Current
 
-- [ ] close button on larger results
 - [ ] UI in status bar to shut down/interrupt/restart
-- [ ] ensure support for other languages
 - [ ] python support
 - [ ] make overlay bubbles not go over tabs
 
@@ -12,6 +10,7 @@
 ## Soon
 
 - [ ] expandable/shrinkable multiline
+- [ ] destroy existing bubbles on line before adding a new one
 
 
 ## Someday
@@ -38,3 +37,5 @@
 - [x] status spinner and checkmark (in status bar?)
 - [x] shut down kernel and ports
 - [x] listen for active editor change and swap status bar component
+- [x] close button on larger results
+- [x] ensure support for other languages

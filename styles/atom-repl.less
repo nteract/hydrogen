@@ -9,10 +9,9 @@
     padding-left: 2px;
     padding-right: 2px;
     background-color: @background-color-selected;
-    border: 1px solid lighten(@background-color-selected, 5%);
+    border: 1px solid lighten(@background-color-selected, 20%);
     border-radius: 3px;
     margin-left: 20px;
-    overflow: scroll;
     white-space: nowrap;
 
     .error {
@@ -26,6 +25,11 @@
         &.svg {
             background-color: white;
         }
+
+        .close-button::after {
+            // top: -5px;
+            right: 20px;
+        }
     }
 
     svg {
@@ -37,10 +41,40 @@
         position: relative;
         max-width: 500px;
         max-height: 300px;
+        overflow: scroll;
 
         video, img, svg {
             max-width: 450px;
             max-height: 275px;
+        }
+    }
+
+    .close-button {
+        &::after {
+            @close-text-color: lighten(@text-color, 20%);
+            // @close-text-color: lighten(@text-color, 10%);
+
+            color: @close-text-color;
+            display: none;
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            content: '✕';
+            cursor: pointer;
+            border: 1px solid @close-text-color;
+            border-radius: 50%;
+            padding: 1px;
+            width: 1.5em;
+            height: 1.5em;
+            text-align: center;
+            background-color: rgba(100,100,100, 0.95);
+        }
+    }
+
+    &.multiline {
+        padding-right: 30px;
+        .close-button::after {
+            display: block;
         }
     }
 }
