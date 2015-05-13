@@ -3,8 +3,8 @@ _ = require 'lodash'
 module.exports =
 class StatusView
 
-    constructor:  ->
-        @title = "kernel"
+    constructor: (@language) ->
+        @title = @language + " kernel"
         @element = document.createElement('div')
         @element.classList.add('atom-repl')
         @element.classList.add('status')

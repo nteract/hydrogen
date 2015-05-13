@@ -13,7 +13,7 @@ class Kernel
         @language = @kernelInfo.language.toLowerCase()
         @executionCallbacks = {}
         # @status = ""
-        @statusView = new StatusView()
+        @statusView = new StatusView(@language)
 
         commandString = ""
         for arg in @kernelInfo.argv

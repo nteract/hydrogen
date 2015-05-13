@@ -15,6 +15,7 @@ module.exports = AtomRepl =
     statusBarElement: null
     statusBarTile: null
     editor: null
+    bubbles: []
 
     activate: (state) ->
         @subscriptions = new CompositeDisposable
@@ -22,6 +23,11 @@ module.exports = AtomRepl =
         @subscriptions.add atom.commands.add 'atom-text-editor',
             'atom-repl:run': => @run()
             'atom-repl:show-kernel-commands': => @showKernelCommands()
+
+        @subscriptions.add atom.commands.add 'atom-workspace',
+            'atom-repl:clear-results': =>
+                _.forEach @bubbles, (bubble) -> bubble.destroy()
+
 
         @subscriptions.add atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this))
 
@@ -100,6 +106,7 @@ module.exports = AtomRepl =
                 view.destroy()
                 marker.destroy()
 
+        @bubbles.push(view)
         return view
 
     getMessageContents: (msg) ->
