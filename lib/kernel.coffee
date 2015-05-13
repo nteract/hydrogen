@@ -24,7 +24,7 @@ class Kernel
 
         console.log "launching kernel:", commandString
         @connect()
-        exec commandString
+        @kernelProcess = exec(commandString)
 
         # exec commandString, (error, stdout, stderr) ->
         #     console.log 'stdout: ', stdout
@@ -32,21 +32,26 @@ class Kernel
         #     if error != null
         #         console.log 'exec error: ', error
 
-    connect: () ->
+    connect: ->
         @shellSocket = zmq.socket 'dealer'
+        @controlSocket = zmq.socket 'dealer'
         @ioSocket    = zmq.socket 'sub'
 
         @shellSocket.identity = 'dealer' + @language + process.pid
+        @controlSocket.identity = 'control' + @language + process.pid
         @ioSocket.identity = 'sub' + @language + process.pid
 
         @shellSocket.connect('tcp://127.0.0.1:' + @config.shell_port)
+        @controlSocket.connect('tcp://127.0.0.1:' + @config.control_port)
         @ioSocket.connect('tcp://127.0.0.1:' + @config.iopub_port)
         @ioSocket.subscribe('')
 
-
         @shellSocket.on 'message', @onShellMessage.bind(this)
-
         @ioSocket.on 'message', @onIOMessage.bind(this)
+
+    interrupt: ->
+        console.log "sending SIGINT"
+        @kernelProcess.kill('SIGINT')
 
     onShellMessage: (msgArray...) ->
         message = @parseMessage msgArray
@@ -215,3 +220,5 @@ class Kernel
         @shellSocket.send message
         @shellSocket.close()
         @ioSocket.close()
+
+        @kernelProcess.kill('SIGKILL')

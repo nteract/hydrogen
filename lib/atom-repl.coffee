@@ -8,6 +8,7 @@ _ = require 'lodash'
 KernelManager = require './kernel-manager'
 ConfigManager = require './config-manager'
 ResultView = require './result-view'
+SignalListView = require './signal-list-view'
 
 module.exports = AtomRepl =
     subscriptions: null
@@ -16,16 +17,13 @@ module.exports = AtomRepl =
     editor: null
 
     activate: (state) ->
-        # Events subscribed to in atom's system can be easily cleaned up
-        # with a CompositeDisposable
         @subscriptions = new CompositeDisposable
 
-        # Register command that toggles this view
-        @subscriptions.add atom.commands.add 'atom-workspace',
-                                             'atom-repl:run': => @run()
+        @subscriptions.add atom.commands.add 'atom-text-editor',
+            'atom-repl:run': => @run()
+            'atom-repl:show-kernel-commands': => @showKernelCommands()
 
         @subscriptions.add atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this))
-
 
     deactivate: ->
         @subscriptions.dispose()
@@ -37,19 +35,38 @@ module.exports = AtomRepl =
         @statusBarElement = document.createElement('div')
         @statusBarElement.classList.add('atom-repl')
         @statusBarElement.classList.add('status-container')
+        @statusBarElement.onclick = =>
+            editor = atom.workspace.getActiveTextEditor()
+            atom.commands.dispatch(atom.views.getView(editor), 'atom-repl:show-kernel-commands')
         @statusBarTile = statusBar.addLeftTile(item: @statusBarElement, priority: 100)
 
     updateCurrentEditor: (currentPaneItem) ->
         console.log "Updating current editor to:", currentPaneItem
         return if not currentPaneItem? or currentPaneItem is @editor
         @editor = currentPaneItem
-        language = @editor.getGrammar().name.toLowerCase()
+        if @editor.getGrammar()?
+            language = @editor.getGrammar().name.toLowerCase()
 
-        kernel = KernelManager.getRunningKernelForLanguage(language)
-        if kernel?
-            @setStatusBarElement(kernel.statusView.getElement())
+            kernel = KernelManager.getRunningKernelForLanguage(language)
+            if kernel?
+                @setStatusBarElement(kernel.statusView.getElement())
+            else
+                @removeStatusBarElement()
         else
             @removeStatusBarElement()
+
+    showKernelCommands: ->
+        unless @signalListView?
+            @signalListView = new SignalListView()
+            @signalListView.onConfirmed = @handleKernelCommand.bind(this)
+        @signalListView.toggle()
+
+    handleKernelCommand: (command) ->
+        if command.value == 'interrupt-kernel'
+            KernelManager.interruptKernelForLanguage(command.language)
+        else if command.value == 'restart-kernel'
+            KernelManager.destroyKernelForLanguage(command.language)
+            @startKernelIfNeeded(command.language)
 
     insertResultBubble: (editor, row) ->
         buffer = editor.getBuffer()
@@ -126,11 +143,11 @@ module.exports = AtomRepl =
                 kernelInfo = KernelManager.getKernelInfoForLanguage language
                 ConfigManager.writeConfigFile (filepath, config) =>
                     kernel = KernelManager.startKernel(kernelInfo, config, filepath)
-                    onStarted(kernel)
+                    onStarted?(kernel)
             else
                 console.error "No kernel for this language!"
         else
-            onStarted(runningKernel)
+            onStarted?(runningKernel)
 
     findCodeBlock: (editor, row) ->
         buffer = editor.getBuffer()

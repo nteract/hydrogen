@@ -2,7 +2,6 @@
 
 ## Current
 
-- [ ] UI in status bar to shut down/interrupt/restart
 - [ ] python support
 - [ ] make overlay bubbles not go over tabs
 
@@ -16,6 +15,8 @@
 ## Someday
 
 - [ ] support interactive HTML widgets like Gadfly
+    - or anything else that uses scripts (itorch.Plot)
+- [ ] autocomplete+ provider
 
 
 
@@ -39,3 +40,4 @@
 - [x] listen for active editor change and swap status bar component
 - [x] close button on larger results
 - [x] ensure support for other languages
+- [x] UI in status bar to shut down/interrupt/restart

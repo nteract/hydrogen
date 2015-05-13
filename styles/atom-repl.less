@@ -72,7 +72,7 @@
     }
 
     &.multiline {
-        padding-right: 30px;
+        padding-right: 10px;
         .close-button::after {
             display: block;
         }
@@ -81,6 +81,11 @@
 
 .atom-repl.status-container {
     display: inline-block;
+    cursor: pointer;
+
+    .status:hover {
+        text-decoration: underline;
+    }
 }
 
 .atom-repl {
