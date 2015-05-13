@@ -76,21 +76,3 @@ class SignalListView extends SelectListView
             @cancel()
         else if @editor = atom.workspace.getActiveTextEditor()
             @attach()
-    #   @currentGrammar = @editor.getGrammar()
-    #   @currentGrammar = @autoDetect if @currentGrammar is atom.grammars.nullGrammar
-    #   @setItems(@getGrammars())
-
-  # getGrammars: ->
-  #   grammars = atom.grammars.getGrammars().filter (grammar) ->
-  #     grammar isnt atom.grammars.nullGrammar
-  #
-  #   grammars.sort (grammarA, grammarB) ->
-  #     if grammarA.scopeName is 'text.plain'
-  #       -1
-  #     else if grammarB.scopeName is 'text.plain'
-  #       1
-  #     else
-  #       grammarA.name?.localeCompare?(grammarB.name) ? grammarA.scopeName?.localeCompare?(grammarB.name) ? 1
-  #
-  #   grammars.unshift(@autoDetect)
-  #   grammars

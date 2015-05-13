@@ -28,8 +28,8 @@ module.exports = AtomRepl =
             'atom-repl:clear-results': =>
                 _.forEach @bubbles, (bubble) -> bubble.destroy()
 
-
-        @subscriptions.add atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this))
+        @subscriptions.add(
+            atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this)))
 
     deactivate: ->
         @subscriptions.dispose()
@@ -42,8 +42,8 @@ module.exports = AtomRepl =
         @statusBarElement.classList.add('atom-repl')
         @statusBarElement.classList.add('status-container')
         @statusBarElement.onclick = =>
-            editor = atom.workspace.getActiveTextEditor()
-            atom.commands.dispatch(atom.views.getView(editor), 'atom-repl:show-kernel-commands')
+            editorView = atom.views.getView(atom.workspace.getActiveTextEditor())
+            atom.commands.dispatch(editorView, 'atom-repl:show-kernel-commands')
         @statusBarTile = statusBar.addLeftTile(item: @statusBarElement, priority: 100)
 
     updateCurrentEditor: (currentPaneItem) ->
@@ -92,7 +92,8 @@ module.exports = AtomRepl =
         lineHeight = editor.getLineHeightInPixels()
         topOffset = lineHeight + 1
         element.setAttribute('style', "top: -#{topOffset}px;")
-        view.spinner.setAttribute('style', "width: #{lineHeight}px; height: #{lineHeight}px;")
+        view.spinner.setAttribute('style',
+                "width: #{lineHeight}px; height: #{lineHeight}px;")
 
         editor.decorateMarker marker, {
                 type: 'overlay'
@@ -108,12 +109,6 @@ module.exports = AtomRepl =
 
         @bubbles.push(view)
         return view
-
-    getMessageContents: (msg) ->
-        i = 0
-        while msg[i].toString('utf8') != '<IDS|MSG>'
-            i++
-        return msg[i+5].toString('utf8')
 
     run: ->
         editor = atom.workspace.getActiveEditor()
@@ -208,14 +203,6 @@ module.exports = AtomRepl =
     blank: (editor, row) ->
         return editor.getBuffer().isRowBlank(row) or
                editor.languageMode.isLineCommentedAtBufferRow(row)
-
-    # findPrecedingFoldRange: (editor, row) ->
-    #     buffer = editor.getBuffer()
-    #     previousRow = row - 1
-    #     while previousRow >= 0
-    #         if editor.isFoldableAtBufferRow(previousRow)
-    #             range = @getFoldRange(editor, previousRow)
-    #             return [range[0], range[1] + 1]
 
     getRow: (editor, row) ->
         buffer = editor.getBuffer()
