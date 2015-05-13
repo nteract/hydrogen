@@ -22,14 +22,23 @@
     &.rich {
         background-color: transparent;
         border: none;
+
+        &.svg {
+            background-color: white;
+        }
     }
+
+    svg {
+        background-color: white;
+    }
+
 
     .bubble-result-container {
         position: relative;
         max-width: 500px;
         max-height: 300px;
 
-        video, img {
+        video, img, svg {
             max-width: 450px;
             max-height: 275px;
         }

@@ -51,6 +51,7 @@ class ResultView
 
                 @resultType = 'image'
                 @element.classList.add('rich')
+                @element.classList.add('svg')
                 buffer = new Buffer(result.data)
                 image = document.createElement('img')
                 image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))

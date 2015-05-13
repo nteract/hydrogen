@@ -6,6 +6,7 @@
 - [ ] UI in status bar to shut down/interrupt/restart
 - [ ] ensure support for other languages
 - [ ] python support
+- [ ] make overlay bubbles not go over tabs
 
 
 ## Soon

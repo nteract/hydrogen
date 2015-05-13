@@ -122,7 +122,7 @@ class Kernel
                     type: 'text'
                     stream: 'pyout'
                 }
-        else if message.type == 'stdout'
+        else if message.type == 'stdout' or message.prefix == 'stdout'
             return {
                 data: message.contents.data
                 type: 'text'
@@ -144,7 +144,7 @@ class Kernel
             i++
 
         msgObject = {
-                # type: msg[0].toString('utf8')
+                prefix: msg[0].toString('utf8')
                 header: JSON.parse msg[i+2].toString('utf8')
                 parent_header: JSON.parse msg[i+3].toString('utf8')
                 metadata: JSON.parse msg[i+4].toString('utf8')
