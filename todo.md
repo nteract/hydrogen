@@ -3,14 +3,15 @@
 ## Current
 
 - [ ] python support
-- [ ] make overlay bubbles not go over tabs
+- [ ] make bubbles not go over tabs
 - [ ] show a message if trying to run code in unsupported language
 
 
 ## Soon
 
 - [ ] expandable/shrinkable multiline
-- [ ] destroy existing bubbles on line before adding a new one
+    - maybe open the results in a new editor?
+- [ ] clipboard button on multiline bubbles
 
 
 ## Someday
@@ -44,3 +45,4 @@
 - [x] UI in status bar to shut down/interrupt/restart
 - [x] command to clear all the bubbles
 - [x] make restarting the kernel clear all the bubbles
+- [x] destroy existing bubbles on line before adding a new one

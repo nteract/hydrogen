@@ -15,7 +15,7 @@ module.exports = AtomRepl =
     statusBarElement: null
     statusBarTile: null
     editor: null
-    bubbles: []
+    markerBubbleMap: {}
 
     activate: (state) ->
         @subscriptions = new CompositeDisposable
@@ -29,6 +29,8 @@ module.exports = AtomRepl =
 
         @subscriptions.add(
             atom.workspace.observeActivePaneItem => @updateCurrentEditor())
+
+        @editor = atom.workspace.getActiveEditor()
 
     deactivate: ->
         @subscriptions.dispose()
@@ -101,18 +103,27 @@ module.exports = AtomRepl =
                 position: 'tail'
             }
 
-        marker.onDidChange (event) ->
+        @markerBubbleMap[marker.id] = view
+        marker.onDidChange (event) =>
             console.log event
             if not event.isValid
                 view.destroy()
                 marker.destroy()
+                delete @markerBubbleMap[marker.id]
 
-        @bubbles.push(view)
         return view
 
+
     clearResultBubbles: ->
-        _.forEach @bubbles, (bubble) -> bubble.destroy()
-        @bubbles = []
+        _.forEach @markerBubbleMap, (bubble) -> bubble.destroy()
+        @markerBubbleMap = {}
+
+    clearBubblesOnRow: (row) ->
+        buffer = @editor.getBuffer()
+        _.forEach buffer.findMarkers({endRow: row}), (marker) =>
+            if @markerBubbleMap[marker.id]?
+                @markerBubbleMap[marker.id].destroy()
+                delete @markerBubbleMap[marker.id]
 
     run: ->
         editor = atom.workspace.getActiveEditor()
@@ -125,6 +136,7 @@ module.exports = AtomRepl =
 
                 [code, row] = @findCodeBlock(editor)
                 if code != null
+                    @clearBubblesOnRow(row)
                     view = @insertResultBubble editor, row
                     KernelManager.execute language, code, (result) ->
                         view.spin(false)
