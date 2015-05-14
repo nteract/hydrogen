@@ -4,6 +4,7 @@
 
 - [ ] python support
 - [ ] make overlay bubbles not go over tabs
+- [ ] show a message if trying to run code in unsupported language
 
 
 ## Soon
@@ -42,3 +43,4 @@
 - [x] ensure support for other languages
 - [x] UI in status bar to shut down/interrupt/restart
 - [x] command to clear all the bubbles
+- [x] make restarting the kernel clear all the bubbles

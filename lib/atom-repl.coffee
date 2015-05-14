@@ -25,11 +25,10 @@ module.exports = AtomRepl =
             'atom-repl:show-kernel-commands': => @showKernelCommands()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
-            'atom-repl:clear-results': =>
-                _.forEach @bubbles, (bubble) -> bubble.destroy()
+            'atom-repl:clear-results': => @clearResultBubbles()
 
         @subscriptions.add(
-            atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this)))
+            atom.workspace.observeActivePaneItem => @updateCurrentEditor())
 
     deactivate: ->
         @subscriptions.dispose()
@@ -72,6 +71,7 @@ module.exports = AtomRepl =
             KernelManager.interruptKernelForLanguage(command.language)
         else if command.value == 'restart-kernel'
             KernelManager.destroyKernelForLanguage(command.language)
+            @clearResultBubbles()
             @startKernelIfNeeded(command.language)
 
     insertResultBubble: (editor, row) ->
@@ -109,6 +109,10 @@ module.exports = AtomRepl =
 
         @bubbles.push(view)
         return view
+
+    clearResultBubbles: ->
+        _.forEach @bubbles, (bubble) -> bubble.destroy()
+        @bubbles = []
 
     run: ->
         editor = atom.workspace.getActiveEditor()
