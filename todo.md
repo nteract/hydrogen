@@ -5,6 +5,7 @@
 - [ ] python support
 - [ ] make bubbles not go over tabs
 - [ ] show a message if trying to run code in unsupported language
+- [ ] remove all the passing around of editors in `atom-repl`, use `@editor`
 
 
 ## Soon

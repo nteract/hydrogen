@@ -27,8 +27,7 @@ module.exports = AtomRepl =
         @subscriptions.add atom.commands.add 'atom-workspace',
             'atom-repl:clear-results': => @clearResultBubbles()
 
-        @subscriptions.add(
-            atom.workspace.observeActivePaneItem => @updateCurrentEditor())
+        @subscriptions.add atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this))
 
         @editor = atom.workspace.getActiveEditor()
 
@@ -51,6 +50,7 @@ module.exports = AtomRepl =
         console.log "Updating current editor to:", currentPaneItem
         return if not currentPaneItem? or currentPaneItem is @editor
         @editor = currentPaneItem
+
         if @editor.getGrammar()?
             language = @editor.getGrammar().name.toLowerCase()
 
