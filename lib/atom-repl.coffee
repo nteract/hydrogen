@@ -76,11 +76,11 @@ module.exports = AtomRepl =
             @clearResultBubbles()
             @startKernelIfNeeded(command.language)
 
-    insertResultBubble: (editor, row) ->
-        buffer = editor.getBuffer()
+    insertResultBubble: (row) ->
+        buffer = @editor.getBuffer()
         lineLength = buffer.lineLengthForRow(row)
 
-        marker = editor.markBufferPosition {
+        marker = @editor.markBufferPosition {
                 row: row
                 column: lineLength
             }, {
@@ -91,13 +91,13 @@ module.exports = AtomRepl =
         view.spin(true)
         element = view.getElement()
 
-        lineHeight = editor.getLineHeightInPixels()
+        lineHeight = @editor.getLineHeightInPixels()
         topOffset = lineHeight + 1
         element.setAttribute('style', "top: -#{topOffset}px;")
         view.spinner.setAttribute('style',
                 "width: #{lineHeight}px; height: #{lineHeight}px;")
 
-        editor.decorateMarker marker, {
+        @editor.decorateMarker marker, {
                 type: 'overlay'
                 item: element
                 position: 'tail'
@@ -134,10 +134,10 @@ module.exports = AtomRepl =
                 statusView = kernel.statusView
                 @setStatusBarElement(statusView.getElement())
 
-                [code, row] = @findCodeBlock(editor)
+                [code, row] = @findCodeBlock()
                 if code != null
                     @clearBubblesOnRow(row)
-                    view = @insertResultBubble editor, row
+                    view = @insertResultBubble(row)
                     KernelManager.execute language, code, (result) ->
                         view.spin(false)
                         view.addResult(result)
@@ -167,61 +167,57 @@ module.exports = AtomRepl =
         else
             onStarted?(runningKernel)
 
-    findCodeBlock: (editor, row) ->
-        buffer = editor.getBuffer()
-        selectedText = editor.getSelectedText()
+    findCodeBlock: ->
+        buffer = @editor.getBuffer()
+        selectedText = @editor.getSelectedText()
 
         if selectedText != ''
-            selectedRange = editor.getSelectedBufferRange()
+            selectedRange = @editor.getSelectedBufferRange()
             return [selectedText, selectedRange.end.row]
 
-        cursor = editor.getCursor()
+        cursor = @editor.getCursor()
 
-        row ?= cursor.marker.bufferMarker.range.start.row
+        row = cursor.marker.bufferMarker.range.start.row
         console.log "row:", row
 
-        indentLevel = editor.suggestedIndentForBufferRow row
+        indentLevel = @editor.suggestedIndentForBufferRow row
 
-        foldable = editor.isFoldableAtBufferRow(row)
-        foldRange = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
+        foldable = @editor.isFoldableAtBufferRow(row)
+        foldRange = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
         if not foldRange? or not foldRange[0]? or not foldRange[1]?
             foldable = false
 
         if foldable
-            console.log "foldable"
-            return @getFoldContents(editor, row)
-        else if @blank(editor, row)
-            console.log "blank"
-            return @findPrecedingBlock(editor, row, indentLevel)
-        else if @getRow(editor, row).trim() == "end"
-            console.log "just an end"
-            return @findPrecedingBlock(editor, row, indentLevel)
+            return @getFoldContents(row)
+        else if @blank(row)
+            return @findPrecedingBlock(row, indentLevel)
+        else if @getRow(row).trim() == "end"
+            return @findPrecedingBlock(row, indentLevel)
         else
-            console.log "this row is it"
-            return [@getRow(editor, row), row]
+            return [@getRow(row), row]
 
-    findPrecedingBlock: (editor, row, indentLevel) ->
-        buffer = editor.getBuffer()
+    findPrecedingBlock: (row, indentLevel) ->
+        buffer = @editor.getBuffer()
         previousRow = row - 1
         while previousRow >= 0
-            sameIndent = editor.indentationForBufferRow(previousRow) <= indentLevel
-            blank = @blank(editor, previousRow)
-            isEnd = @getRow(editor, previousRow).trim() == "end"
+            sameIndent = @editor.indentationForBufferRow(previousRow) <= indentLevel
+            blank = @blank(previousRow)
+            isEnd = @getRow(previousRow).trim() == "end"
             # if blank
                 # row = previousRow
-            if @blank(editor, row)
+            if @blank(row)
                 row = previousRow
             if sameIndent and not blank and not isEnd
-                return [@getRows(editor, previousRow, row), row]
+                return [@getRows(previousRow, row), row]
             previousRow--
         return null
 
-    blank: (editor, row) ->
-        return editor.getBuffer().isRowBlank(row) or
-               editor.languageMode.isLineCommentedAtBufferRow(row)
+    blank: (row) ->
+        return @editor.getBuffer().isRowBlank(row) or
+               @editor.languageMode.isLineCommentedAtBufferRow(row)
 
-    getRow: (editor, row) ->
-        buffer = editor.getBuffer()
+    getRow: (row) ->
+        buffer = @editor.getBuffer()
         return buffer.getTextInRange
                     start:
                         row: row
@@ -230,8 +226,8 @@ module.exports = AtomRepl =
                         row: row
                         column: 9999999
 
-    getRows: (editor, startRow, endRow) ->
-        buffer = editor.getBuffer()
+    getRows: (startRow, endRow) ->
+        buffer = @editor.getBuffer()
         return buffer.getTextInRange
                     start:
                         row: startRow
@@ -242,15 +238,15 @@ module.exports = AtomRepl =
 
     getFoldRange: (editor, row) ->
         range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
-        if @getRow(editor, range[1] + 1).trim() == 'end'
+        if @getRow(range[1] + 1).trim() == 'end'
             range[1] = range[1] + 1
         console.log "fold range:", range
         return range
 
-    getFoldContents: (editor, row) ->
-        buffer = editor.getBuffer()
-        range = @getFoldRange(editor, row)
+    getFoldContents: (row) ->
+        buffer = @editor.getBuffer()
+        range = @getFoldRange(@editor, row)
         return [
-                @getRows(editor, range[0], range[1]),
+                @getRows(range[0], range[1]),
                 range[1]
             ]

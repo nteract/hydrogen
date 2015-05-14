@@ -5,7 +5,6 @@
 - [ ] python support
 - [ ] make bubbles not go over tabs
 - [ ] show a message if trying to run code in unsupported language
-- [ ] remove all the passing around of editors in `atom-repl`, use `@editor`
 
 
 ## Soon
@@ -47,3 +46,4 @@
 - [x] command to clear all the bubbles
 - [x] make restarting the kernel clear all the bubbles
 - [x] destroy existing bubbles on line before adding a new one
+- [x] remove all the passing around of editors in `atom-repl`, use `@editor`
