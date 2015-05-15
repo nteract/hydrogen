@@ -2,7 +2,7 @@ fs = require 'fs'
 path = require 'path'
 zmq = require 'zmq'
 _ = require 'lodash'
-exec = require('child_process').exec
+child_process = require 'child_process'
 uuid = require 'uuid'
 
 StatusView = require './status-view'
@@ -33,7 +33,7 @@ class Kernel
 
         console.log "launching kernel:", commandString
         @connect()
-        @kernelProcess = exec(commandString)
+        @kernelProcess = child_process.exec(commandString)
 
         # exec commandString, (error, stdout, stderr) ->
         #     console.log 'stdout: ', stdout

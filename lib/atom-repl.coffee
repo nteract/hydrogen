@@ -51,7 +51,7 @@ module.exports = AtomRepl =
         return if not currentPaneItem? or currentPaneItem is @editor
         @editor = currentPaneItem
 
-        if @editor.getGrammar()?
+        if @editor? and @editor.getGrammar? and @editor.getGrammar()?
             language = @editor.getGrammar().name.toLowerCase()
 
             kernel = KernelManager.getRunningKernelForLanguage(language)

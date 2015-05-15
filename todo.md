@@ -9,7 +9,7 @@
 - [ ] add dependencies:
     - [ ] brew: `pkg-config`, `zeromq`
     - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
-
+- [ ] test if pane is an editor in `updateCurrentEditor`
 
 ## Soon
 
