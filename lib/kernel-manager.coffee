@@ -13,22 +13,25 @@ module.exports = KernelManager =
         language: "python"
 
     getAvailableKernels: ->
-        kernelNames = fs.readdirSync @kernelsDir
-        kernels = _.map kernelNames, (name) =>
-            kernelDirPath = path.join(@kernelsDir, name)
+        try
+            kernelNames = fs.readdirSync @kernelsDir
+            kernels = _.map kernelNames, (name) =>
+                kernelDirPath = path.join(@kernelsDir, name)
 
-            if fs.statSync(kernelDirPath).isDirectory()
-                kernelFilePath = path.join(kernelDirPath, 'kernel.json')
-                info = JSON.parse fs.readFileSync(kernelFilePath)
-                return info
-            else
-                return null
+                if fs.statSync(kernelDirPath).isDirectory()
+                    kernelFilePath = path.join(kernelDirPath, 'kernel.json')
+                    info = JSON.parse fs.readFileSync(kernelFilePath)
+                    return info
+                else
+                    return null
 
-        kernels = _.filter(kernels)
-        pythonKernels = _.filter kernels, (kernel) ->
-            return kernel.language == 'python'
-        if pythonKernels.length == 0
-            kernels.push(@pythonInfo)
+            kernels = _.filter(kernels)
+            pythonKernels = _.filter kernels, (kernel) ->
+                return kernel.language == 'python'
+            if pythonKernels.length == 0
+                kernels.push(@pythonInfo)
+        catch error
+            kernels = [@pythonInfo]
         return kernels
 
     getKernelInfoForLanguage: (language) ->
