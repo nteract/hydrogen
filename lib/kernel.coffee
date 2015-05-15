@@ -12,15 +12,24 @@ class Kernel
     constructor: (@kernelInfo, @config, @configPath) ->
         @language = @kernelInfo.language.toLowerCase()
         @executionCallbacks = {}
-        # @status = ""
+
         @statusView = new StatusView(@language)
 
         commandString = ""
-        for arg in @kernelInfo.argv
-            if arg == '{connection_file}'
-                commandString = commandString + @configPath + ' '
-            else
-                commandString = commandString + arg + ' '
+        if @language == 'python'
+            commandString = "ipython kernel --no-secure
+                    --hb=#{@config.hb_port}
+                    --control=#{@config.control_port}
+                    --shell=#{@config.shell_port}
+                    --stdin=#{@config.stdin_port}
+                    --iopub=#{@config.iopub_port}
+                    --colors=NoColor"
+        else
+            for arg in @kernelInfo.argv
+                if arg == '{connection_file}'
+                    commandString = commandString + @configPath + ' '
+                else
+                    commandString = commandString + arg + ' '
 
         console.log "launching kernel:", commandString
         @connect()
@@ -96,7 +105,9 @@ class Kernel
                 callback(resultObject)
 
     getResultObject: (message) ->
-        if message.type == 'pyout' or message.type == 'display_data'
+        if message.type == 'pyout' or
+           message.type == 'display_data' or
+           message.type == 'execute_result'
             if message.contents.data['text/html']?
                 return {
                     # data: message.contents.data['image/svg+xml']
@@ -127,9 +138,11 @@ class Kernel
                     type: 'text'
                     stream: 'pyout'
                 }
-        else if message.type == 'stdout' or message.prefix == 'stdout'
+        else if message.type == 'stdout' or
+                message.prefix == 'stdout' or
+                message.prefix == 'stream.stdout'
             return {
-                data: message.contents.data
+                data: message.contents.text ? message.contents.data
                 type: 'text'
                 stream: 'stdout'
             }

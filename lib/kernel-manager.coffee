@@ -8,6 +8,13 @@ Kernel = require './kernel'
 module.exports = KernelManager =
     kernelsDir: path.join(process.env['HOME'], '.ipython/kernels')
     runningKernels: {}
+    pythonInfo:
+        display_name: "Python"
+        # argv: [
+        #         "ipython kernel --config=",
+        #         "{connection_file}"
+        #     ]
+        language: "python"
 
     getAvailableKernels: ->
         kernelNames = fs.readdirSync @kernelsDir
@@ -22,6 +29,7 @@ module.exports = KernelManager =
                 return null
 
         kernels = _.filter(kernels)
+        kernels.push(@pythonInfo)
         return kernels
 
     getKernelInfoForLanguage: (language) ->

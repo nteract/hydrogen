@@ -18,7 +18,9 @@ module.exports = ConfigManager =
 
     buildConfiguration: (ports) ->
         config =
+            version: 5
             key: ""
+            signature_scheme: "hmac-sha256"
             transport: "tcp"
             ip: "127.0.0.1"
             hb_port: ports[0]

@@ -180,7 +180,8 @@ module.exports = AtomRepl =
         row = cursor.marker.bufferMarker.range.start.row
         console.log "row:", row
 
-        indentLevel = @editor.suggestedIndentForBufferRow row
+        indentLevel = cursor.getIndentLevel()
+        # indentLevel = @editor.suggestedIndentForBufferRow row
 
         foldable = @editor.isFoldableAtBufferRow(row)
         foldRange = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
@@ -203,8 +204,7 @@ module.exports = AtomRepl =
             sameIndent = @editor.indentationForBufferRow(previousRow) <= indentLevel
             blank = @blank(previousRow)
             isEnd = @getRow(previousRow).trim() == "end"
-            # if blank
-                # row = previousRow
+
             if @blank(row)
                 row = previousRow
             if sameIndent and not blank and not isEnd
