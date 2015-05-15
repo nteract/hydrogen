@@ -10,10 +10,6 @@ module.exports = KernelManager =
     runningKernels: {}
     pythonInfo:
         display_name: "Python"
-        # argv: [
-        #         "ipython kernel --config=",
-        #         "{connection_file}"
-        #     ]
         language: "python"
 
     getAvailableKernels: ->
@@ -29,7 +25,10 @@ module.exports = KernelManager =
                 return null
 
         kernels = _.filter(kernels)
-        kernels.push(@pythonInfo)
+        pythonKernels = _.filter kernels, (kernel) ->
+            return kernel.language == 'python'
+        if pythonKernels.length == 0
+            kernels.push(@pythonInfo)
         return kernels
 
     getKernelInfoForLanguage: (language) ->
