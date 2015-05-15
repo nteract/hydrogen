@@ -5,6 +5,10 @@
 - [ ] python support
 - [ ] make bubbles not go over tabs
 - [ ] show a message if trying to run code in unsupported language
+- [ ] make `kernel-configs` if it doesn't exist
+- [ ] add dependencies:
+    - [ ] brew: `pkg-config`, `zeromq`
+    - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
 
 
 ## Soon
