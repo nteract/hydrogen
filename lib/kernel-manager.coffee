@@ -53,6 +53,9 @@ module.exports = KernelManager =
         else
             return null
 
+    languageHasRunningKernel: (language) ->
+        return @getRunningKernelForLanguage(language)?
+
     interruptKernelForLanguage: (language) ->
         if @runningKernels[language]?
             @runningKernels[language].interrupt()
@@ -71,6 +74,12 @@ module.exports = KernelManager =
     execute: (language, code, onResults) ->
         if @runningKernels[language]?
             @runningKernels[language].execute(code, onResults)
+        else
+            throw "No such kernel!"
+
+    complete: (language, code, onResults) ->
+        if @runningKernels[language]?
+            @runningKernels[language].complete(code, onResults)
         else
             throw "No such kernel!"
 

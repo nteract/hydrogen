@@ -9,6 +9,7 @@ KernelManager = require './kernel-manager'
 ConfigManager = require './config-manager'
 ResultView = require './result-view'
 SignalListView = require './signal-list-view'
+AutocompleteProvider = require './autocomplete-provider'
 
 module.exports = AtomRepl =
     subscriptions: null
@@ -45,6 +46,11 @@ module.exports = AtomRepl =
             editorView = atom.views.getView(atom.workspace.getActiveTextEditor())
             atom.commands.dispatch(editorView, 'atom-repl:show-kernel-commands')
         @statusBarTile = statusBar.addLeftTile(item: @statusBarElement, priority: 100)
+
+
+    provide: ->
+        # debugger
+        return AutocompleteProvider
 
     updateCurrentEditor: (currentPaneItem) ->
         console.log "Updating current editor to:", currentPaneItem

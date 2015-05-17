@@ -62,6 +62,75 @@ class Kernel
         console.log "sending SIGINT"
         @kernelProcess.kill('SIGINT')
 
+    # onResults is a callback that may be called multiple times
+    # as results come in from the kernel
+    execute: (code, onResults) ->
+        requestId = uuid.v4()
+
+        console.log "sending execute"
+        header = JSON.stringify({
+                msg_id: requestId,
+                username: "",
+                session: 0,
+                msg_type: "execute_request",
+                version: "5.0"
+            })
+
+        contents = JSON.stringify({
+                code: code
+                silent: false
+                store_history: true
+                user_expressions: {}
+                allow_stdin: false
+            })
+
+        message =  [
+                '<IDS|MSG>',
+                '',
+                header,
+                '{}',
+                '{}',
+                contents
+            ]
+        console.log message
+
+        @executionCallbacks[requestId] = onResults
+        @shellSocket.send message
+
+    complete: (code, onResults) ->
+        requestId = uuid.v4()
+
+        column = code.length
+
+        console.log "sending competion"
+        header = JSON.stringify({
+                msg_id: requestId,
+                username: "",
+                session: 0,
+                msg_type: "complete_request",
+                version: "5.0"
+            })
+
+        contents = JSON.stringify({
+                code: code
+                text: code
+                line: code
+                cursor_pos: column
+            })
+
+        message =  [
+                '<IDS|MSG>',
+                '',
+                header,
+                '{}',
+                '{}',
+                contents
+            ]
+        console.log message
+
+        @executionCallbacks[requestId] = onResults
+        @shellSocket.send message
+
     onShellMessage: (msgArray...) ->
         message = @parseMessage msgArray
         console.log "shell message:", message
@@ -69,12 +138,19 @@ class Kernel
         if _.has(message, ['parent_header', 'msg_id'])
             callback = @executionCallbacks[message.parent_header.msg_id]
         if callback? and _.has(message, ['contents', 'status'])
+
             if message.contents.status == 'ok'
-                callback {
-                    data: "✓"
-                    type: 'text'
-                    stream: 'status'
-                }
+                if message.type == 'complete_reply'
+                    matches = message.contents.matches
+                    # matches = _.map matches, (match) -> {text: match}
+                    callback(matches)
+                else
+                    callback {
+                        data: "✓"
+                        type: 'text'
+                        stream: 'status'
+                    }
+
             else if message.contents.status == 'error'
                 errorString = message.contents.ename
                 if message.contents.evalue.length > 0
@@ -170,41 +246,6 @@ class Kernel
             }
         msgObject.type = msgObject.header.msg_type
         return msgObject
-
-    # onResults is a callback that may be called multiple times
-    # as results come in from the kernel
-    execute: (code, onResults) ->
-        requestId = uuid.v4()
-
-        console.log "sending execute"
-        header = JSON.stringify({
-                msg_id: requestId,
-                username: "",
-                session: 0,
-                msg_type: "execute_request",
-                version: "5.0"
-            })
-
-        contents = JSON.stringify({
-                code: code
-                silent: false
-                store_history: true
-                user_expressions: {}
-                allow_stdin: false
-            })
-
-        message =  [
-                '<IDS|MSG>',
-                '',
-                header,
-                '{}',
-                '{}',
-                contents
-            ]
-        console.log message
-
-        @executionCallbacks[requestId] = onResults
-        @shellSocket.send message
 
     destroy: ->
         requestId = uuid.v4()

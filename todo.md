@@ -2,14 +2,12 @@
 
 ## Current
 
-- [ ] python support
 - [ ] make bubbles not go over tabs
 - [ ] show a message if trying to run code in unsupported language
-- [ ] make `kernel-configs` if it doesn't exist
-- [ ] add dependencies:
+- [ ] add dependencies / describe them in readme:
     - [ ] brew: `pkg-config`, `zeromq`
     - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
-- [ ] test if pane is an editor in `updateCurrentEditor`
+- [ ] make close button colors work for dark-on-light themes
 
 ## Soon
 
@@ -23,7 +21,8 @@
 - [ ] support interactive HTML widgets like Gadfly
     - or anything else that uses scripts (itorch.Plot)
 - [ ] autocomplete+ provider
-
+    - [ ] config option to turn it off?
+- [ ] something with the introspection API
 
 
 ## Done
@@ -51,3 +50,6 @@
 - [x] make restarting the kernel clear all the bubbles
 - [x] destroy existing bubbles on line before adding a new one
 - [x] remove all the passing around of editors in `atom-repl`, use `@editor`
+- [x] test if pane is an editor in `updateCurrentEditor`
+- [x] python support
+- [x] make `kernel-configs` if it doesn't exist
