@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Run code inside Atom using Jupyter kernels",
   "activationCommands": {
     "atom-text-editor": "hydrogen:run"
