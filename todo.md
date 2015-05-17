@@ -6,6 +6,7 @@
 - [ ] add dependencies / describe them in readme:
     - [ ] brew: `pkg-config`, `zeromq`
     - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
+- [ ] fix result location for multiline selections
 
 ## Soon
 
