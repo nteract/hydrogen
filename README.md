@@ -37,6 +37,8 @@ But it _should_ work with any kernel — [post an issue](https://github.com/wil
 
 ## Usage
 
+Make sure to start Atom from the command line (with `atom <directory or file>`) for this package to work! See [Jank](#Jank).
+
 ### Running code
 
 Hydrogen adds a command "Hydrogen: Run" to the command palette when you're in any text editor. Press ⌘-⇧-P to open the command palette and type "hydrogen" — it'll come up.
@@ -57,7 +59,9 @@ If your code starts getting cluttered up with results, run "Hydrogen: Clear Resu
 
 Sometimes things go wrong. Maybe you've written an infinite loop, maybe the kernel has crashed, or maybe you just want to clear the kernel's namespace. Use the command palette to open "Hydrogen: Show Kernel Commands" and select "Interrupt" to interrupt (think `Ctrl-C` in a REPL) the kernel or "Restart" to kill the kernel and start a new one, clearing the namespace.
 
+You can also access these commands by clicking on the kernel status in the status bar. It looks like this:
 
+<img src="http://i.imgur.com/oQB5mpB.png" width=300>
 
 ## Jank
 
