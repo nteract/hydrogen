@@ -1,12 +1,12 @@
 {
-  "name": "atom-repl",
-  "main": "./lib/atom-repl",
-  "version": "0.0.0",
-  "description": "A short description of your package",
+  "name": "Hydrogen",
+  "main": "./lib/main",
+  "version": "0.0.1",
+  "description": "Run code inside Atom using Jupyter kernels",
   "activationCommands": {
-    "atom-text-editor": "atom-repl:run"
+    "atom-text-editor": "hydrogen:run"
   },
-  "repository": "https://github.com/atom/atom-repl",
+  "repository": "https://github.com/willwhitney/atom-repl",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"

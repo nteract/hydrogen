@@ -8,4 +8,4 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
 'atom-workspace':
-  'cmd-alt-enter': 'atom-repl:run'
+  'cmd-alt-enter': 'hydrogen:run'

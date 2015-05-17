@@ -1,7 +1,7 @@
 {SelectListView} = require 'atom-space-pen-views'
 _ = require 'lodash'
 
-AtomRepl = require './atom-repl'
+# AtomRepl = require './main'
 KernelManager = require './kernel-manager'
 
 # View to display a list of grammars to apply to the current editor.

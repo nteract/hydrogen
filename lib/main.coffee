@@ -22,11 +22,11 @@ module.exports = AtomRepl =
         @subscriptions = new CompositeDisposable
 
         @subscriptions.add atom.commands.add 'atom-text-editor',
-            'atom-repl:run': => @run()
-            'atom-repl:show-kernel-commands': => @showKernelCommands()
+            'hydrogen:run': => @run()
+            'hydrogen:show-kernel-commands': => @showKernelCommands()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
-            'atom-repl:clear-results': => @clearResultBubbles()
+            'hydrogen:clear-results': => @clearResultBubbles()
 
         @subscriptions.add atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this))
 
