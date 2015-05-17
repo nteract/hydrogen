@@ -50,8 +50,13 @@ There are two ways to tell Hydrogen which code in your file to run.
 1. **Selected code:** If you have code selected when you hit Run, Hydrogen will run exactly that code.
 2. **Current block:** With no code selected, Hydrogen will try to find the complete block that's on or before the current line. It's easiest to see this visually:
 
-TODO: running code gifs
+    <img src="http://g.recordit.co/4ViVmKtKAr.gif">
 
+    - If the line you're on is already a complete expression (like `s = "abracadabra"`), Hydrogen will run just that line.
+
+    - If the line you're on is the start of a block like a `for` loop, Hydrogen will run the whole block.
+
+    - If the line you're on is blank, Hydrogen will run the first block above that line.
 
 If your code starts getting cluttered up with results, run "Hydrogen: Clear Results" to remove them all at once.
 
