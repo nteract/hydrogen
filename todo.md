@@ -2,12 +2,10 @@
 
 ## Current
 
-- [ ] make bubbles not go over tabs
 - [ ] show a message if trying to run code in unsupported language
 - [ ] add dependencies / describe them in readme:
     - [ ] brew: `pkg-config`, `zeromq`
     - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
-- [ ] make close button colors work for dark-on-light themes
 
 ## Soon
 
@@ -20,9 +18,8 @@
 
 - [ ] support interactive HTML widgets like Gadfly
     - or anything else that uses scripts (itorch.Plot)
-- [ ] autocomplete+ provider
-    - [ ] config option to turn it off?
 - [ ] something with the introspection API
+- [ ] make bubbles not go over tabs
 
 
 ## Done
@@ -53,3 +50,5 @@
 - [x] test if pane is an editor in `updateCurrentEditor`
 - [x] python support
 - [x] make `kernel-configs` if it doesn't exist
+- [x] make close button colors work for dark-on-light themes
+- [x] autocomplete+ provider
