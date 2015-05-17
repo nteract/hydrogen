@@ -3,14 +3,8 @@ _ = require 'lodash'
 KernelManager = require './kernel-manager'
 
 module.exports = AutocompleteProvider = ( ->
-    languageExtensions =
-        'julia': 'jl'
-        'python': 'py'
-        'lua': 'lua'
-
-    selectors = _.map languageExtensions, (extension, name) -> '.source.' + name
+    selectors = _.map KernelManager.getAvailableKernels(), ({language}) -> '.source.' + language
     selector = selectors.join(', ')
-    console.log selector
     return {
         # This will work on JavaScript and CoffeeScript files, but not in js comments.
         selector: selector

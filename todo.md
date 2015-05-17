@@ -3,9 +3,6 @@
 ## Current
 
 - [ ] show a message if trying to run code in unsupported language
-- [ ] add dependencies / describe them in readme:
-    - [ ] brew: `pkg-config`, `zeromq`
-    - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
 - [ ] fix result location for multiline selections
 
 ## Soon
@@ -53,3 +50,7 @@
 - [x] make `kernel-configs` if it doesn't exist
 - [x] make close button colors work for dark-on-light themes
 - [x] autocomplete+ provider
+- [x] add dependencies / describe them in readme:
+    - [x] brew: `pkg-config`, `zeromq`
+    - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
+- [x] find available kernels for completion automatically
