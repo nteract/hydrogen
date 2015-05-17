@@ -2,8 +2,7 @@
 
 This package lets you run your code directly in Atom using any [Jupyter](https://jupyter.org/) kernels you have installed.
 
-Remember how exciting [Light Table](http://lighttable.com/) was when it was first announced? Executing code inline and in real time is a better way to develop. By combining the interactive style of Light Table with the stable, actively-developed platform of Atom, Hydrogen makes it
-
+Remember how exciting [Light Table](http://lighttable.com/) was when it was first announced? Executing code inline and in real time is a better way to develop. By combining the interactive style of Light Table with the stable, actively-developed platform of Atom, Hydrogen makes it easy to write code the way you want to.
 
 ## Features
 
@@ -23,8 +22,7 @@ Check out the [todo](https://github.com/willwhitney/atom-ipython/blob/master/tod
 
 ### Install
 
-
-
+`apm install hydrogen`
 
 
 ## Jank
