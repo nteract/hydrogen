@@ -6,7 +6,7 @@
   "activationCommands": {
     "atom-text-editor": "hydrogen:run"
   },
-  "repository": "https://github.com/willwhitney/atom-repl",
+  "repository": "https://github.com/willwhitney/hydrogen",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
