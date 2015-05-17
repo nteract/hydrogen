@@ -7,9 +7,9 @@
 
 ## Soon
 
+- [ ] clipboard button on multiline bubbles
 - [ ] expandable/shrinkable multiline
     - maybe open the results in a new editor?
-- [ ] clipboard button on multiline bubbles
 
 
 ## Someday
