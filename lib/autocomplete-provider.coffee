@@ -20,7 +20,6 @@ module.exports = AutocompleteProvider = ( ->
         # `excludeLowerPriority` will suppress any providers with a lower priority
         # i.e. The default provider will be suppressed
         inclusionPriority: 1
-        excludeLowerPriority: false
 
         # Required: Return a promise, an array of suggestions, or null.
         getSuggestions: ({editor, bufferPosition, scopeDescriptor, prefix}) ->
@@ -38,7 +37,9 @@ module.exports = AutocompleteProvider = ( ->
                         matches = _.map matches, (match) ->
                             text: match
                             replacementPrefix: prefix
-                            iconHTML: '<img src="https://jupyter.org/images/jupyter-sq-text.svg">'
+                            iconHTML: "<img
+                                src='#{__dirname}/../static/logo.svg'
+                                style='width: 100%;'>"
                         resolve(matches)
                 # resolve([text: 'something'])
 
