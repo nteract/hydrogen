@@ -5,11 +5,15 @@
 @import "ui-variables";
 
 .atom-repl.output-bubble {
+    @light-bubble-background: fadein(lighten(@background-color-selected, 40%), 100%);
+    @dark-bubble-background: fadein(lighten(@background-color-selected, 10%), 100%);
+    @bubble-background: contrast(@text-color, @dark-bubble-background, @light-bubble-background, 20%);
     position: absolute;
+    padding: 1px;
     padding-left: 2px;
     padding-right: 2px;
-    background-color: @background-color-selected;
-    border: 1px solid lighten(@background-color-selected, 20%);
+    background-color: @bubble-background;
+    border: 1px solid lighten(@base-background-color, 20%);
     border-radius: 3px;
     margin-left: 20px;
     white-space: nowrap;
@@ -52,7 +56,6 @@
     .close-button {
         &::after {
             @close-text-color: lighten(@text-color, 20%);
-            // @close-text-color: lighten(@text-color, 10%);
 
             color: @close-text-color;
             display: none;
@@ -67,7 +70,7 @@
             width: 1.5em;
             height: 1.5em;
             text-align: center;
-            background-color: rgba(100,100,100, 0.95);
+            background-color: darken(@bubble-background, 10%);
             box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
         }
     }
