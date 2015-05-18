@@ -30,7 +30,7 @@ module.exports = AtomRepl =
 
         @subscriptions.add atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this))
 
-        @editor = atom.workspace.getActiveEditor()
+        @editor = atom.workspace.getActiveTextEditor()
 
     deactivate: ->
         @subscriptions.dispose()
@@ -132,7 +132,7 @@ module.exports = AtomRepl =
                 delete @markerBubbleMap[marker.id]
 
     run: ->
-        editor = atom.workspace.getActiveEditor()
+        editor = atom.workspace.getActiveTextEditor()
         language = editor.getGrammar().name.toLowerCase()
 
         if KernelManager.languageHasKernel(language)
@@ -181,7 +181,7 @@ module.exports = AtomRepl =
             selectedRange = @editor.getSelectedBufferRange()
             return [selectedText, selectedRange.end.row]
 
-        cursor = @editor.getCursor()
+        cursor = @editor.getLastCursor()
 
         row = cursor.marker.bufferMarker.range.start.row
         console.log "row:", row
