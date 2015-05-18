@@ -36,6 +36,7 @@ module.exports = KernelManager =
 
     getKernelInfoForLanguage: (language) ->
         kernels = @getAvailableKernels()
+        console.log "Available kernels:", kernels
         matchingKernels = _.filter kernels, (kernel) ->
             return kernel? and language.toLowerCase() == kernel.language.toLowerCase()
 

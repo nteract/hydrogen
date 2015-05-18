@@ -10,6 +10,9 @@ StatusView = require './status-view'
 module.exports =
 class Kernel
     constructor: (@kernelInfo, @config, @configPath) ->
+        console.log "Kernel info:", @kernelInfo
+        console.log "Kernel configuration:", @config
+        console.log "Kernel configuration file path:", @configPath
         @language = @kernelInfo.language.toLowerCase()
         @executionCallbacks = {}
 

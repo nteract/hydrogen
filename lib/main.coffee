@@ -135,7 +135,7 @@ module.exports = AtomRepl =
         editor = atom.workspace.getActiveTextEditor()
         language = editor.getGrammar().name.toLowerCase()
 
-        if KernelManager.languageHasKernel(language)
+        if language? and KernelManager.languageHasKernel(language)
             @startKernelIfNeeded language, (kernel) =>
                 statusView = kernel.statusView
                 @setStatusBarElement(statusView.getElement())
