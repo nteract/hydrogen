@@ -98,10 +98,10 @@ module.exports = AtomRepl =
         element = view.getElement()
 
         lineHeight = @editor.getLineHeightInPixels()
-        topOffset = lineHeight + 1
+        topOffset = lineHeight
         element.setAttribute('style', "top: -#{topOffset}px;")
         view.spinner.setAttribute('style',
-                "width: #{lineHeight}px; height: #{lineHeight}px;")
+                "width: #{lineHeight + 2}px; height: #{lineHeight - 4}px;")
 
         @editor.decorateMarker marker, {
                 type: 'overlay'

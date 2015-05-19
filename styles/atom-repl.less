@@ -14,7 +14,7 @@
     padding-left: 2px;
     padding-right: 2px;
     background-color: @bubble-background;
-    border: 1px solid lighten(@base-background-color, 20%);
+    // border: 1px solid @bubble-background;
     border-radius: 3px;
     margin-left: 20px;
     white-space: nowrap;
@@ -54,6 +54,12 @@
         }
     }
 
+    &:not(.multiline) {
+        .bubble-output-container {
+            display: inline;
+        }
+    }
+
     &.multiline {
         border: none;
         padding-right: 0px;
@@ -68,6 +74,10 @@
     &.multiline:not(.rich) {
         .bubble-action-panel {
             display: inline-flex;
+        }
+
+        .bubble-output-container {
+            padding: 3px;
         }
 
         .rich-close-button::before {
@@ -111,11 +121,11 @@
         flex-direction: column;
         width: 30px;
         background-color: darken(@bubble-background, 10%);
-        box-shadow: inset 1px 0px 1px 0px rgba(0,0,0,0.5);
+        box-shadow: inset 1px 0px 1px 0px rgba(0,0,0,0.4);
         border-radius: 0 3px 3px 0;
 
         .action-button {
-            @separator-color: fade(darken(@bubble-background, 20%), 15%);
+            @separator-color: fade(darken(@bubble-background, 20%), 20%);
             flex: none;
 
 
@@ -142,10 +152,6 @@
         .padding {
             flex: 1;
         }
-
-        // .copy-button {
-        //
-        // }
     }
 
     .close-button {
@@ -182,6 +188,9 @@
     .spinner {
         display:inline-block;
         text-align: center;
+        line-height: 100%;
+        position: relative;
+        top: 1px;
     }
 
     .spinner > div {
