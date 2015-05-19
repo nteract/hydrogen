@@ -7,7 +7,7 @@ Kernel = require './kernel'
 
 module.exports = KernelManager =
     kernelsDirOptions: [
-        path.join(process.env['HOME'], '.ijupyter/kernels'),
+        path.join(process.env['HOME'], '.jupyter/kernels'),
         path.join(process.env['HOME'], 'Library/Jupyter/kernels'),
         '/usr/local/Cellar/python/2.7.9/Frameworks/Python.framework/Versions/2.7/share/jupyter/kernels',
         '/usr/local/share/jupyter/kernels',
