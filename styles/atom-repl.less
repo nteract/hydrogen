@@ -18,10 +18,6 @@
     margin-left: 20px;
     white-space: nowrap;
 
-    .error {
-        color: @text-color-error;
-    }
-
     &.rich {
         background-color: transparent;
         border: none;
@@ -51,6 +47,11 @@
             max-width: 450px;
             max-height: 275px;
         }
+    }
+
+    .bubble-error-container {
+        color: @text-color-error;
+        font-size: @font-size * 7/8;
     }
 
     .close-button {

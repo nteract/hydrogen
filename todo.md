@@ -3,7 +3,6 @@
 ## Current
 
 - [ ] show a message if trying to run code in unsupported language
-- [ ] fix result location for multiline selections
 
 ## Soon
 
@@ -54,3 +53,4 @@
     - [x] brew: `pkg-config`, `zeromq`
     - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
 - [x] find available kernels for completion automatically
+- [x] fix result location for multiline selections

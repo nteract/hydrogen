@@ -15,6 +15,10 @@ class ResultView
         @resultContainer.classList.add('bubble-result-container')
         @element.appendChild(@resultContainer)
 
+        @errorContainer = document.createElement('div')
+        @errorContainer.classList.add('bubble-error-container')
+        @element.appendChild(@errorContainer)
+
         @statusContainer = document.createElement('div')
         @statusContainer.classList.add('bubble-status-container')
         @element.appendChild(@statusContainer)
@@ -38,7 +42,9 @@ class ResultView
         else
             @shouldIndicateStatus(false)
             if result.stream == 'stderr' or result.stream == 'error'
-                @setType 'error'
+                container = @errorContainer
+            else
+                container = @resultContainer
 
             if result.type == 'text/html'
                 console.log "rendering as HTML"
@@ -52,14 +58,14 @@ class ResultView
                 # container = document.createElement('div')
                 # container.innerHTML = result.data
                 # @resultContainer.appendChild(container)
-                @resultContainer.innerHTML = result.data
+                container.innerHTML = result.data
                 @setMultiline(true)
 
             else if result.type == 'image/svg+xml'
                 console.log "rendering as SVG"
 
 
-                @resultContainer.innerHTML = @resultContainer.innerHTML.trim().replace('<br>', '')
+                container.innerHTML = container.innerHTML.trim().replace('<br>', '')
 
                 @resultType = 'image'
                 @element.classList.add('rich')
@@ -67,19 +73,19 @@ class ResultView
                 buffer = new Buffer(result.data)
                 image = document.createElement('img')
                 image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
-                @resultContainer.appendChild(image)
+                container.appendChild(image)
                 @setMultiline(true)
 
             else if result.type.startsWith('image')
                 console.log "rendering as image"
 
-                @resultContainer.innerHTML = @resultContainer.innerHTML.trim().replace('<br>', '')
+                container.innerHTML = container.innerHTML.trim().replace('<br>', '')
 
                 @resultType = 'image'
                 @element.classList.add('rich')
                 image = document.createElement('img')
                 image.setAttribute('src', "data:#{result.type};base64," + result.data)
-                @resultContainer.appendChild(image)
+                container.appendChild(image)
                 @setMultiline(true)
 
             else
@@ -87,21 +93,21 @@ class ResultView
 
                 if not @resultType or @resultType == 'text'
                     @resultType = 'text'
-                    if @resultContainer.innerText.length > 0
-                        @resultContainer.innerText = @resultContainer.innerText + (" " + result.data)
+                    if container.innerText.length > 0
+                        container.innerText = container.innerText + (" " + result.data)
                     else
-                        @resultContainer.innerText = @resultContainer.innerText + result.data
+                        container.innerText = container.innerText + result.data
 
-                    if /\r|\n/.exec(@resultContainer.innerText.trim())
+                    if /\r|\n/.exec(container.innerText.trim())
                         @setMultiline(true)
 
-    setType: (type) ->
-        if type == 'result'
-            @resultContainer.classList.remove('error')
-        else if type == 'error'
-            @resultContainer.classList.add('error')
-        else
-            throw "Not a type this bubble can be!"
+    # setType: (type) ->
+    #     if type == 'result'
+    #         @resultContainer.classList.remove('error')
+    #     else if type == 'error'
+    #         @resultContainer.classList.add('error')
+    #     else
+    #         throw "Not a type this bubble can be!"
 
     setMultiline: (multiline) ->
         @multiline = multiline

@@ -179,7 +179,10 @@ module.exports = AtomRepl =
 
         if selectedText != ''
             selectedRange = @editor.getSelectedBufferRange()
-            return [selectedText, selectedRange.end.row]
+            endRow = selectedRange.end.row
+            while @blank(endRow)
+                endRow = endRow - 1
+            return [selectedText, endRow]
 
         cursor = @editor.getLastCursor()
 
