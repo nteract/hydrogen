@@ -8,19 +8,36 @@ Kernel = require './kernel'
 module.exports = KernelManager =
     kernelsDirOptions: [
         path.join(process.env['HOME'], '.ijupyter/kernels'),
+        path.join(process.env['HOME'], 'Library/Jupyter/kernels'),
+        '/usr/local/Cellar/python/2.7.9/Frameworks/Python.framework/Versions/2.7/share/jupyter/kernels',
+        '/usr/local/share/jupyter/kernels',
+        '/usr/share/jupyter/kernels',
         path.join(process.env['HOME'], '.ipython/kernels')
     ]
     runningKernels: {}
     pythonInfo:
         display_name: "Python"
         language: "python"
+    availableKernels: null
 
     getAvailableKernels: ->
+        if @availableKernels?
+            return @availableKernels
+        else
+            kernelLists = _.map @kernelsDirOptions, @getKernelsFromDirectory
+            kernels = []
+            kernels = kernels.concat.apply(kernels, kernelLists)
+            pythonKernels = _.filter kernels, (kernel) ->
+                return kernel.language == 'python'
+            if pythonKernels.length == 0
+                kernels.push(@pythonInfo)
+            return kernels
+
+    getKernelsFromDirectory: (directory) ->
         try
-            kernelsDir = _.find @kernelsDirOptions, fs.existsSync
-            kernelNames = fs.readdirSync kernelsDir
+            kernelNames = fs.readdirSync directory
             kernels = _.map kernelNames, (name) =>
-                kernelDirPath = path.join(kernelsDir, name)
+                kernelDirPath = path.join(directory, name)
 
                 if fs.statSync(kernelDirPath).isDirectory()
                     kernelFilePath = path.join(kernelDirPath, 'kernel.json')
@@ -30,12 +47,8 @@ module.exports = KernelManager =
                     return null
 
             kernels = _.filter(kernels)
-            pythonKernels = _.filter kernels, (kernel) ->
-                return kernel.language == 'python'
-            if pythonKernels.length == 0
-                kernels.push(@pythonInfo)
         catch error
-            kernels = [@pythonInfo]
+            kernels = []
         return kernels
 
     getKernelInfoForLanguage: (language) ->

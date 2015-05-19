@@ -7,5 +7,8 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
-'atom-workspace':
+'atom-text-editor':
   'cmd-alt-enter': 'hydrogen:run'
+
+'atom-workspace':
+  'cmd-alt-backspace': 'hydrogen:clear-results'

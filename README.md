@@ -58,7 +58,7 @@ There are two ways to tell Hydrogen which code in your file to run.
 
     - If the line you're on is blank, Hydrogen will run the first block above that line.
 
-If your code starts getting cluttered up with results, run "Hydrogen: Clear Results" to remove them all at once.
+If your code starts getting cluttered up with results, run "Hydrogen: Clear Results" to remove them all at once. You can also run this command with ⌘-⌥-⌫.
 
 ### Managing kernels
 
