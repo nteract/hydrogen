@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Run code inside Atom using Jupyter kernels like IPython, IJulia, and iTorch",
   "activationCommands": {
     "atom-text-editor": "hydrogen:run"
