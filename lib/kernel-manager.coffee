@@ -6,7 +6,10 @@ exec = require('child_process').exec
 Kernel = require './kernel'
 
 module.exports = KernelManager =
-    kernelsDir: path.join(process.env['HOME'], '.ipython/kernels')
+    kernelsDirOptions: [
+        path.join(process.env['HOME'], '.ijupyter/kernels'),
+        path.join(process.env['HOME'], '.ipython/kernels')
+    ]
     runningKernels: {}
     pythonInfo:
         display_name: "Python"
@@ -14,9 +17,10 @@ module.exports = KernelManager =
 
     getAvailableKernels: ->
         try
-            kernelNames = fs.readdirSync @kernelsDir
+            kernelsDir = _.find @kernelsDirOptions, fs.existsSync
+            kernelNames = fs.readdirSync kernelsDir
             kernels = _.map kernelNames, (name) =>
-                kernelDirPath = path.join(@kernelsDir, name)
+                kernelDirPath = path.join(kernelsDir, name)
 
                 if fs.statSync(kernelDirPath).isDirectory()
                     kernelFilePath = path.join(kernelDirPath, 'kernel.json')
@@ -41,9 +45,8 @@ module.exports = KernelManager =
             kernelLanguage = kernel.language
             kernelLanguage ?= kernel.display_name
 
-            return kernel? and
-                   kernel.language? and
-                   language.toLowerCase() == kernel.language.toLowerCase()
+            return kernelLanguage? and
+                   language.toLowerCase() == kernelLanguage.toLowerCase()
 
         if matchingKernels.length == 0
             return null
