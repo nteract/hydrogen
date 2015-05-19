@@ -36,7 +36,14 @@ class Kernel
 
         console.log "launching kernel:", commandString
         @connect()
-        @kernelProcess = child_process.exec(commandString)
+        # projectPath = atom.project.getPaths()[0]
+        projectPath = path.dirname(atom.workspace.getActiveTextEditor().getPath())
+        if projectPath?
+            @kernelProcess = child_process.exec(commandString, {
+                    cwd: projectPath
+                })
+        else
+            @kernelProcess = child_process.exec(commandString)
 
         # exec commandString, (error, stdout, stderr) ->
         #     console.log 'stdout: ', stdout
