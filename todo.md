@@ -2,13 +2,10 @@
 
 ## Current
 
-- [ ] show a message if trying to run code in unsupported language
+
 
 ## Soon
 
-- [ ] clipboard button on multiline bubbles
-- [ ] expandable/shrinkable multiline
-    - maybe open the results in a new editor?
 
 
 ## Someday
@@ -17,7 +14,9 @@
     - or anything else that uses scripts (itorch.Plot)
 - [ ] something with the introspection API
 - [ ] make bubbles not go over tabs
-
+    - issue opened on `atom/atom`
+- [ ] experiment with line decorations that make a gap between lines for results
+- [ ] experiment with two-pane experience
 
 ## Done
 - [x] start kernels based on file type
@@ -54,3 +53,6 @@
     - [x] node: `lodash`, `zmq`, `atom-space-pen-views`
 - [x] find available kernels for completion automatically
 - [x] fix result location for multiline selections
+- [x] clipboard button on multiline bubbles
+- [x] button to open multilines in new editor
+- [x] show a message if trying to run code in unsupported language

@@ -22,7 +22,7 @@ Check out the [todo](https://github.com/willwhitney/atom-ipython/blob/master/tod
 
 ### Install
 
-`apm install hydrogen`
+`apm install hydrogen` or search for "hydrogen" in the Install pane of the Atom settings.
 
 
 ### Kernels

@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 _ = require 'lodash'
 
 module.exports =
@@ -11,25 +12,64 @@ class ResultView
         @spinner = @buildSpinner()
         @element.appendChild(@spinner)
 
+        @outputContainer = document.createElement('div')
+        @outputContainer.classList.add('bubble-output-container')
+        @element.appendChild(@outputContainer)
+
         @resultContainer = document.createElement('div')
         @resultContainer.classList.add('bubble-result-container')
-        @element.appendChild(@resultContainer)
+        @outputContainer.appendChild(@resultContainer)
 
         @errorContainer = document.createElement('div')
         @errorContainer.classList.add('bubble-error-container')
-        @element.appendChild(@errorContainer)
+        @outputContainer.appendChild(@errorContainer)
 
         @statusContainer = document.createElement('div')
         @statusContainer.classList.add('bubble-status-container')
-        @element.appendChild(@statusContainer)
+        @outputContainer.appendChild(@statusContainer)
+
+        @richCloseButton = document.createElement('div')
+        @richCloseButton.classList.add('rich-close-button', 'icon', 'icon-x')
+        @richCloseButton.onclick = => @destroy()
+        @element.appendChild(@richCloseButton)
+
+        @actionPanel = document.createElement('div')
+        @actionPanel.classList.add('bubble-action-panel')
+        @element.appendChild(@actionPanel)
 
         @closeButton = document.createElement('div')
-        @closeButton.classList.add('close-button')
+        @closeButton.classList.add('action-button', 'close-button', 'icon', 'icon-x')
         @closeButton.onclick = => @destroy()
-        @element.appendChild(@closeButton)
+        @actionPanel.appendChild(@closeButton)
+
+
+        padding = document.createElement('div')
+        padding.classList.add('padding')
+        @actionPanel.appendChild(padding)
+
+        @copyButton = document.createElement('div')
+        @copyButton.classList.add('action-button', 'copy-button', 'icon', 'icon-clippy')
+        @copyButton.onclick = =>
+            atom.clipboard.write(@getAllText())
+            atom.notifications.addSuccess("Copied to clipboard")
+        @actionPanel.appendChild(@copyButton)
+
+        @openButton = document.createElement('div')
+        @openButton.classList.add('action-button', 'open-button', 'icon', 'icon-file-symlink-file')
+        # @openButton.classList.add('action-button', 'open-button', 'icon', 'icon-move-right')
+        @openButton.onclick = =>
+            bubbleText = @getAllText()
+            atom.workspace.open().then (editor) ->
+                editor.insertText(bubbleText)
+        @actionPanel.appendChild(@openButton)
 
         @resultType = null
         @setMultiline(false)
+
+        @tooltips = new CompositeDisposable()
+        @tooltips.add atom.tooltips.add(@copyButton, {title: "Copy to clipboard"})
+        @tooltips.add atom.tooltips.add(@openButton, {title: "Open in new editor"})
+
 
         return this
 
@@ -101,13 +141,10 @@ class ResultView
                     if /\r|\n/.exec(container.innerText.trim())
                         @setMultiline(true)
 
-    # setType: (type) ->
-    #     if type == 'result'
-    #         @resultContainer.classList.remove('error')
-    #     else if type == 'error'
-    #         @resultContainer.classList.add('error')
-    #     else
-    #         throw "Not a type this bubble can be!"
+    getAllText: ->
+        resultText = @resultContainer.innerText
+        errorText = @errorContainer.innerText
+        return resultText + "\n" + errorText
 
     setMultiline: (multiline) ->
         @multiline = multiline
@@ -156,6 +193,7 @@ class ResultView
 
 
     destroy: ->
+        @tooltips.dispose()
         @marker.destroy()
         @element.innerHTML = ''
         @element.remove()

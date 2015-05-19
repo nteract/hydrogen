@@ -147,6 +147,11 @@ module.exports = AtomRepl =
                     KernelManager.execute language, code, (result) ->
                         view.spin(false)
                         view.addResult(result)
+        else
+            atom.notifications.addError("No kernel for language `#{language}` found", {
+                    detail: "Check that the language for this file is set in Atom
+                             and that you have a Jupyter kernel installed for it."
+                })
 
     removeStatusBarElement: ->
         if @statusBarElement?
