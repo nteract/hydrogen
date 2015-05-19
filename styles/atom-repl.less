@@ -21,7 +21,7 @@
 
 
     &.rich {
-        background-color: transparent;
+        // background-color: transparent;
         border: none;
 
         &.svg {
@@ -85,10 +85,6 @@
         }
     }
 
-    svg, img {
-        background-color: white;
-    }
-
     .rich-close-button::before {
         display: none;
     }
@@ -104,10 +100,14 @@
         max-height: 500px;
         overflow: hidden;
 
+        img, svg {
+            background-color: white;
+        }
 
         video, img, svg {
+            display: block;
             max-width: 450px;
-            max-height: 275px;
+            max-height: 450px;
         }
     }
 
