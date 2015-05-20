@@ -4,9 +4,13 @@ This package lets you run your code directly in Atom using any [Jupyter](https:/
 
 Remember how exciting [Light Table](http://lighttable.com/) was when it was first announced? Executing code inline and in real time is a better way to develop. By combining the interactive style of Light Table with the stable, actively-developed platform of Atom, Hydrogen makes it easy to write code the way you want to.
 
+<img src="http://i.imgur.com/RFPD1c9.gif" width=400>
+
+
+
 ## Features
 
-- execute of a line, selection, or block at a time
+- execute a line, selection, or block at a time
 - rich media support for plots, images, and video
 - autocomplete from the running kernel, so it only suggests things that are really defined
 
@@ -34,6 +38,9 @@ Tested and works with:
 - [iTorch](https://github.com/facebook/iTorch)
 
 But it _should_ work with any kernel — [post an issue](https://github.com/willwhitney/hydrogen/issues) if anything is broken!
+
+<img src="http://i.imgur.com/1cGSHzo.png" width=400>
+<img src="http://i.imgur.com/I5kO69B.png" width=400>
 
 ## Usage
 
