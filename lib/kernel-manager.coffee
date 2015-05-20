@@ -42,6 +42,7 @@ module.exports = KernelManager =
                 if fs.statSync(kernelDirPath).isDirectory()
                     kernelFilePath = path.join(kernelDirPath, 'kernel.json')
                     info = JSON.parse fs.readFileSync(kernelFilePath)
+                    info.language ?= info.display_name.toLowerCase()
                     return info
                 else
                     return null

@@ -13,7 +13,9 @@
     "python",
     "torch",
     "ijulia",
-    "itorch"
+    "itorch",
+    "plot",
+    "image"
   ],
   "activationCommands": {
     "atom-text-editor": "hydrogen:run"

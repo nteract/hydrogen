@@ -18,8 +18,10 @@ class Kernel
 
         @statusView = new StatusView(@language)
 
-        commandString = ""
-        if @language == 'python'
+        projectPath = path.dirname(atom.workspace.getActiveTextEditor().getPath())
+
+        @connect()
+        if @language == 'python' and not @kernelInfo.argv?
             commandString = "ipython kernel --no-secure
                     --hb=#{@config.hb_port}
                     --control=#{@config.control_port}
@@ -27,23 +29,24 @@ class Kernel
                     --stdin=#{@config.stdin_port}
                     --iopub=#{@config.iopub_port}
                     --colors=NoColor"
-        else
-            for arg in @kernelInfo.argv
-                if arg == '{connection_file}'
-                    commandString = commandString + @configPath + ' '
-                else
-                    commandString = commandString + arg + ' '
 
-        console.log "launching kernel:", commandString
-        @connect()
-        # projectPath = atom.project.getPaths()[0]
-        projectPath = path.dirname(atom.workspace.getActiveTextEditor().getPath())
-        if projectPath?
+            console.log "launching kernel:", commandString
             @kernelProcess = child_process.exec(commandString, {
                     cwd: projectPath
                 })
         else
-            @kernelProcess = child_process.exec(commandString)
+            commandString = _.first(@kernelInfo.argv)
+            args = _.rest(@kernelInfo.argv)
+            args = _.map args, (arg) =>
+                if arg == '{connection_file}'
+                    return @configPath
+                else
+                    return arg
+
+            console.log "launching kernel:", commandString, args
+            @kernelProcess = child_process.spawn(commandString, args, {
+                    cwd: projectPath
+                })
 
         # exec commandString, (error, stdout, stderr) ->
         #     console.log 'stdout: ', stdout
