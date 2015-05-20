@@ -191,7 +191,7 @@ module.exports = AtomRepl =
 
         cursor = @editor.getLastCursor()
 
-        row = cursor.marker.bufferMarker.range.start.row
+        row = cursor.getBufferRow()
         console.log "row:", row
 
         indentLevel = cursor.getIndentLevel()
