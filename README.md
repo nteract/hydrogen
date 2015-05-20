@@ -95,4 +95,4 @@ Hydrogen atoms make up 90% of Jupiter by volume.
 
 Plus, it was easy to make a logo.
 
-![hydrogen logo](static/logo.svg)
+![hydrogen logo](http://cl.ly/2z3B3M1F0t1v/logo.svg)
