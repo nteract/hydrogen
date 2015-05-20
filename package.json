@@ -2,7 +2,19 @@
   "name": "Hydrogen",
   "main": "./lib/main",
   "version": "0.2.8",
-  "description": "Run code inside Atom using Jupyter kernels like IPython, IJulia, and iTorch",
+  "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
+  "author": "Will Whitney <me@willwhitney.com>",
+  "keywords": [
+    "execute",
+    "run",
+    "jupyter",
+    "ipython",
+    "julia",
+    "python",
+    "torch",
+    "ijulia",
+    "itorch"
+  ],
   "activationCommands": {
     "atom-text-editor": "hydrogen:run"
   },
