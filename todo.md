@@ -6,6 +6,9 @@
 
 ## Soon
 
+- [ ] try connecting to running kernel from notebook
+- [ ] change icon
+- [ ] support remote kernels
 
 
 ## Someday

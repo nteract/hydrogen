@@ -44,7 +44,7 @@ module.exports = AtomRepl =
         @statusBarElement.classList.add('status-container')
         @statusBarElement.onclick = =>
             editorView = atom.views.getView(atom.workspace.getActiveTextEditor())
-            atom.commands.dispatch(editorView, 'atom-repl:show-kernel-commands')
+            atom.commands.dispatch(editorView, 'hydrogen:show-kernel-commands')
         @statusBarTile = statusBar.addLeftTile(item: @statusBarElement, priority: 100)
 
 
