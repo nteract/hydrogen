@@ -1,4 +1,3 @@
-# AtomReplView = require './atom-repl-view'
 {CompositeDisposable} = require 'atom'
 
 fs = require 'fs'
@@ -12,6 +11,21 @@ SignalListView = require './signal-list-view'
 AutocompleteProvider = require './autocomplete-provider'
 
 module.exports = AtomRepl =
+    config:
+        languageMappings:
+            title: "Language Mappings"
+            description: 'Some packages may change the name of the grammar for
+                          a language (e.g. "Python" -> "Python Django"). That
+                          leaves Hydrogen unable to figure out what kernel to
+                          use for your code.
+
+                          This field should be valid JSON mapping a nonstandard
+                          language name to a standard one, e.g.
+
+                          {"Python Django": "python", "Ruby (Rails)": "ruby"}'
+            type: 'string'
+            default: '{}'
+
     subscriptions: null
     statusBarElement: null
     statusBarTile: null

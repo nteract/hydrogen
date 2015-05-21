@@ -43,7 +43,6 @@ class SignalListView extends SelectListView
         @panel?.destroy()
         @panel = null
         @editor = null
-        @currentGrammar = null
 
     confirmed: (item) ->
         console.log "Selected command:", item
@@ -57,6 +56,7 @@ class SignalListView extends SelectListView
         @panel ?= atom.workspace.addModalPanel(item: this)
         @focusFilterEditor()
         language = @editor.getGrammar().name.toLowerCase()
+        language = KernelManager.getTrueLanguage(language)
         kernel = KernelManager.getRunningKernelForLanguage(language)
 
         if kernel?

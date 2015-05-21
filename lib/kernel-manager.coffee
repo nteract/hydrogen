@@ -27,6 +27,10 @@ module.exports = KernelManager =
             kernelLists = _.map @kernelsDirOptions, @getKernelsFromDirectory
             kernels = []
             kernels = kernels.concat.apply(kernels, kernelLists)
+            kernels = _.map kernels, (kernel) =>
+                kernel.language = @getTrueLanguage(kernel.language)
+                return kernel
+
             pythonKernels = _.filter kernels, (kernel) ->
                 return kernel.language == 'python'
             if pythonKernels.length == 0
@@ -52,9 +56,22 @@ module.exports = KernelManager =
             kernels = []
         return kernels
 
+    getTrueLanguage: (language) ->
+        languageMappings = JSON.parse atom.config.get('hydrogen.languageMappings')
+        matchingLanguageKeys = _.filter languageMappings, (trueLanguage, languageKey) ->
+            return languageKey.toLowerCase() == language.toLowerCase()
+
+        if matchingLanguageKeys[0]?
+            return matchingLanguageKeys[0]
+        else
+            return language
+
     getKernelInfoForLanguage: (language) ->
         kernels = @getAvailableKernels()
         console.log "Available kernels:", kernels
+
+        language = @getTrueLanguage(language)
+
         matchingKernels = _.filter kernels, (kernel) ->
             kernelLanguage = kernel.language
             kernelLanguage ?= kernel.display_name
@@ -71,6 +88,7 @@ module.exports = KernelManager =
         return @getKernelInfoForLanguage(language)?
 
     getRunningKernelForLanguage: (language) ->
+        language = @getTrueLanguage(language)
         if @runningKernels[language]?
             return @runningKernels[language]
         else
@@ -80,29 +98,33 @@ module.exports = KernelManager =
         return @getRunningKernelForLanguage(language)?
 
     interruptKernelForLanguage: (language) ->
-        if @runningKernels[language]?
-            @runningKernels[language].interrupt()
+        kernel = @getRunningKernelForLanguage(language)
+        if kernel?
+            kernel.interrupt()
 
     destroyKernelForLanguage: (language) ->
+        language = @getTrueLanguage(language)
         if @runningKernels[language]?
             @runningKernels[language].destroy()
             delete @runningKernels[language]
 
     startKernel: (kernelInfo, config, configFilePath) ->
-        language = kernelInfo.language.toLowerCase()
+        language = @getTrueLanguage(kernelInfo.language.toLowerCase())
         kernel = new Kernel(kernelInfo, config, configFilePath)
         @runningKernels[language] = kernel
         return kernel
 
     execute: (language, code, onResults) ->
-        if @runningKernels[language]?
-            @runningKernels[language].execute(code, onResults)
+        kernel = @getRunningKernelForLanguage(language)
+        if kernel?
+            kernel.execute(code, onResults)
         else
             throw "No such kernel!"
 
     complete: (language, code, onResults) ->
-        if @runningKernels[language]?
-            @runningKernels[language].complete(code, onResults)
+        kernel = @getRunningKernelForLanguage(language)
+        if kernel?
+            kernel.complete(code, onResults)
         else
             throw "No such kernel!"
 
