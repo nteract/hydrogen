@@ -43,6 +43,8 @@ But it _should_ work with any kernel — [post an issue](https://github.com/wil
 <img src="http://i.imgur.com/1cGSHzo.png" width=350>
 <img src="http://i.imgur.com/I5kO69B.png" width=350>
 
+Note that if you install a new kernel, you'll need to reload Atom (search in the Command Palette for "reload") for Hydrogen to find it. For performance reasons, Hydrogen only looks for available kernels when it first starts.
+
 ## Usage
 
 Make sure to start Atom from the command line (with `atom <directory or file>`) for this package to work! See [Jank](#Jank).
