@@ -6,10 +6,11 @@ child_process = require 'child_process'
 portfinder = require './find-port'
 
 module.exports = ConfigManager =
-    fileStoragePath: path.join(__dirname, '../kernel-configs')
+    fileStoragePath: path.join(__dirname, '..', 'kernel-configs')
 
     writeConfigFile: (onCompleted) ->
-        child_process.execSync('mkdir -p ' + @fileStoragePath)
+        fs.mkdirSync(@fileStoragePath)
+        # child_process.execSync('mkdir -p ' + @fileStoragePath)
         filename = 'kernel-' + uuid.v4() + '.json'
         portfinder.findMany 5, (ports) =>
             config = @buildConfiguration ports
