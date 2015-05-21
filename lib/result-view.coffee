@@ -90,7 +90,7 @@ class ResultView
                 console.log "rendering as HTML"
                 @resultType = 'html'
                 @element.classList.add('rich')
-                @container.classList.add('html')
+                container.classList.add('html')
 
                 # if result.data.trim().startsWith('<br>')
                 #     result.data = result.data.trim().replace('<br>', '')

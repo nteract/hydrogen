@@ -231,7 +231,8 @@ class Kernel
                 }
         else if message.type == 'stdout' or
                 message.prefix == 'stdout' or
-                message.prefix == 'stream.stdout'
+                message.prefix == 'stream.stdout' or
+                message.contents.name == 'stdout'
             return {
                 data: message.contents.text ? message.contents.data
                 type: 'text'
