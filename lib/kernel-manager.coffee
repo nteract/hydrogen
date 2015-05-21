@@ -57,7 +57,7 @@ module.exports = KernelManager =
         return kernels
 
     getTrueLanguage: (language) ->
-        languageMappings = JSON.parse atom.config.get('hydrogen.languageMappings')
+        languageMappings = @getLanguageMappings()
         matchingLanguageKeys = _.filter languageMappings, (trueLanguage, languageKey) ->
             return languageKey.toLowerCase() == language.toLowerCase()
 
@@ -65,6 +65,13 @@ module.exports = KernelManager =
             return matchingLanguageKeys[0]
         else
             return language
+
+    getLanguageMappings: ->
+        try
+            languageMappings = JSON.parse atom.config.get('hydrogen.languageMappings')
+        catch error
+            console.error error
+            languageMappings = {}
 
     getKernelInfoForLanguage: (language) ->
         kernels = @getAvailableKernels()
