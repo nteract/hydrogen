@@ -62,7 +62,7 @@ module.exports = KernelManager =
             return languageKey.toLowerCase() == language.toLowerCase()
 
         if matchingLanguageKeys[0]?
-            return matchingLanguageKeys[0]
+            return matchingLanguageKeys[0].toLowerCase()
         else
             return language
 
