@@ -9,7 +9,11 @@ module.exports = ConfigManager =
     fileStoragePath: path.join(__dirname, '..', 'kernel-configs')
 
     writeConfigFile: (onCompleted) ->
-        fs.mkdirSync(@fileStoragePath)
+        try
+            fs.mkdirSync(@fileStoragePath)
+        catch e
+            if e.code != 'EEXIST'
+                throw e
         # child_process.execSync('mkdir -p ' + @fileStoragePath)
         filename = 'kernel-' + uuid.v4() + '.json'
         portfinder.findMany 5, (ports) =>
