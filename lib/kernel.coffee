@@ -48,11 +48,13 @@ class Kernel
                     cwd: projectPath
                 })
 
-        # exec commandString, (error, stdout, stderr) ->
-        #     console.log 'stdout: ', stdout
-        #     console.log 'stderr: ', stderr
-        #     if error != null
-        #         console.log 'exec error: ', error
+            # commandString = 'unbuffer ' + commandString + ' ' + args.join(' ')
+            # console.log "launching:", commandString
+            # @kernelProcess = child_process.exec commandString, (error, stdout, stderr) ->
+            #     console.log 'stdout: ', stdout
+            #     console.log 'stderr: ', stderr
+            #     if error != null
+            #         console.log 'exec error: ', error
 
     connect: ->
         @shellSocket = zmq.socket 'dealer'
