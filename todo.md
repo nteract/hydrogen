@@ -9,6 +9,7 @@
 - [ ] try connecting to running kernel from notebook
 - [ ] change icon
 - [ ] support remote kernels
+- [ ] check out using [`fix-path`](https://github.com/sindresorhus/fix-path) to make the path work when Atom is launched as an app
 
 
 ## Someday
