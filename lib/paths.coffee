@@ -9,6 +9,8 @@ path = require('path')
 response = execSync 'python -c "import sys; print(sys.prefix)"'
 sysPrefix = response.toString().replace /^\s+|\s+$/g, ""
 
+# Returns the home specified by environment variable or
+# node's built in path.resolve('~')
 userHome = ->
   return process.env['HOME'] or process.env['USERPROFILE'] or path.resolve('~')
 
@@ -88,20 +90,18 @@ else
 
 ENV_JUPYTER_PATH = [path.join(sysPrefix, 'share', 'jupyter')]
 
-"""Return the list of directories to search
-
-JUPYTER_PATH environment variable has highest priority.
-
-If subdirs are given, that subdirectory path will be added to each element.
-
-Examples:
-
-jupyterPath()
-['/Users/rgbkrk/.local/jupyter', '/usr/local/share/jupyter']
-
-jupyterPath
-['/Users/rgbkrk/.local/jupyter/kernels', '/usr/local/share/jupyter/kernels']
-"""
+# Return the list of directories to search
+#
+# JUPYTER_PATH environment variable has highest priority.
+#
+# If subdirs are given, that subdirectory path will be added to each element.
+# Examples:
+#
+# > jupyterPath()
+# ['/Users/rgbkrk/.local/jupyter', '/usr/local/share/jupyter']
+#
+# >jupyterPath
+# ['/Users/rgbkrk/.local/jupyter/kernels', '/usr/local/share/jupyter/kernels']
 jupyterPath = (subdirs...) ->
   paths = []
 
