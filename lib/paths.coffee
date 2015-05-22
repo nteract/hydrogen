@@ -10,6 +10,21 @@ path = require('path')
 response = execSync 'python -c "import sys; print(sys.prefix)"'
 sysPrefix = response.toString().replace /^\s+|\s+$/g, ""
 
+# Compute default system configurations
+if process.platform == 'win32'
+  programData = process.env['PROGRAMDATA']
+  if programData
+    SYSTEM_JUPYTER_PATH = [path.join(programData, 'jupyter')]
+  else
+    SYSTEM_JUPYTER_PATH = [path.join(sysPrefix, 'share', 'jupyter')]
+else
+  SYSTEM_JUPYTER_PATH = [
+    "/usr/local/share/jupyter",
+    "/usr/share/jupyter"
+  ]
+
+ENV_JUPYTER_PATH = [path.join(sysPrefix, 'share', 'jupyter')]
+
 # Returns the home specified by environment variable or
 # node's built in path.resolve('~')
 userHome = ->
@@ -35,16 +50,18 @@ jupyterDataDir = ->
   if process.env['JUPYTER_DATA_DIR']
     return process.env['JUPYTER_DATA_DIR']
 
-  home = userHome()
-
-  if process.platform == 'darwin'
-    return path.join(home, 'Library', 'Jupyter')
-  else if process.platform == 'win32'
+  # Windows first for easier testing
+  if process.platform == 'win32'
     appData = process.env['APPDATA']
     if appData
       return path.join appData, 'jupyter'
     else
       return path.join jupyterConfigDir(), 'data'
+
+  home = userHome()
+
+  if process.platform == 'darwin'
+    return path.join(home, 'Library', 'Jupyter')
   else
     # Linux, non-OS X Unix, AIX, etc.
     xdg = process.env['XDG_DATA_HOME']
@@ -77,23 +94,6 @@ jupyterRuntimeDir = ->
       return path.join(xdg, 'jupyter')
     return path.join(jupyterDataDir, 'runtime')
 
-
-if process.platform == 'win32'
-  programData = process.env['PROGRAMDATA']
-  if programData
-    SYSTEM_JUPYTER_PATH = [path.join(programData, 'jupyter')]
-  else
-    # TODO: convert `sys.prefix` from Python to something node-able
-    #       e.g.
-    SYSTEM_JUPYTER_PATH = [path.join(sysPrefix, 'share', 'jupyter')]
-else
-  SYSTEM_JUPYTER_PATH = [
-    "/usr/local/share/jupyter",
-    "/usr/share/jupyter"
-  ]
-
-ENV_JUPYTER_PATH = [path.join(sysPrefix, 'share', 'jupyter')]
-
 # Return the list of directories to search
 #
 # JUPYTER_PATH environment variable has highest priority.
@@ -114,7 +114,7 @@ jupyterPath = (subdirs...) ->
     jupyterPathEnvSplit = process.env['JUPYTER_PATH'].split(path.delimiter)
     for p in jupyterPathEnvSplit
       # Strip off the path separator from the right
-      normalizedP = p.replace ///#{path.separator}+$///g, ""
+      normalizedP = p.replace ///#{path.sep}+$///g, ""
       paths.push normalizedP
   # Next up, user directory
   paths.push jupyterDataDir()
