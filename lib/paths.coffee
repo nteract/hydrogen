@@ -2,14 +2,12 @@
 
 path = require('path')
 
-# Getting access to `sys.prefix` from Python
+# Access `sys.prefix` from Python, to handle particular conda and virtualenv setups
 # TODO: Think of something more sensible here, possibly doing this asynchronously elsewhere
 # TODO: Provide a timeout, handle error
 {execSync} = require('child_process')
 response = execSync 'python -c "import sys; print(sys.prefix)"'
 sysPrefix = response.toString().replace /^\s+|\s+$/g, ""
-
-console.log("Time for some sysPrefix: #{sysPrefix}")
 
 userHome = ->
   return process.env['HOME'] or process.env['USERPROFILE'] or path.resolve('~')
