@@ -73,6 +73,7 @@ jupyterRuntimeDir = ->
     # Linux, non-OS X Unix, AIX, etc.
     xdg = process.env['XDG_RUNTIME_DIR']
     if xdg
+      # Ref https://github.com/jupyter/jupyter_core/commit/176b7a9067bfc20bfa97be5dae93912e2930a427#commitcomment-11331375
       return path.join(xdg, 'jupyter')
     return path.join(jupyterDataDir, 'runtime')
 
