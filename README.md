@@ -22,8 +22,9 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 
 ### Dependencies
 
-- ZeroMQ: `brew install pkg-config`, then `brew install zeromq`
-- IPython (Jupyter): needs to be installed and on your `$PATH`. `pip install "ipython[notebook]"`
+- [`pkg-config`](http://www.freedesktop.org/wiki/Software/pkg-config/): `brew install pkg-config`
+- [ZeroMQ](http://zeromq.org/intro:get-the-software): `brew install zeromq`
+- [IPython (Jupyter)](http://ipython.org/): needs to be installed and on your `$PATH`. `pip install "ipython[notebook]"`
 
 ### Install
 
