@@ -3,7 +3,7 @@ path = require 'path'
 _ = require 'lodash'
 exec = require('child_process').exec
 
-jupyterPath = require './paths'
+{jupyterPath} = require './paths'
 
 Kernel = require './kernel'
 

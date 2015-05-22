@@ -131,4 +131,9 @@ jupyterPath = (subdirs...) ->
     paths = (path.join(p, subdirs...) for p in paths)
   return paths
 
-module.exports = jupyterPath
+module.exports = {
+  jupyterPath: jupyterPath,
+  jupyterConfigDir: jupyterConfigDir,
+  jupyterDataDir: jupyterDataDir,
+  jupyterRuntimeDir: jupyterRuntimeDir
+}
