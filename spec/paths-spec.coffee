@@ -11,6 +11,8 @@ describe "JupyterPath", ->
   describe "when jupyterPath is called", ->
     it "it returns an array of path strings", ->
       kernelspecs = jupyterPath()
+      expect(Array.isArray(kernelspecs)).toBeTruthy()
+
       for kernelspec in kernelspecs
         expect(typeof(kernelspec)).toBe('string')
 
