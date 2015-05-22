@@ -1,5 +1,6 @@
 # Port of jupyter_core.paths
 
+fs = require('fs')
 path = require('path')
 
 # Access `sys.prefix` from Python, to handle particular conda and virtualenv setups
@@ -12,7 +13,9 @@ sysPrefix = response.toString().replace /^\s+|\s+$/g, ""
 # Returns the home specified by environment variable or
 # node's built in path.resolve('~')
 userHome = ->
-  return process.env['HOME'] or process.env['USERPROFILE'] or path.resolve('~')
+  homeDir = process.env['HOME'] or process.env['USERPROFILE'] or path.resolve('~')
+  homeDir = fs.realpathSync(homeDir)
+  return homeDir
 
 # Get the Jupyter config directory for this platform and user.
 # Reutrns env[JUPYTER_CONFIG_DIR] if defined, else ~/.jupyter
