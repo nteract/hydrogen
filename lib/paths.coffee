@@ -139,5 +139,6 @@ module.exports = {
   jupyterPath: jupyterPath,
   jupyterConfigDir: jupyterConfigDir,
   jupyterDataDir: jupyterDataDir,
-  jupyterRuntimeDir: jupyterRuntimeDir
+  jupyterRuntimeDir: jupyterRuntimeDir,
+  userHome: userHome
 }
