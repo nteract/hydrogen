@@ -69,7 +69,7 @@ module.exports = KernelManager =
 
     getLanguageMappings: ->
         try
-            languageMappings = JSON.parse atom.config.get('hydrogen.languageMappings')
+            languageMappings = JSON.parse atom.config.get('Hydrogen.languageMappings')
         catch error
             console.error error
             languageMappings = {}
