@@ -42,7 +42,8 @@ module.exports = AtomRepl =
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
 
-        @subscriptions.add atom.workspace.observeActivePaneItem(@updateCurrentEditor.bind(this))
+        @subscriptions.add(atom.workspace.observeActivePaneItem(
+            @updateCurrentEditor.bind(this)))
 
         @editor = atom.workspace.getActiveTextEditor()
 
@@ -59,7 +60,8 @@ module.exports = AtomRepl =
         @statusBarElement.onclick = =>
             editorView = atom.views.getView(atom.workspace.getActiveTextEditor())
             atom.commands.dispatch(editorView, 'hydrogen:show-kernel-commands')
-        @statusBarTile = statusBar.addLeftTile(item: @statusBarElement, priority: 100)
+        @statusBarTile = statusBar.addLeftTile(item: @statusBarElement,
+                                               priority: 100)
 
 
     provide: ->
@@ -162,7 +164,9 @@ module.exports = AtomRepl =
                         view.spin(false)
                         view.addResult(result)
         else
-            atom.notifications.addError("No kernel for language `#{language}` found", {
+            atom.notifications.addError(
+                "No kernel for language `#{language}` found",
+                {
                     detail: "Check that the language for this file is set in Atom
                              and that you have a Jupyter kernel installed for it."
                 })
