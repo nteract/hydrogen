@@ -49,24 +49,19 @@ jupyterConfigDir = ->
 jupyterDataDir = ->
   if process.env['JUPYTER_DATA_DIR']
     return process.env['JUPYTER_DATA_DIR']
-
-  # Windows first for easier testing
-  if process.platform == 'win32'
+  else if process.platform == 'win32'
     appData = process.env['APPDATA']
     if appData
       return path.join appData, 'jupyter'
     else
       return path.join jupyterConfigDir(), 'data'
-
-  home = userHome()
-
-  if process.platform == 'darwin'
-    return path.join(home, 'Library', 'Jupyter')
+  else if process.platform == 'darwin'
+    return path.join(userHome(), 'Library', 'Jupyter')
   else
     # Linux, non-OS X Unix, AIX, etc.
     xdg = process.env['XDG_DATA_HOME']
     if not xdg
-      xdg = path.join(home, '.local', 'share')
+      xdg = path.join(userHome(), '.local', 'share')
     return path.join(xdg, 'jupyter')
 
 
