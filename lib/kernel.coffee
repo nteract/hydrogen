@@ -22,18 +22,22 @@ class Kernel
 
         @connect()
         if @language == 'python' and not @kernelInfo.argv?
-            commandString = "ipython kernel --no-secure
-                    --hb=#{@config.hb_port}
-                    --control=#{@config.control_port}
-                    --shell=#{@config.shell_port}
-                    --stdin=#{@config.stdin_port}
-                    --iopub=#{@config.iopub_port}
-                    --colors=NoColor"
+            commandString = "ipython"
+            args = [
+                "kernel",
+                "--no-secure",
+                "--hb=#{@config.hb_port}",
+                "--control=#{@config.control_port}",
+                "--shell=#{@config.shell_port}",
+                "--stdin=#{@config.stdin_port}",
+                "--iopub=#{@config.iopub_port}",
+                "--colors=NoColor"
+                ]
 
-            console.log "launching kernel:", commandString
-            @kernelProcess = child_process.exec(commandString, {
-                    cwd: projectPath
-                })
+            # console.log "launching kernel:", commandString
+            # @kernelProcess = child_process.exec(commandString, {
+            #         cwd: projectPath
+            #     })
         else
             commandString = _.first(@kernelInfo.argv)
             args = _.rest(@kernelInfo.argv)
@@ -43,10 +47,10 @@ class Kernel
                 else
                     return arg
 
-            console.log "launching kernel:", commandString, args
-            @kernelProcess = child_process.spawn(commandString, args, {
-                    cwd: projectPath
-                })
+        console.log "launching kernel:", commandString, args
+        @kernelProcess = child_process.spawn(commandString, args, {
+                cwd: projectPath
+            })
 
             # commandString = 'unbuffer ' + commandString + ' ' + args.join(' ')
             # console.log "launching:", commandString
