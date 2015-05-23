@@ -1,7 +1,6 @@
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
-exec = require('child_process').exec
 
 {jupyterPath} = require './paths'
 
