@@ -98,6 +98,6 @@ Hydrogen implements the [messaging protocol](http://ipython.org/ipython-doc/stab
 
 Hydrogen atoms make up 90% of Jupiter by volume.
 
-Plus, it was easy to make a logo.
+Plus, it was easy to make a logo. (Which now doesn't look exactly like Ionic's. Whoops.)
 
-![hydrogen logo](http://cl.ly/2z3B3M1F0t1v/logo.svg)
+![hydrogen logo](http://f.cl.ly/items/3m15291M082k011c0Z3M/logo.svg)
