@@ -3,18 +3,12 @@ path = require 'path'
 _ = require 'lodash'
 exec = require('child_process').exec
 
+{jupyterPath} = require './paths'
+
 Kernel = require './kernel'
-homePath = process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME']
 
 module.exports = KernelManager =
-    kernelsDirOptions: [
-        path.join(homePath, '.jupyter/kernels'),
-        path.join(homePath, 'Library/Jupyter/kernels'),
-        '/usr/local/Cellar/python/2.7.9/Frameworks/Python.framework/Versions/2.7/share/jupyter/kernels',
-        '/usr/local/share/jupyter/kernels',
-        '/usr/share/jupyter/kernels',
-        path.join(homePath, '.ipython/kernels')
-    ]
+    kernelsDirOptions: jupyterPath('kernels')
     runningKernels: {}
     pythonInfo:
         display_name: "Python"
