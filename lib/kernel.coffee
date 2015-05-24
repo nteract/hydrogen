@@ -48,6 +48,11 @@ class Kernel
                 cwd: projectPath
             })
 
+        @kernelProcess.stdout.on 'data', (data) ->
+            console.log "kernel process received on stdout:", data.toString()
+        @kernelProcess.stderr.on 'data', (data) ->
+            console.error "kernel process received on stderr:", data.toString()
+
             # console.log "launching:", commandString
             # @kernelProcess = child_process.exec commandString, (error, stdout, stderr) ->
             #     console.log 'stdout: ', stdout
