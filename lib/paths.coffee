@@ -6,9 +6,9 @@ path = require('path')
 # Access `sys.prefix` from Python, to handle particular conda and virtualenv setups
 # TODO: Think of something more sensible here, possibly doing this asynchronously elsewhere
 # TODO: Provide a timeout, handle error
-{execSync} = require('child_process')
-response = execSync 'python -c "import sys; print(sys.prefix)"'
-sysPrefix = response.toString().replace /^\s+|\s+$/g, ""
+child_process = require('child_process')
+response = child_process.spawnSync 'python', ['-c', 'import sys; print(sys.prefix)']
+sysPrefix = response.stdout.toString().replace /^\s+|\s+$/g, ""
 
 # Compute default system configurations
 if process.platform == 'win32'

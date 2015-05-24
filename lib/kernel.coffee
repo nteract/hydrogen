@@ -34,10 +34,6 @@ class Kernel
                 "--colors=NoColor"
                 ]
 
-            # console.log "launching kernel:", commandString
-            # @kernelProcess = child_process.exec(commandString, {
-            #         cwd: projectPath
-            #     })
         else
             commandString = _.first(@kernelInfo.argv)
             args = _.rest(@kernelInfo.argv)
@@ -52,7 +48,6 @@ class Kernel
                 cwd: projectPath
             })
 
-            # commandString = 'unbuffer ' + commandString + ' ' + args.join(' ')
             # console.log "launching:", commandString
             # @kernelProcess = child_process.exec commandString, (error, stdout, stderr) ->
             #     console.log 'stdout: ', stdout

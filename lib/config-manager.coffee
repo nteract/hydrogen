@@ -14,7 +14,6 @@ module.exports = ConfigManager =
         catch e
             if e.code != 'EEXIST'
                 throw e
-        # child_process.execSync('mkdir -p ' + @fileStoragePath)
         filename = 'kernel-' + uuid.v4() + '.json'
         portfinder.findMany 5, (ports) =>
             config = @buildConfiguration ports
