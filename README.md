@@ -15,8 +15,6 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 - one kernel per language (so you can run snippets from several files, all in the same namespace)
 - interrupt or restart the kernel if anything goes wrong
 
-<!-- Check out the [todo](https://github.com/willwhitney/atom-ipython/blob/master/todo.md) for more info about the current state of the project. -->
-
 
 ## Installation
 
