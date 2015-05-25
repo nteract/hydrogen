@@ -7,8 +7,14 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
-'atom-text-editor':
+'.platform-darwin atom-text-editor':
   'cmd-alt-enter': 'hydrogen:run'
 
-'atom-workspace':
+'.platform-darwin atom-workspace':
   'cmd-alt-backspace': 'hydrogen:clear-results'
+
+'.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
+  'ctrl-alt-enter': 'hydrogen:run'
+
+'.platform-win32 atom-workspace, .platform-linux atom-workspace':
+  'ctrl-backspace': 'hydrogen:clear-results'
