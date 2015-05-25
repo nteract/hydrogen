@@ -15,18 +15,43 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 - one kernel per language (so you can run snippets from several files, all in the same namespace)
 - interrupt or restart the kernel if anything goes wrong
 
+## Dependencies
 
-## Installation
+For all systems, you'll need
 
-### Dependencies
+- [ZeroMQ](http://zeromq.org/intro:get-the-software)
+- IPython notebook `pip install ipython[notebook]`
+- Python 2 (for builds - you can still run Python 3 code)
+
+Each operating system has their own instruction set. Please read on down to save yourself time.
+
+#### OS X
+
+##### homebrew on OS X
 
 - [`pkg-config`](http://www.freedesktop.org/wiki/Software/pkg-config/): `brew install pkg-config`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software): `brew install zeromq`
-- [IPython (Jupyter)](http://ipython.org/): needs to be installed and on your `$PATH`. `pip install "ipython[notebook]"`
+- [IPython (Jupyter)](http://ipython.org/install.html): needs to be installed and on your `$PATH`. `pip install "ipython[notebook]"`
 
-### Install
+#### Windows
 
-`apm install hydrogen` or search for "hydrogen" in the Install pane of the Atom settings.
+- You'll need a compiler! [Visual Studio Community Edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx) is recommended.
+- Python (tread on your own or install [Anaconda](http://continuum.io/downloads))
+- [IPython notebook](http://ipython.org/install.html) - If you installed Anaconda, you're already done
+
+#### Linux
+
+Depending on the distribution, you'll need to install `libzmq-dev` or `libzmq3-dev` with your favorite package manager.
+
+If you have Python and pip setup, install the notebook directly:
+
+```
+pip install ipython[notebook]
+```
+
+## Installation
+
+Assuming you followed the dependencies steps above, you can now `apm install hydrogen` or search for "hydrogen" in the Install pane of the Atom settings.
 
 If your default `python` is 3.x, you need to instead run `PYTHON=python2.7 apm install hydrogen`. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://code.google.com/p/gyp/issues/detail?id=36)
 
