@@ -35,6 +35,7 @@ Each operating system has their own instruction set. Please read on down to save
 
 #### Windows
 
+- [ZeroMQ for Windows](http://zeromq.org/distro:microsoft-windows)
 - You'll need a compiler! [Visual Studio Community Edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx) is recommended.
 - Python (tread on your own or install [Anaconda](http://continuum.io/downloads))
 - [IPython notebook](http://ipython.org/install.html) - If you installed Anaconda, you're already done
