@@ -39,6 +39,8 @@ Each operating system has their own instruction set. Please read on down to save
 - Python (tread on your own or install [Anaconda](http://continuum.io/downloads))
 - [IPython notebook](http://ipython.org/install.html) - If you installed Anaconda, you're already done
 
+After these are installed, you'll likely need to restart your machine (especially after Visual Studio).
+
 #### Linux
 
 Depending on the distribution, you'll need to install `libzmq-dev` or `libzmq3-dev` with your favorite package manager.
@@ -51,7 +53,7 @@ pip install ipython[notebook]
 
 ## Installation
 
-Assuming you followed the dependencies steps above, you can now `apm install hydrogen` or search for "hydrogen" in the Install pane of the Atom settings.
+Assuming you followed the dependencies steps above, you can now `apm install hydrogen` (recommended) or search for "hydrogen" in the Install pane of the Atom settings.
 
 If your default `python` is 3.x, you need to instead run `PYTHON=python2.7 apm install hydrogen`. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://code.google.com/p/gyp/issues/detail?id=36)
 
