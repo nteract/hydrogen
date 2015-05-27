@@ -9,6 +9,8 @@ class StatusView
         @element.classList.add('atom-repl')
         @element.classList.add('status')
 
+        @element.innerText = @title
+
         return this
 
 

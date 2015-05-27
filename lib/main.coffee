@@ -156,8 +156,10 @@ module.exports = AtomRepl =
                 statusView = kernel.statusView
                 @setStatusBarElement(statusView.getElement())
 
-                [code, row] = @findCodeBlock()
-                if code != null
+                codeBlock = @findCodeBlock()
+                if codeBlock?
+                    [code, row] = codeBlock
+                if code?
                     @clearBubblesOnRow(row)
                     view = @insertResultBubble(row)
                     KernelManager.execute language, code, (result) ->
