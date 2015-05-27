@@ -66,6 +66,9 @@ Tested and works with:
 - [IPython](http://ipython.org/)
 - [IJulia](https://github.com/JuliaLang/IJulia.jl)
 - [iTorch](https://github.com/facebook/iTorch)
+- [IJavascript](https://github.com/n-riesco/ijavascript)
+- [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
+- [IRkernel](https://github.com/IRkernel/IRkernel) (install the "Development" version from `master` — necessary changes haven't gotten released as binaries yet)
 
 But it _should_ work with any kernel — [post an issue](https://github.com/willwhitney/hydrogen/issues) if anything is broken!
 
