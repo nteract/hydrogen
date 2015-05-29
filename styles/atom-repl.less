@@ -5,10 +5,10 @@
 @import "ui-variables";
 
 .atom-repl.output-bubble {
-    @light-bubble-background: fadein(lighten(@background-color-selected, 40%), 100%);
-    @dark-bubble-background: fadein(lighten(@background-color-selected, 5%), 100%);
-    @bubble-background: contrast(@text-color, @dark-bubble-background, @light-bubble-background, 20%);
-    @button-text-color: lighten(@text-color, 20%);
+    @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
+    @dark-bubble-background: fadein(lighten(@syntax-background-color, 15%), 100%);
+    @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
+    @button-text-color: lighten(@syntax-text-color, 20%);
 
     position: absolute;
     padding-left: 2px;
@@ -18,7 +18,6 @@
     border-radius: 3px;
     margin-left: 20px;
     white-space: nowrap;
-
 
     &.rich {
         // background-color: transparent;
