@@ -15,6 +15,7 @@ class Kernel
         console.log "Kernel configuration file path:", @configPath
         @language = @kernelInfo.language.toLowerCase()
         @executionCallbacks = {}
+        @watchCallbacks = []
 
         @statusView = new StatusView(@language)
 
@@ -83,8 +84,11 @@ class Kernel
 
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
-    execute: (code, onResults) ->
-        requestId = uuid.v4()
+    execute: (code, isWatch, onResults) ->
+        if isWatch
+            requestId = "watch_" + uuid.v4()
+        else
+            requestId = "execute_" + uuid.v4()
 
         console.log "sending execute"
         header = JSON.stringify({
@@ -117,7 +121,7 @@ class Kernel
         @shellSocket.send message
 
     complete: (code, onResults) ->
-        requestId = uuid.v4()
+        requestId = "complete_" + uuid.v4()
 
         column = code.length
 
@@ -149,6 +153,9 @@ class Kernel
 
         @executionCallbacks[requestId] = onResults
         @shellSocket.send message
+
+    addWatchCallback: (watchCallback) ->
+        @watchCallbacks.push(watchCallback)
 
     onShellMessage: (msgArray...) ->
         message = @parseMessage msgArray
@@ -191,6 +198,11 @@ class Kernel
         if message.type == 'status'
             status = message.contents.execution_state
             @statusView.setStatus(status)
+
+            if status == 'idle' and _.has(message, ['parent_header', 'msg_id'])
+                if message.parent_header.msg_id.startsWith('execute')
+                    _.forEach @watchCallbacks, (watchCallback) ->
+                        watchCallback()
 
         if _.has(message, ['parent_header', 'msg_id'])
             callback = @executionCallbacks[message.parent_header.msg_id]

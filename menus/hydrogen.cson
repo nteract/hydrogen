@@ -10,11 +10,11 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'atom-repl'
+      'label': 'Hydrogen'
       'submenu': [
         {
           'label': 'Run'
-          'command': 'atom-repl:run'
+          'command': 'hydrogen:run'
         }
       ]
     ]

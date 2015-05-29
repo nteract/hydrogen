@@ -6,7 +6,7 @@ class ResultView
 
     constructor: (@marker) ->
         @element = document.createElement('div')
-        @element.classList.add('atom-repl')
+        @element.classList.add('hydrogen')
         @element.classList.add('output-bubble')
 
         @spinner = @buildSpinner()
@@ -195,7 +195,8 @@ class ResultView
 
     destroy: ->
         @tooltips.dispose()
-        @marker.destroy()
+        if @marker?
+            @marker.destroy()
         @element.innerHTML = ''
         @element.remove()
 

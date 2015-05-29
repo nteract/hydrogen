@@ -8,6 +8,7 @@ KernelManager = require './kernel-manager'
 ConfigManager = require './config-manager'
 ResultView = require './result-view'
 SignalListView = require './signal-list-view'
+WatchView = require './watch-view'
 AutocompleteProvider = require './autocomplete-provider'
 
 module.exports = AtomRepl =
@@ -38,6 +39,7 @@ module.exports = AtomRepl =
         @subscriptions.add atom.commands.add 'atom-text-editor',
             'hydrogen:run': => @run()
             'hydrogen:show-kernel-commands': => @showKernelCommands()
+            'hydrogen:update-watches': => @updateWatches()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -47,6 +49,10 @@ module.exports = AtomRepl =
 
         @editor = atom.workspace.getActiveTextEditor()
 
+        @watchView = new WatchView()
+        atom.workspace.addRightPanel({item: @watchView.element})
+
+
     deactivate: ->
         @subscriptions.dispose()
         KernelManager.destroy()
@@ -55,7 +61,7 @@ module.exports = AtomRepl =
     consumeStatusBar: (statusBar) ->
         console.log "making status bar"
         @statusBarElement = document.createElement('div')
-        @statusBarElement.classList.add('atom-repl')
+        @statusBarElement.classList.add('hydrogen')
         @statusBarElement.classList.add('status-container')
         @statusBarElement.onclick = =>
             editorView = atom.views.getView(atom.workspace.getActiveTextEditor())
@@ -65,7 +71,6 @@ module.exports = AtomRepl =
 
 
     provide: ->
-        # debugger
         return AutocompleteProvider
 
     updateCurrentEditor: (currentPaneItem) ->
@@ -162,7 +167,15 @@ module.exports = AtomRepl =
                 if code?
                     @clearBubblesOnRow(row)
                     view = @insertResultBubble(row)
-                    KernelManager.execute language, code, (result) ->
+
+                    kernel.watchCallbacks = []
+                    kernel.addWatchCallback =>
+                        @watchView.clearResults()
+                        code = @watchView.getCode()
+                        kernel.execute code, true, (result) =>
+                            @watchView.resultView.addResult(result)
+
+                    KernelManager.execute language, code, (result) =>
                         view.spin(false)
                         view.addResult(result)
         else
@@ -172,6 +185,13 @@ module.exports = AtomRepl =
                     detail: "Check that the language for this file is set in Atom
                              and that you have a Jupyter kernel installed for it."
                 })
+
+
+    updateWatches: ->
+        language = @editor.getGrammar().name.toLowerCase()
+        code = @watchView.getCode()
+        KernelManager.execute language, code, (result) =>
+            @watchView.resultView.addResult(result)
 
     removeStatusBarElement: ->
         if @statusBarElement?

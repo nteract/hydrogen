@@ -6,7 +6,7 @@ class StatusView
     constructor: (@language) ->
         @title = @language + " kernel"
         @element = document.createElement('div')
-        @element.classList.add('atom-repl')
+        @element.classList.add('hydrogen')
         @element.classList.add('status')
 
         @element.innerText = @title

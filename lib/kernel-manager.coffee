@@ -118,7 +118,7 @@ module.exports = KernelManager =
     execute: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
         if kernel?
-            kernel.execute(code, onResults)
+            kernel.execute(code, false, onResults)
         else
             throw "No such kernel!"
 

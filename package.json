@@ -28,6 +28,7 @@
   "dependencies": {
     "atom-space-pen-views": "^2.0.5",
     "lodash": "^3.8.0",
+    "react": "^0.13.3",
     "uuid": "^2.0.1",
     "zmq": "^2.11.1"
   },
