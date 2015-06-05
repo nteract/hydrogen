@@ -54,7 +54,7 @@ pip install ipython[notebook]
 
 ## Installation
 
-Assuming you followed the dependencies steps above, you can now `apm install hydrogen` (recommended) or search for "hydrogen" in the Install pane of the Atom settings.
+Assuming you followed the dependencies steps above, you can now `apm install hydrogen` (recommended) or search for "hydrogen" in the Install pane of the Atom settings. Note that installing from within Atom will only work if you start Atom from the command line! See [Jank](#Jank).
 
 If your default `python` is 3.x, you need to instead run `PYTHON=python2.7 apm install hydrogen`. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://code.google.com/p/gyp/issues/detail?id=36)
 
