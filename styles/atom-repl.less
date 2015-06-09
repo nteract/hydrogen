@@ -3,12 +3,14 @@
 // See https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
 // for a full listing of what's available.
 @import "ui-variables";
+@import "syntax-variables";
 
 .atom-repl.output-bubble {
     @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
-    @dark-bubble-background: fadein(lighten(@syntax-background-color, 15%), 100%);
+    @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
     @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
     @button-text-color: lighten(@syntax-text-color, 20%);
+    color: lighten(@syntax-text-color, 10%);
 
     position: absolute;
     padding-left: 2px;
@@ -111,7 +113,8 @@
     }
 
     .bubble-error-container {
-        color: @text-color-error;
+        @error-base-color: average(@text-color-error, @bubble-background);
+        color: contrast(@bubble-background, saturate(darken(@error-base-color, 30%), 20%), saturate(lighten(@error-base-color, 30%), 70%));
         font-size: @font-size * 7/8;
     }
 
