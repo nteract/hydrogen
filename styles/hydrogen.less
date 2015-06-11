@@ -5,10 +5,6 @@
 @import "ui-variables";
 @import "syntax-variables";
 
-.hidden {
-    display: none;
-}
-
 .hydrogen.output-bubble {
     @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
     @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
@@ -182,7 +178,8 @@
 }
 
 .hydrogen.watch-sidebar {
-    // background-color: @base-background-color;
+    height: 100%;
+    overflow-y: scroll;
     margin: 5px;
 
     .watch-sidebar-title {
@@ -301,6 +298,10 @@
     .status:hover {
         text-decoration: underline;
     }
+}
+
+.hidden {
+    display: none;
 }
 
 .hydrogen {
