@@ -9,23 +9,12 @@ class SignalListView extends SelectListView
     initialize: ->
         super
 
-        @basicCommands = [
-            {
-                name: "Interrupt"
-                value: 'interrupt-kernel'
-                language: null
-            },
-            {
-                name: "Restart"
-                value: 'restart-kernel'
-                language: null
-            },
-        ]
+
 
         @onConfirmed = null
-        @addClass('kernel-signal-selector')
+        @addClass('watch-language-picker')
         @list.addClass('mark-active')
-        @setItems([])
+
 
     getFilterKey: ->
         'name'
@@ -51,24 +40,35 @@ class SignalListView extends SelectListView
         @cancel()
 
     attach: ->
+
+
         @storeFocusedElement()
         @panel ?= atom.workspace.addModalPanel(item: this)
         @focusFilterEditor()
-        language = @editor.getGrammar().name.toLowerCase()
-        language = KernelManager.getTrueLanguage(language)
-        kernel = KernelManager.getRunningKernelForLanguage(language)
 
-        if kernel?
-            commands = _.map _.cloneDeep(@basicCommands), (command) ->
-                command.name = _.capitalize(language) + ' kernel: ' + command.name
-                command.language = language
-                return command
-            @setItems(commands)
-        else
-            @setItems([])
+        kernels = KernelManager.getRunningKernels()
+        @languageOptions = _.map kernels, (kernel) ->
+            return {
+                name: kernel.language
+                value: kernel.language
+            }
+            
+        @setItems(@languageOptions)
+        # language = @editor.getGrammar().name.toLowerCase()
+        # language = KernelManager.getTrueLanguage(language)
+        # kernel = KernelManager.getRunningKernelForLanguage(language)
+        #
+        # if kernel?
+        #     commands = _.map _.cloneDeep(@basicCommands), (command) ->
+        #         command.name = _.capitalize(language) + ' kernel: ' + command.name
+        #         command.language = language
+        #         return command
+        #     @setItems(commands)
+        # else
+        #     @setItems([])
 
     getEmptyMessage: ->
-        "No running kernels for this file type."
+        "No running kernels found."
 
     toggle: ->
         if @panel?

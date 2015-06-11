@@ -5,6 +5,10 @@
 @import "ui-variables";
 @import "syntax-variables";
 
+.hidden {
+    display: none;
+}
+
 .hydrogen.output-bubble {
     @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
     @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
@@ -177,9 +181,117 @@
     }
 }
 
-.watch-view {
-    width: 300px;
-    height: 100%;
+.hydrogen.watch-sidebar {
+    // background-color: @base-background-color;
+    margin: 5px;
+
+    .watch-sidebar-title {
+        text-align: center;
+        padding-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    .watch-sidebar-language {
+        margin-top: 5px;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .watch-view {
+        width: 300px;
+        // height: 100%;
+        margin-top: 20px;
+
+        .watch-input {
+            border-radius: 3px;
+            background-color: @syntax-background-color;
+            margin: 5px;
+            font-size: @font-size;
+            min-height: 3em;
+        }
+    }
+
+    .add-watch {
+        margin: 2%;
+        width: 96%;
+    }
+
+    .output-bubble.empty {
+        display: none;
+    }
+
+    .output-bubble {
+        position: static;
+        display: flex;
+        border-radius: 0px;
+        margin: 5px;
+        font-size: @font-size;
+        box-shadow: none;
+        padding-left: 0px;
+        padding-right: 0px;
+
+
+        &.rich .rich-close-button {
+            display: none;
+        }
+
+        &:not(.rich) {
+            .bubble-action-panel {
+                display: inline-flex;
+                flex-direction: column;
+                width: 30px;
+                border-radius: 0;
+            }
+        }
+
+        .bubble-output-container {
+            display: inline-block;
+            width: 100%;
+            max-height: none;
+            // overflow: scroll;
+        }
+
+
+        .bubble-result-container {
+            position: relative;
+
+            video, img, svg {
+                display: block;
+                max-width: 100%;
+                max-height: 450px;
+            }
+        }
+
+        .bubble-error-container {
+            font-size: @font-size;
+        }
+
+
+
+        // .close-button {
+        //     &::after {
+        //         color: @button-text-color;
+        //         display: none;
+        //         position: absolute;
+        //         top: -12px;
+        //         right: -12px;
+        //         // content: '✕';
+        //         cursor: pointer;
+        //         // border: 1px solid @close-text-color;
+        //         border-radius: 50%;
+        //         padding: 1px;
+        //         width: 1.5em;
+        //         height: 1.5em;
+        //         text-align: center;
+        //         background-color: darken(@bubble-background, 10%);
+        //         box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
+        //     }
+        // }
+    }
 }
 
 .hydrogen.status-container {

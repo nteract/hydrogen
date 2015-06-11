@@ -6,6 +6,7 @@ child_process = require 'child_process'
 uuid = require 'uuid'
 
 StatusView = require './status-view'
+WatchSidebar = require './watch-sidebar'
 
 module.exports =
 class Kernel
@@ -17,6 +18,8 @@ class Kernel
         @executionCallbacks = {}
         @watchCallbacks = []
 
+        grammar = @getGrammarForLanguage(@language)
+        @watchSidebar = new WatchSidebar(this, grammar)
         @statusView = new StatusView(@language)
 
         projectPath = path.dirname(atom.workspace.getActiveTextEditor().getPath())
@@ -308,3 +311,10 @@ class Kernel
         @ioSocket.close()
 
         @kernelProcess.kill('SIGKILL')
+
+    getGrammarForLanguage: (language) ->
+        matchingGrammars = atom.grammars.getGrammars().filter (grammar) ->
+            grammar != atom.grammars.nullGrammar and
+                grammar.name.toLowerCase() == language
+
+        return matchingGrammars[0]

@@ -31,6 +31,9 @@ module.exports = KernelManager =
                 kernels.push(@pythonInfo)
             return kernels
 
+    getRunningKernels: ->
+        return _.clone(@runningKernels)
+
     getKernelsFromDirectory: (directory) ->
         try
             kernelNames = fs.readdirSync directory
