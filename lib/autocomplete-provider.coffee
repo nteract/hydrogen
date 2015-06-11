@@ -39,7 +39,7 @@ module.exports = AutocompleteProvider = ( ->
 
         getPrefix: (editor, bufferPosition) ->
             # Whatever your prefix regex might be
-            regex = /([\w0-9_-][\.:]?)+$/
+            regex = /([\w0-9_-][\.:\$]?)+$/
 
             # Get the text for the line up to the triggered buffer position
             line = editor.getTextInRange([[bufferPosition.row, 0], bufferPosition])
