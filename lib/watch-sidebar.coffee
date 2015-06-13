@@ -1,3 +1,4 @@
+{$} = require 'atom-space-pen-views'
 _ = require 'lodash'
 
 WatchView = require './watch-view'
@@ -36,10 +37,15 @@ class WatchSidebar
         @addButton.innerText = "Add watch"
         @addButton.onclick = => @addWatch()
 
+        @resizeHandle = document.createElement('div')
+        @resizeHandle.classList.add('watch-resize-handle')
+        $(@resizeHandle).on 'mousedown', @resizeStarted
+
         @element.appendChild(title)
         @element.appendChild(languageDisplay)
         @element.appendChild(@watchesContainer)
         @element.appendChild(@addButton)
+        @element.appendChild(@resizeHandle)
 
         @kernel.addWatchCallback =>
             @run()
@@ -60,6 +66,20 @@ class WatchSidebar
     run: ->
         _.forEach @watchViews, (watchView) =>
             watchView.run()
+
+    resizeStarted: =>
+        $(document).on('mousemove', @resizeTreeView)
+        $(document).on('mouseup', @resizeStopped)
+
+    resizeStopped: =>
+        $(document).off('mousemove', @resizeTreeView)
+        $(document).off('mouseup', @resizeStopped)
+
+    resizeTreeView: ({pageX, which}) =>
+        return @resizeStopped() unless which is 1
+
+        width = $(document.body).width() - pageX
+        @element.style.width = "#{width - 10}px"
 
     show: ->
         @element.classList.remove('hidden')
