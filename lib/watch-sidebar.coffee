@@ -17,7 +17,7 @@ class WatchSidebar
 
         languageDisplay = document.createElement('h3')
         languageDisplay.classList.add('watch-sidebar-language')
-        languageDisplay.innerText = "Language: #{@language}"
+        languageDisplay.innerText = "Kernel: #{@language}"
         languageDisplay.onclick = =>
             editor = atom.workspace.getActiveTextEditor()
             editorView = atom.views.getView(editor)
