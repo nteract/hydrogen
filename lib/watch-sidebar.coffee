@@ -64,8 +64,9 @@ class WatchSidebar
         _.last(@watchViews).inputElement.element.focus()
 
     run: ->
-        _.forEach @watchViews, (watchView) =>
-            watchView.run()
+        if @visible
+            _.forEach @watchViews, (watchView) =>
+                watchView.run()
 
     resizeStarted: =>
         $(document).on('mousemove', @resizeTreeView)

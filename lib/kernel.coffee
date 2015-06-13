@@ -175,7 +175,7 @@ class Kernel
                     callback(matches)
                 else
                     callback {
-                        data: "✓"
+                        data: 'ok'
                         type: 'text'
                         stream: 'status'
                     }

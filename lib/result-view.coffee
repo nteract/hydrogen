@@ -73,7 +73,9 @@ class ResultView
     addResult: (result) ->
         @element.classList.remove('empty')
         if result.stream == 'status'
-            @statusContainer.innerText = result.data
+            if result.data == 'ok'
+                console.log "making with check mark"
+                @statusContainer.classList.add('icon', 'icon-check')
 
         else
             if result.stream == 'stderr' or result.stream == 'error'
@@ -107,7 +109,8 @@ class ResultView
                 @element.classList.add('svg')
                 buffer = new Buffer(result.data)
                 image = document.createElement('img')
-                image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
+                image.setAttribute('src', "data:image/svg+xml;base64," +
+                                           buffer.toString('base64'))
                 container.appendChild(image)
                 @setMultiline(true)
 
