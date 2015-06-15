@@ -22,7 +22,7 @@ class WatchSidebar
         languageDisplay.onclick = =>
             editor = atom.workspace.getActiveTextEditor()
             editorView = atom.views.getView(editor)
-            atom.commands.dispatch(editorView, 'hydrogen:select-watch-language')
+            atom.commands.dispatch(editorView, 'hydrogen:select-watch-kernel')
 
         # watch = new WatchView(@kernel, @grammar)
 

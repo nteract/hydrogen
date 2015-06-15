@@ -11,9 +11,12 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 
 - execute a line, selection, or block at a time
 - rich media support for plots, images, and video
+- watch expressions let you keep track of variables and re-run snippets after every change
 - completions from the running kernel, just like autocomplete in the Chrome dev tools
 - one kernel per language (so you can run snippets from several files, all in the same namespace)
 - interrupt or restart the kernel if anything goes wrong
+
+<img src="http://i.imgur.com/KiHQFO4.png?1" width=300>
 
 ## Dependencies
 
@@ -103,6 +106,19 @@ It's easiest to see these interactions visually:
 <img src="http://g.recordit.co/4ViVmKtKAr.gif">
 
 If your code starts getting cluttered up with results, run "Hydrogen: Clear Results" to remove them all at once. You can also run this command with ⌘-⌥-⌫.
+
+
+### Watch Expressions
+
+After you've run some code with Hydrogen, you can use the "Hydrogen: Toggle Watches" command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code. **IMPORTANT:** Be careful what you put in your watch expressions. If you write code that mutates state in a watch expression, that code will get run after every execute command and likely result in some _extremely confusing_ bugs.
+
+<img src="http://i.imgur.com/PAQ3Jvf.gif">
+
+You can re-run the watch expressions by using the normal run shortcut (⌘-⌥-↩ by default) inside a watch expression's edit field.
+
+If you have multiple kernels running, you can switch between their watch expressions with the "Hydrogen: Select Watch Kernel" command (or just click on the "Kernel: <language>" text).
+
+
 
 ### Managing kernels
 

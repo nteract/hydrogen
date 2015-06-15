@@ -41,7 +41,7 @@ module.exports = Hydrogen =
             'hydrogen:run': => @run()
             'hydrogen:show-kernel-commands': => @showKernelCommands()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
-            'hydrogen:select-watch-language': => @showWatchLanguagePicker()
+            'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -125,6 +125,7 @@ module.exports = Hydrogen =
         element.setAttribute('style', "top: -#{topOffset}px;")
         view.spinner.setAttribute('style',
                 "width: #{lineHeight + 2}px; height: #{lineHeight - 4}px;")
+        view.statusContainer.setAttribute('style', "height: #{lineHeight}px")
 
         @editor.decorateMarker marker, {
                 type: 'overlay'
