@@ -16,7 +16,7 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 - one kernel per language (so you can run snippets from several files, all in the same namespace)
 - interrupt or restart the kernel if anything goes wrong
 
-<img src="http://i.imgur.com/KiHQFO4.png?1" width=300>
+<!-- <img src="http://i.imgur.com/KiHQFO4.png?1" width=300> -->
 
 ## Dependencies
 
