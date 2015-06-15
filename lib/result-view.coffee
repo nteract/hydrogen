@@ -6,11 +6,7 @@ class ResultView
 
     constructor: (@marker) ->
         @element = document.createElement('div')
-        @element.classList.add('atom-repl')
-        @element.classList.add('output-bubble')
-
-        @spinner = @buildSpinner()
-        @element.appendChild(@spinner)
+        @element.classList.add('hydrogen', 'output-bubble', 'empty')
 
         @outputContainer = document.createElement('div')
         @outputContainer.classList.add('bubble-output-container')
@@ -26,6 +22,8 @@ class ResultView
 
         @statusContainer = document.createElement('div')
         @statusContainer.classList.add('bubble-status-container')
+        @spinner = @buildSpinner()
+        @statusContainer.appendChild(@spinner)
         @outputContainer.appendChild(@statusContainer)
 
         @richCloseButton = document.createElement('div')
@@ -70,17 +68,16 @@ class ResultView
         @tooltips.add atom.tooltips.add(@copyButton, {title: "Copy to clipboard"})
         @tooltips.add atom.tooltips.add(@openButton, {title: "Open in new editor"})
 
-
         return this
 
     addResult: (result) ->
+        @element.classList.remove('empty')
         if result.stream == 'status'
-            hasResults = @resultContainer.innerHTML.length == 0
-            @shouldIndicateStatus(hasResults)
-            @statusContainer.innerText = result.data
+            if result.data == 'ok'
+                console.log "making with check mark"
+                @statusContainer.classList.add('icon', 'icon-check')
 
         else
-            @shouldIndicateStatus(false)
             if result.stream == 'stderr' or result.stream == 'error'
                 container = @errorContainer
             else
@@ -105,7 +102,6 @@ class ResultView
             else if result.type == 'image/svg+xml'
                 console.log "rendering as SVG"
 
-
                 container.innerHTML = container.innerHTML.trim().replace('<br>', '')
 
                 @resultType = 'image'
@@ -113,7 +109,8 @@ class ResultView
                 @element.classList.add('svg')
                 buffer = new Buffer(result.data)
                 image = document.createElement('img')
-                image.setAttribute('src', "data:image/svg+xml;base64," + buffer.toString('base64'))
+                image.setAttribute('src', "data:image/svg+xml;base64," +
+                                           buffer.toString('base64'))
                 container.appendChild(image)
                 @setMultiline(true)
 
@@ -129,18 +126,21 @@ class ResultView
                 container.appendChild(image)
                 @setMultiline(true)
 
-            else
+            else if not @resultType or @resultType == 'text'
                 console.log "rendering as text"
+                @resultType = 'text'
+                if container.innerText.length > 0
+                    container.innerText = container.innerText + (" " + result.data)
+                else
+                    container.innerText = container.innerText + result.data
 
-                if not @resultType or @resultType == 'text'
-                    @resultType = 'text'
-                    if container.innerText.length > 0
-                        container.innerText = container.innerText + (" " + result.data)
-                    else
-                        container.innerText = container.innerText + result.data
+                if /\r|\n/.exec(container.innerText.trim())
+                    @setMultiline(true)
+            else
+                console.error "Unrecognized result:", result
 
-                    if /\r|\n/.exec(container.innerText.trim())
-                        @setMultiline(true)
+        console.log "resultType after update:", @resultType
+        @updateStatusVisibility()
 
     getAllText: ->
         resultText = @resultContainer.innerText
@@ -157,8 +157,8 @@ class ResultView
             # @closeButton.style.display = 'none'
 
 
-    shouldIndicateStatus: (shouldIndicate) ->
-        if shouldIndicate
+    updateStatusVisibility: ->
+        if not @resultType?
             @statusContainer.style.display = 'inline-block'
         else
             @statusContainer.style.display = 'none'
@@ -188,6 +188,7 @@ class ResultView
 
     spin: (shouldSpin) ->
         if shouldSpin
+            @element.classList.remove('empty')
             @spinner.style.display = 'block'
         else
             @spinner.style.display = 'none'
@@ -195,7 +196,8 @@ class ResultView
 
     destroy: ->
         @tooltips.dispose()
-        @marker.destroy()
+        if @marker?
+            @marker.destroy()
         @element.innerHTML = ''
         @element.remove()
 

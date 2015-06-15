@@ -8,9 +8,11 @@ KernelManager = require './kernel-manager'
 ConfigManager = require './config-manager'
 ResultView = require './result-view'
 SignalListView = require './signal-list-view'
+WatchSidebar = require './watch-sidebar'
+WatchLanguagePicker = require './watch-language-picker'
 AutocompleteProvider = require './autocomplete-provider'
 
-module.exports = AtomRepl =
+module.exports = Hydrogen =
     config:
         languageMappings:
             title: "Language Mappings"
@@ -38,6 +40,8 @@ module.exports = AtomRepl =
         @subscriptions.add atom.commands.add 'atom-text-editor',
             'hydrogen:run': => @run()
             'hydrogen:show-kernel-commands': => @showKernelCommands()
+            'hydrogen:toggle-watches': => @toggleWatchSidebar()
+            'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -47,6 +51,7 @@ module.exports = AtomRepl =
 
         @editor = atom.workspace.getActiveTextEditor()
 
+
     deactivate: ->
         @subscriptions.dispose()
         KernelManager.destroy()
@@ -55,7 +60,7 @@ module.exports = AtomRepl =
     consumeStatusBar: (statusBar) ->
         console.log "making status bar"
         @statusBarElement = document.createElement('div')
-        @statusBarElement.classList.add('atom-repl')
+        @statusBarElement.classList.add('hydrogen')
         @statusBarElement.classList.add('status-container')
         @statusBarElement.onclick = =>
             editorView = atom.views.getView(atom.workspace.getActiveTextEditor())
@@ -65,7 +70,6 @@ module.exports = AtomRepl =
 
 
     provide: ->
-        # debugger
         return AutocompleteProvider
 
     updateCurrentEditor: (currentPaneItem) ->
@@ -79,7 +83,10 @@ module.exports = AtomRepl =
             kernel = KernelManager.getRunningKernelForLanguage(language)
             if kernel?
                 @setStatusBarElement(kernel.statusView.getElement())
+                # @setWatchSidebar(kernel.watchSidebar)
             else
+                # @hideWatchSidebar()
+                # @watchSidebar = null
                 @removeStatusBarElement()
         else
             @removeStatusBarElement()
@@ -118,6 +125,7 @@ module.exports = AtomRepl =
         element.setAttribute('style', "top: -#{topOffset}px;")
         view.spinner.setAttribute('style',
                 "width: #{lineHeight + 2}px; height: #{lineHeight - 4}px;")
+        view.statusContainer.setAttribute('style', "height: #{lineHeight}px")
 
         @editor.decorateMarker marker, {
                 type: 'overlay'
@@ -149,22 +157,34 @@ module.exports = AtomRepl =
 
     run: ->
         editor = atom.workspace.getActiveTextEditor()
-        language = editor.getGrammar().name.toLowerCase()
+        grammar = editor.getGrammar()
+        language = grammar.name.toLowerCase()
 
         if language? and KernelManager.languageHasKernel(language)
             @startKernelIfNeeded language, (kernel) =>
-                statusView = kernel.statusView
-                @setStatusBarElement(statusView.getElement())
+                if @watchSidebar? and
+                        @watchSidebar.element.contains(document.activeElement)
+                    @watchSidebar.run()
+                else
+                    statusView = kernel.statusView
+                    @setStatusBarElement(statusView.getElement())
+                    if not @watchSidebar?
+                        @setWatchSidebar(kernel.watchSidebar)
 
-                codeBlock = @findCodeBlock()
-                if codeBlock?
-                    [code, row] = codeBlock
-                if code?
-                    @clearBubblesOnRow(row)
-                    view = @insertResultBubble(row)
-                    KernelManager.execute language, code, (result) ->
-                        view.spin(false)
-                        view.addResult(result)
+                    # if not @watchSidebar?
+                        # @watchSidebar = new WatchSidebar(kernel, grammar)
+                    # @showWatchSidebar()
+
+                    codeBlock = @findCodeBlock()
+                    if codeBlock?
+                        [code, row] = codeBlock
+                    if code?
+                        @clearBubblesOnRow(row)
+                        view = @insertResultBubble(row)
+
+                        KernelManager.execute language, code, (result) =>
+                            view.spin(false)
+                            view.addResult(result)
         else
             atom.notifications.addError(
                 "No kernel for language `#{language}` found",
@@ -185,6 +205,47 @@ module.exports = AtomRepl =
         else
             console.error "No status bar element. Can't set it."
 
+    hideWatchSidebar: ->
+        console.log "hiding watch sidebar"
+        if @watchSidebar?
+            console.log "there is a sidebar to hide"
+            @watchSidebar.hide()
+
+    showWatchSidebar: ->
+        console.log "showing watch sidebar"
+        if @watchSidebar?
+            @watchSidebar.show()
+
+    toggleWatchSidebar: ->
+        if @watchSidebar? and @watchSidebar.visible
+            @watchSidebar.hide()
+        else
+            @watchSidebar.show()
+
+    setWatchSidebar: (sidebar) ->
+        console.log "setting watch sidebar"
+        if @watchSidebar? and @watchSidebar != sidebar and @watchSidebar.visible
+            @watchSidebar.hide()
+            @watchSidebar = sidebar
+            @watchSidebar.show()
+        else
+            @watchSidebar = sidebar
+
+    showWatchLanguagePicker: ->
+        unless @watchLanguagePicker?
+            @watchLanguagePicker = new WatchLanguagePicker()
+            @watchLanguagePicker.onConfirmed =
+                    @handleWatchLanguageCommand.bind(this)
+        @watchLanguagePicker.toggle()
+
+    handleWatchLanguageCommand: (command) ->
+        kernel = KernelManager.getRunningKernelForLanguage(command.value)
+        @setWatchSidebar(kernel.watchSidebar)
+
+    # updateWatches: ->
+    #     if @watchSidebar?
+    #         @watchSidebar.run()
+
     startKernelIfNeeded: (language, onStarted) ->
         runningKernel = KernelManager.getRunningKernelForLanguage(language)
         if not runningKernel?
@@ -196,7 +257,8 @@ module.exports = AtomRepl =
             else
                 console.error "No kernel for this language!"
         else
-            onStarted?(runningKernel)
+            if onStarted?
+                onStarted(runningKernel)
 
     findCodeBlock: ->
         buffer = @editor.getBuffer()

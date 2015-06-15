@@ -11,9 +11,12 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 
 - execute a line, selection, or block at a time
 - rich media support for plots, images, and video
+- watch expressions let you keep track of variables and re-run snippets after every change
 - completions from the running kernel, just like autocomplete in the Chrome dev tools
 - one kernel per language (so you can run snippets from several files, all in the same namespace)
 - interrupt or restart the kernel if anything goes wrong
+
+<!-- <img src="http://i.imgur.com/KiHQFO4.png?1" width=300> -->
 
 ## Dependencies
 
@@ -104,6 +107,21 @@ It's easiest to see these interactions visually:
 
 If your code starts getting cluttered up with results, run "Hydrogen: Clear Results" to remove them all at once. You can also run this command with ⌘-⌥-⌫.
 
+
+### Watch Expressions
+
+After you've run some code with Hydrogen, you can use the "Hydrogen: Toggle Watches" command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code.
+
+**IMPORTANT:** Be careful what you put in your watch expressions. If you write code that mutates state in a watch expression, that code will get run after every execute command and likely result in some _extremely confusing_ bugs.
+
+<img src="http://i.imgur.com/PAQ3Jvf.gif">
+
+You can re-run the watch expressions by using the normal run shortcut (⌘-⌥-↩ by default) inside a watch expression's edit field.
+
+If you have multiple kernels running, you can switch between their watch expressions with the "Hydrogen: Select Watch Kernel" command (or just click on the "Kernel: <language>" text).
+
+
+
 ### Managing kernels
 
 Sometimes things go wrong. Maybe you've written an infinite loop, maybe the kernel has crashed, or maybe you just want to clear the kernel's namespace. Use the command palette to open "Hydrogen: Show Kernel Commands" and select "Interrupt" to interrupt (think `Ctrl-C` in a REPL) the kernel or "Restart" to kill the kernel and start a new one, clearing the namespace.
@@ -127,6 +145,6 @@ Hydrogen implements the [messaging protocol](http://ipython.org/ipython-doc/stab
 
 Hydrogen atoms make up 90% of Jupiter by volume.
 
-Plus, it was easy to make a logo. (Which now doesn't look exactly like Ionic's. Whoops.)
+Plus, it was easy to make a logo.
 
 ![hydrogen logo](http://f.cl.ly/items/3m15291M082k011c0Z3M/logo.svg)

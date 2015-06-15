@@ -6,6 +6,7 @@ child_process = require 'child_process'
 uuid = require 'uuid'
 
 StatusView = require './status-view'
+WatchSidebar = require './watch-sidebar'
 
 module.exports =
 class Kernel
@@ -15,7 +16,10 @@ class Kernel
         console.log "Kernel configuration file path:", @configPath
         @language = @kernelInfo.language.toLowerCase()
         @executionCallbacks = {}
+        @watchCallbacks = []
 
+        grammar = @getGrammarForLanguage(@language)
+        @watchSidebar = new WatchSidebar(this, grammar)
         @statusView = new StatusView(@language)
 
         projectPath = path.dirname(atom.workspace.getActiveTextEditor().getPath())
@@ -83,9 +87,7 @@ class Kernel
 
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
-    execute: (code, onResults) ->
-        requestId = uuid.v4()
-
+    _execute: (code, requestId, onResults) ->
         console.log "sending execute"
         header = JSON.stringify({
                 msg_id: requestId,
@@ -116,8 +118,16 @@ class Kernel
         @executionCallbacks[requestId] = onResults
         @shellSocket.send message
 
+    execute: (code, onResults) ->
+        requestId = "execute_" + uuid.v4()
+        @_execute(code, requestId, onResults)
+
+    executeWatch: (code, onResults) ->
+        requestId = "watch_" + uuid.v4()
+        @_execute(code, requestId, onResults)
+
     complete: (code, onResults) ->
-        requestId = uuid.v4()
+        requestId = "complete_" + uuid.v4()
 
         column = code.length
 
@@ -150,6 +160,9 @@ class Kernel
         @executionCallbacks[requestId] = onResults
         @shellSocket.send message
 
+    addWatchCallback: (watchCallback) ->
+        @watchCallbacks.push(watchCallback)
+
     onShellMessage: (msgArray...) ->
         message = @parseMessage msgArray
         console.log "shell message:", message
@@ -165,7 +178,7 @@ class Kernel
                     callback(matches)
                 else
                     callback {
-                        data: "✓"
+                        data: 'ok'
                         type: 'text'
                         stream: 'status'
                     }
@@ -191,6 +204,11 @@ class Kernel
         if message.type == 'status'
             status = message.contents.execution_state
             @statusView.setStatus(status)
+
+            if status == 'idle' and _.has(message, ['parent_header', 'msg_id'])
+                if message.parent_header.msg_id.startsWith('execute')
+                    _.forEach @watchCallbacks, (watchCallback) ->
+                        watchCallback()
 
         if _.has(message, ['parent_header', 'msg_id'])
             callback = @executionCallbacks[message.parent_header.msg_id]
@@ -296,3 +314,10 @@ class Kernel
         @ioSocket.close()
 
         @kernelProcess.kill('SIGKILL')
+
+    getGrammarForLanguage: (language) ->
+        matchingGrammars = atom.grammars.getGrammars().filter (grammar) ->
+            grammar != atom.grammars.nullGrammar and
+                grammar.name.toLowerCase() == language
+
+        return matchingGrammars[0]
