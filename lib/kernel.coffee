@@ -87,12 +87,7 @@ class Kernel
 
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
-    execute: (code, isWatch, onResults) ->
-        if isWatch
-            requestId = "watch_" + uuid.v4()
-        else
-            requestId = "execute_" + uuid.v4()
-
+    _execute: (code, requestId, onResults) ->
         console.log "sending execute"
         header = JSON.stringify({
                 msg_id: requestId,
@@ -122,6 +117,14 @@ class Kernel
 
         @executionCallbacks[requestId] = onResults
         @shellSocket.send message
+
+    execute: (code, onResults) ->
+        requestId = "execute_" + uuid.v4()
+        @_execute(code, requestId, onResults)
+
+    executeWatch: (code, onResults) ->
+        requestId = "watch_" + uuid.v4()
+        @_execute(code, requestId, onResults)
 
     complete: (code, onResults) ->
         requestId = "complete_" + uuid.v4()

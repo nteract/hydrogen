@@ -31,7 +31,7 @@ class WatchView
         @clearResults()
         console.log "watchview running:", code
         if code? and code.length? and code.length > 0
-            @kernel.execute code, true, (result) =>
+            @kernel.executeWatch code, (result) =>
                 console.log "watchview got result:", result
                 @resultView.addResult(result)
 
