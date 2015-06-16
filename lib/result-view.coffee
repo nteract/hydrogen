@@ -74,7 +74,6 @@ class ResultView
         @element.classList.remove('empty')
         if result.stream == 'status'
             if result.data == 'ok'
-                console.log "making with check mark"
                 @statusContainer.classList.add('icon', 'icon-check')
 
         else
