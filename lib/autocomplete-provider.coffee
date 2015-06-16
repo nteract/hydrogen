@@ -9,17 +9,17 @@ module.exports = AutocompleteProvider = ( ->
         selector: selector
         disableForSelector: '.comment'
 
-        defaultRegex: /([\w0-9_-][\.:\$]?)+$/
+        defaultRegex: /([\w-][\.:\$]?)+$/
         regexes:
 
             # pretty dodgy, adapted from http://stackoverflow.com/questions/8396577/check-if-character-value-is-a-valid-r-object-name/8396658#8396658
             r: /([^\d\W]|[.])[\w.$]*$/
 
             # this is NOT correct. using the python one until I get an alternative
-            julia: /[^\d\W][\w.]*$/
+            julia: /([^\d\W]|[\u00A0-\uFFFF])[\w.!\u00A0-\uFFFF]*$/
 
             # adapted from http://stackoverflow.com/questions/5474008/regular-expression-to-confirm-whether-a-string-is-a-valid-identifier-in-python
-            python: /[^\d\W][\w.]*$/
+            python: /([^\d\W]|[\u00A0-\uFFFF])[\w.\u00A0-\uFFFF]*$/
 
             # taken from https://github.com/n-riesco/nel/blob/master/lib/nel.js#L713
             javascript: /[_$a-zA-Z][_$a-zA-Z0-9]*$/
