@@ -66,10 +66,12 @@ module.exports = KernelManager =
     getLanguageMappings: ->
         try
             languageMappings = JSON.parse atom.config.get('Hydrogen.languageMappings')
+            return languageMappings
         catch error
             console.error error
             languageMappings = {}
-
+            return languageMappings
+            
     getKernelInfoForLanguage: (language) ->
         kernels = @getAvailableKernels()
         console.log "Available kernels:", kernels
