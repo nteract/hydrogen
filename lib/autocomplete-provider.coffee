@@ -49,26 +49,32 @@ module.exports = AutocompleteProvider = ( ->
                             if match.suggestion_type == "function"
                                 console.log "match:", match
                                 argText = ""
-                                if match.signatures[0].arguments? and
-                                   match.signatures[0].arguments.length > 0
-                                    # console.log match.signatures[0].arguments
-                                    # debugger
-                                    argText = _.reduce match.signatures[0].arguments, (prev, arg) ->
-                                            argSignature = arg.name
-                                            if arg.type? and arg.type.length > 0
-                                                argSignature = argSignature + "::#{arg.type}"
-                                            prev = "#{prev}, " unless prev is ""
-                                            return "#{prev}#{argSignature}"
-                                        , ""
-                                    argText = argText.trim()
+                                if match.signatures.length == 1
+                                    if match.signatures[0].arguments? and
+                                       match.signatures[0].arguments.length > 0
+                                        # console.log match.signatures[0].arguments
+                                        # debugger
+                                        argText = _.reduce match.signatures[0].arguments, (prev, arg) ->
+                                                argSignature = arg.name
+                                                if arg.type? and arg.type.length > 0
+                                                    argSignature = argSignature + "::#{arg.type}"
+                                                prev = "#{prev}, " unless prev is ""
+                                                return "#{prev}#{argSignature}"
+                                            , ""
+                                        argText = "(#{argText.trim()})"
+                                    # else if match.signatures[0].arguments? and
+                                    #    match.signatures[0].arguments.length > 1
+                                    #    argText = " (#{} signatures)"
+
+                                else if match.signatures.length > 1
+                                    argText = "(#{match.signatures.length} signatures)"
                                 return {
                                     text: match.text
-                                    displayText: "#{match.text}(#{argText})"
+                                    displayText: "#{match.text}#{argText}"
                                     type: match.suggestion_type
                                     replacementPrefix: prefix
                                     leftLabel: match.type
                                 }
-
                             else
                                 return {
                                     text: match.text
@@ -81,6 +87,7 @@ module.exports = AutocompleteProvider = ( ->
                             # iconHTML: "<img
                                 # src='#{__dirname}/../static/logo.svg'
                                 # style='width: 100%;'>"
+                        console.log matches
                         resolve(matches)
                 # resolve([text: 'something'])
 
