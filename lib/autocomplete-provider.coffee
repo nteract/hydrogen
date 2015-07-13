@@ -46,11 +46,41 @@ module.exports = AutocompleteProvider = ( ->
                 new Promise (resolve) ->
                     KernelManager.complete language, prefix, (matches) ->
                         matches = _.map matches, (match) ->
-                            text: match
-                            replacementPrefix: prefix
-                            iconHTML: "<img
-                                src='#{__dirname}/../static/logo.svg'
-                                style='width: 100%;'>"
+                            if match.suggestion_type == "function"
+                                console.log "match:", match
+                                argText = ""
+                                if match.signatures[0].arguments? and
+                                   match.signatures[0].arguments.length > 0
+                                    # console.log match.signatures[0].arguments
+                                    # debugger
+                                    argText = _.reduce match.signatures[0].arguments, (prev, arg) ->
+                                            argSignature = arg.name
+                                            if arg.type? and arg.type.length > 0
+                                                argSignature = argSignature + "::#{arg.type}"
+                                            prev = "#{prev}, " unless prev is ""
+                                            return "#{prev}#{argSignature}"
+                                        , ""
+                                    argText = argText.trim()
+                                return {
+                                    text: match.text
+                                    displayText: "#{match.text}(#{argText})"
+                                    type: match.suggestion_type
+                                    replacementPrefix: prefix
+                                    leftLabel: match.type
+                                }
+
+                            else
+                                return {
+                                    text: match.text
+                                    type: match.suggestion_type
+                                    replacementPrefix: prefix
+                                    leftLabel: match.type
+                                    rightLabel: match.value
+                                }
+
+                            # iconHTML: "<img
+                                # src='#{__dirname}/../static/logo.svg'
+                                # style='width: 100%;'>"
                         resolve(matches)
                 # resolve([text: 'something'])
 

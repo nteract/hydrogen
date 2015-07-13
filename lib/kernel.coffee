@@ -131,7 +131,7 @@ class Kernel
 
         column = code.length
 
-        console.log "sending competion"
+        console.log "sending completion"
         header = JSON.stringify({
                 msg_id: requestId,
                 username: "",
