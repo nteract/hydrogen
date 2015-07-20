@@ -92,7 +92,7 @@ class Kernel
         header = JSON.stringify({
                 msg_id: requestId,
                 username: "",
-                session: 0,
+                session: "00000000-0000-0000-0000-000000000000",
                 msg_type: "execute_request",
                 version: "5.0"
             })
@@ -131,11 +131,11 @@ class Kernel
 
         column = code.length
 
-        console.log "sending competion"
+        console.log "sending completion"
         header = JSON.stringify({
                 msg_id: requestId,
                 username: "",
-                session: 0,
+                session: "00000000-0000-0000-0000-000000000000",
                 msg_type: "complete_request",
                 version: "5.0"
             })
