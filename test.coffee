@@ -35,7 +35,7 @@ io_socket.subscribe('')
 header = JSON.stringify({
             msg_id: 0,
             username: "will",
-            session: 0,
+            session: "00000000-0000-0000-0000-000000000000",
             msg_type: "execute_request",
             version: "5.0"
         })
