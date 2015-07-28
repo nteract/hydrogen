@@ -69,14 +69,14 @@ class WatchSidebar
                 watchView.run()
 
     resizeStarted: =>
-        $(document).on('mousemove', @resizeTreeView)
+        $(document).on('mousemove', @resizeSidebar)
         $(document).on('mouseup', @resizeStopped)
 
     resizeStopped: =>
-        $(document).off('mousemove', @resizeTreeView)
+        $(document).off('mousemove', @resizeSidebar)
         $(document).off('mouseup', @resizeStopped)
 
-    resizeTreeView: ({pageX, which}) =>
+    resizeSidebar: ({pageX, which}) =>
         return @resizeStopped() unless which is 1
 
         width = $(document.body).width() - pageX
