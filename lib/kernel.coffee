@@ -318,6 +318,8 @@ class Kernel
     getGrammarForLanguage: (language) ->
         matchingGrammars = atom.grammars.getGrammars().filter (grammar) ->
             grammar != atom.grammars.nullGrammar and
+                grammar.name? and
+                grammar.name.toLowerCase? and
                 grammar.name.toLowerCase() == language
 
         return matchingGrammars[0]
