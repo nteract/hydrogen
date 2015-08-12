@@ -46,15 +46,15 @@ module.exports = AutocompleteProvider = ( ->
                 new Promise (resolve) ->
                     KernelManager.complete language, prefix, (matches) ->
                         matches = _.map matches, (match) ->
-                            if match.suggestion_type == "function"
+                            if match.signatures?
                                 console.log "match:", match
                                 argText = ""
                                 if match.signatures.length == 1
-                                    if match.signatures[0].arguments? and
-                                       match.signatures[0].arguments.length > 0
-                                        # console.log match.signatures[0].arguments
-                                        # debugger
-                                        argText = _.reduce match.signatures[0].arguments, (prev, arg) ->
+                                    if match.signatures[0].parameters? and
+                                       match.signatures[0].parameters.length > 0
+                                        # console.log match.signatures[0].parameters
+
+                                        argText = _.reduce match.signatures[0].parameters, (prev, arg) ->
                                                 argSignature = arg.name
                                                 if arg.type? and arg.type.length > 0
                                                     argSignature = argSignature + "::#{arg.type}"
@@ -62,8 +62,8 @@ module.exports = AutocompleteProvider = ( ->
                                                 return "#{prev}#{argSignature}"
                                             , ""
                                         argText = "(#{argText.trim()})"
-                                    # else if match.signatures[0].arguments? and
-                                    #    match.signatures[0].arguments.length > 1
+                                    # else if match.signatures[0].parameters? and
+                                    #    match.signatures[0].parameters.length > 1
                                     #    argText = " (#{} signatures)"
 
                                 else if match.signatures.length > 1
@@ -71,14 +71,14 @@ module.exports = AutocompleteProvider = ( ->
                                 return {
                                     text: match.text
                                     displayText: "#{match.text}#{argText}"
-                                    type: match.suggestion_type
+                                    type: match.type
                                     replacementPrefix: prefix
                                     leftLabel: match.type
                                 }
                             else
                                 return {
                                     text: match.text
-                                    type: match.suggestion_type
+                                    type: match.type
                                     replacementPrefix: prefix
                                     leftLabel: match.type
                                     rightLabel: match.value
