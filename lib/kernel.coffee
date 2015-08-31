@@ -1,3 +1,4 @@
+crypto = require 'crypto'
 fs = require 'fs'
 path = require 'path'
 zmq = require 'zmq'
@@ -86,38 +87,62 @@ class Kernel
         console.log "sending SIGINT"
         @kernelProcess.kill('SIGINT')
 
+    # send a signed Jupyter message (adapted from github.com/n-riesco/jmp)
+    _send: (message, socket) ->
+        encodedMessage =
+            idents:        message.idents or []
+            signature:     ''
+            header:        JSON.stringify message.header
+            parent_header: JSON.stringify (message.parent_header or {})
+            metadata:      JSON.stringify (message.metadata or {})
+            content:       JSON.stringify (message.content or {})
+
+        if (@config.key)
+            hmac = crypto.createHmac @config.signature_scheme.slice(5),
+                @config.key
+            hmac.update encodedMessage.header
+            hmac.update encodedMessage.parent_header
+            hmac.update encodedMessage.metadata
+            hmac.update encodedMessage.content
+            encodedMessage.signature = hmac.digest "hex"
+
+        console.log encodedMessage
+
+        socket.send encodedMessage.idents.concat [
+            '<IDS|MSG>'
+            encodedMessage.signature
+            encodedMessage.header
+            encodedMessage.parent_header
+            encodedMessage.metadata
+            encodedMessage.content
+        ]
+
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
     _execute: (code, requestId, onResults) ->
         console.log "sending execute"
-        header = JSON.stringify({
+
+        header =
                 msg_id: requestId,
                 username: "",
                 session: "00000000-0000-0000-0000-000000000000",
                 msg_type: "execute_request",
                 version: "5.0"
-            })
 
-        contents = JSON.stringify({
+        content =
                 code: code
                 silent: false
                 store_history: true
                 user_expressions: {}
                 allow_stdin: false
-            })
 
-        message =  [
-                '<IDS|MSG>',
-                '',
-                header,
-                '{}',
-                '{}',
-                contents
-            ]
-        console.log message
+        message =
+                header: header
+                content: content
 
         @executionCallbacks[requestId] = onResults
-        @shellSocket.send message
+
+        @_send message, @shellSocket
 
     execute: (code, onResults) ->
         requestId = "execute_" + uuid.v4()
