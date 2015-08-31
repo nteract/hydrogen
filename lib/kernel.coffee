@@ -153,38 +153,32 @@ class Kernel
         @_execute(code, requestId, onResults)
 
     complete: (code, onResults) ->
+        console.log "sending completion"
+
         requestId = "complete_" + uuid.v4()
 
         column = code.length
 
-        console.log "sending completion"
-        header = JSON.stringify({
-                msg_id: requestId,
-                username: "",
-                session: "00000000-0000-0000-0000-000000000000",
-                msg_type: "complete_request",
+        header =
+                msg_id: requestId
+                username: ""
+                session: "00000000-0000-0000-0000-000000000000"
+                msg_type: "complete_request"
                 version: "5.0"
-            })
 
-        contents = JSON.stringify({
+        content =
                 code: code
                 text: code
                 line: code
                 cursor_pos: column
-            })
 
-        message =  [
-                '<IDS|MSG>',
-                '',
-                header,
-                '{}',
-                '{}',
-                contents
-            ]
-        console.log message
+        message =
+                header: header
+                content: content
 
         @executionCallbacks[requestId] = onResults
-        @shellSocket.send message
+
+        @_send message, @shellSocket
 
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
@@ -312,30 +306,26 @@ class Kernel
         return msgObject
 
     destroy: ->
+        console.log "sending shutdown"
+
         requestId = uuid.v4()
 
-        console.log "sending shutdown"
-        header = JSON.stringify({
+        header =
                 msg_id: requestId,
                 username: "",
                 session: 0,
                 msg_type: "shutdown_request",
                 version: "5.0"
-            })
 
-        contents = JSON.stringify({
+        content =
                 restart: false
-            })
 
-        message =  [
-                '<IDS|MSG>',
-                '',
-                header,
-                '{}',
-                '{}',
-                contents
-            ]
-        @shellSocket.send message
+        message =
+                header: header
+                content: content
+
+        @_send message, @shellSocket
+
         @shellSocket.close()
         @ioSocket.close()
 
