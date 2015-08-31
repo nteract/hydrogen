@@ -88,7 +88,7 @@ class Kernel
         @kernelProcess.kill('SIGINT')
 
     # send a signed Jupyter message (adapted from github.com/n-riesco/jmp)
-    _send: (message, socket) ->
+    signedSend: (message, socket) ->
         encodedMessage =
             idents:        message.idents or []
             signature:     ''
@@ -142,7 +142,7 @@ class Kernel
 
         @executionCallbacks[requestId] = onResults
 
-        @_send message, @shellSocket
+        @signedSend message, @shellSocket
 
     execute: (code, onResults) ->
         requestId = "execute_" + uuid.v4()
@@ -178,7 +178,7 @@ class Kernel
 
         @executionCallbacks[requestId] = onResults
 
-        @_send message, @shellSocket
+        @signedSend message, @shellSocket
 
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
@@ -324,7 +324,7 @@ class Kernel
                 header: header
                 content: content
 
-        @_send message, @shellSocket
+        @signedSend message, @shellSocket
 
         @shellSocket.close()
         @ioSocket.close()
