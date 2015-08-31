@@ -25,7 +25,7 @@ module.exports = ConfigManager =
     buildConfiguration: (ports) ->
         config =
             version: 5
-            key: ""
+            key: uuid.v4()
             signature_scheme: "hmac-sha256"
             transport: "tcp"
             ip: "127.0.0.1"
