@@ -73,9 +73,10 @@ class Kernel
         @controlSocket.identity = 'control' + @language + process.pid
         @ioSocket.identity = 'sub' + @language + process.pid
 
-        @shellSocket.connect('tcp://127.0.0.1:' + @config.shell_port)
-        @controlSocket.connect('tcp://127.0.0.1:' + @config.control_port)
-        @ioSocket.connect('tcp://127.0.0.1:' + @config.iopub_port)
+        address = "#{ @config.transport }://#{ @config.ip }:"
+        @shellSocket.connect(address + @config.shell_port)
+        @controlSocket.connect(address + @config.control_port)
+        @ioSocket.connect(address + @config.iopub_port)
         @ioSocket.subscribe('')
 
         @shellSocket.on 'message', @onShellMessage.bind(this)
