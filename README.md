@@ -46,7 +46,7 @@ After these are installed, you'll likely need to restart your machine (especiall
 
 #### Linux
 
-Depending on the distribution, you'll need to install `libzmq-dev` or `libzmq3-dev` with your favorite package manager.
+Depending on the distribution, you'll need to install `libzmq-dev` or `libzmq3-dev` with your favorite package manager. On Fedora, you need to install `zeromq` and `zeromq-devel`.
 
 If you have Python and pip setup, install the notebook directly:
 
