@@ -1,3 +1,4 @@
+crypto = require 'crypto'
 fs = require 'fs'
 path = require 'path'
 zmq = require 'zmq'
@@ -73,9 +74,10 @@ class Kernel
         @controlSocket.identity = 'control' + @language + process.pid
         @ioSocket.identity = 'sub' + @language + process.pid
 
-        @shellSocket.connect('tcp://127.0.0.1:' + @config.shell_port)
-        @controlSocket.connect('tcp://127.0.0.1:' + @config.control_port)
-        @ioSocket.connect('tcp://127.0.0.1:' + @config.iopub_port)
+        address = "#{ @config.transport }://#{ @config.ip }:"
+        @shellSocket.connect(address + @config.shell_port)
+        @controlSocket.connect(address + @config.control_port)
+        @ioSocket.connect(address + @config.iopub_port)
         @ioSocket.subscribe('')
 
         @shellSocket.on 'message', @onShellMessage.bind(this)
@@ -85,38 +87,62 @@ class Kernel
         console.log "sending SIGINT"
         @kernelProcess.kill('SIGINT')
 
+    # send a signed Jupyter message (adapted from github.com/n-riesco/jmp)
+    signedSend: (message, socket) ->
+        encodedMessage =
+            idents:        message.idents or []
+            signature:     ''
+            header:        JSON.stringify message.header
+            parent_header: JSON.stringify (message.parent_header or {})
+            metadata:      JSON.stringify (message.metadata or {})
+            content:       JSON.stringify (message.content or {})
+
+        if (@config.key)
+            hmac = crypto.createHmac @config.signature_scheme.slice(5),
+                @config.key
+            hmac.update encodedMessage.header
+            hmac.update encodedMessage.parent_header
+            hmac.update encodedMessage.metadata
+            hmac.update encodedMessage.content
+            encodedMessage.signature = hmac.digest "hex"
+
+        console.log encodedMessage
+
+        socket.send encodedMessage.idents.concat [
+            '<IDS|MSG>'
+            encodedMessage.signature
+            encodedMessage.header
+            encodedMessage.parent_header
+            encodedMessage.metadata
+            encodedMessage.content
+        ]
+
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
     _execute: (code, requestId, onResults) ->
         console.log "sending execute"
-        header = JSON.stringify({
+
+        header =
                 msg_id: requestId,
                 username: "",
                 session: "00000000-0000-0000-0000-000000000000",
                 msg_type: "execute_request",
                 version: "5.0"
-            })
 
-        contents = JSON.stringify({
+        content =
                 code: code
                 silent: false
                 store_history: true
                 user_expressions: {}
                 allow_stdin: false
-            })
 
-        message =  [
-                '<IDS|MSG>',
-                '',
-                header,
-                '{}',
-                '{}',
-                contents
-            ]
-        console.log message
+        message =
+                header: header
+                content: content
 
         @executionCallbacks[requestId] = onResults
-        @shellSocket.send message
+
+        @signedSend message, @shellSocket
 
     execute: (code, onResults) ->
         requestId = "execute_" + uuid.v4()
@@ -127,38 +153,32 @@ class Kernel
         @_execute(code, requestId, onResults)
 
     complete: (code, onResults) ->
+        console.log "sending completion"
+
         requestId = "complete_" + uuid.v4()
 
         column = code.length
 
-        console.log "sending completion"
-        header = JSON.stringify({
-                msg_id: requestId,
-                username: "",
-                session: "00000000-0000-0000-0000-000000000000",
-                msg_type: "complete_request",
+        header =
+                msg_id: requestId
+                username: ""
+                session: "00000000-0000-0000-0000-000000000000"
+                msg_type: "complete_request"
                 version: "5.0"
-            })
 
-        contents = JSON.stringify({
+        content =
                 code: code
                 text: code
                 line: code
                 cursor_pos: column
-            })
 
-        message =  [
-                '<IDS|MSG>',
-                '',
-                header,
-                '{}',
-                '{}',
-                contents
-            ]
-        console.log message
+        message =
+                header: header
+                content: content
 
         @executionCallbacks[requestId] = onResults
-        @shellSocket.send message
+
+        @signedSend message, @shellSocket
 
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
@@ -286,30 +306,26 @@ class Kernel
         return msgObject
 
     destroy: ->
+        console.log "sending shutdown"
+
         requestId = uuid.v4()
 
-        console.log "sending shutdown"
-        header = JSON.stringify({
+        header =
                 msg_id: requestId,
                 username: "",
                 session: 0,
                 msg_type: "shutdown_request",
                 version: "5.0"
-            })
 
-        contents = JSON.stringify({
+        content =
                 restart: false
-            })
 
-        message =  [
-                '<IDS|MSG>',
-                '',
-                header,
-                '{}',
-                '{}',
-                contents
-            ]
-        @shellSocket.send message
+        message =
+                header: header
+                content: content
+
+        @signedSend message, @shellSocket
+
         @shellSocket.close()
         @ioSocket.close()
 
