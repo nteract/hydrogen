@@ -130,7 +130,12 @@ module.exports = Hydrogen =
                         @editor.moveToBottom()
                         @editor.insertNewline()
                     else
-                        @editor.moveDown()
+                        if isCursorBelowCodeBlock
+                            @editor.setCursorBufferPosition
+                                row: cursorRow
+                                column: 0
+                        else
+                            @editor.moveDown()
                 else
                     unless isCursorBelowCodeBlock
                         if isCursorOnLastRow
