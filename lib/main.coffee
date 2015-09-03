@@ -300,6 +300,8 @@ module.exports = Hydrogen =
             endRow = selectedRange.end.row
             while @blank(endRow)
                 endRow = endRow - 1
+            if selectedRange.end.column is 0
+                endRow = endRow - 1
             return [selectedText, endRow]
 
         cursor = @editor.getLastCursor()
