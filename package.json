@@ -18,7 +18,10 @@
     "image"
   ],
   "activationCommands": {
-    "atom-text-editor": "hydrogen:run"
+    "atom-text-editor": [
+        "hydrogen:run",
+        "hydrogen:run-and-move-down"
+    ]
   },
   "repository": "https://github.com/willwhitney/hydrogen",
   "license": "MIT",
