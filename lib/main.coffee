@@ -38,7 +38,8 @@ module.exports = Hydrogen =
         @subscriptions = new CompositeDisposable
 
         @subscriptions.add atom.commands.add 'atom-text-editor',
-            'hydrogen:run': => @run()
+            'hydrogen:run': => @run(false)
+            'hydrogen:run-and-move-down': => @run(true)
             'hydrogen:show-kernel-commands': => @showKernelCommands()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
@@ -105,6 +106,59 @@ module.exports = Hydrogen =
             @clearResultBubbles()
             @startKernelIfNeeded(command.language)
 
+
+    createResultBubble: (andMoveDown = false) ->
+        language = @editor.getGrammar().name.toLowerCase()
+
+        codeBlock = @findCodeBlock()
+        if codeBlock?
+            [code, row] = codeBlock
+        if code?
+            @clearBubblesOnRow(row)
+
+            if andMoveDown
+                bubbleRow = row
+                lastRow = @editor.getLastBufferRow()
+
+                isCodeBlockOnLastRow = bubbleRow is lastRow
+                isTextSelection = not @editor.getLastSelection().isEmpty()
+
+                if isTextSelection
+                    cursorRow = @editor.getSelectedBufferRange().end.row
+
+                    isCursorBelowCodeBlock = cursorRow > bubbleRow
+                    isCursorOnLastRow = cursorRow is lastRow
+
+                    if isCursorBelowCodeBlock
+                        @editor.setCursorBufferPosition
+                            row: cursorRow
+                            column: 0
+                    else
+                        if isCodeBlockOnLastRow
+                            @editor.moveToBottom()
+                            @editor.insertNewline()
+                        else
+                            @editor.moveDown()
+                else
+                    cursorRow = @editor.getCursorBufferPosition().row
+
+                    isCursorBelowCodeBlock = cursorRow > bubbleRow
+                    isCursorOnLastRow = cursorRow is lastRow
+
+                    unless isCursorBelowCodeBlock
+                        if isCursorOnLastRow
+                            @editor.moveToBottom()
+                            @editor.insertNewline()
+                        else
+                            @editor.moveDown()
+
+            view = @insertResultBubble(row)
+
+            KernelManager.execute language, code, (result) ->
+                view.spin(false)
+                view.addResult(result)
+
+
     insertResultBubble: (row) ->
         buffer = @editor.getBuffer()
         lineLength = buffer.lineLengthForRow(row)
@@ -155,7 +209,7 @@ module.exports = Hydrogen =
                 @markerBubbleMap[marker.id].destroy()
                 delete @markerBubbleMap[marker.id]
 
-    run: ->
+    run: (andMoveDown = false) ->
         editor = atom.workspace.getActiveTextEditor()
         grammar = editor.getGrammar()
         language = grammar.name.toLowerCase()
@@ -175,16 +229,7 @@ module.exports = Hydrogen =
                         # @watchSidebar = new WatchSidebar(kernel, grammar)
                     # @showWatchSidebar()
 
-                    codeBlock = @findCodeBlock()
-                    if codeBlock?
-                        [code, row] = codeBlock
-                    if code?
-                        @clearBubblesOnRow(row)
-                        view = @insertResultBubble(row)
-
-                        KernelManager.execute language, code, (result) =>
-                            view.spin(false)
-                            view.addResult(result)
+                    @createResultBubble(andMoveDown)
         else
             atom.notifications.addError(
                 "No kernel for language `#{language}` found",
