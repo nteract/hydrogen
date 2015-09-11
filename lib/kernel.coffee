@@ -100,10 +100,11 @@ class Kernel
         if (@config.key)
             hmac = crypto.createHmac @config.signature_scheme.slice(5),
                 @config.key
-            hmac.update encodedMessage.header
-            hmac.update encodedMessage.parent_header
-            hmac.update encodedMessage.metadata
-            hmac.update encodedMessage.content
+            toBuffer = (str) -> new Buffer str, "utf8"
+            hmac.update toBuffer encodedMessage.header
+            hmac.update toBuffer encodedMessage.parent_header
+            hmac.update toBuffer encodedMessage.metadata
+            hmac.update toBuffer encodedMessage.content
             encodedMessage.signature = hmac.digest "hex"
 
         console.log encodedMessage
