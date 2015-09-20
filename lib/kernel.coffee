@@ -18,7 +18,7 @@ class Kernel
         @language = @kernelInfo.language.toLowerCase()
         @executionCallbacks = {}
         @watchCallbacks = []
-
+        @loadedExtensions = []
         grammar = @getGrammarForLanguage(@language)
         @watchSidebar = new WatchSidebar(this, grammar)
         @statusView = new StatusView(@language)
@@ -145,15 +145,22 @@ class Kernel
 
         @signedSend message, @shellSocket
 
-    execute: (code, onResults) ->
+    handleExtensions: (code, language) ->
+        if language == 'coffeescript'
+            if language not in @loadedExtensions
+                @_execute '%load_ext coffee', => @loadedeExtensions.push language
+            "%%coffee bare no-prompt\n"+code
+
+    execute: (code, onResults, language=@language) ->
         requestId = "execute_" + uuid.v4()
+        code = @handleExtensions code, language
         @_execute(code, requestId, onResults)
 
     executeWatch: (code, onResults) ->
         requestId = "watch_" + uuid.v4()
         @_execute(code, requestId, onResults)
 
-    complete: (code, onResults) ->
+    complete: (code, onResults, language) ->
         console.log "sending completion"
 
         requestId = "complete_" + uuid.v4()
