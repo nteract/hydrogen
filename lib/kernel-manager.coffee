@@ -54,6 +54,7 @@ module.exports = KernelManager =
         return kernels
 
     getTrueLanguage: (language) ->
+        language = 'javascript' if language in ['coffeescript','closurescript','babel','typescript']
         languageMappings = @getLanguageMappings()
         matchingLanguageKeys = _.filter languageMappings, (trueLanguage, languageKey) ->
             return languageKey.toLowerCase() == language.toLowerCase()
@@ -77,7 +78,6 @@ module.exports = KernelManager =
     getKernelInfoForLanguage: (language) ->
         kernels = @getAvailableKernels()
         console.log "Available kernels:", kernels
-
         language = @getTrueLanguage(language)
 
         matchingKernels = _.filter kernels, (kernel) ->
@@ -125,14 +125,14 @@ module.exports = KernelManager =
     execute: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
         if kernel?
-            kernel.execute(code, onResults)
+            kernel.execute(code, onResults, language)
         else
             throw "No such kernel!"
 
     complete: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
         if kernel?
-            kernel.complete(code, onResults)
+            kernel.complete(code, onResults, language)
         else
             throw "No such kernel!"
 
