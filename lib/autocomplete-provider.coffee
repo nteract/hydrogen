@@ -2,8 +2,11 @@ _ = require 'lodash'
 
 KernelManager = require './kernel-manager'
 
-module.exports = AutocompleteProvider = ( ->
-    selectors = _.map KernelManager.getAvailableKernels(), ({language}) -> '.source.' + language
+module.exports = AutocompleteProvider = do ->
+    selectors = _.map KernelManager.getAvailableKernels(), ({language}) ->
+        '.source.' + language
+            .replace 'coffeescript', 'coffee'
+            .replace 'javascript', 'js'
     selector = selectors.join(', ')
     return {
         selector: selector
@@ -20,9 +23,6 @@ module.exports = AutocompleteProvider = ( ->
 
             # adapted from http://stackoverflow.com/questions/5474008/regular-expression-to-confirm-whether-a-string-is-a-valid-identifier-in-python
             python: /([^\d\W]|[\u00A0-\uFFFF])[\w.\u00A0-\uFFFF]*$/
-
-            # taken from https://github.com/n-riesco/nel/blob/master/lib/nel.js#L713
-            javascript: /[_$a-zA-Z][_$a-zA-Z0-9]*$/
 
             # adapted from http://php.net/manual/en/language.variables.basics.php
             php: /[$a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/
@@ -79,4 +79,3 @@ module.exports = AutocompleteProvider = ( ->
         # from things, kill any processes, etc.
         dispose: ->
     }
-)()
