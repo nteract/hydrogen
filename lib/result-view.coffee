@@ -128,10 +128,7 @@ class ResultView
             else if not @resultType or @resultType == 'text'
                 console.log "rendering as text"
                 @resultType = 'text'
-                if container.innerText.length > 0
-                    container.innerText = container.innerText + (" " + result.data)
-                else
-                    container.innerText = container.innerText + result.data
+                container.innerText = container.innerText + result.data
 
                 if /\r|\n/.exec(container.innerText.trim())
                     @setMultiline(true)
