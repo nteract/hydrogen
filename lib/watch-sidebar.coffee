@@ -58,10 +58,21 @@ class WatchSidebar
 
 
     addWatch: ->
-        watch = new WatchView(@kernel, @grammar)
-        @watchViews.push(watch)
-        @watchesContainer.appendChild(watch.element)
+        if not _.last(@watchViews) or _.last(@watchViews).getCode().replace /\s/g, '' != ''
+            watch = new WatchView(@kernel, @grammar)
+            @watchViews.push(watch)
+            @watchesContainer.appendChild(watch.element)
         _.last(@watchViews).inputElement.element.focus()
+
+    addWatchFromEditor: ->
+        unless watchText = atom.workspace.getActiveTextEditor().getSelectedText()
+            @addWatch()
+        else
+            watch = new WatchView @kernel, @grammar, watchText
+            @watchViews.push watch
+            @watchesContainer.appendChild watch.element
+            watch.run()
+        @show()
 
     run: ->
         if @visible
