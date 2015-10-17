@@ -19,7 +19,7 @@ class Kernel
         @executionCallbacks = {}
         @watchCallbacks = []
 
-        grammar = @getGrammarForLanguage(@language)
+        grammar = @getGrammarForLanguage(@kernelInfo.grammarLanguage)
         @watchSidebar = new WatchSidebar(this, grammar)
         @statusView = new StatusView(@language)
 
@@ -339,4 +339,7 @@ class Kernel
                 grammar.name.toLowerCase? and
                 grammar.name.toLowerCase() == language
 
-        return matchingGrammars[0]
+        if !matchingGrammars[0]?
+            throw "No grammar found for language #{language}"
+        else
+            return matchingGrammars[0]

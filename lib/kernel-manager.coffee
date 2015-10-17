@@ -74,11 +74,11 @@ module.exports = KernelManager =
 
         return {}
 
-    getKernelInfoForLanguage: (language) ->
+    getKernelInfoForLanguage: (grammarLanguage) ->
         kernels = @getAvailableKernels()
         console.log "Available kernels:", kernels
 
-        language = @getTrueLanguage(language)
+        language = @getTrueLanguage(grammarLanguage)
 
         matchingKernels = _.filter kernels, (kernel) ->
             kernelLanguage = kernel.language
@@ -90,7 +90,9 @@ module.exports = KernelManager =
         if matchingKernels.length == 0
             return null
         else
-            return matchingKernels[0]
+            kernelInfo = matchingKernels[0]
+            kernelInfo.grammarLanguage = grammarLanguage
+            return kernelInfo
 
     languageHasKernel: (language) ->
         return @getKernelInfoForLanguage(language)?
