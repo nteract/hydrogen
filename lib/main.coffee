@@ -43,6 +43,7 @@ module.exports = Hydrogen =
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
+            'hydrogen:remove-watch': => @watchSidebar.removeWatch()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()

@@ -6,7 +6,7 @@ ResultView = require './result-view'
 module.exports =
 class WatchView
 
-    constructor: (@kernel, @grammar, watchText = '') ->
+    constructor: (@kernel, @grammar) ->
         @element = document.createElement('div')
         @element.classList.add('hydrogen', 'watch-view')
 
@@ -17,7 +17,6 @@ class WatchView
         @inputEditor.setGrammar(@grammar)
         @inputEditor.setSoftWrapped(true)
         @inputEditor.setLineNumberGutterVisible(false)
-        @inputEditor.setText(watchText)
         @inputEditor.moveToTop()
 
         @resultView = new ResultView()
@@ -35,6 +34,10 @@ class WatchView
                 console.log "watchview got result:", result
                 @resultView.addResult(result)
 
+    setCode: (code)->
+      @inputEditor.setText code
+      this
+      
     getCode: ->
         return @inputElement.getText()
 
@@ -48,3 +51,7 @@ class WatchView
         @resultView = new ResultView()
         @resultView.setMultiline(true)
         @element.appendChild(@resultView.element)
+
+    destroy: ->
+      @clearResults()
+      @element.parentNode.removeChild @element
