@@ -2,6 +2,7 @@
 _ = require 'lodash'
 
 WatchView = require './watch-view'
+WatchesPicker = require './watches-picker'
 
 module.exports =
 class WatchSidebar
@@ -57,11 +58,33 @@ class WatchSidebar
         atom.workspace.addRightPanel(item: @element)
 
 
+    createWatch: ->
+        watch = _.last @watchViews
+        if not watch or watch.getCode().replace /\s/g, '' != ''
+            watch = new WatchView(@kernel, @grammar)
+            @watchViews.push watch
+            @watchesContainer.appendChild watch.element
+        watch
+
     addWatch: ->
-        watch = new WatchView(@kernel, @grammar)
-        @watchViews.push(watch)
-        @watchesContainer.appendChild(watch.element)
-        _.last(@watchViews).inputElement.element.focus()
+        @createWatch().inputElement.element.focus()
+
+    addWatchFromEditor: ->
+        unless watchText = atom.workspace.getActiveTextEditor().getSelectedText()
+            @addWatch()
+        else
+            @createWatch().setCode(watchText).run()
+        @show()
+
+    removeWatch: ->
+      watches = (for v,k in @watchViews
+          name: v.getCode()
+          value: k)
+      WatchesPicker.onConfirmed = (item) =>
+        @watchViews[item.value].destroy()
+        @watchViews.splice item.value, 1
+      WatchesPicker.setItems watches
+      WatchesPicker.toggle()
 
     run: ->
         if @visible
