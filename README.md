@@ -22,6 +22,7 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 
 For all systems, you'll need
 
+- [`npm`](https://docs.npmjs.com/getting-started/installing-node)
 - [ZeroMQ](http://zeromq.org/intro:get-the-software)
 - IPython notebook `pip install ipython[notebook]`
 - Python 2 (for builds - you can still run Python 3 code)
