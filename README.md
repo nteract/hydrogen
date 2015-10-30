@@ -47,7 +47,7 @@ After these are installed, you'll likely need to restart your machine (especiall
 
 #### Linux
 
-For Debian/Ubuntu based variants, you'll need `libzmq-dev` or `libzmq3-dev`.   
+For Debian/Ubuntu based variants, you'll need `libzmq3-dev` (preferred) or alternatively `libzmq-dev`.   
 For RedHat/CentOS/Fedora based variants, you'll need `zeromq` and `zeromq-devel`.
 
 If you have Python and pip setup, install the notebook directly:
