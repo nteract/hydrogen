@@ -1,4 +1,4 @@
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, Range} = require 'atom'
 
 fs = require 'fs'
 zmq = require 'zmq'
@@ -177,12 +177,15 @@ module.exports = Hydrogen =
                     # @showWatchSidebar()
 
                     codeBlock = @findCodeBlock()
+
                     if codeBlock?
-                        [code, row, range] = codeBlock
+                        [code, range] = codeBlock
+                        console.log(range)
+
                     if code?
                         @highlightBlock(range)
-                        @clearBubblesOnRow(row)
-                        view = @insertResultBubble(row)
+                        @clearBubblesOnRow(range.end.row)
+                        view = @insertResultBubble(range.end.row)
 
                         KernelManager.execute language, code, (result) =>
                             view.spin(false)
@@ -272,13 +275,14 @@ module.exports = Hydrogen =
         selectedText = @editor.getSelectedText()
 
         if selectedText != ''
+            console.log('selectedText')
             selectedRange = @editor.getSelectedBufferRange()
-            endRow = selectedRange.end.row
-            if selectedRange.end.column is 0
-                endRow = endRow - 1
-            while @blank(endRow)
-                endRow = endRow - 1
-            return [selectedText, endRow, selectedRange]
+            # endRow = selectedRange.end.row
+            # if selectedRange.end.column is 0
+            #     endRow = endRow - 1
+            # while @blank(endRow)
+            #     endRow = endRow - 1
+            return [selectedText, selectedRange]
 
         cursor = @editor.getLastCursor()
 
@@ -291,17 +295,24 @@ module.exports = Hydrogen =
         foldable = @editor.isFoldableAtBufferRow(row)
         foldRange = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
 
+        console.log(foldable)
+        console.log(foldRange)
+
         if not foldRange? or not foldRange[0]? or not foldRange[1]?
             foldable = false
 
         if foldable
+            console.log('foldable')
             return @getFoldContents(row)
         else if @blank(row)
+            console.log('blank')
             return @findPrecedingBlock(row, indentLevel)
         else if @getRowText(row).trim() == "end"
+            console.log('end')
             return @findPrecedingBlock(row, indentLevel)
         else
-            return [@getRowText(row), row, cursor.getCurrentLineBufferRange()]
+            console.log('other')
+            return [@getRowText(row), cursor.getCurrentLineBufferRange()]
 
     findPrecedingBlock: (row, indentLevel) ->
         buffer = @editor.getBuffer()
@@ -313,9 +324,10 @@ module.exports = Hydrogen =
 
             if @blank(row)
                 row = previousRow
+
             if sameIndent and not blank and not isEnd
                 range = new Range([previousRow, 0], [row, 9999999])
-                return [buffer.getTextInRange(range), row, range]
+                return [buffer.getTextInRange(range), range]
             previousRow--
         return null
 
@@ -324,27 +336,23 @@ module.exports = Hydrogen =
                @editor.languageMode.isLineCommentedAtBufferRow(row)
 
     getRowText: (row) ->
-        buffer = @editor.getBuffer()
-        return buffer.getTextInRange
-                    start:
-                        row: row
-                        column: 0
-                    end:
-                        row: row
-                        column: 9999999
+        return @editor.getBuffer().getTextInRange(new Range([row, 0], [row, 9999999]))
 
     getFoldRange: (editor, row) ->
-        range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
-        if @getRowText(range[1] + 1).trim() == 'end'
-            range[1] = range[1] + 1
+        rowRange = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
+        range = new Range([rowRange[0], 0], [rowRange[1], 9999999])
+
+        # if @getRowText(range[1] + 1).trim() == 'end'
+        #     range[1] = range[1] + 1
+
         console.log "fold range:", range
         return range
 
     getFoldContents: (row) ->
         buffer = @editor.getBuffer()
         range = @getFoldRange(@editor, row)
+        
         return [
                 buffer.getTextInRange(range),
-                range[1],
                 range
             ]
