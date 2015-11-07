@@ -158,8 +158,7 @@ module.exports = Hydrogen =
                 delete @markerBubbleMap[marker.id]
 
     run: ->
-        editor = atom.workspace.getActiveTextEditor()
-        grammar = editor.getGrammar()
+        grammar = @editor.getGrammar()
         language = grammar.name.toLowerCase()
 
         if language? and KernelManager.languageHasKernel(language)
@@ -179,8 +178,9 @@ module.exports = Hydrogen =
 
                     codeBlock = @findCodeBlock()
                     if codeBlock?
-                        [code, row] = codeBlock
+                        [code, row, range] = codeBlock
                     if code?
+                        @highlightBlock(range)
                         @clearBubblesOnRow(row)
                         view = @insertResultBubble(row)
 
@@ -194,6 +194,11 @@ module.exports = Hydrogen =
                     detail: "Check that the language for this file is set in Atom
                              and that you have a Jupyter kernel installed for it."
                 })
+
+    highlightBlock: (range) ->
+        console.log(range)
+        marker = @editor.markBufferRange(range, { persistant: false, invalidate: 'touch' })
+        decoration = @editor.decorateMarker(marker, { type: 'line', class: 'hydrogen-run' })
 
     removeStatusBarElement: ->
         if @statusBarElement?
@@ -273,7 +278,7 @@ module.exports = Hydrogen =
                 endRow = endRow - 1
             while @blank(endRow)
                 endRow = endRow - 1
-            return [selectedText, endRow]
+            return [selectedText, endRow, selectedRange]
 
         cursor = @editor.getLastCursor()
 
@@ -285,6 +290,7 @@ module.exports = Hydrogen =
 
         foldable = @editor.isFoldableAtBufferRow(row)
         foldRange = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
+
         if not foldRange? or not foldRange[0]? or not foldRange[1]?
             foldable = false
 
@@ -292,10 +298,10 @@ module.exports = Hydrogen =
             return @getFoldContents(row)
         else if @blank(row)
             return @findPrecedingBlock(row, indentLevel)
-        else if @getRow(row).trim() == "end"
+        else if @getRowText(row).trim() == "end"
             return @findPrecedingBlock(row, indentLevel)
         else
-            return [@getRow(row), row]
+            return [@getRowText(row), row, cursor.getCurrentLineBufferRange()]
 
     findPrecedingBlock: (row, indentLevel) ->
         buffer = @editor.getBuffer()
@@ -303,12 +309,13 @@ module.exports = Hydrogen =
         while previousRow >= 0
             sameIndent = @editor.indentationForBufferRow(previousRow) <= indentLevel
             blank = @blank(previousRow)
-            isEnd = @getRow(previousRow).trim() == "end"
+            isEnd = @getRowText(previousRow).trim() == "end"
 
             if @blank(row)
                 row = previousRow
             if sameIndent and not blank and not isEnd
-                return [@getRows(previousRow, row), row]
+                range = new Range([previousRow, 0], [row, 9999999])
+                return [buffer.getTextInRange(range), row, range]
             previousRow--
         return null
 
@@ -316,7 +323,7 @@ module.exports = Hydrogen =
         return @editor.getBuffer().isRowBlank(row) or
                @editor.languageMode.isLineCommentedAtBufferRow(row)
 
-    getRow: (row) ->
+    getRowText: (row) ->
         buffer = @editor.getBuffer()
         return buffer.getTextInRange
                     start:
@@ -324,21 +331,11 @@ module.exports = Hydrogen =
                         column: 0
                     end:
                         row: row
-                        column: 9999999
-
-    getRows: (startRow, endRow) ->
-        buffer = @editor.getBuffer()
-        return buffer.getTextInRange
-                    start:
-                        row: startRow
-                        column: 0
-                    end:
-                        row: endRow
                         column: 9999999
 
     getFoldRange: (editor, row) ->
         range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
-        if @getRow(range[1] + 1).trim() == 'end'
+        if @getRowText(range[1] + 1).trim() == 'end'
             range[1] = range[1] + 1
         console.log "fold range:", range
         return range
@@ -347,6 +344,7 @@ module.exports = Hydrogen =
         buffer = @editor.getBuffer()
         range = @getFoldRange(@editor, row)
         return [
-                @getRows(range[0], range[1]),
-                range[1]
+                buffer.getTextInRange(range),
+                range[1],
+                range
             ]

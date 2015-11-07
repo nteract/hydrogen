@@ -11,6 +11,12 @@
     z-index: 6;
 }
 
+.atom-text-editor, :host, atom-text-editor, atom-text-editor::shadow {
+    .line.hydrogen-run {
+        background-color: lighten(@background-color-highlight, 10%);
+    }
+}
+
 .hydrogen.output-bubble {
     @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
     @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
