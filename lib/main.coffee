@@ -41,6 +41,7 @@ module.exports = Hydrogen =
     statusBarTile: null
     editor: null
     markerBubbleMap: {}
+    highlightMarkerMap: {}
 
     activate: (state) ->
         @subscriptions = new CompositeDisposable
@@ -78,7 +79,6 @@ module.exports = Hydrogen =
         @statusBarTile = statusBar.addLeftTile(item: @statusBarElement,
                                                priority: 100)
 
-
     provide: ->
         return AutocompleteProvider
 
@@ -112,6 +112,7 @@ module.exports = Hydrogen =
             KernelManager.interruptKernelForLanguage(command.language)
         else if command.value == 'restart-kernel'
             KernelManager.destroyKernelForLanguage(command.language)
+            @clearHighlights()
             @clearResultBubbles()
             @startKernelIfNeeded(command.language)
 
@@ -153,7 +154,6 @@ module.exports = Hydrogen =
 
         return view
 
-
     clearResultBubbles: ->
         _.forEach @markerBubbleMap, (bubble) -> bubble.destroy()
         @markerBubbleMap = {}
@@ -164,6 +164,21 @@ module.exports = Hydrogen =
             if @markerBubbleMap[marker.id]?
                 @markerBubbleMap[marker.id].destroy()
                 delete @markerBubbleMap[marker.id]
+
+    highlightRange: (range) ->
+        marker = @editor.markBufferRange(range, { persistant: false, invalidate: 'touch' })
+        decoration = @editor.decorateMarker(marker, { type: 'line', class: 'hydrogen-run' })
+
+        @highlightMarkerMap[marker.id] = marker
+
+        marker.onDidChange (event) =>
+            if not event.isValid
+                marker.destroy()
+                delete @highlightMarkerMap[marker.id]
+
+    clearHighlights: ->
+        _.forEach @highlightMarkerMap, (highlight) -> highlight.destroy()
+        @highlightMarkerMap = {}
 
     run: ->
         grammar = @editor.getGrammar()
@@ -192,7 +207,7 @@ module.exports = Hydrogen =
 
                     if code?
                         if atom.config.get('Hydrogen.highlightExecuted')?
-                          @highlightBlock(range)
+                            @highlightRange(range)
 
                         @clearBubblesOnRow(range.end.row)
                         view = @insertResultBubble(range.end.row)
@@ -207,10 +222,6 @@ module.exports = Hydrogen =
                     detail: "Check that the language for this file is set in Atom
                              and that you have a Jupyter kernel installed for it."
                 })
-
-    highlightBlock: (range) ->
-        marker = @editor.markBufferRange(range, { persistant: false, invalidate: 'touch' })
-        decoration = @editor.decorateMarker(marker, { type: 'line', class: 'hydrogen-run' })
 
     removeStatusBarElement: ->
         if @statusBarElement?
