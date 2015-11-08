@@ -203,7 +203,6 @@ module.exports = Hydrogen =
 
                     if codeBlock?
                         [code, range] = codeBlock
-                        console.log(range)
 
                     if code?
                         if atom.config.get('Hydrogen.highlightExecuted')?
@@ -306,10 +305,8 @@ module.exports = Hydrogen =
         cursor = @editor.getLastCursor()
 
         row = cursor.getBufferRow()
-        console.log "row:", row
 
         indentLevel = cursor.getIndentLevel()
-        # indentLevel = @editor.suggestedIndentForBufferRow row
 
         foldable = @editor.isFoldableAtBufferRow(row)
         foldRange = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
@@ -318,19 +315,15 @@ module.exports = Hydrogen =
             foldable = false
 
         if foldable
-            console.log('foldable')
             range = @rowRangeToBufferRange(foldRange)
             return [buffer.getTextInRange(range), range]
         else if @blank(row)
-            console.log('blank')
             return @findPrecedingBlock(row, indentLevel)
         else if @isEnd(row)
-            console.log('end')
             rowRange = @findContainingFoldRange(row)
             range = @rowRangeToBufferRange(rowRange)
             return [buffer.getTextInRange(range), range]
         else
-            console.log('other')
             return [@getRowText(row), cursor.getCurrentLineBufferRange()]
 
     findPrecedingBlock: (row, indentLevel) ->
