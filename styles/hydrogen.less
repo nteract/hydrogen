@@ -5,6 +5,9 @@
 @import "ui-variables";
 @import "syntax-variables";
 
+@background-color-light: lighten(@syntax-background-color, 5%);
+@background-color-dark: darken(@syntax-background-color, 5%);
+
 // this is a hack to deal with a failing of the markers API
 // https://github.com/atom/atom/issues/6857
 .tab-bar {
@@ -13,7 +16,7 @@
 
 .atom-text-editor, :host, atom-text-editor, atom-text-editor::shadow {
     .line.hydrogen-run {
-        background-color: lighten(@background-color-highlight, 10%);
+        background-color: contrast(@syntax-text-color, @background-color-dark, @background-color-light, 20%);
     }
 }
 
