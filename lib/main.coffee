@@ -27,6 +27,14 @@ module.exports = Hydrogen =
                           {"Python Django": "python", "Ruby (Rails)": "ruby"}'
             type: 'string'
             default: '{}'
+          highlightExecuted:
+            title: 'Highlight Executed Code Until Modified'
+            description: 'Highlight lines of code that have been executed. The
+                          highlight will be removed automatically when the code
+                          is modified so you will know your Jupyter context is
+                          out of date.'
+            type: 'boolean'
+            default: false
 
     subscriptions: null
     statusBarElement: null
@@ -183,7 +191,9 @@ module.exports = Hydrogen =
                         console.log(range)
 
                     if code?
-                        @highlightBlock(range)
+                        if atom.config.get('Hydrogen.highlightExecuted')?
+                          @highlightBlock(range)
+
                         @clearBubblesOnRow(range.end.row)
                         view = @insertResultBubble(range.end.row)
 
@@ -351,7 +361,7 @@ module.exports = Hydrogen =
     getFoldContents: (row) ->
         buffer = @editor.getBuffer()
         range = @getFoldRange(@editor, row)
-        
+
         return [
                 buffer.getTextInRange(range),
                 range
