@@ -295,11 +295,13 @@ module.exports = Hydrogen =
 
         if selectedText != ''
             selectedRange = @editor.getSelectedBufferRange()
-            # endRow = selectedRange.end.row
+
             # if selectedRange.end.column is 0
-            #     endRow = endRow - 1
-            # while @blank(endRow)
-            #     endRow = endRow - 1
+            #     selectedRange.end.row -= 1
+
+            while @blank(selectedRange.end.row - 1)
+                selectedRange.end.row -= 1
+
             return [selectedText, selectedRange]
 
         cursor = @editor.getLastCursor()
