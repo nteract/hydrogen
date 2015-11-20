@@ -62,7 +62,7 @@ class Kernel
             #     console.log 'stderr: ', stderr
             #     if error != null
             #         console.log 'exec error: ', error
-     stderr: (data, caption = "kernel answer") ->
+     stderr: (data, caption) ->
         detail = data.toString()
         method = 'addInfo'
         if /warning/gi.test detail
@@ -71,7 +71,7 @@ class Kernel
             method = 'addError'
 
         console.error "kernel process received on stderr:", detail
-        atom.notifications[method] "Hydrogen: #{caption}",
+        atom.notifications[method] "#{@language} Kernel: #{caption}",
          detail: detail, dismissable: /error/i.test method
 
     connect: ->
