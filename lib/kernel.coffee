@@ -55,15 +55,24 @@ class Kernel
 
         @kernelProcess.stdout.on 'data', (data) ->
             console.log "kernel process received on stdout:", data.toString()
-        @kernelProcess.stderr.on 'data', (data) ->
-            console.error "kernel process received on stderr:", data.toString()
-
+        @kernelProcess.stderr.on 'data', @stderr
             # console.log "launching:", commandString
             # @kernelProcess = child_process.exec commandString, (error, stdout, stderr) ->
             #     console.log 'stdout: ', stdout
             #     console.log 'stderr: ', stderr
             #     if error != null
             #         console.log 'exec error: ', error
+     stderr: (data, caption) ->
+        detail = data.toString()
+        method = 'addInfo'
+        if /warning/gi.test detail
+            method = 'addWarning'
+        if /error/gi.test detail
+            method = 'addError'
+
+        console.error "kernel process received on stderr:", detail
+        atom.notifications[method] "#{@language} Kernel: #{caption}",
+         detail: detail, dismissable: /error/i.test method
 
     connect: ->
         @shellSocket = zmq.socket 'dealer'
@@ -221,6 +230,8 @@ class Kernel
 
         message = @parseMessage msgArray
         console.log message
+        if message.type == 'error' #TODO; produces to much warning & errors, maybe filter?
+            @stderr message.contents.evalue, message.contents.ename
 
         if message.type == 'status'
             status = message.contents.execution_state
