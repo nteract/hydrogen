@@ -50,6 +50,17 @@ class SignalListView extends SelectListView
             @onConfirmed(item)
         @cancel()
 
+    getSwitchKernelCommands: (language) ->
+        kernels = []
+        for kernel in KernelManager.getAvailableKernels() when kernel.language is language
+          kernel.grammarLanguage = language
+          kernels.push {
+            name: "Switch to #{kernel.display_name}"
+            value: 'switch-kernel'
+            kernelInfo: kernel
+          }
+        kernels
+
     attach: ->
         @storeFocusedElement()
         @panel ?= atom.workspace.addModalPanel(item: this)
@@ -58,14 +69,13 @@ class SignalListView extends SelectListView
         language = KernelManager.getTrueLanguage(language)
         kernel = KernelManager.getRunningKernelForLanguage(language)
 
-        if kernel?
-            commands = _.map _.cloneDeep(@basicCommands), (command) ->
-                command.name = _.capitalize(language) + ' kernel: ' + command.name
-                command.language = language
-                return command
-            @setItems(commands)
-        else
-            @setItems([])
+        return @setItems [] unless kernel?
+
+        commands = _.map _.cloneDeep(@basicCommands), (command) ->
+            command.name = _.capitalize(language) + ' kernel: ' + command.name
+            command.language = language
+            return command
+        @setItems _.union commands, @getSwitchKernelCommands(language)
 
     getEmptyMessage: ->
         "No running kernels for this file type."
