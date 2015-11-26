@@ -10,6 +10,7 @@ class ResultView
 
         @outputContainer = document.createElement('div')
         @outputContainer.classList.add('bubble-output-container')
+        @outputContainer.onmousewheel = (e) -> e.stopPropagation()
         @element.appendChild(@outputContainer)
 
         @resultContainer = document.createElement('div')
@@ -130,8 +131,11 @@ class ResultView
                 @resultType = 'text'
                 container.innerText = container.innerText + result.data
 
-                if /\r|\n/.exec(container.innerText.trim())
-                    @setMultiline(true)
+                if /(\\n|\r|\n)/.exec(container.innerText.trim()) \
+                or container.offsetWidth > 500 \
+                or container.offsetHeight > 500
+                  container.innerText = container.innerText.replace /\\n/g, "\n"
+                  @setMultiline true
             else
                 console.error "Unrecognized result:", result
 
