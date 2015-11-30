@@ -63,6 +63,10 @@ Assuming you followed the dependencies steps above, you can now `apm install hyd
 If your default `python` is 3.x, you need to instead run `PYTHON=python2.7 apm install hydrogen`. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://code.google.com/p/gyp/issues/detail?id=36)
 
 
+### Troubleshooting
+
+We have a [troubleshooting guide](https://github.com/willwhitney/hydrogen/wiki/Troubleshooting) in the wiki! It's pretty sparse at the moment, so please share how the resolution to any rough spots that you find.
+
 ### Kernels
 
 Tested and works with:
