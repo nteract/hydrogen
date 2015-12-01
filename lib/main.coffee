@@ -1,4 +1,4 @@
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, Range} = require 'atom'
 
 fs = require 'fs'
 zmq = require 'zmq'
@@ -27,12 +27,21 @@ module.exports = Hydrogen =
                           {"Python Django": "python", "Ruby (Rails)": "ruby"}'
             type: 'string'
             default: '{}'
+          highlightExecuted:
+            title: 'Highlight Executed Code Until Modified'
+            description: 'Highlight lines of code that have been executed. The
+                          highlight will be removed automatically when the code
+                          is modified so you will know your Jupyter context is
+                          out of date.'
+            type: 'boolean'
+            default: false
 
     subscriptions: null
     statusBarElement: null
     statusBarTile: null
     editor: null
     markerBubbleMap: {}
+    highlightMarkerMap: {}
 
     activate: (state) ->
         @subscriptions = new CompositeDisposable
@@ -70,7 +79,6 @@ module.exports = Hydrogen =
         @statusBarTile = statusBar.addLeftTile(item: @statusBarElement,
                                                priority: 100)
 
-
     provide: ->
         return AutocompleteProvider
 
@@ -104,6 +112,7 @@ module.exports = Hydrogen =
             KernelManager.interruptKernelForLanguage(command.language)
         else if command.value == 'restart-kernel'
             KernelManager.destroyKernelForLanguage(command.language)
+            @clearHighlights()
             @clearResultBubbles()
             @startKernelIfNeeded(command.language)
 
@@ -145,7 +154,6 @@ module.exports = Hydrogen =
 
         return view
 
-
     clearResultBubbles: ->
         _.forEach @markerBubbleMap, (bubble) -> bubble.destroy()
         @markerBubbleMap = {}
@@ -157,9 +165,23 @@ module.exports = Hydrogen =
                 @markerBubbleMap[marker.id].destroy()
                 delete @markerBubbleMap[marker.id]
 
+    highlightRange: (range) ->
+        marker = @editor.markBufferRange(range, { persistant: false, invalidate: 'touch' })
+        decoration = @editor.decorateMarker(marker, { type: 'line', class: 'hydrogen-run' })
+
+        @highlightMarkerMap[marker.id] = marker
+
+        marker.onDidChange (event) =>
+            if not event.isValid
+                marker.destroy()
+                delete @highlightMarkerMap[marker.id]
+
+    clearHighlights: ->
+        _.forEach @highlightMarkerMap, (highlight) -> highlight.destroy()
+        @highlightMarkerMap = {}
+
     run: ->
-        editor = atom.workspace.getActiveTextEditor()
-        grammar = editor.getGrammar()
+        grammar = @editor.getGrammar()
         language = grammar.name.toLowerCase()
 
         if language? and KernelManager.languageHasKernel(language)
@@ -178,11 +200,16 @@ module.exports = Hydrogen =
                     # @showWatchSidebar()
 
                     codeBlock = @findCodeBlock()
+
                     if codeBlock?
-                        [code, row] = codeBlock
+                        [code, range] = codeBlock
+
                     if code?
-                        @clearBubblesOnRow(row)
-                        view = @insertResultBubble(row)
+                        if atom.config.get('Hydrogen.highlightExecuted')?
+                            @highlightRange(range)
+
+                        @clearBubblesOnRow(range.end.row)
+                        view = @insertResultBubble(range.end.row)
 
                         KernelManager.execute language, code, (result) =>
                             view.spin(false)
@@ -268,47 +295,55 @@ module.exports = Hydrogen =
 
         if selectedText != ''
             selectedRange = @editor.getSelectedBufferRange()
-            endRow = selectedRange.end.row
-            if selectedRange.end.column is 0
-                endRow = endRow - 1
-            while @blank(endRow)
-                endRow = endRow - 1
-            return [selectedText, endRow]
+
+            # if selectedRange.end.column is 0
+            #     selectedRange.end.row -= 1
+
+            while @blank(selectedRange.end.row - 1)
+                selectedRange.end.row -= 1
+
+            return [selectedText, selectedRange]
 
         cursor = @editor.getLastCursor()
 
         row = cursor.getBufferRow()
-        console.log "row:", row
 
         indentLevel = cursor.getIndentLevel()
-        # indentLevel = @editor.suggestedIndentForBufferRow row
 
         foldable = @editor.isFoldableAtBufferRow(row)
         foldRange = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
+
         if not foldRange? or not foldRange[0]? or not foldRange[1]?
             foldable = false
 
         if foldable
-            return @getFoldContents(row)
+            range = @rowRangeToBufferRange(foldRange)
+            return [buffer.getTextInRange(range), range]
         else if @blank(row)
             return @findPrecedingBlock(row, indentLevel)
-        else if @getRow(row).trim() == "end"
-            return @findPrecedingBlock(row, indentLevel)
+        else if @isEnd(row)
+            rowRange = @findContainingFoldRange(row)
+            range = @rowRangeToBufferRange(rowRange)
+            return [buffer.getTextInRange(range), range]
         else
-            return [@getRow(row), row]
+            return [@getRowText(row), cursor.getCurrentLineBufferRange()]
 
     findPrecedingBlock: (row, indentLevel) ->
         buffer = @editor.getBuffer()
         previousRow = row - 1
+
         while previousRow >= 0
             sameIndent = @editor.indentationForBufferRow(previousRow) <= indentLevel
             blank = @blank(previousRow)
-            isEnd = @getRow(previousRow).trim() == "end"
+            isEnd = @isEnd(previousRow)
 
             if @blank(row)
                 row = previousRow
+
             if sameIndent and not blank and not isEnd
-                return [@getRows(previousRow, row), row]
+                range = new Range([previousRow, 0], [row, 9999999])
+                return [buffer.getTextInRange(range), range]
+
             previousRow--
         return null
 
@@ -316,37 +351,19 @@ module.exports = Hydrogen =
         return @editor.getBuffer().isRowBlank(row) or
                @editor.languageMode.isLineCommentedAtBufferRow(row)
 
-    getRow: (row) ->
-        buffer = @editor.getBuffer()
-        return buffer.getTextInRange
-                    start:
-                        row: row
-                        column: 0
-                    end:
-                        row: row
-                        column: 9999999
+    isEnd: (row) ->
+        return @getRowText(row).trim() == "end"
 
-    getRows: (startRow, endRow) ->
-        buffer = @editor.getBuffer()
-        return buffer.getTextInRange
-                    start:
-                        row: startRow
-                        column: 0
-                    end:
-                        row: endRow
-                        column: 9999999
+    rowRangeToBufferRange: (rowRange) ->
+        return new Range([rowRange[0], 0], [rowRange[1], 9999999])
 
-    getFoldRange: (editor, row) ->
-        range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
-        if @getRow(range[1] + 1).trim() == 'end'
-            range[1] = range[1] + 1
-        console.log "fold range:", range
-        return range
+    getRowText: (row) ->
+        return @editor.getBuffer().getTextInRange(new Range([row, 0], [row, 9999999]))
 
-    getFoldContents: (row) ->
-        buffer = @editor.getBuffer()
-        range = @getFoldRange(@editor, row)
-        return [
-                @getRows(range[0], range[1]),
-                range[1]
-            ]
+    findContainingFoldRange: (row) ->
+        for i in [0..row]
+            fold_range = @editor.languageMode.rowRangeForFoldAtBufferRow(row - i)
+
+            return fold_range if fold_range and fold_range[1] >= row
+
+        return null

@@ -5,10 +5,28 @@
 @import "ui-variables";
 @import "syntax-variables";
 
+@run-color-light: lighten(@syntax-background-color, 5%);
+@run-color-dark: darken(@syntax-background-color, 5%);
+@run-color: contrast(@syntax-background-color, @run-color-dark, @run-color-light, 20%);
+
+@highlight-color-light: lighten(@syntax-background-color, 10%);
+@highlight-color-dark: darken(@syntax-background-color, 10%);
+@highlight-color: contrast(@syntax-background-color, @highlight-color-dark, @highlight-color-light, 20%);
+
 // this is a hack to deal with a failing of the markers API
 // https://github.com/atom/atom/issues/6857
 .tab-bar {
     z-index: 6;
+}
+
+.atom-text-editor, :host, atom-text-editor, atom-text-editor::shadow {
+    .line.hydrogen-run {
+        background-color: @run-color;
+
+        &.cursor-line {
+            background-color: @highlight-color;
+        }
+    }
 }
 
 .hydrogen.output-bubble {
