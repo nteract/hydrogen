@@ -180,6 +180,7 @@
             box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
         }
     }
+
 }
 
 .hydrogen.watch-sidebar {
@@ -216,6 +217,18 @@
             font-size: @font-size;
             min-height: 3em;
         }
+
+        .history-scrollbar {
+          overflow-x: scroll;
+          height: 7px;
+          .hidden {
+            height: 1px;
+            width: 1000px;
+            visibility: hidden;
+            display: block !important;
+          }
+        }
+
     }
 
     .watch-resize-handle {
