@@ -271,7 +271,7 @@ module.exports = Hydrogen =
             endRow = selectedRange.end.row
             if selectedRange.end.column is 0
                 endRow = endRow - 1
-            while @blank(endRow)
+            while @blank(endRow) and endRow > selectedRange.start.row
                 endRow = endRow - 1
             return [selectedText, endRow]
 
