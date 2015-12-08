@@ -12,24 +12,20 @@ module.exports = KernelManager =
     pythonInfo:
         display_name: "Python"
         language: "python"
-    availableKernels: null
 
-    getAvailableKernels: ->
-        if @availableKernels?
-            return @availableKernels
-        else
-            kernelLists = _.map @kernelsDirOptions, @getKernelsFromDirectory
-            kernels = []
-            kernels = kernels.concat.apply(kernels, kernelLists)
-            kernels = _.map kernels, (kernel) =>
-                kernel.language = @getTrueLanguage(kernel.language)
-                return kernel
+    getAvailableKernels: _.memoize ->
+        kernelLists = _.map @kernelsDirOptions, @getKernelsFromDirectory
+        kernels = []
+        kernels = kernels.concat.apply(kernels, kernelLists)
+        kernels = _.map kernels, (kernel) =>
+            kernel.language = @getTrueLanguage(kernel.language)
+            return kernel
 
-            pythonKernels = _.filter kernels, (kernel) ->
-                return kernel.language == 'python'
-            if pythonKernels.length == 0
-                kernels.push(@pythonInfo)
-            return kernels
+        pythonKernels = _.filter kernels, (kernel) ->
+            return kernel.language == 'python'
+        if pythonKernels.length == 0
+            kernels.push(@pythonInfo)
+        return kernels
 
     getRunningKernels: ->
         return _.clone(@runningKernels)
