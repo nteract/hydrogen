@@ -9,45 +9,35 @@ Kernel = require './kernel'
 module.exports = KernelManager =
     kernelsDirOptions: jupyterPath('kernels')
     runningKernels: {}
-    pythonInfo:
-        display_name: "Python"
-        language: "python"
 
     getAvailableKernels: _.memoize ->
-        kernelLists = _.map @kernelsDirOptions, @getKernelsFromDirectory
-        kernels = []
-        kernels = kernels.concat.apply(kernels, kernelLists)
-        kernels = _.map kernels, (kernel) =>
+        kernels = _.flatten _.map @kernelsDirOptions, @getKernelsFromDirectory
+        kernels = _.uniq kernels, (x) -> x.display_name
+        console.log "Available kernels:", kernels
+        _.map kernels, (kernel) =>
             kernel.language = @getTrueLanguage(kernel.language)
             return kernel
-
-        pythonKernels = _.filter kernels, (kernel) ->
-            return kernel.language == 'python'
-        if pythonKernels.length == 0
-            kernels.push(@pythonInfo)
-        return kernels
 
     getRunningKernels: ->
         return _.clone(@runningKernels)
 
     getKernelsFromDirectory: (directory) ->
         try
-            kernelNames = fs.readdirSync directory
-            kernels = _.map kernelNames, (name) =>
-                kernelDirPath = path.join(directory, name)
+          kernelNames = fs.readdirSync directory
+          kernels = _.map kernelNames, (name) ->
+              kernelDirPath = path.join(directory, name)
 
-                if fs.statSync(kernelDirPath).isDirectory()
-                    kernelFilePath = path.join(kernelDirPath, 'kernel.json')
+              if fs.statSync(kernelDirPath).isDirectory()
+                  kernelFilePath = path.join(kernelDirPath, 'kernel.json')
+                  try
                     info = JSON.parse fs.readFileSync(kernelFilePath)
                     info.language ?= info.display_name.toLowerCase()
-                    return info
-                else
-                    return null
+                    info
+                  catch e
+          return _.filter(kernels)
+        catch e
+          return []
 
-            kernels = _.filter(kernels)
-        catch error
-            kernels = []
-        return kernels
 
     getTrueLanguage: (language) ->
         languageMappings = @getLanguageMappings()
@@ -72,7 +62,6 @@ module.exports = KernelManager =
 
     getKernelInfoForLanguage: (grammarLanguage) ->
         kernels = @getAvailableKernels()
-        console.log "Available kernels:", kernels
 
         language = @getTrueLanguage(grammarLanguage)
 
