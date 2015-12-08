@@ -58,6 +58,7 @@ class SignalListView extends SelectListView
             name: "Switch to #{kernel.display_name}"
             value: 'switch-kernel'
             kernelInfo: kernel
+            grammar: @editor.getGrammar().name.toLowerCase()
           }
         kernels
 

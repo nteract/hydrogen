@@ -108,6 +108,9 @@ module.exports = Hydrogen =
             @startKernelIfNeeded(command.language)
         else if command.value == 'switch-kernel'
             KernelManager.destroyKernelForLanguage(command.language)
+            mapping = {}
+            mapping[command.grammar] = command.kernelInfo.display_name
+            KernelManager.setConfigJson 'grammarToKernel', mapping, true
             @clearResultBubbles()
             ConfigManager.writeConfigFile (filepath, config) ->
                 KernelManager.startKernel(command.kernelInfo, config, filepath)
