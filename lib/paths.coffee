@@ -8,9 +8,7 @@ ipythonDataDir = ->
 
 jupyterResolve = _.memoize (category) ->
     match = child_process.spawnSync('jupyter', ['--paths']).stdout.toString()
-    _.filter (_.map (
-        ///#{category}:\n(\s+.*\n)+///gim.exec(match)[0].split('\n')
-    ), (e) -> e.replace(///#{category}:///,'').trim()), _.negate(_.isEmpty)
+    _.map ///#{category}:\n(\s+.*\n)+///gim.exec(match)[0].split('\n')[1...-1], (x) -> x.trim()
 
 
 jupyterPath = _.memoize (subdirs...) ->
@@ -22,6 +20,12 @@ jupyterPath = _.memoize (subdirs...) ->
     paths = (path.join(p, subdirs...) for p in paths)
     _.filter paths, (x) -> try fs.statSync(x).isDirectory() catch e
 
+kernels = _.memoize ->
+    stdout =  child_process.spawnSync('ipython',['kernelspec','list']).stdout.toString()
+    _.map /Available kernels:(\s+.+\s+.+\n)+/.exec(stdout)[0].split('\n')[1...-1], (x) ->
+        /\/.*/.exec(x)[0]
+
 module.exports =
   jupyterResolve: jupyterResolve
   jupyterPath: jupyterPath
+  availableKernels: kernels
