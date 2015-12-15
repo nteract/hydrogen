@@ -20,6 +20,9 @@
   "activationCommands": {
     "atom-text-editor": "hydrogen:run"
   },
+  "scripts": {
+    "preinstall": "node dependencies.js"
+  },
   "repository": "https://github.com/willwhitney/hydrogen",
   "license": "MIT",
   "engines": {
