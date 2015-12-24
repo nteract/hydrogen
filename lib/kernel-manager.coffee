@@ -63,16 +63,18 @@ module.exports = KernelManager =
         else
             return language
 
-    getLanguageMappings: ->
-        languageMappings = atom.config.get 'Hydrogen.languageMappings'
+    getConfigJson: (key) ->
+        return {} unless value = atom.config.get "Hydrogen.#{key}"
+        try
+            return JSON.parse value
+        catch error
+            atom.notifications.addError "Your Hydrogen config is broken: #{key}", detail: error
 
-        if languageMappings
-            try
-                return JSON.parse languageMappings
-            catch error
-                console.error error
+    setConfigJson: (key, value, merge=false) ->
+        value = _.merge @getConfigJson(key), value if merge
+        atom.config.set "Hydrogen.#{key}", JSON.stringify value
 
-        return {}
+    getLanguageMappings: -> @getConfigJson('languageMappings')
 
     getKernelInfoForLanguage: (grammarLanguage) ->
         kernels = @getAvailableKernels()
@@ -91,6 +93,8 @@ module.exports = KernelManager =
             return null
         else
             kernelInfo = matchingKernels[0]
+            if display_name = @getConfigJson('grammarToKernel')[grammarLanguage]
+                kernelInfo = _.filter(matchingKernels, (k) -> k.display_name == display_name)[0]
             kernelInfo.grammarLanguage = grammarLanguage
             return kernelInfo
 
