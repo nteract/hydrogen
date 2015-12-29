@@ -7,9 +7,8 @@ Kernel = require './kernel'
 
 module.exports = KernelManager =
     runningKernels: {}
-    availableKernels: null
 
-    getAvailableKernels: ->
+    getAvailableKernels: _.memoize ->
         out = child_process.spawnSync('ipython',['kernelspec','list', '--json']).stdout.toString()
         _.pluck(JSON.parse(out).kernelspecs, 'spec')
 
