@@ -27,6 +27,16 @@ module.exports = Hydrogen =
                           {"Python Django": "python", "Ruby (Rails)": "ruby"}'
             type: 'string'
             default: '{}'
+        grammarToKernel:
+            description: 'JSON mappings between specific kernel and
+                          language/grammar. This value updated automatically
+                          by switch kernel command. So if you switch from
+                          python2 to python3, this kernel would be used next
+                          time. It means, you probabbly shouldn\'t
+                          change this by hand'
+            type: 'string'
+            default: '{}'
+
 
     subscriptions: null
     statusBarElement: null

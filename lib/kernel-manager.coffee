@@ -1,5 +1,3 @@
-fs = require 'fs'
-path = require 'path'
 _ = require 'lodash'
 child_process = require 'child_process'
 
@@ -51,14 +49,11 @@ module.exports = KernelManager =
             return kernelLanguage? and
                    language.toLowerCase() == kernelLanguage.toLowerCase()
 
-        if matchingKernels.length == 0
-            return null
-        else
+        if matchingKernels.length != 0
             kernelInfo = matchingKernels[0]
-            if display_name = @getConfigJson('grammarToKernel')[grammarLanguage]
-                kernelInfo = _.filter(matchingKernels, (k) -> k.display_name == display_name)[0]
-            kernelInfo.grammarLanguage = grammarLanguage
-            return kernelInfo
+        if display_name = @getConfigJson('grammarToKernel')[grammarLanguage]
+            kernelInfo = _.filter(matchingKernels, (k) -> k.display_name == display_name)[0]
+        return _.assign kernelInfo, {grammarLanguage: grammarLanguage}
 
     languageHasKernel: (language) ->
         return @getKernelInfoForLanguage(language)?
