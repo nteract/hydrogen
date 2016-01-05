@@ -136,7 +136,7 @@ You can also access these commands by clicking on the kernel status in the statu
 
 <img src="http://i.imgur.com/oQB5mpB.png" width=300>
 
-Additionally, if you have two or more kernels for language/grammar, you can switch to another kernel. This changes automatically saved into hydrogen configuration to ```grammarToKernel``` map. So if you switch from python2 to python3, this kernel would be used next time.
+Additionally, if you have two or more kernels for a particular language (grammar), you can select which kernel to use with the "Switch to <kernel>" option in the Kernel Commands menu. This change is automatically saved into the Hydrogen configuration's ```grammarToKernel``` map. For example, if Hydrogen is using the kernel for Python 2 by default, you could switch to Python 3. Then next time you open a `.py` file, Hydrogen will remember your selection and use Python 3.
 
 ## How it works
 
