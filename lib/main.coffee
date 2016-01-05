@@ -28,12 +28,12 @@ module.exports = Hydrogen =
             type: 'string'
             default: '{}'
         grammarToKernel:
-            description: 'JSON mappings between specific kernel and
-                          language/grammar. This value updated automatically
-                          by switch kernel command. So if you switch from
-                          python2 to python3, this kernel would be used next
-                          time. It means, you probabbly shouldn\'t
-                          change this by hand'
+            description: 'JSON mappings between specific kernel and a
+                          language/grammar. This value is updated automatically
+                          by the "switch kernel" command. If you switch from
+                          python2 to python3, python3 will be used the next time
+                          you open a Python file. You probabbly shouldn\'t
+                          change this by hand.'
             type: 'string'
             default: '{}'
 
