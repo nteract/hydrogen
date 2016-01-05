@@ -1,57 +1,19 @@
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
-
-{jupyterPath} = require './paths'
+child_process = require 'child_process'
 
 Kernel = require './kernel'
 
 module.exports = KernelManager =
-    kernelsDirOptions: jupyterPath('kernels')
     runningKernels: {}
-    pythonInfo:
-        display_name: "Python"
-        language: "python"
-    availableKernels: null
 
-    getAvailableKernels: ->
-        if @availableKernels?
-            return @availableKernels
-        else
-            kernelLists = _.map @kernelsDirOptions, @getKernelsFromDirectory
-            kernels = []
-            kernels = kernels.concat.apply(kernels, kernelLists)
-            kernels = _.map kernels, (kernel) =>
-                kernel.language = @getTrueLanguage(kernel.language)
-                return kernel
-
-            pythonKernels = _.filter kernels, (kernel) ->
-                return kernel.language == 'python'
-            if pythonKernels.length == 0
-                kernels.push(@pythonInfo)
-            return kernels
+    getAvailableKernels: _.memoize ->
+        out = child_process.spawnSync('ipython',['kernelspec','list', '--json']).stdout.toString()
+        _.pluck(JSON.parse(out).kernelspecs, 'spec')
 
     getRunningKernels: ->
         return _.clone(@runningKernels)
-
-    getKernelsFromDirectory: (directory) ->
-        try
-            kernelNames = fs.readdirSync directory
-            kernels = _.map kernelNames, (name) =>
-                kernelDirPath = path.join(directory, name)
-
-                if fs.statSync(kernelDirPath).isDirectory()
-                    kernelFilePath = path.join(kernelDirPath, 'kernel.json')
-                    info = JSON.parse fs.readFileSync(kernelFilePath)
-                    info.language ?= info.display_name.toLowerCase()
-                    return info
-                else
-                    return null
-
-            kernels = _.filter(kernels)
-        catch error
-            kernels = []
-        return kernels
 
     getTrueLanguage: (language) ->
         languageMappings = @getLanguageMappings()
