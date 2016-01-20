@@ -32,7 +32,7 @@ module.exports = Hydrogen =
                           language/grammar. This value is updated automatically
                           by the "switch kernel" command. If you switch from
                           python2 to python3, python3 will be used the next time
-                          you open a Python file. You probabbly shouldn\'t
+                          you open a Python file. You probably shouldn\'t
                           change this by hand.'
             type: 'string'
             default: '{}'
