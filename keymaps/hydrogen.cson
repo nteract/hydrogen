@@ -8,13 +8,15 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
 '.platform-darwin atom-text-editor':
-  'cmd-alt-enter': 'hydrogen:run'
+  'cmd-alt-enter': 'hydrogen:run-and-move-down'
+  'shift-alt-enter': 'hydrogen:run'
 
 '.platform-darwin atom-workspace':
   'cmd-alt-backspace': 'hydrogen:clear-results'
 
 '.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
-  'ctrl-alt-enter': 'hydrogen:run'
+  'ctrl-alt-enter': 'hydrogen:run-and-move-down'
+  'shift-alt-enter': 'hydrogen:run'
 
 '.platform-win32 atom-workspace, .platform-linux atom-workspace':
   'ctrl-backspace': 'hydrogen:clear-results'

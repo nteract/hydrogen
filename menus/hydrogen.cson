@@ -15,6 +15,9 @@
         {
           'label': 'Run'
           'command': 'hydrogen:run'
+        }, {
+          'label': 'Run and Move Down'
+          'command': 'hydrogen:run-and-move-down'
         }
       ]
     ]
