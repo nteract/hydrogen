@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
   "author": "Will Whitney <me@willwhitney.com>",
   "keywords": [
@@ -19,8 +19,8 @@
   ],
   "activationCommands": {
     "atom-text-editor": [
-        "hydrogen:run",
-        "hydrogen:run-and-move-down"
+      "hydrogen:run",
+      "hydrogen:run-and-move-down"
     ]
   },
   "repository": "https://github.com/willwhitney/hydrogen",
