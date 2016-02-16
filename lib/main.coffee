@@ -48,9 +48,10 @@ module.exports = Hydrogen =
         @subscriptions = new CompositeDisposable
 
         @subscriptions.add atom.commands.add 'atom-text-editor',
-            'hydrogen:run': => @run(false, false)
-            'hydrogen:run-all': => @run(false, true)
-            'hydrogen:run-and-move-down': => @run(true, false)
+            'hydrogen:run': => @run(false, false, false)
+            'hydrogen:run-all': => @run(false, true, false)
+            'hydrogen:run-and-move-down': => @run(true, false, false)
+            'hydrogen:run-all-above': => @run(false, false, true)
             'hydrogen:show-kernel-commands': => @showKernelCommands()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
@@ -128,10 +129,10 @@ module.exports = Hydrogen =
                 KernelManager.startKernel(command.kernelInfo, config, filepath)
 
 
-    createResultBubble: (andMoveDown = false, runAll = false) ->
+    createResultBubble: (andMoveDown = false, runAll = false, runAllAbove = false) ->
         language = @editor.getGrammar().name.toLowerCase()
 
-        codeBlock = @findCodeBlock(runAll)
+        codeBlock = @findCodeBlock(runAll, runAllAbove)
         if codeBlock?
             [code, row] = codeBlock
         if code?
@@ -230,7 +231,7 @@ module.exports = Hydrogen =
                 @markerBubbleMap[marker.id].destroy()
                 delete @markerBubbleMap[marker.id]
 
-    run: (andMoveDown = false, runAll = false) ->
+    run: (andMoveDown = false, runAll = false, runAllAbove = false) ->
         editor = atom.workspace.getActiveTextEditor()
         grammar = editor.getGrammar()
         language = grammar.name.toLowerCase()
@@ -250,7 +251,7 @@ module.exports = Hydrogen =
                         # @watchSidebar = new WatchSidebar(kernel, grammar)
                     # @showWatchSidebar()
 
-                    @createResultBubble(andMoveDown, runAll)
+                    @createResultBubble(andMoveDown, runAll, runAllAbove)
         else
             atom.notifications.addError(
                 "No kernel for language `#{language}` found",
@@ -326,7 +327,7 @@ module.exports = Hydrogen =
             if onStarted?
                 onStarted(runningKernel)
 
-    findCodeBlock: (runAll = false) ->
+    findCodeBlock: (runAll = false, runAllAbove = false) ->
         if runAll
             return [@editor.getText(), @editor.getLastBufferRow()]
 
@@ -346,6 +347,9 @@ module.exports = Hydrogen =
 
         row = cursor.getBufferRow()
         console.log "row:", row
+
+        if runAllAbove
+            return [@getRows(0, row), row]
 
         indentLevel = cursor.getIndentLevel()
         # indentLevel = @editor.suggestedIndentForBufferRow row
