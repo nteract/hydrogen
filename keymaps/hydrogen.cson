@@ -10,6 +10,7 @@
 '.platform-darwin atom-text-editor':
   'cmd-alt-enter': 'hydrogen:run-and-move-down'
   'shift-alt-enter': 'hydrogen:run'
+  'cmd-ctrl-enter': 'hydrogen:run-all'
 
 '.platform-darwin atom-workspace':
   'cmd-alt-backspace': 'hydrogen:clear-results'
@@ -17,6 +18,7 @@
 '.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
   'ctrl-alt-enter': 'hydrogen:run-and-move-down'
   'shift-alt-enter': 'hydrogen:run'
+  'ctrl-shift-alt-enter': 'hydrogen:run-all'
 
 '.platform-win32 atom-workspace, .platform-linux atom-workspace':
   'ctrl-backspace': 'hydrogen:clear-results'
