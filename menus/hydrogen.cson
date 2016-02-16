@@ -21,6 +21,9 @@
         }, {
           'label': 'Run All'
           'command': 'hydrogen:run-all'
+        }, {
+          'label': 'Run All Above'
+          'command': 'hydrogen:run-all-above'
         }
       ]
     ]
