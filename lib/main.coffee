@@ -330,11 +330,6 @@ module.exports = Hydrogen =
         if runAll
             return [@editor.getText(), @editor.getLastBufferRow()]
 
-        cursor = @editor.getLastCursor()
-
-        row = cursor.getBufferRow()
-        console.log "row:", row
-
         buffer = @editor.getBuffer()
         selectedText = @editor.getSelectedText()
 
@@ -346,6 +341,11 @@ module.exports = Hydrogen =
             while @blank(endRow) and endRow > selectedRange.start.row
                 endRow = endRow - 1
             return [selectedText, endRow]
+
+        cursor = @editor.getLastCursor()
+
+        row = cursor.getBufferRow()
+        console.log "row:", row
 
         indentLevel = cursor.getIndentLevel()
         # indentLevel = @editor.suggestedIndentForBufferRow row
