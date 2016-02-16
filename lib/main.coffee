@@ -327,13 +327,13 @@ module.exports = Hydrogen =
                 onStarted(runningKernel)
 
     findCodeBlock: (runAll = false) ->
+        if runAll
+            return [@editor.getText(), @editor.getLastBufferRow()]
+
         cursor = @editor.getLastCursor()
 
         row = cursor.getBufferRow()
         console.log "row:", row
-
-        if runAll
-            return [@editor.getText(), row]
 
         buffer = @editor.getBuffer()
         selectedText = @editor.getSelectedText()
