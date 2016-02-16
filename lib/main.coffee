@@ -48,8 +48,9 @@ module.exports = Hydrogen =
         @subscriptions = new CompositeDisposable
 
         @subscriptions.add atom.commands.add 'atom-text-editor',
-            'hydrogen:run': => @run(false)
-            'hydrogen:run-and-move-down': => @run(true)
+            'hydrogen:run': => @run(false, false)
+            'hydrogen:run-all': => @run(false, true)
+            'hydrogen:run-and-move-down': => @run(true, false)
             'hydrogen:show-kernel-commands': => @showKernelCommands()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
@@ -127,10 +128,10 @@ module.exports = Hydrogen =
                 KernelManager.startKernel(command.kernelInfo, config, filepath)
 
 
-    createResultBubble: (andMoveDown = false) ->
+    createResultBubble: (andMoveDown = false, runAll = false) ->
         language = @editor.getGrammar().name.toLowerCase()
 
-        codeBlock = @findCodeBlock()
+        codeBlock = @findCodeBlock(runAll)
         if codeBlock?
             [code, row] = codeBlock
         if code?
@@ -229,7 +230,7 @@ module.exports = Hydrogen =
                 @markerBubbleMap[marker.id].destroy()
                 delete @markerBubbleMap[marker.id]
 
-    run: (andMoveDown = false) ->
+    run: (andMoveDown = false, runAll = false) ->
         editor = atom.workspace.getActiveTextEditor()
         grammar = editor.getGrammar()
         language = grammar.name.toLowerCase()
@@ -249,7 +250,7 @@ module.exports = Hydrogen =
                         # @watchSidebar = new WatchSidebar(kernel, grammar)
                     # @showWatchSidebar()
 
-                    @createResultBubble(andMoveDown)
+                    @createResultBubble(andMoveDown, runAll)
         else
             atom.notifications.addError(
                 "No kernel for language `#{language}` found",
@@ -325,7 +326,15 @@ module.exports = Hydrogen =
             if onStarted?
                 onStarted(runningKernel)
 
-    findCodeBlock: ->
+    findCodeBlock: (runAll = false) ->
+        cursor = @editor.getLastCursor()
+
+        row = cursor.getBufferRow()
+        console.log "row:", row
+
+        if runAll
+            return [@editor.getText(), row]
+
         buffer = @editor.getBuffer()
         selectedText = @editor.getSelectedText()
 
@@ -337,11 +346,6 @@ module.exports = Hydrogen =
             while @blank(endRow) and endRow > selectedRange.start.row
                 endRow = endRow - 1
             return [selectedText, endRow]
-
-        cursor = @editor.getLastCursor()
-
-        row = cursor.getBufferRow()
-        console.log "row:", row
 
         indentLevel = cursor.getIndentLevel()
         # indentLevel = @editor.suggestedIndentForBufferRow row

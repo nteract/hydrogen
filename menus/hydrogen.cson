@@ -18,6 +18,9 @@
         }, {
           'label': 'Run and Move Down'
           'command': 'hydrogen:run-and-move-down'
+        }, {
+          'label': 'Run All'
+          'command': 'hydrogen:run-all'
         }
       ]
     ]
