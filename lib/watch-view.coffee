@@ -25,6 +25,33 @@ class WatchView
         @element.appendChild(@inputElement.element)
         @element.appendChild(@resultView.element)
 
+        @addHistoryScrollbar().clearHistory()
+
+    clearHistory: (@currentHistory=[]) -> this
+    addToHistory: (result) ->
+      return if result.data is 'ok'
+      @currentHistory.push(result)
+      @historyScrollbar.querySelector('.hidden').style.width =
+        (total = @currentHistory.length * @historyScrollbar.offsetWidth) + 'px'
+      @historyScrollbar.scrollLeft = total
+      this
+
+    addHistoryScrollbar: ->
+        @historyScrollbar = document.createElement 'div'
+        filler = document.createElement 'div'
+        @historyScrollbar.classList.add 'history-scrollbar'
+        filler.classList.add 'hidden'
+        @historyScrollbar.appendChild filler
+        @historyScrollbar.onscroll = do (currentPos=0) => (e) =>
+            pos = Math.ceil(@historyScrollbar.scrollLeft / (@historyScrollbar.offsetWidth+1))
+            pos = @currentHistory.length - 1 if pos >= @currentHistory.length
+            if currentPos != pos
+              @clearResults()
+              @resultView.addResult @currentHistory[currentPos = pos]
+
+        @element.appendChild @historyScrollbar
+        this
+
     run: ->
         code = @getCode()
         @clearResults()
@@ -33,11 +60,12 @@ class WatchView
             @kernel.executeWatch code, (result) =>
                 console.log "watchview got result:", result
                 @resultView.addResult(result)
+                @addToHistory result
 
     setCode: (code)->
       @inputEditor.setText code
       this
-      
+
     getCode: ->
         return @inputElement.getText()
 
