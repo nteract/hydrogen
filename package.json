@@ -20,7 +20,9 @@
   "activationCommands": {
     "atom-text-editor": [
       "hydrogen:run",
-      "hydrogen:run-and-move-down"
+      "hydrogen:run-and-move-down",
+      "hydrogen:run-all",
+      "hydrogen:run-all-above"
     ]
   },
   "repository": "https://github.com/willwhitney/hydrogen",
