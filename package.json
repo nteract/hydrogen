@@ -25,6 +25,9 @@
       "hydrogen:run-all-above"
     ]
   },
+  "scripts": {
+    "preinstall": "node dependencies.js"
+  },
   "repository": "https://github.com/willwhitney/hydrogen",
   "license": "MIT",
   "engines": {
