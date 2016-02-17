@@ -7,7 +7,10 @@ module.exports = KernelManager =
     runningKernels: {}
 
     getAvailableKernels: _.memoize ->
-        out = child_process.spawnSync('ipython',['kernelspec','list', '--json']).stdout.toString()
+        try
+            out = child_process.spawnSync('jupyter',['kernelspec','list', '--json']).stdout.toString()
+        catch
+            out = child_process.spawnSync('ipython',['kernelspec','list', '--json']).stdout.toString()
         _.pluck(JSON.parse(out).kernelspecs, 'spec')
 
     getRunningKernels: ->
