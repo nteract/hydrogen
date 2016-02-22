@@ -5,6 +5,10 @@
 
   child_process = require('child_process');
 
+  if (!child_process.spawnSync) {
+    throw "Please install iojs or node >= 0.12. Hydrogen doesn't support older versions of node";
+  }
+
   os = require('os');
 
   MINIMAL_WIN_CL_VERSION = 15;
