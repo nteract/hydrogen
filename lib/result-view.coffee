@@ -136,6 +136,11 @@ class ResultView
                 or container.offsetHeight > 500
                   container.innerText = container.innerText.replace /\\n/g, "\n"
                   @setMultiline true
+                else
+                  @tooltips.add atom.tooltips.add(container, {title: "Copy to clipboard"})
+                  container.onclick = =>
+                    atom.clipboard.write(@getAllText())
+                    atom.notifications.addSuccess("Copied to clipboard")
             else
                 console.error "Unrecognized result:", result
 
