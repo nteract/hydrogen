@@ -188,17 +188,19 @@
     height: 100%;
     width: 300px;
     min-width: 200px;
-    overflow-y: scroll;
-    margin: 5px;
+    overflow-y: overlay;
+    padding: 10px;
+    border-left: 1px solid @base-border-color;
 
     .watch-sidebar-title {
         text-align: center;
-        // padding-top: 15px;
+        margin-top: 5px;
         margin-bottom: 5px;
     }
 
     .watch-sidebar-language {
         margin-top: 5px;
+        margin-bottom: 5px;
         text-align: center;
         cursor: pointer;
 
@@ -209,19 +211,20 @@
 
     .watch-view {
         width: 100%;
-        margin-top: 20px;
-
+        margin-top: 10px;
         .watch-input {
+            padding: 3px;
             border-radius: 3px;
             background-color: @syntax-background-color;
-            margin: 5px;
             font-size: @font-size;
             min-height: 3em;
+            border: 1px solid @base-border-color;
         }
 
         .history-scrollbar {
           overflow-x: scroll;
-          height: 7px;
+          overflow-y: hidden;
+          height: 10px;
           .hidden {
             height: 1px;
             width: 1000px;
@@ -242,8 +245,7 @@
     }
 
     .add-watch {
-        margin: 2%;
-        width: 96%;
+        width: 100%;
     }
 
     .output-bubble.empty {
@@ -253,12 +255,14 @@
     .output-bubble {
         position: static;
         display: flex;
-        border-radius: 0px;
-        margin: 5px;
+        border-radius: 3px;
+        margin: 0px;
         font-size: @font-size * 5/6;
         box-shadow: none;
         padding-left: 0px;
         padding-right: 0px;
+        border: 1px solid @base-border-color;
+        margin-bottom: 10px;
 
 
         &.rich .rich-close-button {
@@ -267,10 +271,10 @@
 
         &:not(.rich) {
             .bubble-action-panel {
-                display: inline-flex;
+                display: flex;
                 flex-direction: column;
                 width: 30px;
-                border-radius: 0;
+                border-radius: 0 3px 3px 0;
             }
         }
 
