@@ -4,15 +4,26 @@ child_process = require 'child_process'
 Kernel = require './kernel'
 
 module.exports = KernelManager =
+    availableKernels:  []
     runningKernels: {}
-
-    getAvailableKernels: _.memoize ->
-        try
-            out = child_process.spawnSync('jupyter',['kernelspec','list', '--json']).stdout.toString()
-        catch
-            out = child_process.spawnSync('ipython',['kernelspec','list', '--json']).stdout.toString()
-        _.pluck(JSON.parse(out).kernelspecs, 'spec')
-
+    
+    getAvailableKernels: ->
+        @availableKernels = @getConfigJson 'kernelspecs', @availableKernels
+        @updateKernels() unless @availableKernels.length
+        @availableKernels
+               
+    updateKernels: ->
+        save = (out) =>
+            @availableKernels = _.pluck JSON.parse(out).kernelspecs, 'spec'
+            @setConfigJson 'kernelspecs', @availableKernels
+            atom.notifications.addInfo 'Hydrogen Kernels updated:',
+              detail: (_.pluck @availableKernels, 'display_name').join('\n')
+      
+        child_process.exec 'jupyter kernelspec list --json', (e, stdout, stderr) ->
+            return save stdout unless e
+            child_process.exec 'ipython kernelspec list --json', (e, stdout, stderr) ->
+                save stdout
+       
     getRunningKernels: ->
         return _.clone(@runningKernels)
 
@@ -26,12 +37,12 @@ module.exports = KernelManager =
         else
             return language
 
-    getConfigJson: (key) ->
-        return {} unless value = atom.config.get "Hydrogen.#{key}"
+    getConfigJson: (key, _default = {}) ->
+        return _default unless value = atom.config.get "Hydrogen.#{key}"
         try
-            return JSON.parse value
+          return JSON.parse value
         catch error
-            atom.notifications.addError "Your Hydrogen config is broken: #{key}", detail: error
+          atom.notifications.addError "Your Hydrogen config is broken: #{key}", detail: error
 
     setConfigJson: (key, value, merge=false) ->
         value = _.merge @getConfigJson(key), value if merge
