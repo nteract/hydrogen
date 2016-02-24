@@ -1,4 +1,5 @@
 {$} = require 'atom-space-pen-views'
+{CompositeDisposable} = require 'atom'
 _ = require 'lodash'
 
 WatchView = require './watch-view'
@@ -13,17 +14,30 @@ class WatchSidebar
         @element = document.createElement('div')
         @element.classList.add('hydrogen', 'watch-sidebar')
 
-        title = document.createElement('h1')
-        title.classList.add('watch-sidebar-title')
-        title.innerText = "Hydrogen Watch"
+        @toolbar = document.createElement('div')
+        @toolbar.classList.add('toolbar', 'block')
 
-        languageDisplay = document.createElement('h3')
-        languageDisplay.classList.add('watch-sidebar-language')
-        languageDisplay.innerText = "Kernel: #{@language}"
+        languageDisplay = document.createElement('button')
+        languageDisplay.classList.add('btn', 'icon', 'icon-sync', 'language')
+        languageDisplay.innerText = "Watch: #{@language}"
         languageDisplay.onclick = =>
             editor = atom.workspace.getActiveTextEditor()
             editorView = atom.views.getView(editor)
             atom.commands.dispatch(editorView, 'hydrogen:select-watch-kernel')
+
+        @commands = document.createElement('div')
+        @commands.classList.add('btn-group')
+        @removeButton = document.createElement('button')
+        @removeButton.classList.add('btn', 'icon', 'icon-trashcan')
+        @removeButton.onclick = => @removeWatch()
+        @toggleButton = document.createElement('button')
+        @toggleButton.classList.add('btn', 'icon', 'icon-remove-close')
+        @toggleButton.onclick = => this.hide()
+
+        @tooltips = new CompositeDisposable()
+        @tooltips.add atom.tooltips.add(@toggleButton, {title: "Toggle Watches"})
+        @tooltips.add atom.tooltips.add(languageDisplay, {title: "Change Watch Kernel"})
+        @tooltips.add atom.tooltips.add(@removeButton, {title: "Remove Watch"})
 
         # watch = new WatchView(@kernel, @grammar)
 
@@ -42,8 +56,12 @@ class WatchSidebar
         @resizeHandle.classList.add('watch-resize-handle')
         $(@resizeHandle).on 'mousedown', @resizeStarted
 
-        @element.appendChild(title)
-        @element.appendChild(languageDisplay)
+        @toolbar.appendChild(languageDisplay)
+        @toolbar.appendChild(@commands)
+        @commands.appendChild(@removeButton)
+        @commands.appendChild(@toggleButton)
+
+        @element.appendChild(@toolbar)
         @element.appendChild(@watchesContainer)
         @element.appendChild(@addButton)
         @element.appendChild(@resizeHandle)

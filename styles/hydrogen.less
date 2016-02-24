@@ -192,26 +192,15 @@
     padding: 10px;
     border-left: 1px solid @base-border-color;
 
-    .watch-sidebar-title {
-        text-align: center;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .watch-sidebar-language {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        text-align: center;
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: underline;
+    .toolbar {
+        margin-bottom: 10px;
+        .btn-group{
+            float: right;
         }
     }
 
     .watch-view {
         width: 100%;
-        margin-top: 10px;
         .watch-input {
             padding: 3px;
             border-radius: 3px;
@@ -282,7 +271,7 @@
             display: inline-block;
             width: 100%;
             max-height: 400px;
-            overflow-y: scroll;
+            overflow-y: overlay;
             white-space: pre-wrap;
         }
 
