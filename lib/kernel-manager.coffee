@@ -14,7 +14,12 @@ module.exports = KernelManager =
                
     updateKernels: ->
         save = (out) =>
-            @availableKernels = _.pluck JSON.parse(out).kernelspecs, 'spec'
+            try
+                kernelspec = JSON.parse(out).kernelspecs
+            catch e
+                atom.notifications.addError "Can't parse neither 'ipython kernelspecs nor 'jupyter kernelspecs'"
+                
+            @availableKernels = _.pluck kernelspec, 'spec'
             @setConfigJson 'kernelspecs', @availableKernels
             atom.notifications.addInfo 'Hydrogen Kernels updated:',
               detail: (_.pluck @availableKernels, 'display_name').join('\n')

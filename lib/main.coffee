@@ -36,6 +36,32 @@ module.exports = Hydrogen =
                           change this by hand.'
             type: 'string'
             default: '{}'
+        kernelspecs:
+            title: "Kernel Specs"
+            description: 'Kernel specs as reported by:
+
+                            $ jupyter kernelspecs list --json
+
+                          E.g.:
+
+                            {
+                              "ijavascript": {
+                                "spec": {
+                                  "display_name": "IJavascript",
+                                  "env": {},
+                                  "argv": [
+                                    "node",
+                                    "/home/user/node_modules/ijavascript/lib/kernel.js",
+                                    "--protocol=5.0",
+                                    "{connection_file}"
+                                  ],
+                                  "language": "javascript"
+                                },
+                                "resources_dir": "/home/user/node_modules/ijavascript/images"
+                              }
+                            }'
+            type: 'string'
+            default: '{}'
 
 
     subscriptions: null
