@@ -18,7 +18,7 @@ class WatchSidebar
         @toolbar.classList.add('toolbar', 'block')
 
         languageDisplay = document.createElement('button')
-        languageDisplay.classList.add('btn', 'icon', 'icon-sync', 'language')
+        languageDisplay.classList.add('btn', 'icon', 'icon-sync')
         languageDisplay.innerText = "Watch: #{@language}"
         languageDisplay.onclick = =>
             editor = atom.workspace.getActiveTextEditor()
