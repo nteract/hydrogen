@@ -4,29 +4,35 @@ child_process = require 'child_process'
 Kernel = require './kernel'
 
 module.exports = KernelManager =
-    availableKernels:  []
     runningKernels: {}
-    
+    kernelsUpdatedOnce: false
+      
     getAvailableKernels: ->
-        @availableKernels = @getConfigJson 'kernelspecs', @availableKernels
-        @updateKernels() unless @availableKernels.length
-        @availableKernels
+        kernels = _.pluck @getConfigJson('kernelspec', []).kernelspecs, 'spec'
+        @updateKernels() unless @kernelsUpdatedOnce
+        kernels
                
     updateKernels: ->
+        @kernelsUpdatedOnce = true
         save = (out) =>
             try
-                kernelspec = JSON.parse(out).kernelspecs
+                kernelspec = JSON.parse(out)
             catch e
-                atom.notifications.addError "Can't parse neither 'ipython kernelspecs nor 'jupyter kernelspecs'"
+                unless @getAvailableKernels().length
+                    return atom.notifications.addError """
+Can't parse neither 'ipython kernelspecs nor 'jupyter kernelspecs'
+""", detail: """Use kernelspec option in Hydrogen options OR update
+your ipython/jupyter to version that supports kernelspec option:
+$ jupyter kernelspec list --json || ipython kernelspec list --json
+"""
                 
-            @availableKernels = _.pluck kernelspec, 'spec'
-            @setConfigJson 'kernelspecs', @availableKernels
+            @setConfigJson 'kernelspec', kernelspec
             atom.notifications.addInfo 'Hydrogen Kernels updated:',
-              detail: (_.pluck @availableKernels, 'display_name').join('\n')
+              detail: (_.pluck @getAvailableKernels(), 'display_name').join('\n')
       
-        child_process.exec 'jupyter kernelspec list --json', (e, stdout, stderr) ->
+        child_process.exec 'jupter kernelspec list --json', (e, stdout, stderr) ->
             return save stdout unless e
-            child_process.exec 'ipython kernelspec list --json', (e, stdout, stderr) ->
+            child_process.exec 'iython kernelspec list --json', (e, stdout, stderr) ->
                 save stdout
        
     getRunningKernels: ->
