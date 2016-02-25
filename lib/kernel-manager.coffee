@@ -12,7 +12,6 @@ module.exports = KernelManager =
         @updateKernels() unless @kernelsUpdatedOnce
         kernels
                
-               
     updateKernels: ->
       saveKernelsToConfig = (out) =>
         try
@@ -31,9 +30,9 @@ module.exports = KernelManager =
             detail: (_.pluck @getAvailableKernels(), 'display_name').join('\n')
       
       @kernelsUpdatedOnce = true
-      child_process.exec 'jupyter kernelspec list --json', (e, stdout, stderr) ->
+      child_process.exec 'jupyter kernelspec list --json --log-level=CRITICAL', (e, stdout, stderr) ->
           return saveKernelsToConfig stdout unless e
-          child_process.exec 'ipython kernelspec list --json', (e, stdout, stderr) ->
+          child_process.exec 'ipython kernelspec list --json --log-level=CRITICAL', (e, stdout, stderr) ->
               saveKernelsToConfig stdout
        
     getRunningKernels: ->
