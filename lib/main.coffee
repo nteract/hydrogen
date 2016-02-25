@@ -13,29 +13,7 @@ WatchLanguagePicker = require './watch-language-picker'
 AutocompleteProvider = require './autocomplete-provider'
 
 module.exports = Hydrogen =
-    config:
-        languageMappings:
-            title: "Language Mappings"
-            description: 'Some packages may change the name of the grammar for
-                          a language (e.g. "Python" -> "Python Django"). That
-                          leaves Hydrogen unable to figure out what kernel to
-                          use for your code.
-
-                          This field should be valid JSON mapping a nonstandard
-                          language name to a standard one, e.g.
-
-                          {"Python Django": "python", "Ruby (Rails)": "ruby"}'
-            type: 'string'
-            default: '{}'
-        grammarToKernel:
-            description: 'JSON mappings between specific kernel and a
-                          language/grammar. This value is updated automatically
-                          by the "switch kernel" command. If you switch from
-                          python2 to python3, python3 will be used the next time
-                          you open a Python file. You probably shouldn\'t
-                          change this by hand.'
-            type: 'string'
-            default: '{}'
+    config: require './config'
 
 
     subscriptions: null
@@ -57,6 +35,7 @@ module.exports = Hydrogen =
             'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
+            'hydrogen:update-kernels': -> KernelManager.updateKernels()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()

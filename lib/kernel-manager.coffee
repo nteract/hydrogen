@@ -5,14 +5,36 @@ Kernel = require './kernel'
 
 module.exports = KernelManager =
     runningKernels: {}
-
-    getAvailableKernels: _.memoize ->
+    kernelsUpdatedOnce: false
+      
+    getAvailableKernels: ->
+        kernels = _.pluck @getConfigJson('kernelspec', {kernelspecs:{}}).kernelspecs, 'spec'
+        @updateKernels() unless @kernelsUpdatedOnce
+        kernels
+               
+    updateKernels: ->
+      saveKernelsToConfig = (out) =>
         try
-            out = child_process.spawnSync('jupyter',['kernelspec','list', '--json']).stdout.toString()
-        catch
-            out = child_process.spawnSync('ipython',['kernelspec','list', '--json']).stdout.toString()
-        _.pluck(JSON.parse(out).kernelspecs, 'spec')
-
+          kernelspec = JSON.parse(out)
+        catch e
+          unless @getAvailableKernels().length
+            atom.notifications.addError """
+              Can't parse neither 'ipython kernelspecs nor 'jupyter kernelspecs'
+              """, detail: """Use kernelspec option in Hydrogen options OR update
+              your ipython/jupyter to version that supports kernelspec option:
+              $ jupyter kernelspec list --json || ipython kernelspec list --json
+              """
+        if kernelspec?
+          @setConfigJson 'kernelspec', kernelspec
+          atom.notifications.addInfo 'Hydrogen Kernels updated:',
+            detail: (_.pluck @getAvailableKernels(), 'display_name').join('\n')
+      
+      @kernelsUpdatedOnce = true
+      child_process.exec 'jupyter kernelspec list --json --log-level=CRITICAL', (e, stdout, stderr) ->
+          return saveKernelsToConfig stdout unless e
+          child_process.exec 'ipython kernelspec list --json --log-level=CRITICAL', (e, stdout, stderr) ->
+              saveKernelsToConfig stdout
+       
     getRunningKernels: ->
         return _.clone(@runningKernels)
 
@@ -26,12 +48,12 @@ module.exports = KernelManager =
         else
             return language
 
-    getConfigJson: (key) ->
-        return {} unless value = atom.config.get "Hydrogen.#{key}"
+    getConfigJson: (key, _default = {}) ->
+        return _default unless value = atom.config.get "Hydrogen.#{key}"
         try
-            return JSON.parse value
+          return JSON.parse value
         catch error
-            atom.notifications.addError "Your Hydrogen config is broken: #{key}", detail: error
+          atom.notifications.addError "Your Hydrogen config is broken: #{key}", detail: error
 
     setConfigJson: (key, value, merge=false) ->
         value = _.merge @getConfigJson(key), value if merge
