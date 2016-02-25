@@ -8,7 +8,7 @@ module.exports = KernelManager =
     kernelsUpdatedOnce: false
       
     getAvailableKernels: ->
-        kernels = _.pluck @getConfigJson('kernelspec', []).kernelspecs, 'spec'
+        kernels = _.pluck @getConfigJson('kernelspec', {kernelspecs:{}}).kernelspecs, 'spec'
         @updateKernels() unless @kernelsUpdatedOnce
         kernels
                
