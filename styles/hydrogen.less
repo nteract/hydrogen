@@ -11,6 +11,10 @@
     z-index: 6;
 }
 
+.bottom{
+    z-index: 4;
+}
+
 .hydrogen.output-bubble {
     @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
     @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
@@ -79,7 +83,8 @@
 
         .bubble-output-container {
             padding: 3px;
-            overflow: scroll;
+            padding-right: 10px;
+            overflow: auto;
         }
 
         .rich-close-button::before {
@@ -187,40 +192,32 @@
     height: 100%;
     width: 300px;
     min-width: 200px;
-    overflow-y: scroll;
-    margin: 5px;
+    overflow-y: overlay;
+    padding: 10px;
+    border-left: 1px solid @base-border-color;
 
-    .watch-sidebar-title {
-        text-align: center;
-        // padding-top: 15px;
-        margin-bottom: 5px;
-    }
-
-    .watch-sidebar-language {
-        margin-top: 5px;
-        text-align: center;
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: underline;
+    .toolbar {
+        margin-bottom: 10px;
+        .btn-group{
+            float: right;
         }
     }
 
     .watch-view {
         width: 100%;
-        margin-top: 20px;
-
         .watch-input {
+            padding: 3px;
             border-radius: 3px;
             background-color: @syntax-background-color;
-            margin: 5px;
             font-size: @font-size;
             min-height: 3em;
+            border: 1px solid @base-border-color;
         }
 
         .history-scrollbar {
           overflow-x: scroll;
-          height: 7px;
+          overflow-y: hidden;
+          height: 10px;
           .hidden {
             height: 1px;
             width: 1000px;
@@ -241,8 +238,7 @@
     }
 
     .add-watch {
-        margin: 2%;
-        width: 96%;
+        width: 100%;
     }
 
     .output-bubble.empty {
@@ -252,12 +248,14 @@
     .output-bubble {
         position: static;
         display: flex;
-        border-radius: 0px;
-        margin: 5px;
-        font-size: @font-size;
+        border-radius: 3px;
+        margin: 0px;
+        font-size: @font-size * 5/6;
         box-shadow: none;
         padding-left: 0px;
         padding-right: 0px;
+        border: 1px solid @base-border-color;
+        margin-bottom: 10px;
 
 
         &.rich .rich-close-button {
@@ -266,10 +264,10 @@
 
         &:not(.rich) {
             .bubble-action-panel {
-                display: inline-flex;
+                display: flex;
                 flex-direction: column;
                 width: 30px;
-                border-radius: 0;
+                border-radius: 0 3px 3px 0;
             }
         }
 
@@ -277,7 +275,7 @@
             display: inline-block;
             width: 100%;
             max-height: 400px;
-            overflow-y: scroll;
+            overflow-y: overlay;
             white-space: pre-wrap;
         }
 
