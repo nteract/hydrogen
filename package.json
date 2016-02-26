@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
   "author": "Will Whitney <me@willwhitney.com>",
   "keywords": [
@@ -25,8 +25,7 @@
       "hydrogen:run-all-above"
     ]
   },
-  "scripts": {
-  },
+  "scripts": {},
   "repository": "https://github.com/willwhitney/hydrogen",
   "license": "MIT",
   "engines": {
