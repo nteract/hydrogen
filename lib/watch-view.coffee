@@ -32,26 +32,40 @@ class WatchView
       return if result.data is 'ok'
       @currentHistory.push(result)
       @currentHistory.pos = @currentHistory.length - 1
-      @historyInfo.innerText = "#{@currentHistory.length} / #{@currentHistory.length}"
+      @counter.innerText = "#{@currentHistory.length} / #{@currentHistory.length}"
+      @scrollbar.querySelector('.hidden').style.width =
+        (total = @currentHistory.length * @scrollbar.offsetWidth) + 'px'
+      @scrollbar.scrollLeft = total
+      @scrollbar.classList.add 'show'
       this
 
     addHistorySwitch: ->
         @historySwitch = document.createElement 'div'
         @historySwitch.classList.add 'history-switch'
 
-        @historyInfo = document.createElement('div')
-        @historyInfo.classList.add('history-info')
-        @historyInfo.innerText = "0 / 0"
+        @scrollbar = document.createElement 'div'
+        filler = document.createElement 'div'
+        @scrollbar.classList.add 'scrollbar'
+        filler.classList.add 'hidden'
+        @scrollbar.classList.add 'hide'
+        @scrollbar.appendChild filler
+        @scrollbar.onscroll = =>
+            @currentHistory.pos = Math.ceil(@scrollbar.scrollLeft / (@scrollbar.offsetWidth+1))
+            @counter.innerText = "#{@currentHistory.pos+1} / #{@currentHistory.length}"
+            @clearResults()
+            @resultView.addResult @currentHistory[@currentHistory.pos]
+
+        @counter = document.createElement('div')
+        @counter.classList.add('counter')
+        @counter.innerText = "0 / 0"
 
         @nextButton = document.createElement('button')
         @nextButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-right', 'next-btn')
         @nextButton.onclick = =>
             if @currentHistory.pos != @currentHistory.length - 1 and @currentHistory.pos?
                 @currentHistory.pos += 1
-
-                txt = "#{@currentHistory.pos + 1} / #{@currentHistory.length}"
-                @historyInfo.innerText = txt
-
+                @counter.innerText = "#{@currentHistory.pos+1} / #{@currentHistory.length}"
+                @scrollbar.scrollLeft = @currentHistory.pos * (@scrollbar.offsetWidth+1)
                 @clearResults()
                 @resultView.addResult @currentHistory[@currentHistory.pos]
 
@@ -60,16 +74,15 @@ class WatchView
         @prevButton.onclick = =>
             if @currentHistory.pos != 0 and @currentHistory.pos?
                 @currentHistory.pos -= 1
-
-                txt = "#{@currentHistory.pos + 1} / #{@currentHistory.length}"
-                @historyInfo.innerText = txt
-                
+                @counter.innerText = "#{@currentHistory.pos+1} / #{@currentHistory.length}"
+                @scrollbar.scrollLeft = @currentHistory.pos * (@scrollbar.offsetWidth+1)
                 @clearResults()
                 @resultView.addResult @currentHistory[@currentHistory.pos]
 
         @historySwitch.appendChild(@prevButton)
-        @historySwitch.appendChild(@historyInfo)
+        @historySwitch.appendChild(@counter)
         @historySwitch.appendChild(@nextButton)
+        @historySwitch.appendChild(@scrollbar)
         @element.appendChild @historySwitch
         this
 

@@ -217,15 +217,34 @@
         .history-switch {
             padding: 3px 0 3px 0;
             position: relative;
-            .history-info{
+            .counter{
                 position: absolute;
                 left: 50%;
                 top: 50%;
                 transform: translate(-50%, -50%);
-
             }
             .next-btn{
                 float: right;
+            }
+            .scrollbar {
+                overflow-x: scroll;
+                overflow-y: hidden;
+                height: 10px;
+                margin-top: -11px;
+                margin-left: @component-icon-size + @component-icon-padding;
+                margin-right: @component-icon-size + @component-icon-padding;
+                .hidden {
+                    height: 1px;
+                    width: 1000px;
+                    visibility: hidden;
+                    display: block !important;
+                }
+            }
+            .hide {
+                display: none;
+            }
+            .show {
+                display: block;
             }
         }
 
