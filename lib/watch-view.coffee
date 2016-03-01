@@ -32,30 +32,43 @@ class WatchView
       return if result.data is 'ok'
       @currentHistory.push(result)
       @currentHistory.pos = @currentHistory.length - 1
+      @historyInfo.innerText = "#{@currentHistory.length} / #{@currentHistory.length}"
       this
 
     addHistorySwitch: ->
         @historySwitch = document.createElement 'div'
         @historySwitch.classList.add 'history-switch'
 
+        @historyInfo = document.createElement('div')
+        @historyInfo.classList.add('history-info')
+        @historyInfo.innerText = "0 / 0"
 
-        @nextButton = document.createElement('block')
+        @nextButton = document.createElement('button')
         @nextButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-right', 'next-btn')
         @nextButton.onclick = =>
             if @currentHistory.pos != @currentHistory.length - 1 and @currentHistory.pos?
-                @currentHistory.pos = @currentHistory.pos + 1
+                @currentHistory.pos += 1
+
+                txt = "#{@currentHistory.pos + 1} / #{@currentHistory.length}"
+                @historyInfo.innerText = txt
+
                 @clearResults()
                 @resultView.addResult @currentHistory[@currentHistory.pos]
 
-        @previousButton = document.createElement('block')
-        @previousButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-left', 'previous-btn')
-        @previousButton.onclick = =>
+        @prevButton = document.createElement('button')
+        @prevButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-left')
+        @prevButton.onclick = =>
             if @currentHistory.pos != 0 and @currentHistory.pos?
-                @currentHistory.pos = @currentHistory.pos - 1
+                @currentHistory.pos -= 1
+
+                txt = "#{@currentHistory.pos + 1} / #{@currentHistory.length}"
+                @historyInfo.innerText = txt
+                
                 @clearResults()
                 @resultView.addResult @currentHistory[@currentHistory.pos]
 
-        @historySwitch.appendChild(@previousButton)
+        @historySwitch.appendChild(@prevButton)
+        @historySwitch.appendChild(@historyInfo)
         @historySwitch.appendChild(@nextButton)
         @element.appendChild @historySwitch
         this
