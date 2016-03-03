@@ -64,7 +64,8 @@ module.exports = Hydrogen =
 
 
     provide: ->
-        return AutocompleteProvider
+        if KernelManager.getConfigJson('autocomplete') is true
+            return AutocompleteProvider
 
     updateCurrentEditor: (currentPaneItem) ->
         console.log "Updating current editor to:", currentPaneItem
