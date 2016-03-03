@@ -215,7 +215,7 @@
         }
 
         .history-switch {
-            padding: 3px 0 2px 0;
+            padding: 3px 0 3px 0;
             position: relative;
 
             .counter {
@@ -231,9 +231,9 @@
             .scrollbar {
                 overflow-x: scroll;
                 overflow-y: hidden;
-                margin-top: -@component-icon-size - @component-icon-padding;
-                margin-left: @component-icon-size + @component-icon-padding;
-                margin-right: @component-icon-size + @component-icon-padding;
+                margin-top: -@component-icon-size - @component-icon-padding + 1px;
+                margin-left: @component-icon-size + @component-icon-padding + 2px;
+                margin-right: @component-icon-size + @component-icon-padding + 2px;
                 .hidden {
                     height: 1px;
                     width: 1000px;
@@ -248,7 +248,16 @@
                 display: block;
             }
             ::-webkit-scrollbar {
-                height: @component-icon-size + @component-icon-padding;
+                height: @component-icon-size + @component-icon-padding - 2px;
+                -webkit-appearance: none;
+            }
+            ::-webkit-scrollbar-thumb {
+                border-radius: @component-border-radius;
+                border: 1px solid @button-border-color;
+                background: @button-background-color;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: @button-background-color-hover;
             }
         }
 
