@@ -56,7 +56,6 @@ class WatchView
 
         @counter = document.createElement('div')
         @counter.classList.add('counter')
-        @counter.innerText = "0 / 0"
 
         @nextButton = document.createElement('button')
         @nextButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-right', 'next-btn')
