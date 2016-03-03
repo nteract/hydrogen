@@ -197,7 +197,6 @@
     border-left: 1px solid @base-border-color;
 
     .toolbar {
-        margin-bottom: 10px;
         .btn-group{
             float: right;
         }
@@ -206,6 +205,7 @@
     .watch-view {
         width: 100%;
         .watch-input {
+            margin-top: 10px;
             padding: 3px;
             border-radius: 3px;
             background-color: @syntax-background-color;
@@ -215,22 +215,23 @@
         }
 
         .history-switch {
-            padding: 3px 0 3px 0;
+            padding: 3px 0 2px 0;
             position: relative;
-            .counter{
+
+            .counter {
                 position: absolute;
                 left: 50%;
                 top: 50%;
                 transform: translate(-50%, -50%);
             }
-            .next-btn{
+            .next-btn {
                 float: right;
             }
+
             .scrollbar {
                 overflow-x: scroll;
                 overflow-y: hidden;
-                height: 10px;
-                margin-top: -11px;
+                margin-top: -@component-icon-size - @component-icon-padding;
                 margin-left: @component-icon-size + @component-icon-padding;
                 margin-right: @component-icon-size + @component-icon-padding;
                 .hidden {
@@ -245,6 +246,9 @@
             }
             .show {
                 display: block;
+            }
+            ::-webkit-scrollbar {
+                height: @component-icon-size + @component-icon-padding;
             }
         }
 
@@ -261,6 +265,7 @@
 
     .add-watch {
         width: 100%;
+        margin-top: 10px;
     }
 
     .output-bubble.empty {
@@ -277,7 +282,6 @@
         padding-left: 0px;
         padding-right: 0px;
         border: 1px solid @base-border-color;
-        margin-bottom: 10px;
 
 
         &.rich .rich-close-button {

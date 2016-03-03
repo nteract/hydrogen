@@ -36,18 +36,17 @@ class WatchView
       @scrollbar.querySelector('.hidden').style.width =
         (total = @currentHistory.length * @scrollbar.offsetWidth) + 'px'
       @scrollbar.scrollLeft = total
-      @scrollbar.classList.add 'show'
+      @historySwitch.classList.add 'show'
       this
 
     addHistorySwitch: ->
         @historySwitch = document.createElement 'div'
-        @historySwitch.classList.add 'history-switch'
+        @historySwitch.classList.add('history-switch', 'hide')
 
         @scrollbar = document.createElement 'div'
         filler = document.createElement 'div'
         @scrollbar.classList.add 'scrollbar'
         filler.classList.add 'hidden'
-        @scrollbar.classList.add 'hide'
         @scrollbar.appendChild filler
         @scrollbar.onscroll = =>
             @currentHistory.pos = Math.ceil(@scrollbar.scrollLeft / (@scrollbar.offsetWidth+1))
