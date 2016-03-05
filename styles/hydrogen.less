@@ -197,7 +197,6 @@
     border-left: 1px solid @base-border-color;
 
     .toolbar {
-        margin-bottom: 10px;
         .btn-group{
             float: right;
         }
@@ -206,6 +205,7 @@
     .watch-view {
         width: 100%;
         .watch-input {
+            margin-top: 10px;
             padding: 3px;
             border-radius: 3px;
             background-color: @syntax-background-color;
@@ -214,16 +214,52 @@
             border: 1px solid @base-border-color;
         }
 
-        .history-scrollbar {
-          overflow-x: scroll;
-          overflow-y: hidden;
-          height: 10px;
-          .hidden {
-            height: 1px;
-            width: 1000px;
-            visibility: hidden;
-            display: block !important;
-          }
+        .history-switch {
+            padding: 3px 0 3px 0;
+            position: relative;
+
+            .counter {
+                position: absolute;
+                pointer-events: none;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .next-btn {
+                float: right;
+            }
+
+            .scrollbar {
+                overflow-x: scroll;
+                overflow-y: hidden;
+                margin-top: -@component-icon-size - @component-icon-padding + 1px;
+                margin-left: @component-icon-size + @component-icon-padding + 2px;
+                margin-right: @component-icon-size + @component-icon-padding + 2px;
+                .hidden {
+                    height: 1px;
+                    width: 1000px;
+                    visibility: hidden;
+                    display: block !important;
+                }
+            }
+            .hide {
+                display: none;
+            }
+            .show {
+                display: block;
+            }
+            ::-webkit-scrollbar {
+                height: @component-icon-size + @component-icon-padding - 2px;
+                -webkit-appearance: none;
+            }
+            ::-webkit-scrollbar-thumb {
+                border-radius: @component-border-radius;
+                border: 1px solid @button-border-color;
+                background: @button-background-color;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: @button-background-color-hover;
+            }
         }
 
     }
@@ -239,6 +275,7 @@
 
     .add-watch {
         width: 100%;
+        margin-top: 10px;
     }
 
     .output-bubble.empty {
@@ -255,7 +292,6 @@
         padding-left: 0px;
         padding-right: 0px;
         border: 1px solid @base-border-color;
-        margin-bottom: 10px;
 
 
         &.rich .rich-close-button {
