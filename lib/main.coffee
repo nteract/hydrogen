@@ -115,50 +115,35 @@ module.exports = Hydrogen =
         codeBlock = @findCodeBlock(runAll, runAllAbove)
         if codeBlock?
             [code, row] = codeBlock
+
+        if andMoveDown
+            @moveDown row
+
         if code?
             @clearBubblesOnRow(row)
-
-            if andMoveDown
-                bubbleRow = row
-                lastRow = @editor.getLastBufferRow()
-
-                isCodeBlockOnLastRow = bubbleRow is lastRow
-                isTextSelection = not @editor.getLastSelection().isEmpty()
-
-                if isTextSelection
-                    cursorRow = @editor.getSelectedBufferRange().end.row
-
-                    isCursorBelowCodeBlock = cursorRow > bubbleRow
-                    isCursorOnLastRow = cursorRow is lastRow
-
-                    if isCursorBelowCodeBlock
-                        @editor.setCursorBufferPosition
-                            row: cursorRow
-                            column: 0
-                    else
-                        if isCodeBlockOnLastRow
-                            @editor.moveToBottom()
-                            @editor.insertNewline()
-                        else
-                            @editor.moveDown()
-                else
-                    cursorRow = @editor.getCursorBufferPosition().row
-
-                    isCursorBelowCodeBlock = cursorRow > bubbleRow
-                    isCursorOnLastRow = cursorRow is lastRow
-
-                    unless isCursorBelowCodeBlock
-                        if isCursorOnLastRow
-                            @editor.moveToBottom()
-                            @editor.insertNewline()
-                        else
-                            @editor.moveDown()
 
             view = @insertResultBubble(row)
 
             KernelManager.execute language, code, (result) ->
                 view.spin(false)
                 view.addResult(result)
+
+
+    moveDown: (row) ->
+        lastRow = @editor.getLastBufferRow()
+
+        if row >= lastRow
+            @editor.moveToBottom()
+            @editor.insertNewline()
+            return
+
+        while row < lastRow
+            row++
+            break if not @blank(row)
+
+        @editor.setCursorBufferPosition
+            row: row
+            column: 0
 
 
     insertResultBubble: (row) ->
