@@ -214,7 +214,9 @@ module.exports = Hydrogen =
     runAll: () ->
         code = @editor.getText()
         row = @editor.getLastBufferRow()
-        codeBlock = [code, row]
+        if row > 0
+            for i in [0 .. row - 1] when @blank(row)
+                row -= 1
         @createResultBubble code, row
 
 
@@ -325,6 +327,9 @@ module.exports = Hydrogen =
         console.log "row:", row
 
         if runAllAbove
+            if row > 0
+                for i in [0 .. row - 1] when @blank(row)
+                    row -= 1
             return [@getRows(0, row), row]
 
         indentLevel = cursor.getIndentLevel()
