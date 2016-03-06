@@ -308,9 +308,7 @@ module.exports = Hydrogen =
 
     findCodeBlock: (runAll = false, runAllAbove = false) ->
         if runAll
-            endRow = @editor.getLastBufferRow()
-            while @blank(endRow) and endRow > 0
-                endRow -= 1
+            endRow = @editor.getBuffer().getText().replace(/\s+$/).split('\n').length - 1
             return [@editor.getText(), endRow]
 
         buffer = @editor.getBuffer()
@@ -331,9 +329,8 @@ module.exports = Hydrogen =
         console.log "row:", row
 
         if runAllAbove
-            while @blank(row) and row > 0
-                row -= 1
-            return [@getRows(0, row), row]
+            endRow = @getRows(0, row).replace(/\s+$/).split('\n').length - 1
+            return [@getRows(0, row), endRow]
 
         indentLevel = cursor.getIndentLevel()
         # indentLevel = @editor.suggestedIndentForBufferRow row
