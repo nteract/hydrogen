@@ -26,10 +26,10 @@ module.exports = Hydrogen =
         @subscriptions = new CompositeDisposable
 
         @subscriptions.add atom.commands.add 'atom-text-editor',
-            'hydrogen:run': => @run(false, false, false)
-            'hydrogen:run-all': => @run(false, true, false)
-            'hydrogen:run-and-move-down': => @run(true, false, false)
-            'hydrogen:run-all-above': => @run(false, false, true)
+            'hydrogen:run': => @run()
+            'hydrogen:run-all': => @runAll()
+            'hydrogen:run-all-above': => @runAllAbove()
+            'hydrogen:run-and-move-down': => @runAndMoveDown()
             'hydrogen:show-kernel-commands': => @showKernelCommands()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
@@ -109,56 +109,27 @@ module.exports = Hydrogen =
                 KernelManager.startKernel(command.kernelInfo, config, filepath)
 
 
-    createResultBubble: (andMoveDown = false, runAll = false, runAllAbove = false) ->
-        language = @editor.getGrammar().name.toLowerCase()
+    createResultBubble: (code, row) ->
+        language = @editor.getGrammar()?.name.toLowerCase()
+        unless language? and KernelManager.languageHasKernel(language)
+            atom.notifications.addError(
+                "No kernel for language `#{language}` found",
+                    detail: "Check that the language for this file is set in Atom
+                             and that you have a Jupyter kernel installed for it."
+            )
+            return
 
-        codeBlock = @findCodeBlock(runAll, runAllAbove)
-        if codeBlock?
-            [code, row] = codeBlock
-        if code?
-            @clearBubblesOnRow(row)
-
-            if andMoveDown
-                bubbleRow = row
-                lastRow = @editor.getLastBufferRow()
-
-                isCodeBlockOnLastRow = bubbleRow is lastRow
-                isTextSelection = not @editor.getLastSelection().isEmpty()
-
-                if isTextSelection
-                    cursorRow = @editor.getSelectedBufferRange().end.row
-
-                    isCursorBelowCodeBlock = cursorRow > bubbleRow
-                    isCursorOnLastRow = cursorRow is lastRow
-
-                    if isCursorBelowCodeBlock
-                        @editor.setCursorBufferPosition
-                            row: cursorRow
-                            column: 0
-                    else
-                        if isCodeBlockOnLastRow
-                            @editor.moveToBottom()
-                            @editor.insertNewline()
-                        else
-                            @editor.moveDown()
-                else
-                    cursorRow = @editor.getCursorBufferPosition().row
-
-                    isCursorBelowCodeBlock = cursorRow > bubbleRow
-                    isCursorOnLastRow = cursorRow is lastRow
-
-                    unless isCursorBelowCodeBlock
-                        if isCursorOnLastRow
-                            @editor.moveToBottom()
-                            @editor.insertNewline()
-                        else
-                            @editor.moveDown()
-
-            view = @insertResultBubble(row)
-
-            KernelManager.execute language, code, (result) ->
-                view.spin(false)
-                view.addResult(result)
+        @startKernelIfNeeded language, (kernel) =>
+            if @watchSidebar?.element.contains(document.activeElement)
+                @watchSidebar.run()
+            else
+                @setStatusBarElement(kernel.statusView.getElement())
+                @setWatchSidebar(kernel.watchSidebar) unless @watchSidebar?
+                @clearBubblesOnRow row
+                view = @insertResultBubble row
+                KernelManager.execute language, code, (result) ->
+                    view.spin false
+                    view.addResult result
 
 
     insertResultBubble: (row) ->
@@ -204,6 +175,7 @@ module.exports = Hydrogen =
         _.forEach @markerBubbleMap, (bubble) -> bubble.destroy()
         @markerBubbleMap = {}
 
+
     clearBubblesOnRow: (row) ->
         buffer = @editor.getBuffer()
         _.forEach buffer.findMarkers({endRow: row}), (marker) =>
@@ -211,34 +183,61 @@ module.exports = Hydrogen =
                 @markerBubbleMap[marker.id].destroy()
                 delete @markerBubbleMap[marker.id]
 
-    run: (andMoveDown = false, runAll = false, runAllAbove = false) ->
-        editor = atom.workspace.getActiveTextEditor()
-        grammar = editor.getGrammar()
-        language = grammar.name.toLowerCase()
 
-        if language? and KernelManager.languageHasKernel(language)
-            @startKernelIfNeeded language, (kernel) =>
-                if @watchSidebar? and
-                        @watchSidebar.element.contains(document.activeElement)
-                    @watchSidebar.run()
-                else
-                    statusView = kernel.statusView
-                    @setStatusBarElement(statusView.getElement())
-                    if not @watchSidebar?
-                        @setWatchSidebar(kernel.watchSidebar)
+    moveDown: (row) ->
+        lastRow = @editor.getLastBufferRow()
 
-                    # if not @watchSidebar?
-                        # @watchSidebar = new WatchSidebar(kernel, grammar)
-                    # @showWatchSidebar()
+        if row >= lastRow
+            @editor.moveToBottom()
+            @editor.insertNewline()
+            return
 
-                    @createResultBubble(andMoveDown, runAll, runAllAbove)
-        else
-            atom.notifications.addError(
-                "No kernel for language `#{language}` found",
-                {
-                    detail: "Check that the language for this file is set in Atom
-                             and that you have a Jupyter kernel installed for it."
-                })
+        while row < lastRow
+            row++
+            break if not @blank(row)
+
+        @editor.setCursorBufferPosition
+            row: row
+            column: 0
+
+
+    run: () ->
+        codeBlock = @findCodeBlock()
+        unless codeBlock?
+            return
+
+        [code, row] = codeBlock
+        if code? and row?
+            @createResultBubble code, row
+
+
+    runAll: () ->
+        code = @editor.getText()
+        row = @editor.getLastBufferRow()
+        codeBlock = [code, row]
+        @createResultBubble code, row
+
+
+    runAllAbove: () ->
+        codeBlock = @findCodeBlock(true)
+        unless codeBlock?
+            return
+
+        [code, row] = codeBlock
+        if code? and row?
+            @createResultBubble code, row
+
+
+    runAndMoveDown: () ->
+        codeBlock = @findCodeBlock()
+        unless codeBlock?
+            return
+
+        [code, row] = codeBlock
+        if code? and row?
+            @createResultBubble code, row
+            @moveDown row
+
 
     removeStatusBarElement: ->
         if @statusBarElement?
@@ -307,10 +306,7 @@ module.exports = Hydrogen =
             if onStarted?
                 onStarted(runningKernel)
 
-    findCodeBlock: (runAll = false, runAllAbove = false) ->
-        if runAll
-            return [@editor.getText(), @editor.getLastBufferRow()]
-
+    findCodeBlock: (runAllAbove = false) ->
         buffer = @editor.getBuffer()
         selectedText = @editor.getSelectedText()
 
