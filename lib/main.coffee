@@ -217,7 +217,7 @@ module.exports = Hydrogen =
         if row > 0
             for i in [0 .. row - 1] when @blank(row)
                 row -= 1
-            @createResultBubble code, row
+        @createResultBubble code, row
 
 
     runAllAbove: () ->
