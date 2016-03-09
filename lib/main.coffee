@@ -111,25 +111,21 @@ module.exports = Hydrogen =
 
     createResultBubble: (code, row) ->
         language = @editor.getGrammar()?.name.toLowerCase()
-        unless language? and KernelManager.languageHasKernel(language)
-            atom.notifications.addError(
-                "No kernel for language `#{language}` found",
-                    detail: "Check that the language for this file is set in Atom
-                             and that you have a Jupyter kernel installed for it."
-            )
-            return
 
         KernelManager.startKernelIfNeeded language, (kernel) =>
-            if @watchSidebar?.element.contains(document.activeElement)
+            unless @watchSidebar?
+                @setWatchSidebar kernel.watchSidebar
+            else if @watchSidebar.element.contains document.activeElement
                 @watchSidebar.run()
-            else
-                @setStatusBarElement(kernel.statusView.getElement())
-                @setWatchSidebar(kernel.watchSidebar) unless @watchSidebar?
-                @clearBubblesOnRow row
-                view = @insertResultBubble row
-                KernelManager.execute language, code, (result) ->
-                    view.spin false
-                    view.addResult result
+                return
+
+            @setStatusBarElement kernel.statusView.getElement()
+
+            @clearBubblesOnRow row
+            view = @insertResultBubble row
+            KernelManager.execute language, code, (result) =>
+                view.spin false
+                view.addResult result
 
 
     insertResultBubble: (row) ->

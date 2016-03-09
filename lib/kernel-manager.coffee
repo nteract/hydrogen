@@ -112,18 +112,23 @@ module.exports = KernelManager =
         return kernel
 
     startKernelIfNeeded: (language, onStarted) ->
-        runningKernel = @getRunningKernelForLanguage(language)
-        if not runningKernel?
-            if @languageHasKernel(language)
-                kernelInfo = @getKernelInfoForLanguage language
-                ConfigManager.writeConfigFile (filepath, config) =>
-                    kernel = @startKernel(kernelInfo, config, filepath)
-                    onStarted?(kernel)
-            else
-                console.error "No kernel for this language!"
-        else
-            if onStarted?
-                onStarted(runningKernel)
+        unless language? and @languageHasKernel(language)
+            message = "No kernel for language `#{language}` found"
+            options =
+                detail: "Check that the language for this file is set in Atom
+                         and that you have a Jupyter kernel installed for it."
+            atom.notifications.addError message, options
+            return
+
+        runningKernel = @getRunningKernelForLanguage language
+        if runningKernel?
+            onStarted(runningKernel)
+            return
+
+        ConfigManager.writeConfigFile (filepath, config) =>
+            kernelInfo = @getKernelInfoForLanguage language
+            kernel = @startKernel(kernelInfo, config, filepath)
+            onStarted?(kernel)
 
     execute: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
