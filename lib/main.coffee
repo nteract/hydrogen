@@ -20,6 +20,7 @@ module.exports = Hydrogen =
     statusBarElement: null
     statusBarTile: null
     editor: null
+    language: null
     markerBubbleMap: {}
 
     activate: (state) ->
@@ -68,21 +69,19 @@ module.exports = Hydrogen =
             return AutocompleteProvider
 
     updateCurrentEditor: (currentPaneItem) ->
+        if not currentPaneItem? or currentPaneItem is @editor
+            return
+
         console.log "Updating current editor to:", currentPaneItem
-        return if not currentPaneItem? or currentPaneItem is @editor
+
         @editor = currentPaneItem
 
-        if @editor? and @editor.getGrammar? and @editor.getGrammar()?
-            language = @editor.getGrammar().name.toLowerCase()
+        @language = @editor.getGrammar?()?.name.toLowerCase()
+        if @language?
+            kernel = KernelManager.getRunningKernelForLanguage(@language)
 
-            kernel = KernelManager.getRunningKernelForLanguage(language)
-            if kernel?
-                @setStatusBarElement(kernel.statusView.getElement())
-                # @setWatchSidebar(kernel.watchSidebar)
-            else
-                # @hideWatchSidebar()
-                # @watchSidebar = null
-                @removeStatusBarElement()
+        if kernel?
+            @setStatusBarElement(kernel.statusView.getElement())
         else
             @removeStatusBarElement()
 
@@ -110,9 +109,7 @@ module.exports = Hydrogen =
 
 
     createResultBubble: (code, row) ->
-        language = @editor.getGrammar()?.name.toLowerCase()
-
-        KernelManager.startKernelIfNeeded language, (kernel) =>
+        KernelManager.startKernelIfNeeded @language, (kernel) =>
             unless @watchSidebar?
                 @setWatchSidebar kernel.watchSidebar
             else if @watchSidebar.element.contains document.activeElement
@@ -123,7 +120,7 @@ module.exports = Hydrogen =
 
             @clearBubblesOnRow row
             view = @insertResultBubble row
-            KernelManager.execute language, code, (result) =>
+            KernelManager.execute @language, code, (result) =>
                 view.spin false
                 view.addResult result
 
