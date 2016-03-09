@@ -20,6 +20,7 @@ module.exports = Hydrogen =
     statusBarElement: null
     statusBarTile: null
     editor: null
+    language: null
     markerBubbleMap: {}
 
     activate: (state) ->
@@ -68,21 +69,19 @@ module.exports = Hydrogen =
             return AutocompleteProvider
 
     updateCurrentEditor: (currentPaneItem) ->
+        if not currentPaneItem? or currentPaneItem is @editor
+            return
+
         console.log "Updating current editor to:", currentPaneItem
-        return if not currentPaneItem? or currentPaneItem is @editor
+
         @editor = currentPaneItem
 
-        if @editor? and @editor.getGrammar? and @editor.getGrammar()?
-            language = @editor.getGrammar().name.toLowerCase()
+        @language = @editor.getGrammar?()?.name.toLowerCase()
+        if @language?
+            kernel = KernelManager.getRunningKernelForLanguage(@language)
 
-            kernel = KernelManager.getRunningKernelForLanguage(language)
-            if kernel?
-                @setStatusBarElement(kernel.statusView.getElement())
-                # @setWatchSidebar(kernel.watchSidebar)
-            else
-                # @hideWatchSidebar()
-                # @watchSidebar = null
-                @removeStatusBarElement()
+        if kernel?
+            @setStatusBarElement(kernel.statusView.getElement())
         else
             @removeStatusBarElement()
 
@@ -98,7 +97,7 @@ module.exports = Hydrogen =
         else if command.value == 'restart-kernel'
             KernelManager.destroyKernelForLanguage(command.language)
             @clearResultBubbles()
-            @startKernelIfNeeded(command.language)
+            KernelManager.startKernelIfNeeded(command.language)
         else if command.value == 'switch-kernel'
             KernelManager.destroyKernelForLanguage(command.language)
             mapping = {}
@@ -110,26 +109,20 @@ module.exports = Hydrogen =
 
 
     createResultBubble: (code, row) ->
-        language = @editor.getGrammar()?.name.toLowerCase()
-        unless language? and KernelManager.languageHasKernel(language)
-            atom.notifications.addError(
-                "No kernel for language `#{language}` found",
-                    detail: "Check that the language for this file is set in Atom
-                             and that you have a Jupyter kernel installed for it."
-            )
-            return
-
-        @startKernelIfNeeded language, (kernel) =>
-            if @watchSidebar?.element.contains(document.activeElement)
+        KernelManager.startKernelIfNeeded @language, (kernel) =>
+            unless @watchSidebar?
+                @setWatchSidebar kernel.watchSidebar
+            else if @watchSidebar.element.contains document.activeElement
                 @watchSidebar.run()
-            else
-                @setStatusBarElement(kernel.statusView.getElement())
-                @setWatchSidebar(kernel.watchSidebar) unless @watchSidebar?
-                @clearBubblesOnRow row
-                view = @insertResultBubble row
-                KernelManager.execute language, code, (result) ->
-                    view.spin false
-                    view.addResult result
+                return
+
+            @setStatusBarElement kernel.statusView.getElement()
+
+            @clearBubblesOnRow row
+            view = @insertResultBubble row
+            KernelManager.execute @language, code, (result) =>
+                view.spin false
+                view.addResult result
 
 
     insertResultBubble: (row) ->
@@ -162,7 +155,7 @@ module.exports = Hydrogen =
 
         @markerBubbleMap[marker.id] = view
         marker.onDidChange (event) =>
-            console.log event
+            console.log "Invoked onDidChange:", marker
             if not event.isValid
                 view.destroy()
                 marker.destroy()
@@ -293,20 +286,6 @@ module.exports = Hydrogen =
     # updateWatches: ->
     #     if @watchSidebar?
     #         @watchSidebar.run()
-
-    startKernelIfNeeded: (language, onStarted) ->
-        runningKernel = KernelManager.getRunningKernelForLanguage(language)
-        if not runningKernel?
-            if KernelManager.languageHasKernel(language)
-                kernelInfo = KernelManager.getKernelInfoForLanguage language
-                ConfigManager.writeConfigFile (filepath, config) =>
-                    kernel = KernelManager.startKernel(kernelInfo, config, filepath)
-                    onStarted?(kernel)
-            else
-                console.error "No kernel for this language!"
-        else
-            if onStarted?
-                onStarted(runningKernel)
 
     findCodeBlock: (runAllAbove = false) ->
         buffer = @editor.getBuffer()
