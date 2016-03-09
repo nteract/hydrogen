@@ -92,6 +92,14 @@ class Kernel
         @shellSocket.on 'message', @onShellMessage.bind(this)
         @ioSocket.on 'message', @onIOMessage.bind(this)
 
+        @shellSocket.on 'connect', () -> console.log "shellSocket connected"
+        @controlSocket.on 'connect', () -> console.log "controlSocket connected"
+        @ioSocket.on 'connect', () -> console.log "ioSocket connected"
+
+        @shellSocket.monitor()
+        @controlSocket.monitor()
+        @ioSocket.monitor()
+
     interrupt: ->
         console.log "sending SIGINT"
         @kernelProcess.kill('SIGINT')
@@ -116,7 +124,7 @@ class Kernel
             hmac.update toBuffer encodedMessage.content
             encodedMessage.signature = hmac.digest "hex"
 
-        console.log encodedMessage
+        console.log "signedMessage:", encodedMessage
 
         socket.send encodedMessage.idents.concat [
             '<IDS|MSG>'
@@ -225,11 +233,9 @@ class Kernel
 
 
     onIOMessage: (msgArray...) ->
-        console.log "IO message"
-        _.forEach msgArray, (msg) -> console.log "io:", msg.toString('utf8')
-
         message = @parseMessage msgArray
-        console.log message
+        console.log "IO message:", message
+
         if message.type == 'error' #TODO; produces to much warning & errors, maybe filter?
             @stderr message.contents.evalue, message.contents.ename
 

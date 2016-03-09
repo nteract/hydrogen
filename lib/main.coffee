@@ -155,7 +155,7 @@ module.exports = Hydrogen =
 
         @markerBubbleMap[marker.id] = view
         marker.onDidChange (event) =>
-            console.log event
+            console.log "Invoked onDidChange:", marker
             if not event.isValid
                 view.destroy()
                 marker.destroy()
