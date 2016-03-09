@@ -98,7 +98,7 @@ module.exports = Hydrogen =
         else if command.value == 'restart-kernel'
             KernelManager.destroyKernelForLanguage(command.language)
             @clearResultBubbles()
-            @startKernelIfNeeded(command.language)
+            KernelManager.startKernelIfNeeded(command.language)
         else if command.value == 'switch-kernel'
             KernelManager.destroyKernelForLanguage(command.language)
             mapping = {}
@@ -119,7 +119,7 @@ module.exports = Hydrogen =
             )
             return
 
-        @startKernelIfNeeded language, (kernel) =>
+        KernelManager.startKernelIfNeeded language, (kernel) =>
             if @watchSidebar?.element.contains(document.activeElement)
                 @watchSidebar.run()
             else
@@ -293,20 +293,6 @@ module.exports = Hydrogen =
     # updateWatches: ->
     #     if @watchSidebar?
     #         @watchSidebar.run()
-
-    startKernelIfNeeded: (language, onStarted) ->
-        runningKernel = KernelManager.getRunningKernelForLanguage(language)
-        if not runningKernel?
-            if KernelManager.languageHasKernel(language)
-                kernelInfo = KernelManager.getKernelInfoForLanguage language
-                ConfigManager.writeConfigFile (filepath, config) =>
-                    kernel = KernelManager.startKernel(kernelInfo, config, filepath)
-                    onStarted?(kernel)
-            else
-                console.error "No kernel for this language!"
-        else
-            if onStarted?
-                onStarted(runningKernel)
 
     findCodeBlock: (runAllAbove = false) ->
         buffer = @editor.getBuffer()

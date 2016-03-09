@@ -1,6 +1,7 @@
 _ = require 'lodash'
 child_process = require 'child_process'
 
+ConfigManager = require './config-manager'
 Kernel = require './kernel'
 
 module.exports = KernelManager =
@@ -109,6 +110,20 @@ module.exports = KernelManager =
         kernel = new Kernel(kernelInfo, config, configFilePath)
         @runningKernels[language] = kernel
         return kernel
+
+    startKernelIfNeeded: (language, onStarted) ->
+        runningKernel = @getRunningKernelForLanguage(language)
+        if not runningKernel?
+            if @languageHasKernel(language)
+                kernelInfo = @getKernelInfoForLanguage language
+                ConfigManager.writeConfigFile (filepath, config) =>
+                    kernel = @startKernel(kernelInfo, config, filepath)
+                    onStarted?(kernel)
+            else
+                console.error "No kernel for this language!"
+        else
+            if onStarted?
+                onStarted(runningKernel)
 
     execute: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
