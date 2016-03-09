@@ -1,6 +1,7 @@
 _ = require 'lodash'
 child_process = require 'child_process'
 
+ConfigManager = require './config-manager'
 Kernel = require './kernel'
 
 module.exports = KernelManager =
@@ -109,6 +110,25 @@ module.exports = KernelManager =
         kernel = new Kernel(kernelInfo, config, configFilePath)
         @runningKernels[language] = kernel
         return kernel
+
+    startKernelIfNeeded: (language, onStarted) ->
+        unless language? and @languageHasKernel(language)
+            message = "No kernel for language `#{language}` found"
+            options =
+                detail: "Check that the language for this file is set in Atom
+                         and that you have a Jupyter kernel installed for it."
+            atom.notifications.addError message, options
+            return
+
+        runningKernel = @getRunningKernelForLanguage language
+        if runningKernel?
+            onStarted(runningKernel)
+            return
+
+        ConfigManager.writeConfigFile (filepath, config) =>
+            kernelInfo = @getKernelInfoForLanguage language
+            kernel = @startKernel(kernelInfo, config, filepath)
+            onStarted?(kernel)
 
     execute: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
