@@ -5,7 +5,6 @@ zmq = require 'zmq'
 _ = require 'lodash'
 
 KernelManager = require './kernel-manager'
-ConfigManager = require './config-manager'
 ResultView = require './result-view'
 SignalListView = require './signal-list-view'
 WatchSidebar = require './watch-sidebar'
@@ -92,20 +91,29 @@ module.exports = Hydrogen =
         @signalListView.toggle()
 
     handleKernelCommand: (command) ->
-        if command.value == 'interrupt-kernel'
-            KernelManager.interruptKernelForLanguage(command.language)
-        else if command.value == 'restart-kernel'
-            KernelManager.destroyKernelForLanguage(command.language)
+        console.log "handleKernelCommand:", command
+        request = command.value
+        language = command.language
+        grammar = command.grammar
+        kernelInfo = command.kernelInfo
+
+        if request is 'interrupt-kernel'
+            KernelManager.interruptKernelForLanguage language
+
+        else if request is 'restart-kernel'
+            KernelManager.destroyKernelForLanguage language
             @clearResultBubbles()
-            KernelManager.startKernelIfNeeded(command.language)
-        else if command.value == 'switch-kernel'
-            KernelManager.destroyKernelForLanguage(command.language)
+            KernelManager.startKernelIfNeeded language
+
+        else if request is 'switch-kernel'
+            KernelManager.destroyKernelForLanguage language
+            @clearResultBubbles()
+
             mapping = {}
-            mapping[command.grammar] = command.kernelInfo.display_name
+            mapping[grammar] = kernelInfo.display_name
             KernelManager.setConfigJson 'grammarToKernel', mapping, true
-            @clearResultBubbles()
-            ConfigManager.writeConfigFile (filepath, config) ->
-                KernelManager.startKernel(command.kernelInfo, config, filepath)
+
+            KernelManager.startKernel kernelInfo
 
 
     createResultBubble: (code, row) ->
