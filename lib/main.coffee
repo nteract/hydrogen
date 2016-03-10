@@ -19,7 +19,6 @@ module.exports = Hydrogen =
     statusBarElement: null
     statusBarTile: null
     editor: null
-    language: null
     markerBubbleMap: {}
 
     activate: (state) ->
@@ -56,8 +55,8 @@ module.exports = Hydrogen =
         @statusBarElement = document.createElement('div')
         @statusBarElement.classList.add('hydrogen')
         @statusBarElement.classList.add('status-container')
-        @statusBarElement.onclick = =>
-            editorView = atom.views.getView(atom.workspace.getActiveTextEditor())
+        @statusBarElement.onclick = ->
+            editorView = atom.views.getView atom.workspace.getActiveTextEditor()
             atom.commands.dispatch(editorView, 'hydrogen:show-kernel-commands')
         @statusBarTile = statusBar.addLeftTile(item: @statusBarElement,
                                                priority: 100)
@@ -75,12 +74,12 @@ module.exports = Hydrogen =
 
         @editor = currentPaneItem
 
-        @language = @editor.getGrammar?()?.name.toLowerCase()
-        if @language?
-            kernel = KernelManager.getRunningKernelForLanguage(@language)
+        language = @editor.getGrammar?()?.name.toLowerCase()
+        if language?
+            kernel = KernelManager.getRunningKernelForLanguage language
 
         if kernel?
-            @setStatusBarElement(kernel.statusView.getElement())
+            @setStatusBarElement kernel.statusView.getElement()
         else
             @removeStatusBarElement()
 
@@ -117,7 +116,9 @@ module.exports = Hydrogen =
 
 
     createResultBubble: (code, row) ->
-        KernelManager.startKernelIfNeeded @language, (kernel) =>
+        language = @editor.getGrammar().name.toLowerCase()
+
+        KernelManager.startKernelIfNeeded language, (kernel) =>
             unless @watchSidebar?
                 @setWatchSidebar kernel.watchSidebar
             else if @watchSidebar.element.contains document.activeElement
@@ -128,7 +129,7 @@ module.exports = Hydrogen =
 
             @clearBubblesOnRow row
             view = @insertResultBubble row
-            KernelManager.execute @language, code, (result) =>
+            KernelManager.execute language, code, (result) ->
                 view.spin false
                 view.addResult result
 
@@ -138,11 +139,11 @@ module.exports = Hydrogen =
         lineLength = buffer.lineLengthForRow(row)
 
         marker = @editor.markBufferPosition {
-                row: row
-                column: lineLength
-            }, {
-                invalidate: 'touch'
-            }
+            row: row
+            column: lineLength
+        }, {
+            invalidate: 'touch'
+        }
 
         view = new ResultView(marker)
         view.spin(true)
@@ -155,11 +156,10 @@ module.exports = Hydrogen =
                 "width: #{lineHeight + 2}px; height: #{lineHeight - 4}px;")
         view.statusContainer.setAttribute('style', "height: #{lineHeight}px")
 
-        @editor.decorateMarker marker, {
-                type: 'overlay'
-                item: element
-                position: 'tail'
-            }
+        @editor.decorateMarker marker,
+            type: 'overlay'
+            item: element
+            position: 'tail'
 
         @markerBubbleMap[marker.id] = view
         marker.onDidChange (event) =>
@@ -340,7 +340,8 @@ module.exports = Hydrogen =
         buffer = @editor.getBuffer()
         previousRow = row - 1
         while previousRow >= 0
-            sameIndent = @editor.indentationForBufferRow(previousRow) <= indentLevel
+            previousIndentLevel = @editor.indentationForBufferRow previousRow
+            sameIndent = previousIndentLevel <= indentLevel
             blank = @blank(previousRow)
             isEnd = @getRow(previousRow).trim() == "end"
 
@@ -358,22 +359,22 @@ module.exports = Hydrogen =
     getRow: (row) ->
         buffer = @editor.getBuffer()
         return buffer.getTextInRange
-                    start:
-                        row: row
-                        column: 0
-                    end:
-                        row: row
-                        column: 9999999
+            start:
+                row: row
+                column: 0
+            end:
+                row: row
+                column: 9999999
 
     getRows: (startRow, endRow) ->
         buffer = @editor.getBuffer()
         return buffer.getTextInRange
-                    start:
-                        row: startRow
-                        column: 0
-                    end:
-                        row: endRow
-                        column: 9999999
+            start:
+                row: startRow
+                column: 0
+            end:
+                row: endRow
+                column: 9999999
 
     getFoldRange: (editor, row) ->
         range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
