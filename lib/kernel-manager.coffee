@@ -40,14 +40,16 @@ module.exports = KernelManager =
         return _.clone(@runningKernels)
 
     getTrueLanguage: (language) ->
-        languageMappings = @getLanguageMappings()
-        matchingLanguageKeys = _.filter languageMappings, (trueLanguage, languageKey) ->
-            return languageKey.toLowerCase() == language.toLowerCase()
+        if language?
+            languageMappings = @getLanguageMappings()
+            languageMatches = _.filter languageMappings,
+                (trueLanguage, languageKey) ->
+                    return languageKey?.toLowerCase() is language.toLowerCase()
 
-        if matchingLanguageKeys[0]?
-            return matchingLanguageKeys[0].toLowerCase()
-        else
-            return language
+            if languageMatches[0]?
+                return languageMatches[0].toLowerCase()
+
+        return language
 
     getConfigJson: (key, _default = {}) ->
         return _default unless value = atom.config.get "Hydrogen.#{key}"
@@ -65,54 +67,77 @@ module.exports = KernelManager =
     getKernelInfoForLanguage: (grammarLanguage) ->
         kernels = @getAvailableKernels()
         console.log "Available kernels:", kernels
+        if not kernels?
+            return null
 
         language = @getTrueLanguage(grammarLanguage)
+        console.log "Grammar language:", grammarLanguage
+        console.log "True language:", language
+        if not language?
+            return null
 
         matchingKernels = _.filter kernels, (kernel) ->
             kernelLanguage = kernel.language
             kernelLanguage ?= kernel.display_name
+            return language is kernelLanguage?.toLowerCase()
 
-            return kernelLanguage? and
-                   language.toLowerCase() == kernelLanguage.toLowerCase()
-
-        if matchingKernels.length != 0
+        if matchingKernels[0]?
             kernelInfo = matchingKernels[0]
+
         if display_name = @getConfigJson('grammarToKernel')[grammarLanguage]
-            kernelInfo = _.filter(matchingKernels, (k) -> k.display_name == display_name)[0]
-        return _.assign kernelInfo, {grammarLanguage: grammarLanguage}
+            kernelInfo = _.filter(
+                matchingKernels,
+                (kernel) -> kernel.display_name is display_name
+            )[0]
+
+        return _.assign kernelInfo, grammarLanguage: grammarLanguage
 
     languageHasKernel: (language) ->
         return @getKernelInfoForLanguage(language)?
 
     getRunningKernelForLanguage: (language) ->
-        language = @getTrueLanguage(language)
-        if @runningKernels[language]?
-            return @runningKernels[language]
-        else
-            return null
+        runningKernel = null
+
+        trueLanguage = @getTrueLanguage language
+        if trueLanguage?
+            runningKernel = @runningKernels[trueLanguage]
+
+        return runningKernel
 
     languageHasRunningKernel: (language) ->
         return @getRunningKernelForLanguage(language)?
 
     interruptKernelForLanguage: (language) ->
-        kernel = @getRunningKernelForLanguage(language)
+        kernel = @getRunningKernelForLanguage language
         if kernel?
             kernel.interrupt()
 
     destroyKernelForLanguage: (language) ->
-        language = @getTrueLanguage(language)
-        if @runningKernels[language]?
-            @runningKernels[language].destroy()
-            delete @runningKernels[language]
+        kernel = @getRunningKernelForLanguage language
+        if kernel?
+            kernel.destroy()
+            delete @runningKernels[kernel.language]
 
-    startKernel: (kernelInfo, config, configFilePath) ->
-        language = @getTrueLanguage(kernelInfo.language.toLowerCase())
-        kernel = new Kernel(kernelInfo, config, configFilePath)
-        @runningKernels[language] = kernel
-        return kernel
+    startKernel: (kernelInfo, onStarted) ->
+        console.log "startKernel:", kernelInfo
+
+        unless kernelInfo?
+            message = "No kernel info for language `#{language}` found"
+            options =
+                detail: "Check that the language for this file is set in Atom
+                         and that you have a Jupyter kernel installed for it."
+            atom.notifications.addError message, options
+            return
+
+        ConfigManager.writeConfigFile (filepath, config) =>
+            kernel = new Kernel(kernelInfo, config, filepath)
+            @runningKernels[kernelInfo.language] = kernel
+            onStarted?(kernel)
 
     startKernelIfNeeded: (language, onStarted) ->
-        unless language? and @languageHasKernel(language)
+        console.log "startKernelIfNeeded:", language
+
+        unless @languageHasKernel(language)
             message = "No kernel for language `#{language}` found"
             options =
                 detail: "Check that the language for this file is set in Atom
@@ -122,13 +147,11 @@ module.exports = KernelManager =
 
         runningKernel = @getRunningKernelForLanguage language
         if runningKernel?
-            onStarted(runningKernel)
+            onStarted?(runningKernel)
             return
 
-        ConfigManager.writeConfigFile (filepath, config) =>
-            kernelInfo = @getKernelInfoForLanguage language
-            kernel = @startKernel(kernelInfo, config, filepath)
-            onStarted?(kernel)
+        kernelInfo = @getKernelInfoForLanguage language
+        @startKernel kernelInfo, onStarted
 
     execute: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
