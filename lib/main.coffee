@@ -19,7 +19,6 @@ module.exports = Hydrogen =
     statusBarElement: null
     statusBarTile: null
     editor: null
-    language: null
     markerBubbleMap: {}
 
     activate: (state) ->
@@ -75,12 +74,12 @@ module.exports = Hydrogen =
 
         @editor = currentPaneItem
 
-        @language = @editor.getGrammar?()?.name.toLowerCase()
-        if @language?
-            kernel = KernelManager.getRunningKernelForLanguage(@language)
+        language = @editor.getGrammar?()?.name.toLowerCase()
+        if language?
+            kernel = KernelManager.getRunningKernelForLanguage language
 
         if kernel?
-            @setStatusBarElement(kernel.statusView.getElement())
+            @setStatusBarElement kernel.statusView.getElement()
         else
             @removeStatusBarElement()
 
@@ -117,7 +116,9 @@ module.exports = Hydrogen =
 
 
     createResultBubble: (code, row) ->
-        KernelManager.startKernelIfNeeded @language, (kernel) =>
+        language = @editor.getGrammar().name.toLowerCase()
+
+        KernelManager.startKernelIfNeeded language, (kernel) =>
             unless @watchSidebar?
                 @setWatchSidebar kernel.watchSidebar
             else if @watchSidebar.element.contains document.activeElement
@@ -128,7 +129,7 @@ module.exports = Hydrogen =
 
             @clearBubblesOnRow row
             view = @insertResultBubble row
-            KernelManager.execute @language, code, (result) =>
+            KernelManager.execute language, code, (result) =>
                 view.spin false
                 view.addResult result
 
