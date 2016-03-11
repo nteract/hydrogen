@@ -1,5 +1,6 @@
 {CompositeDisposable} = require 'atom'
 _ = require 'lodash'
+stripAnsi = require('strip-ansi')
 
 module.exports =
 class ResultView
@@ -129,7 +130,7 @@ class ResultView
             else if not @resultType or @resultType == 'text'
                 console.log "rendering as text"
                 @resultType = 'text'
-                container.innerText = container.innerText + result.data
+                container.innerText = container.innerText + stripAnsi(result.data)
 
                 if /(\\n|\r|\n)/.exec(container.innerText.trim()) \
                 or container.offsetWidth > 500 \

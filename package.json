@@ -36,7 +36,8 @@
     "lodash": "^3.8.0",
     "react": "^0.13.3",
     "uuid": "^2.0.1",
-    "zmq": "^2.11.1"
+    "zmq": "^2.11.1",
+    "strip-ansi": "3.0.1"
   },
   "consumedServices": {
     "status-bar": {
