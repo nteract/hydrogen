@@ -3,6 +3,7 @@
 fs = require 'fs'
 zmq = require 'zmq'
 _ = require 'lodash'
+stripAnsi = require 'strip-ansi'
 
 KernelManager = require './kernel-manager'
 ResultView = require './result-view'
@@ -35,6 +36,7 @@ module.exports = Hydrogen =
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': -> KernelManager.updateKernels()
+            'hydrogen:inspect': => @inspect()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -390,3 +392,30 @@ module.exports = Hydrogen =
                 @getRows(range[0], range[1]),
                 range[1]
             ]
+    inspect: ->
+        language = @editor.getGrammar().name.toLowerCase()
+
+        if @editor.getSelectedText() != ''
+            code = @editor.getSelectedText()
+            cursor_pos = code.length
+        else
+            cursor = @editor.getLastCursor()
+            row = cursor.getBufferRow()
+            code = @getRow(row)
+            cursor_pos = cursor.getBufferColumn()
+
+        KernelManager.inspect language, code, cursor_pos, (result) ->
+            console.log 'inspect result:', result
+            found = result['found']
+            if found is true
+                data = result['data']
+                atom.workspace.open('Hydrogen Inspector', {split:'down'}).then (editor) ->
+                    if editor.isEmpty() is false
+                        buffer = editor.getBuffer()
+                        buffer.deleteRows(0, buffer.getLineCount())
+
+                    editor.insertText(stripAnsi(data['text/plain']))
+                    editor.moveToTop()
+                    atom.workspace.activatePreviousPane()
+            else
+                atom.notifications.addInfo("No introspection available!")

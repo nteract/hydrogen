@@ -7,12 +7,12 @@ Kernel = require './kernel'
 module.exports = KernelManager =
     runningKernels: {}
     kernelsUpdatedOnce: false
-      
+
     getAvailableKernels: ->
         kernels = _.pluck @getConfigJson('kernelspec', {kernelspecs:{}}).kernelspecs, 'spec'
         @updateKernels() unless @kernelsUpdatedOnce
         kernels
-               
+
     updateKernels: ->
       saveKernelsToConfig = (out) =>
         try
@@ -29,13 +29,13 @@ module.exports = KernelManager =
           @setConfigJson 'kernelspec', kernelspec
           atom.notifications.addInfo 'Hydrogen Kernels updated:',
             detail: (_.pluck @getAvailableKernels(), 'display_name').join('\n')
-      
+
       @kernelsUpdatedOnce = true
       child_process.exec 'jupyter kernelspec list --json --log-level=CRITICAL', (e, stdout, stderr) ->
           return saveKernelsToConfig stdout unless e
           child_process.exec 'ipython kernelspec list --json --log-level=CRITICAL', (e, stdout, stderr) ->
               saveKernelsToConfig stdout
-       
+
     getRunningKernels: ->
         return _.clone(@runningKernels)
 
@@ -164,6 +164,13 @@ module.exports = KernelManager =
         kernel = @getRunningKernelForLanguage(language)
         if kernel?
             kernel.complete(code, onResults)
+        else
+            throw "No such kernel!"
+
+    inspect: (language, code, cursor_pos, onResults) ->
+        kernel = @getRunningKernelForLanguage(language)
+        if kernel?
+            kernel.inspect(code, cursor_pos, onResults)
         else
             throw "No such kernel!"
 
