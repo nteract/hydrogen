@@ -1,5 +1,4 @@
 {CompositeDisposable} = require 'atom'
-{$} = require 'atom-space-pen-views'
 
 fs = require 'fs'
 zmq = require 'zmq'
