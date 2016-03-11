@@ -1,4 +1,5 @@
 {CompositeDisposable} = require 'atom'
+{$} = require 'atom-space-pen-views'
 
 fs = require 'fs'
 zmq = require 'zmq'
@@ -409,13 +410,16 @@ module.exports = Hydrogen =
             found = result['found']
             if found is true
                 data = result['data']
-                atom.workspace.open('Hydrogen Inspector', {split:'down'}).then (editor) ->
+                atom.workspace.open('.Hydrogen Inspector', {split:'down'}).then (editor) ->
                     if editor.isEmpty() is false
                         buffer = editor.getBuffer()
                         buffer.deleteRows(0, buffer.getLineCount())
-
+                    editor.setSoftWrapped(true)
+                    editor.setLineNumberGutterVisible(false)
                     editor.insertText(stripAnsi(data['text/plain']))
                     editor.moveToTop()
                     atom.workspace.activatePreviousPane()
+                    # Hack for easy closing
+                    editor.save()
             else
                 atom.notifications.addInfo("No introspection available!")
