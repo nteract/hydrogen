@@ -198,6 +198,33 @@ class Kernel
 
         @signedSend message, @shellSocket
 
+
+    inspect: (code, cursor_pos, onResults) ->
+        console.log "sending inspect"
+
+        requestId = "inspect_" + uuid.v4()
+
+        header =
+                msg_id: requestId
+                username: ""
+                session: "00000000-0000-0000-0000-000000000000"
+                msg_type: "inspect_request"
+                version: "5.0"
+
+        content =
+                code: code
+                cursor_pos: cursor_pos
+                detail_level : 0
+
+        message =
+                header: header
+                content: content
+
+        @executionCallbacks[requestId] = onResults
+
+        @signedSend message, @shellSocket
+
+
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
 
@@ -214,6 +241,11 @@ class Kernel
                     matches = message.contents.matches
                     # matches = _.map matches, (match) -> {text: match}
                     callback(matches)
+                else if message.type == 'inspect_reply'
+                    callback {
+                        data: message.contents.data
+                        found: message.contents.found
+                    }
                 else
                     callback {
                         data: 'ok'
