@@ -39,7 +39,6 @@ module.exports = Hydrogen =
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': -> KernelManager.updateKernels()
             'hydrogen:inspect': => @inspect()
-            'hydrogen:open-inspector': => @openInspector()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -398,7 +397,7 @@ module.exports = Hydrogen =
     inspect: ->
         language = @editor.getGrammar().name.toLowerCase()
 
-        [code, cursor_pos, row] = @getCodeToInspect()
+        [code, cursor_pos] = @getCodeToInspect()
 
         KernelManager.inspect language, code, cursor_pos, (result) ->
             console.log 'inspect result:', result
@@ -417,8 +416,6 @@ module.exports = Hydrogen =
                     @inspector.clear()
                 @inspector.attach()
                 @inspector.add new PlainMessageView
-                    line: row + 1
-                    character: cursor_pos
                     message: firstline
                     className: 'inspect-message'
 
@@ -432,12 +429,12 @@ module.exports = Hydrogen =
                     @inspector.close()
 
     getCodeToInspect: ->
-        cursor = @editor.getLastCursor()
-        row = cursor.getBufferRow()
         if @editor.getSelectedText() != ''
             code = @editor.getSelectedText()
             cursor_pos = code.length
         else
+            cursor = @editor.getLastCursor()
+            row = cursor.getBufferRow()
             code = @getRow(row)
             cursor_pos = cursor.getBufferColumn()
-        return [code, cursor_pos, row]
+        return [code, cursor_pos]
