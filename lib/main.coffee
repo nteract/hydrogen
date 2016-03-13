@@ -4,6 +4,8 @@ fs = require 'fs'
 zmq = require 'zmq'
 _ = require 'lodash'
 stripAnsi = require 'strip-ansi'
+{MessagePanelView, PlainMessageView} = require 'atom-message-panel'
+
 
 KernelManager = require './kernel-manager'
 ResultView = require './result-view'
@@ -395,6 +397,38 @@ module.exports = Hydrogen =
     inspect: ->
         language = @editor.getGrammar().name.toLowerCase()
 
+        [code, cursor_pos] = @getCodeToInspect()
+
+        KernelManager.inspect language, code, cursor_pos, (result) ->
+            console.log 'inspect result:', result
+            found = result['found']
+            if found is true
+                data = result['data']
+                lines = stripAnsi(data['text/plain']).split('\n')
+                firstline = lines[0]
+                lines.splice(0,1)
+                message = lines.join('\n')
+                if not @inspector?
+                    console.log "Opening Inspector"
+                    @inspector = new MessagePanelView
+                        title: 'Hydrogen Inspector'
+                else
+                    @inspector.clear()
+                @inspector.attach()
+                @inspector.add new PlainMessageView
+                    message: firstline
+                    className: 'inspect-message'
+
+                @inspector.add new PlainMessageView
+                    message: message
+                    className: 'inspect-message'
+
+            else
+                atom.notifications.addInfo("No introspection available!")
+                if @inspector
+                    @inspector.close()
+
+    getCodeToInspect: ->
         if @editor.getSelectedText() != ''
             code = @editor.getSelectedText()
             cursor_pos = code.length
@@ -403,22 +437,4 @@ module.exports = Hydrogen =
             row = cursor.getBufferRow()
             code = @getRow(row)
             cursor_pos = cursor.getBufferColumn()
-
-        KernelManager.inspect language, code, cursor_pos, (result) ->
-            console.log 'inspect result:', result
-            found = result['found']
-            if found is true
-                data = result['data']
-                atom.workspace.open('.Hydrogen Inspector', {split:'down'}).then (editor) ->
-                    if editor.isEmpty() is false
-                        buffer = editor.getBuffer()
-                        buffer.deleteRows(0, buffer.getLineCount())
-                    editor.setSoftWrapped(true)
-                    editor.setLineNumberGutterVisible(false)
-                    editor.insertText(stripAnsi(data['text/plain']))
-                    editor.moveToTop()
-                    atom.workspace.activatePreviousPane()
-                    # Hack for easy closing
-                    editor.save()
-            else
-                atom.notifications.addInfo("No introspection available!")
+        return [code, cursor_pos]
