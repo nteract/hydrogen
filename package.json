@@ -37,7 +37,9 @@
     "lodash": "^3.8.0",
     "jmp": "0.4.x",
     "strip-ansi": "3.0.1",
-    "uuid": "^2.0.1"
+    "uuid": "^2.0.1",
+    "ansi-to-html": "0.4.1",
+    "atom-message-panel": "1.2.4"
   },
   "consumedServices": {
     "status-bar": {

@@ -342,7 +342,6 @@ atom-overlay.autocomplete-plus {
 .hydrogen.status-container {
     display: inline-block;
     cursor: pointer;
-    vertical-align: top;
 
     .status:hover {
         text-decoration: underline;
@@ -416,4 +415,13 @@ atom-overlay.autocomplete-plus {
 .plain-message.inspect-message {
     white-space: pre-wrap;
     font-size: @font-size;
+    span[style] {
+        color: @text-color-info !important;
+    }
+}
+
+.heading-summary.inspect-message {
+    span[style] {
+        color: @text-color-info !important;
+    }
 }

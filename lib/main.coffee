@@ -2,7 +2,7 @@
 
 fs = require 'fs'
 _ = require 'lodash'
-stripAnsi = require 'strip-ansi'
+convertAnsi = require 'ansi-to-html'
 {MessagePanelView, PlainMessageView} = require 'atom-message-panel'
 
 
@@ -403,10 +403,11 @@ module.exports = Hydrogen =
             found = result['found']
             if found is true
                 data = result['data']
-                lines = stripAnsi(data['text/plain']).split('\n')
-                firstline = lines[0]
+                lines = data['text/plain'].split('\n')
+                convert = new convertAnsi()
+                firstline = convert.toHtml(lines[0])
                 lines.splice(0,1)
-                message = lines.join('\n')
+                message = convert.toHtml(lines.join('\n'))
                 if not @inspector?
                     console.log "Opening Inspector"
                     @inspector = new MessagePanelView
@@ -417,10 +418,12 @@ module.exports = Hydrogen =
                 @inspector.add new PlainMessageView
                     message: firstline
                     className: 'inspect-message'
+                    raw: true
 
                 @inspector.add new PlainMessageView
                     message: message
                     className: 'inspect-message'
+                    raw: true
 
             else
                 atom.notifications.addInfo("No introspection available!")
