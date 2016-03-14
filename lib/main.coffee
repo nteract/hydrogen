@@ -38,9 +38,11 @@ module.exports = Hydrogen =
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': -> KernelManager.updateKernels()
             'hydrogen:inspect': => @inspect()
+            'hydrogen:close-inspector': => @closeInspector()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
+            'hydrogen:toggle-inspector-size': => @toggleInspectorSize()
 
         @subscriptions.add(atom.workspace.observeActivePaneItem(
             @updateCurrentEditor.bind(this)))
@@ -398,7 +400,7 @@ module.exports = Hydrogen =
 
         [code, cursor_pos] = @getCodeToInspect()
 
-        KernelManager.inspect language, code, cursor_pos, (result) ->
+        KernelManager.inspect language, code, cursor_pos, (result) =>
             console.log 'inspect result:', result
             found = result['found']
             if found is true
@@ -442,3 +444,11 @@ module.exports = Hydrogen =
             code = @getRow(row)
             cursor_pos = cursor.getBufferColumn()
         return [code, cursor_pos]
+
+    toggleInspectorSize: ->
+        if @inspector?
+            @inspector.toggle()
+
+    closeInspector: ->
+        if @inspector?
+            @inspector.close()
