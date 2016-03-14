@@ -402,24 +402,26 @@ module.exports = Hydrogen =
             console.log 'inspect result:', result
             found = result['found']
             if found is true
+                if not @convert?
+                    @convert = new convertAnsi()
                 data = result['data']
                 lines = data['text/plain'].split('\n')
-                convert = new convertAnsi()
-                firstline = convert.toHtml(lines[0])
+                firstline = @convert.toHtml(lines[0])
                 lines.splice(0,1)
-                message = convert.toHtml(lines.join('\n'))
+                message = @convert.toHtml(lines.join('\n'))
+
                 if not @inspector?
                     console.log "Opening Inspector"
                     @inspector = new MessagePanelView
                         title: 'Hydrogen Inspector'
                 else
                     @inspector.clear()
+
                 @inspector.attach()
                 @inspector.add new PlainMessageView
                     message: firstline
                     className: 'inspect-message'
                     raw: true
-
                 @inspector.add new PlainMessageView
                     message: message
                     className: 'inspect-message'
