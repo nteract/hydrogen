@@ -2,8 +2,6 @@
 
 fs = require 'fs'
 _ = require 'lodash'
-stripAnsi = require 'strip-ansi'
-{MessagePanelView, PlainMessageView} = require 'atom-message-panel'
 
 
 KernelManager = require './kernel-manager'
@@ -12,6 +10,7 @@ SignalListView = require './signal-list-view'
 WatchSidebar = require './watch-sidebar'
 WatchLanguagePicker = require './watch-language-picker'
 AutocompleteProvider = require './autocomplete-provider'
+Inspector = require './inspector'
 
 module.exports = Hydrogen =
     config: require './config'
@@ -37,10 +36,12 @@ module.exports = Hydrogen =
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': -> KernelManager.updateKernels()
-            'hydrogen:inspect': => @inspect()
+            'hydrogen:inspect': -> Inspector.inspect()
+            'hydrogen:close-inspector': -> Inspector.closeInspector()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
+            'hydrogen:toggle-inspector-size': -> Inspector.toggleInspectorSize()
 
         @subscriptions.add(atom.workspace.observeActivePaneItem(
             @updateCurrentEditor.bind(this)))
@@ -393,47 +394,3 @@ module.exports = Hydrogen =
                 @getRows(range[0], range[1]),
                 range[1]
             ]
-    inspect: ->
-        language = @editor.getGrammar().name.toLowerCase()
-
-        [code, cursor_pos] = @getCodeToInspect()
-
-        KernelManager.inspect language, code, cursor_pos, (result) ->
-            console.log 'inspect result:', result
-            found = result['found']
-            if found is true
-                data = result['data']
-                lines = stripAnsi(data['text/plain']).split('\n')
-                firstline = lines[0]
-                lines.splice(0,1)
-                message = lines.join('\n')
-                if not @inspector?
-                    console.log "Opening Inspector"
-                    @inspector = new MessagePanelView
-                        title: 'Hydrogen Inspector'
-                else
-                    @inspector.clear()
-                @inspector.attach()
-                @inspector.add new PlainMessageView
-                    message: firstline
-                    className: 'inspect-message'
-
-                @inspector.add new PlainMessageView
-                    message: message
-                    className: 'inspect-message'
-
-            else
-                atom.notifications.addInfo("No introspection available!")
-                if @inspector
-                    @inspector.close()
-
-    getCodeToInspect: ->
-        if @editor.getSelectedText() != ''
-            code = @editor.getSelectedText()
-            cursor_pos = code.length
-        else
-            cursor = @editor.getLastCursor()
-            row = cursor.getBufferRow()
-            code = @getRow(row)
-            cursor_pos = cursor.getBufferColumn()
-        return [code, cursor_pos]
