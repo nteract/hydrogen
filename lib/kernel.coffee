@@ -25,7 +25,9 @@ class Kernel
         @watchSidebar = new WatchSidebar(this, grammar)
         @statusView = new StatusView(@language)
 
-        projectPath = path.dirname(atom.workspace.getActiveTextEditor().getPath())
+        projectPath = path.dirname(
+            atom.workspace.getActiveTextEditor().getPath()
+        )
 
         @connect()
         if @language == 'python' and not @kernelInfo.argv?
@@ -51,9 +53,8 @@ class Kernel
                     return arg
 
         console.log "launching kernel:", commandString, args
-        @kernelProcess = child_process.spawn(commandString, args, {
-                cwd: projectPath
-            })
+        @kernelProcess = child_process.spawn commandString, args,
+            cwd: projectPath
 
         @kernelProcess.stdout.on 'data', (data) ->
             console.log "kernel process received on stdout:", data.toString()
@@ -265,7 +266,8 @@ class Kernel
         message = @parseMessage msgArray
         console.log "IO message:", message
 
-        if message.type == 'error' #TODO; produces to much warning & errors, maybe filter?
+        if message.type == 'error'
+            #TODO; produces to much warning & errors, maybe filter?
             @stderr message.contents.evalue, message.contents.ename
 
         if message.type == 'status'
@@ -290,7 +292,6 @@ class Kernel
            message.type == 'execute_result'
             if message.contents.data['text/html']?
                 return {
-                    # data: message.contents.data['image/svg+xml']
                     data: message.contents.data['text/html']
                     type: 'text/html'
                     stream: 'pyout'
@@ -342,13 +343,13 @@ class Kernel
         while msg[i].toString('utf8') != '<IDS|MSG>'
             i++
 
-        msgObject = {
-                prefix: msg[0].toString('utf8')
-                header: JSON.parse msg[i+2].toString('utf8')
-                parent_header: JSON.parse msg[i+3].toString('utf8')
-                metadata: JSON.parse msg[i+4].toString('utf8')
-                contents: JSON.parse msg[i+5].toString('utf8')
-            }
+        msgObject =
+            prefix: msg[0].toString('utf8')
+            header: JSON.parse msg[i+2].toString('utf8')
+            parent_header: JSON.parse msg[i+3].toString('utf8')
+            metadata: JSON.parse msg[i+4].toString('utf8')
+            contents: JSON.parse msg[i+5].toString('utf8')
+
         msgObject.type = msgObject.header.msg_type
         return msgObject
 
