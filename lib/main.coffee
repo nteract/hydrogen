@@ -118,7 +118,6 @@ module.exports = Hydrogen =
 
             KernelManager.startKernel kernelInfo
 
-
     createResultBubble: (code, row) ->
         language = @editor.getGrammar().name.toLowerCase()
 
