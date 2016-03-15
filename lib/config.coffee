@@ -63,6 +63,6 @@ module.exports =
         default: true
     startupCode:
         title: "Startup Code"
-        description: 'This code will be executed on kernel startup. Format: `{"kernel": "your code \\nmore code"}`. Example: `{"python": "%matplotlib inline"}`'
+        description: 'This code will be executed on kernel startup. Format: `{"kernel": "your code \\nmore code"}`. Example: `{"Python 2": "%matplotlib inline"}`'
         type: 'string'
         default: '{}'

@@ -132,10 +132,11 @@ module.exports = KernelManager =
         ConfigManager.writeConfigFile (filepath, config) =>
             kernel = new Kernel(kernelInfo, config, filepath)
             @runningKernels[kernelInfo.language] = kernel
-            startupCode = @getConfigJson('startupCode')[kernelInfo.language]
+            startupCode = @getConfigJson('startupCode')[kernelInfo.display_name]
             if startupCode?
+                console.log "executing startup code"
                 startupCode = startupCode + ' \n'
-                KernelManager.execute kernelInfo.language, startupCode
+                @execute kernelInfo.language, startupCode
             onStarted?(kernel)
 
     startKernelIfNeeded: (language, onStarted) ->
