@@ -1,6 +1,7 @@
 fs = require 'fs'
-zmq = require 'zmq'
 _ = require 'lodash'
+jmp = require 'jmp'
+zmq = jmp.zmq
 
 shell_socket = zmq.socket 'dealer'
 io_socket    = zmq.socket 'sub'
@@ -11,7 +12,7 @@ io_socket.identity = 'sub' + process.pid
 shell_socket.on 'message', (msg...) ->
     console.log "new shell message"
     _.forEach(msg,(item) ->
-            console.log "shell received:", item.toString('utf8'))
+        console.log "shell received:", item.toString('utf8'))
 
 io_socket.on 'message', (msg...) ->
     console.log "new IO message"
@@ -32,26 +33,25 @@ io_socket.subscribe('')
 
 # console.log io_socket
 
-header = JSON.stringify({
-            msg_id: 0,
-            username: "will",
-            session: "00000000-0000-0000-0000-000000000000",
-            msg_type: "execute_request",
-            version: "5.0"
-        })
+header = JSON.stringify
+    msg_id: 0,
+    username: "will",
+    session: "00000000-0000-0000-0000-000000000000",
+    msg_type: "execute_request",
+    version: "5.0"
 
-shell_socket.send(
-    [
-        '<IDS|MSG>',
-        '',
-        header,
-        '{}',
-        '{}',
-        JSON.stringify({
-                code: "a - 4"
-                silent: false
-                store_history: true
-                user_expressions: {}
-                allow_stdin: false
-            })
-    ])
+message = [
+    '<IDS|MSG>',
+    '',
+    header,
+    '{}',
+    '{}',
+    JSON.stringify
+        code: "a - 4"
+        silent: false
+        store_history: true
+        user_expressions: {}
+        allow_stdin: false
+]
+
+shell_socket.send message
