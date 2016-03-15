@@ -1,10 +1,12 @@
+child_process = require 'child_process'
 crypto = require 'crypto'
 fs = require 'fs'
 path = require 'path'
-zmq = require 'zmq'
+
 _ = require 'lodash'
-child_process = require 'child_process'
+jmp = require 'jmp'
 uuid = require 'uuid'
+zmq = jmp.zmq
 
 StatusView = require './status-view'
 WatchSidebar = require './watch-sidebar'
