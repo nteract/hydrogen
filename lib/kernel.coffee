@@ -58,13 +58,8 @@ class Kernel
         @kernelProcess.stdout.on 'data', (data) ->
             console.log "kernel process received on stdout:", data.toString()
         @kernelProcess.stderr.on 'data', @stderr
-            # console.log "launching:", commandString
-            # @kernelProcess = child_process.exec commandString, (error, stdout, stderr) ->
-            #     console.log 'stdout: ', stdout
-            #     console.log 'stderr: ', stderr
-            #     if error != null
-            #         console.log 'exec error: ', error
-     stderr: (data, caption) ->
+
+    stderr: (data, caption) ->
         detail = data.toString()
         method = 'addInfo'
         if /warning/gi.test detail
