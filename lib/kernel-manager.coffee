@@ -143,15 +143,16 @@ module.exports = KernelManager =
                 detail: "Check that the language for this file is set in Atom
                          and that you have a Jupyter kernel installed for it."
             atom.notifications.addError message, options
-            return
+            return false
 
         runningKernel = @getRunningKernelForLanguage language
         if runningKernel?
             onStarted?(runningKernel)
-            return
+            return false
 
         kernelInfo = @getKernelInfoForLanguage language
         @startKernel kernelInfo, onStarted
+        return true
 
     execute: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
@@ -176,3 +177,6 @@ module.exports = KernelManager =
 
     destroy: ->
         _.forEach @runningKernels, (kernel) -> kernel.destroy()
+
+    getStartupCode: (language) ->
+        return @getConfigJson('startupCode')[language] + ' \n'

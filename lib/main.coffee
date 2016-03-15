@@ -106,7 +106,8 @@ module.exports = Hydrogen =
         else if request is 'restart-kernel'
             KernelManager.destroyKernelForLanguage language
             @clearResultBubbles()
-            KernelManager.startKernelIfNeeded language
+            isStartup = KernelManager.startKernelIfNeeded language, (kernel) =>
+                @executeStartupCode(language, isStartup)
 
         else if request is 'switch-kernel'
             KernelManager.destroyKernelForLanguage language
@@ -116,13 +117,19 @@ module.exports = Hydrogen =
             mapping[grammar] = kernelInfo.display_name
             KernelManager.setConfigJson 'grammarToKernel', mapping, true
 
-            KernelManager.startKernel kernelInfo
+            KernelManager.startKernel kernelInfo, (kernel) =>
+                @executeStartupCode(kernelInfo.language)
+
+    executeStartupCode: (language, isStartup=true) ->
+        if isStartup == true and KernelManager.getStartupCode(language)?
+            code = KernelManager.getStartupCode(language)
+        KernelManager.execute language, code
 
 
     createResultBubble: (code, row) ->
         language = @editor.getGrammar().name.toLowerCase()
 
-        KernelManager.startKernelIfNeeded language, (kernel) =>
+        isStartup = KernelManager.startKernelIfNeeded language, (kernel) =>
             unless @watchSidebar?
                 @setWatchSidebar kernel.watchSidebar
             else if @watchSidebar.element.contains document.activeElement
@@ -133,6 +140,8 @@ module.exports = Hydrogen =
 
             @clearBubblesOnRow row
             view = @insertResultBubble row
+            if isStartup == true and KernelManager.getStartupCode(language)?
+                code = KernelManager.getStartupCode(language) + code
             KernelManager.execute language, code, (result) ->
                 view.spin false
                 view.addResult result
