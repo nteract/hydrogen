@@ -386,6 +386,6 @@ class Kernel
                 grammar.name.toLowerCase() == language
 
         if !matchingGrammars[0]?
-            throw "No grammar found for language #{language}"
+            throw new Error "No grammar found for language #{language}"
         else
             return matchingGrammars[0]
