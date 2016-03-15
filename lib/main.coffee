@@ -1,7 +1,6 @@
 {CompositeDisposable} = require 'atom'
 
 fs = require 'fs'
-zmq = require 'zmq'
 _ = require 'lodash'
 stripAnsi = require 'strip-ansi'
 {MessagePanelView, PlainMessageView} = require 'atom-message-panel'

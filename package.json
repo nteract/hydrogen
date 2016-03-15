@@ -26,19 +26,18 @@
     ]
   },
   "scripts": {},
-  "repository": "https://github.com/willwhitney/hydrogen",
+  "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
+    "atom-message-panel": "^1.2.4",
     "atom-space-pen-views": "^2.0.5",
     "lodash": "^3.8.0",
-    "react": "^0.13.3",
-    "uuid": "^2.0.1",
-    "zmq": "^2.11.1",
+    "jmp": "0.4.x",
     "strip-ansi": "3.0.1",
-    "atom-message-panel": "1.2.4"
+    "uuid": "^2.0.1"
   },
   "consumedServices": {
     "status-bar": {
