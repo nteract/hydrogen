@@ -281,53 +281,16 @@ class Kernel
         unless callback?
             return
 
-        if msg_type == 'pyout' or
-           msg_type == 'display_data' or
-           msg_type == 'execute_result'
-            if message.content.data['text/html']?
-                result =
-                    data: message.content.data['text/html']
-                    type: 'text/html'
-                    stream: 'pyout'
+        result = @_parseDisplayIOMessage message
 
-            if message.content.data['image/svg+xml']?
-                result =
-                    data: message.content.data['image/svg+xml']
-                    type: 'image/svg+xml'
-                    stream: 'pyout'
+        unless result?
+            result = @_parseResultIOMessage message
 
-            imageKeys = _.filter _.keys(message.content.data), (key) ->
-                return key.startsWith('image')
-            imageKey = imageKeys[0]
+        unless result?
+            result = @_parseErrorIOMessage message
 
-            if imageKey?
-                result =
-                    data: message.content.data[imageKey]
-                    type: imageKey
-                    stream: 'pyout'
-            else
-                result =
-                    data: message.content.data['text/plain']
-                    type: 'text'
-                    stream: 'pyout'
-
-        else if msg_type == 'stdout' or
-                message.idents == 'stdout' or
-                message.idents == 'stream.stdout' or
-                message.content.name == 'stdout'
-            result =
-                data: message.content.text ? message.content.data
-                type: 'text'
-                stream: 'stdout'
-
-        else if msg_type == 'pyerr' or msg_type == 'error'
-            stack = message.content.traceback
-            stack = _.map stack, (item) -> item.trim()
-            stack = stack.join('\n')
-            result =
-                data: stack
-                type: 'text'
-                stream: 'error'
+        unless result?
+            result = @_parseStreamIOMessage message
 
         if result?
             callback result
@@ -367,6 +330,94 @@ class Kernel
             return false
 
         return true
+
+
+    _parseDisplayIOMessage: (message) ->
+        if message.header.msg_type is 'display_data'
+            result = @_parseDataMime message.content.data
+
+        return result
+
+
+    _parseResultIOMessage: (message) ->
+        msg_type = message.header.msg_type
+
+        if msg_type is 'execute_result' or msg_type is 'pyout'
+            result = @_parseDataMime message.content.data
+
+        return result
+
+
+    _parseDataMime: (data) ->
+        if data?
+            imageMimes = Object.getOwnPropertyNames(data).filter (mime) ->
+                return mime.startsWith 'image/'
+
+            if data.hasOwnProperty 'text/html'
+                mime = 'text/html'
+
+            else if data.hasOwnProperty 'image/svg+xml'
+                mime = 'image/svg+xml'
+
+            else if not (imageMimes.length is 0)
+                mime = imageMimes[0]
+
+            else if data.hasOwnProperty 'text/plain'
+                mime = 'text/plain'
+
+        if mime is 'text/plain'
+            result =
+                data:   data[mime]
+                type:   'text'
+                stream: 'pyout'
+
+        else if mime?
+            result =
+                data:   data[mime]
+                type:   mime
+                stream: 'pyout'
+
+        return result
+
+
+    _parseErrorIOMessage: (message) ->
+        msg_type = message.header.msg_type
+
+        if msg_type is 'error' or msg_type == 'pyerr'
+            result =
+                data:   message.content.traceback?.join('\n')
+                type:   'text'
+                stream: 'error'
+
+        return result
+
+
+    _parseStreamIOMessage: (message) ->
+        if message.header.msg_type is 'stream'
+            result =
+                data:   message.content.text ? message.content.data
+                type:   'text'
+                stream: message.content.name
+
+        # For kernels that do not conform to the messaging standard
+        else if message.idents is 'stdout' or
+                message.idents is 'stream.stdout' or
+                message.content.name is 'stdout'
+            result =
+                data:   message.content.text ? message.content.data
+                type:   'text'
+                stream: 'stdout'
+
+        # For kernels that do not conform to the messaging standard
+        else if message.idents is 'stderr' or
+                message.idents is 'stream.stderr' or
+                message.content.name is 'stderr'
+            result =
+                data:   message.content.text ? message.content.data
+                type:   'text'
+                stream: 'stderr'
+
+        return result
 
 
     destroy: ->
