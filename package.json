@@ -32,13 +32,15 @@
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
+    "ansi-to-html": "0.4.1",
     "atom-message-panel": "^1.2.4",
     "atom-space-pen-views": "^2.0.5",
-    "lodash": "^3.8.0",
     "jmp": "0.4.x",
+    "lodash": "^3.8.0",
     "strip-ansi": "3.0.1",
-    "uuid": "^2.0.1",
-    "ansi-to-html": "0.4.1"
+    "transformime": "^2.1.2",
+    "transformime-jupyter-transformers": "^0.4.1",
+    "uuid": "^2.0.1"
   },
   "consumedServices": {
     "status-bar": {

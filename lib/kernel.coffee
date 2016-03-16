@@ -58,19 +58,18 @@ class Kernel
 
         @kernelProcess.stdout.on 'data', (data) ->
             console.log "kernel process received on stdout:", data.toString()
-        @kernelProcess.stderr.on 'data', @_onKernelStderr
 
-    _onKernelStderr: (data, caption) ->
-        detail = data.toString()
-        method = 'addInfo'
-        if /warning/gi.test detail
-            method = 'addWarning'
-        if /error/gi.test detail
-            method = 'addError'
+        @kernelProcess.stderr.on 'data', (data, caption) =>
+            detail = data.toString()
+            method = 'addInfo'
+            if /warning/gi.test detail
+                method = 'addWarning'
+            if /error/gi.test detail
+                method = 'addError'
 
-        console.error "kernel process received on stderr:", detail
-        atom.notifications[method] "#{@language} Kernel: #{caption}",
-         detail: detail, dismissable: /error/i.test method
+            console.error "kernel process received on stderr:", detail
+            atom.notifications[method] "#{@language} Kernel: #{caption}",
+                detail: detail, dismissable: /error/i.test method
 
     connect: ->
         scheme = @config.signature_scheme.slice 'hmac-'.length
@@ -214,22 +213,10 @@ class Kernel
 
         status = message.content.status
         if status is 'error'
-            errorLines = []
+            # Drop 'status: error' shell messages, wait for IO messages instead
+            return
 
-            ename = message.content.ename
-            if ename?
-                errorLines.push ename
-
-            evalue = message.content.evalue
-            if evalue?.length
-                errorLines = errorLines.concat evalue
-
-            callback
-                data:   errorLines.join '\n'
-                type:   'text'
-                stream: 'error'
-
-        else if status is 'ok'
+        if status is 'ok'
             msg_type = message.header.msg_type
 
             if msg_type is 'execution_reply'
@@ -261,11 +248,7 @@ class Kernel
 
         msg_type = message.header.msg_type
 
-        if msg_type is 'error'
-            #TODO; produces to much warning & errors, maybe filter?
-            @_onKernelStderr message.content.evalue, message.content.ename
-
-        else if msg_type is 'status'
+        if msg_type is 'status'
             status = message.content.execution_state
             @statusView.setStatus status
 
@@ -367,15 +350,18 @@ class Kernel
 
         if mime is 'text/plain'
             result =
-                data:   data[mime]
+                data:
+                    'text/plain': data[mime]
                 type:   'text'
                 stream: 'pyout'
+            result.data['text/plain'] = result.data['text/plain'].trim()
 
         else if mime?
             result =
-                data:   data[mime]
+                data:   {}
                 type:   mime
                 stream: 'pyout'
+            result.data[mime] = data[mime]
 
         return result
 
@@ -384,10 +370,24 @@ class Kernel
         msg_type = message.header.msg_type
 
         if msg_type is 'error' or msg_type == 'pyerr'
-            result =
-                data:   message.content.traceback?.join('\n')
-                type:   'text'
-                stream: 'error'
+            result = @_parseErrorMessage message
+
+        return result
+
+
+    _parseErrorMessage: (message) ->
+        try
+            errorString = message.content.traceback.join '\n'
+        catch err
+            ename = message.content.ename ? ''
+            evalue = message.content.evalue ? ''
+            errorString = ename + ': ' + evalue
+
+        result =
+            data:
+                'text/plain': errorString
+            type:   'text'
+            stream: 'error'
 
         return result
 
@@ -395,7 +395,8 @@ class Kernel
     _parseStreamIOMessage: (message) ->
         if message.header.msg_type is 'stream'
             result =
-                data:   message.content.text ? message.content.data
+                data:
+                    'text/plain': message.content.text ? message.content.data
                 type:   'text'
                 stream: message.content.name
 
@@ -404,7 +405,8 @@ class Kernel
                 message.idents is 'stream.stdout' or
                 message.content.name is 'stdout'
             result =
-                data:   message.content.text ? message.content.data
+                data:
+                    'text/plain': message.content.text ? message.content.data
                 type:   'text'
                 stream: 'stdout'
 
@@ -413,9 +415,13 @@ class Kernel
                 message.idents is 'stream.stderr' or
                 message.content.name is 'stderr'
             result =
-                data:   message.content.text ? message.content.data
+                data:
+                    'text/plain': message.content.text ? message.content.data
                 type:   'text'
                 stream: 'stderr'
+
+        if result?.data['text/plain']?
+            result.data['text/plain'] = result.data['text/plain'].trim()
 
         return result
 

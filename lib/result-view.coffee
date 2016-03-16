@@ -38,7 +38,8 @@ class ResultView
         @element.appendChild(@actionPanel)
 
         @closeButton = document.createElement('div')
-        @closeButton.classList.add('action-button', 'close-button', 'icon', 'icon-x')
+        @closeButton.classList.add 'action-button',
+            'close-button', 'icon', 'icon-x'
         @closeButton.onclick = => @destroy()
         @actionPanel.appendChild(@closeButton)
 
@@ -48,126 +49,121 @@ class ResultView
         @actionPanel.appendChild(padding)
 
         @copyButton = document.createElement('div')
-        @copyButton.classList.add('action-button', 'copy-button', 'icon', 'icon-clippy')
+        @copyButton.classList.add 'action-button',
+            'copy-button', 'icon', 'icon-clippy'
         @copyButton.onclick = =>
             atom.clipboard.write(@getAllText())
             atom.notifications.addSuccess("Copied to clipboard")
         @actionPanel.appendChild(@copyButton)
 
         @openButton = document.createElement('div')
-        @openButton.classList.add('action-button', 'open-button', 'icon', 'icon-file-symlink-file')
-        # @openButton.classList.add('action-button', 'open-button', 'icon', 'icon-move-right')
+        @openButton.classList.add 'action-button',
+            'open-button', 'icon', 'icon-file-symlink-file'
         @openButton.onclick = =>
             bubbleText = @getAllText()
             atom.workspace.open().then (editor) ->
                 editor.insertText(bubbleText)
         @actionPanel.appendChild(@openButton)
 
-        @resultType = null
-        @setMultiline(false)
+        @setMultiline false
 
         @tooltips = new CompositeDisposable()
-        @tooltips.add atom.tooltips.add(@copyButton, {title: "Copy to clipboard"})
-        @tooltips.add atom.tooltips.add(@openButton, {title: "Open in new editor"})
+        @tooltips.add atom.tooltips.add @copyButton,
+            title: "Copy to clipboard"
+        @tooltips.add atom.tooltips.add @openButton,
+            title: "Open in new editor"
+
+        @_hasResult = false
 
         return this
 
     addResult: (result) ->
+        console.log "ResultView: Add result", result
+
         @element.classList.remove('empty')
-        if result.stream == 'status'
-            if result.data == 'ok'
-                @statusContainer.classList.add('icon', 'icon-check')
 
+        if result.stream is 'status'
+            if not @_hasResult and result.data is 'ok'
+                console.log "ResultView: Show status container"
+                @statusContainer.classList.add 'icon', 'icon-check'
+                @statusContainer.style.display = 'inline-block'
+            return
+
+        console.log "ResultView: Hide status container"
+        @_hasResult = true
+        @statusContainer.style.display = 'none'
+
+        if result.stream is 'stderr'
+            container = @errorContainer
+        else if result.stream is 'stdout'
+            container = @resultContainer
+        else if result.stream is 'error'
+            container = @errorContainer
         else
-            if result.stream == 'stderr' or result.stream == 'error'
-                container = @errorContainer
-            else
-                container = @resultContainer
+            container = @resultContainer
 
-            if result.type == 'text/html'
-                console.log "rendering as HTML"
-                @resultType = 'html'
-                @element.classList.add('rich')
+        onSuccess = ({mimetype, el}) =>
+            mimeType = mimetype
+            htmlElement = el
+
+            console.log "ResultView: Rendering as " + mimeType
+
+            if mimeType is 'text/plain'
+                @element.classList.remove 'rich'
+
+                previousText = @getAllText()
+                text = result.data['text/plain']
+                if previousText is '' and text.length < 50 and
+                text.indexOf('\n') is -1
+                    @setMultiline false
+
+                    @tooltips.add atom.tooltips.add container,
+                        title: "Copy to clipboard"
+
+                    container.onclick = =>
+                        atom.clipboard.write @getAllText()
+                        atom.notifications.addSuccess "Copied to clipboard"
+                else
+                    @setMultiline true
+
+            else
+                @element.classList.add 'rich'
+                @setMultiline true
+
+            if mimeType is 'text/html'
                 container.classList.add('html')
 
-                # if result.data.trim().startsWith('<br>')
-                #     result.data = result.data.trim().replace('<br>', '')
+            if mimeType is 'image/svg+xml'
+                container.classList.add('svg')
 
+            container.appendChild htmlElement
 
-                # container = document.createElement('div')
-                # container.innerHTML = result.data
-                # @resultContainer.appendChild(container)
-                container.innerHTML = result.data
-                @setMultiline(true)
+        onError = (error) ->
+            console.error "ResultView: Rendering error:", error
 
-            else if result.type == 'image/svg+xml'
-                console.log "rendering as SVG"
+        transform(result.data).then onSuccess, onError
 
-                container.innerHTML = container.innerHTML.trim().replace('<br>', '')
-
-                @resultType = 'image'
-                @element.classList.add('rich')
-                @element.classList.add('svg')
-                buffer = new Buffer(result.data)
-                image = document.createElement('img')
-                image.setAttribute('src', "data:image/svg+xml;base64," +
-                                           buffer.toString('base64'))
-                container.appendChild(image)
-                @setMultiline(true)
-
-            else if result.type.startsWith('image')
-                console.log "rendering as image"
-
-                container.innerHTML = container.innerHTML.trim().replace('<br>', '')
-
-                @resultType = 'image'
-                @element.classList.add('rich')
-                image = document.createElement('img')
-                image.setAttribute('src', "data:#{result.type};base64," + result.data)
-                container.appendChild(image)
-                @setMultiline(true)
-
-            else if not @resultType or @resultType == 'text'
-                console.log "rendering as text"
-                @resultType = 'text'
-                container.innerText = container.innerText + stripAnsi(result.data)
-
-                if /(\\n|\r|\n)/.exec(container.innerText.trim()) \
-                or container.offsetWidth > 500 \
-                or container.offsetHeight > 500
-                  container.innerText = container.innerText.replace /\\n/g, "\n"
-                  @setMultiline true
-                else
-                  @tooltips.add atom.tooltips.add(container, {title: "Copy to clipboard"})
-                  container.onclick = =>
-                    atom.clipboard.write(@getAllText())
-                    atom.notifications.addSuccess("Copied to clipboard")
-            else
-                console.error "Unrecognized result:", result
-
-        console.log "resultType after update:", @resultType
-        @updateStatusVisibility()
 
     getAllText: ->
-        resultText = @resultContainer.innerText
-        errorText = @errorContainer.innerText
-        return resultText + "\n" + errorText
+        text = ''
+
+        resultText = @resultContainer.innerText.trim()
+        if resultText.length > 0
+            text += resultText
+
+        errorText = @errorContainer.innerText.trim()
+        if errorText.length > 0
+            text += '\n' + errorText
+
+        return text
+
 
     setMultiline: (multiline) ->
-        @multiline = multiline
-        if @multiline
-            @element.classList.add('multiline')
-            # @closeButton.style.display = 'block'
+        if multiline
+            @element.classList.add 'multiline'
         else
-            @element.classList.remove('multiline')
-            # @closeButton.style.display = 'none'
+            @element.classList.remove 'multiline'
 
-
-    updateStatusVisibility: ->
-        if not @resultType?
-            @statusContainer.style.display = 'inline-block'
-        else
-            @statusContainer.style.display = 'none'
 
     buildSpinner: ->
         container = document.createElement('div')
@@ -209,3 +205,20 @@ class ResultView
 
     getElement: ->
         @element
+
+
+transformime = require 'transformime'
+transformimeJupyter = require 'transformime-jupyter-transformers'
+transformer = new transformime.Transformime [
+    transformime.TextTransformer,
+    transformimeJupyter.PDFTransform,
+    transformime.ImageTransformer,
+    transformimeJupyter.SVGTransform,
+    transformimeJupyter.consoleTextTransform,
+    transformimeJupyter.LaTeXTransform,
+    transformimeJupyter.markdownTransform,
+    transformime.HTMLTransformer,
+    transformimeJupyter.ScriptTransform
+]
+transform = (mimeBundle) ->
+    return transformer.transform mimeBundle, document

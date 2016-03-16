@@ -114,6 +114,13 @@ atom-overlay.autocomplete-plus {
     .bubble-result-container {
         position: relative;
 
+	pre {
+            margin: 0;
+            padding: 0;
+            color: lighten(@syntax-text-color, 20%);
+            background-color: @bubble-background;
+	}
+
         img, svg {
             background-color: white;
         }
@@ -129,6 +136,13 @@ atom-overlay.autocomplete-plus {
         @error-base-color: average(@syntax-text-color, red);
         color: @error-base-color;
         // font-size: @font-size * 7/8;
+
+	pre {
+            margin: 0;
+            padding: 0;
+            color: @error-base-color;
+            background-color: @bubble-background;
+	}
     }
 
     .bubble-status-container::before {
