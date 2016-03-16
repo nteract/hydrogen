@@ -254,34 +254,43 @@ class Kernel
 
 
     onIOMessage: (message) ->
-        message.type = message.header.msg_type
-
         console.log "IO message:", message
 
-        if message.type == 'error'
+        unless message.content?
+            console.log "onIOMessage: Missing message.content"
+            return
+
+        msg_type = message.header?.msg_type
+
+        if msg_type is 'error'
             #TODO; produces to much warning & errors, maybe filter?
             @stderr message.content.evalue, message.content.ename
 
-        if message.type == 'status'
+        else if msg_type is 'status'
             status = message.content.execution_state
-            @statusView.setStatus(status)
+            @statusView.setStatus status
 
-            if status == 'idle' and _.has(message, ['parent_header', 'msg_id'])
-                if message.parent_header.msg_id.startsWith('execute')
-                    _.forEach @watchCallbacks, (watchCallback) ->
-                        watchCallback()
+            msg_id = message.parent_header?.msg_id
+            if status is 'idle' and msg_id?.startsWith 'execute'
+                @watchCallbacks.forEach (watchCallback) ->
+                    watchCallback()
 
-        if _.has(message, ['parent_header', 'msg_id'])
-            callback = @executionCallbacks[message.parent_header.msg_id]
-        if callback? and message.parent_header.msg_id?
+        msg_id = message.parent_header?.msg_id
+        if msg_id?
+            callback = @executionCallbacks[msg_id]
+
+        if callback?
             resultObject = @getResultObject message
             if resultObject?
-                callback(resultObject)
+                callback resultObject
+
 
     getResultObject: (message) ->
-        if message.type == 'pyout' or
-           message.type == 'display_data' or
-           message.type == 'execute_result'
+        msg_type = message.header?.msg_type
+
+        if msg_type == 'pyout' or
+           msg_type == 'display_data' or
+           msg_type == 'execute_result'
             if message.content.data['text/html']?
                 return {
                     data: message.content.data['text/html']
@@ -311,16 +320,16 @@ class Kernel
                     type: 'text'
                     stream: 'pyout'
                 }
-        else if message.type == 'stdout' or
-                message.prefix == 'stdout' or
-                message.prefix == 'stream.stdout' or
+        else if msg_type == 'stdout' or
+                message.idents == 'stdout' or
+                message.idents == 'stream.stdout' or
                 message.content.name == 'stdout'
             return {
                 data: message.content.text ? message.content.data
                 type: 'text'
                 stream: 'stdout'
             }
-        else if message.type == 'pyerr' or message.type == 'error'
+        else if msg_type == 'pyerr' or msg_type == 'error'
             stack = message.content.traceback
             stack = _.map stack, (item) -> item.trim()
             stack = stack.join('\n')
