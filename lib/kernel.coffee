@@ -58,9 +58,9 @@ class Kernel
 
         @kernelProcess.stdout.on 'data', (data) ->
             console.log "kernel process received on stdout:", data.toString()
-        @kernelProcess.stderr.on 'data', @stderr
+        @kernelProcess.stderr.on 'data', @_onKernelStderr
 
-    stderr: (data, caption) ->
+    _onKernelStderr: (data, caption) ->
         detail = data.toString()
         method = 'addInfo'
         if /warning/gi.test detail
@@ -264,7 +264,7 @@ class Kernel
 
         if msg_type is 'error'
             #TODO; produces to much warning & errors, maybe filter?
-            @stderr message.content.evalue, message.content.ename
+            @_onKernelStderr message.content.evalue, message.content.ename
 
         else if msg_type is 'status'
             status = message.content.execution_state
