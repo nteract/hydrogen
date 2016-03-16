@@ -198,18 +198,18 @@ class Kernel
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
 
+
     onShellMessage: (message) ->
         console.log "shell message:", message
 
-        msg_id = message.parent_header?.msg_id
+        unless @_isValidMessage message
+            return
+
+        msg_id = message.parent_header.msg_id
         if msg_id?
             callback = @executionCallbacks[msg_id]
 
         unless callback?
-            return
-
-        unless message.content?
-            console.log "onShellMessage: Missing message.content"
             return
 
         status = message.content.status
@@ -230,7 +230,7 @@ class Kernel
                 stream: 'error'
 
         else if status is 'ok'
-            msg_type = message.header?.msg_type
+            msg_type = message.header.msg_type
 
             if msg_type is 'execution_reply'
                 callback
@@ -256,11 +256,10 @@ class Kernel
     onIOMessage: (message) ->
         console.log "IO message:", message
 
-        unless message.content?
-            console.log "onIOMessage: Missing message.content"
+        unless @_isValidMessage message
             return
 
-        msg_type = message.header?.msg_type
+        msg_type = message.header.msg_type
 
         if msg_type is 'error'
             #TODO; produces to much warning & errors, maybe filter?
@@ -275,69 +274,100 @@ class Kernel
                 @watchCallbacks.forEach (watchCallback) ->
                     watchCallback()
 
-        msg_id = message.parent_header?.msg_id
+        msg_id = message.parent_header.msg_id
         if msg_id?
             callback = @executionCallbacks[msg_id]
 
-        if callback?
-            resultObject = @getResultObject message
-            if resultObject?
-                callback resultObject
-
-
-    getResultObject: (message) ->
-        msg_type = message.header?.msg_type
+        unless callback?
+            return
 
         if msg_type == 'pyout' or
            msg_type == 'display_data' or
            msg_type == 'execute_result'
             if message.content.data['text/html']?
-                return {
+                result =
                     data: message.content.data['text/html']
                     type: 'text/html'
                     stream: 'pyout'
-                }
+
             if message.content.data['image/svg+xml']?
-                return {
+                result =
                     data: message.content.data['image/svg+xml']
                     type: 'image/svg+xml'
                     stream: 'pyout'
-                }
 
             imageKeys = _.filter _.keys(message.content.data), (key) ->
                 return key.startsWith('image')
             imageKey = imageKeys[0]
 
             if imageKey?
-                return {
+                result =
                     data: message.content.data[imageKey]
                     type: imageKey
                     stream: 'pyout'
-                }
             else
-                return {
+                result =
                     data: message.content.data['text/plain']
                     type: 'text'
                     stream: 'pyout'
-                }
+
         else if msg_type == 'stdout' or
                 message.idents == 'stdout' or
                 message.idents == 'stream.stdout' or
                 message.content.name == 'stdout'
-            return {
+            result =
                 data: message.content.text ? message.content.data
                 type: 'text'
                 stream: 'stdout'
-            }
+
         else if msg_type == 'pyerr' or msg_type == 'error'
             stack = message.content.traceback
             stack = _.map stack, (item) -> item.trim()
             stack = stack.join('\n')
-            return {
+            result =
                 data: stack
                 type: 'text'
                 stream: 'error'
-            }
+
+        if result?
+            callback result
+
+
+    _isValidMessage: (message) ->
+        unless message?
+            console.log "Invalid message: null"
+            return false
+
+        unless message.content?
+            console.log "Invalid message: Missing content"
+            return false
+
+        unless message.parent_header?
+            console.log "Invalid message: Missing parent_header"
+            return false
+
+        unless message.parent_header.msg_id?
+            console.log "Invalid message: Missing parent_header.msg_id"
+            return false
+
+        unless message.parent_header.msg_type?
+            console.log "Invalid message: Missing parent_header.msg_type"
+            return false
+
+        unless message.header?
+            console.log "Invalid message: Missing header"
+            return false
+
+        unless message.header.msg_id?
+            console.log "Invalid message: Missing header.msg_id"
+            return false
+
+        unless message.header.msg_type?
+            console.log "Invalid message: Missing header.msg_type"
+            return false
+
+        return true
+
 
     destroy: ->
         console.log "sending shutdown"
@@ -364,6 +394,7 @@ class Kernel
         @ioSocket.close()
 
         @kernelProcess.kill('SIGKILL')
+
 
     getGrammarForLanguage: (language) ->
         matchingGrammars = atom.grammars.getGrammars().filter (grammar) ->
