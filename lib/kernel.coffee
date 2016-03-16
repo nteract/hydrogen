@@ -58,19 +58,18 @@ class Kernel
 
         @kernelProcess.stdout.on 'data', (data) ->
             console.log "kernel process received on stdout:", data.toString()
-        @kernelProcess.stderr.on 'data', @stderr
 
-    stderr: (data, caption) ->
-        detail = data.toString()
-        method = 'addInfo'
-        if /warning/gi.test detail
-            method = 'addWarning'
-        if /error/gi.test detail
-            method = 'addError'
+        @kernelProcess.stderr.on 'data', (data, caption) =>
+            detail = data.toString()
+            method = 'addInfo'
+            if /warning/gi.test detail
+                method = 'addWarning'
+            if /error/gi.test detail
+                method = 'addError'
 
-        console.error "kernel process received on stderr:", detail
-        atom.notifications[method] "#{@language} Kernel: #{caption}",
-         detail: detail, dismissable: /error/i.test method
+            console.error "kernel process received on stderr:", detail
+            atom.notifications[method] "#{@language} Kernel: #{caption}",
+                detail: detail, dismissable: /error/i.test method
 
     connect: ->
         scheme = @config.signature_scheme.slice 'hmac-'.length
@@ -198,119 +197,234 @@ class Kernel
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
 
-    onShellMessage: (message) ->
-        message.type = message.header.msg_type
 
+    onShellMessage: (message) ->
         console.log "shell message:", message
 
-        if _.has(message, ['parent_header', 'msg_id'])
-            callback = @executionCallbacks[message.parent_header.msg_id]
-        if callback? and _.has(message, ['content', 'status'])
+        unless @_isValidMessage message
+            return
 
-            if message.content.status == 'ok'
-                if message.type == 'complete_reply'
-                    matches = message.content.matches
-                    # matches = _.map matches, (match) -> {text: match}
-                    callback(matches)
-                else if message.type == 'inspect_reply'
-                    callback {
-                        data: message.content.data
-                        found: message.content.found
-                    }
-                else
-                    callback {
-                        data: 'ok'
-                        type: 'text'
-                        stream: 'status'
-                    }
+        msg_id = message.parent_header.msg_id
+        if msg_id?
+            callback = @executionCallbacks[msg_id]
 
-            else if message.content.status == 'error'
-                errorString = message.content.ename
-                if message.content.evalue.length > 0
-                    errorString = errorString + "\n" + message.content.evalue
-                callback {
-                    data: errorString
-                    type: 'text'
-                    stream: 'error'
-                }
+        unless callback?
+            return
+
+        status = message.content.status
+        if status is 'error'
+            # Drop 'status: error' shell messages, wait for IO messages instead
+            return
+
+        if status is 'ok'
+            msg_type = message.header.msg_type
+
+            if msg_type is 'execution_reply'
+                callback
+                    data:   'ok'
+                    type:   'text'
+                    stream: 'status'
+
+            else if msg_type is 'complete_reply'
+                callback message.content.matches
+
+            else if msg_type is 'inspect_reply'
+                callback
+                    data:  message.content.data
+                    found: message.content.found
+
+            else
+                callback
+                    data:   'ok'
+                    type:   'text'
+                    stream: 'status'
 
 
     onIOMessage: (message) ->
-        message.type = message.header.msg_type
-
         console.log "IO message:", message
 
-        if message.type == 'error'
-            #TODO; produces to much warning & errors, maybe filter?
-            @stderr message.content.evalue, message.content.ename
+        unless @_isValidMessage message
+            return
 
-        if message.type == 'status'
+        msg_type = message.header.msg_type
+
+        if msg_type is 'status'
             status = message.content.execution_state
-            @statusView.setStatus(status)
+            @statusView.setStatus status
 
-            if status == 'idle' and _.has(message, ['parent_header', 'msg_id'])
-                if message.parent_header.msg_id.startsWith('execute')
-                    _.forEach @watchCallbacks, (watchCallback) ->
-                        watchCallback()
+            msg_id = message.parent_header?.msg_id
+            if status is 'idle' and msg_id?.startsWith 'execute'
+                @watchCallbacks.forEach (watchCallback) ->
+                    watchCallback()
 
-        if _.has(message, ['parent_header', 'msg_id'])
-            callback = @executionCallbacks[message.parent_header.msg_id]
-        if callback? and message.parent_header.msg_id?
-            resultObject = @getResultObject message
-            if resultObject?
-                callback(resultObject)
+        msg_id = message.parent_header.msg_id
+        if msg_id?
+            callback = @executionCallbacks[msg_id]
 
-    getResultObject: (message) ->
-        if message.type == 'pyout' or
-           message.type == 'display_data' or
-           message.type == 'execute_result'
-            if message.content.data['text/html']?
-                return {
-                    data: message.content.data['text/html']
-                    type: 'text/html'
-                    stream: 'pyout'
-                }
-            if message.content.data['image/svg+xml']?
-                return {
-                    data: message.content.data['image/svg+xml']
-                    type: 'image/svg+xml'
-                    stream: 'pyout'
-                }
+        unless callback?
+            return
 
-            imageKeys = _.filter _.keys(message.content.data), (key) ->
-                return key.startsWith('image')
-            imageKey = imageKeys[0]
+        result = @_parseDisplayIOMessage message
 
-            if imageKey?
-                return {
-                    data: message.content.data[imageKey]
-                    type: imageKey
-                    stream: 'pyout'
-                }
-            else
-                return {
-                    data: message.content.data['text/plain']
-                    type: 'text'
-                    stream: 'pyout'
-                }
-        else if message.type == 'stdout' or
-                message.prefix == 'stdout' or
-                message.prefix == 'stream.stdout' or
-                message.content.name == 'stdout'
-            return {
-                data: message.content.text ? message.content.data
-                type: 'text'
+        unless result?
+            result = @_parseResultIOMessage message
+
+        unless result?
+            result = @_parseErrorIOMessage message
+
+        unless result?
+            result = @_parseStreamIOMessage message
+
+        if result?
+            callback result
+
+
+    _isValidMessage: (message) ->
+        unless message?
+            console.log "Invalid message: null"
+            return false
+
+        unless message.content?
+            console.log "Invalid message: Missing content"
+            return false
+
+        unless message.parent_header?
+            console.log "Invalid message: Missing parent_header"
+            return false
+
+        unless message.parent_header.msg_id?
+            console.log "Invalid message: Missing parent_header.msg_id"
+            return false
+
+        unless message.parent_header.msg_type?
+            console.log "Invalid message: Missing parent_header.msg_type"
+            return false
+
+        unless message.header?
+            console.log "Invalid message: Missing header"
+            return false
+
+        unless message.header.msg_id?
+            console.log "Invalid message: Missing header.msg_id"
+            return false
+
+        unless message.header.msg_type?
+            console.log "Invalid message: Missing header.msg_type"
+            return false
+
+        return true
+
+
+    _parseDisplayIOMessage: (message) ->
+        if message.header.msg_type is 'display_data'
+            result = @_parseDataMime message.content.data
+
+        return result
+
+
+    _parseResultIOMessage: (message) ->
+        msg_type = message.header.msg_type
+
+        if msg_type is 'execute_result' or msg_type is 'pyout'
+            result = @_parseDataMime message.content.data
+
+        return result
+
+
+    _parseDataMime: (data) ->
+        if data?
+            imageMimes = Object.getOwnPropertyNames(data).filter (mime) ->
+                return mime.startsWith 'image/'
+
+            if data.hasOwnProperty 'text/html'
+                mime = 'text/html'
+
+            else if data.hasOwnProperty 'image/svg+xml'
+                mime = 'image/svg+xml'
+
+            else if not (imageMimes.length is 0)
+                mime = imageMimes[0]
+
+            else if data.hasOwnProperty 'text/plain'
+                mime = 'text/plain'
+
+        if mime is 'text/plain'
+            result =
+                data:
+                    'text/plain': data[mime]
+                type:   'text'
+                stream: 'pyout'
+            result.data['text/plain'] = result.data['text/plain'].trim()
+
+        else if mime?
+            result =
+                data:   {}
+                type:   mime
+                stream: 'pyout'
+            result.data[mime] = data[mime]
+
+        return result
+
+
+    _parseErrorIOMessage: (message) ->
+        msg_type = message.header.msg_type
+
+        if msg_type is 'error' or msg_type == 'pyerr'
+            result = @_parseErrorMessage message
+
+        return result
+
+
+    _parseErrorMessage: (message) ->
+        try
+            errorString = message.content.traceback.join '\n'
+        catch err
+            ename = message.content.ename ? ''
+            evalue = message.content.evalue ? ''
+            errorString = ename + ': ' + evalue
+
+        result =
+            data:
+                'text/plain': errorString
+            type:   'text'
+            stream: 'error'
+
+        return result
+
+
+    _parseStreamIOMessage: (message) ->
+        if message.header.msg_type is 'stream'
+            result =
+                data:
+                    'text/plain': message.content.text ? message.content.data
+                type:   'text'
+                stream: message.content.name
+
+        # For kernels that do not conform to the messaging standard
+        else if message.idents is 'stdout' or
+                message.idents is 'stream.stdout' or
+                message.content.name is 'stdout'
+            result =
+                data:
+                    'text/plain': message.content.text ? message.content.data
+                type:   'text'
                 stream: 'stdout'
-            }
-        else if message.type == 'pyerr' or message.type == 'error'
-            stack = message.content.traceback
-            stack = _.map stack, (item) -> item.trim()
-            stack = stack.join('\n')
-            return {
-                data: stack
-                type: 'text'
-                stream: 'error'
-            }
+
+        # For kernels that do not conform to the messaging standard
+        else if message.idents is 'stderr' or
+                message.idents is 'stream.stderr' or
+                message.content.name is 'stderr'
+            result =
+                data:
+                    'text/plain': message.content.text ? message.content.data
+                type:   'text'
+                stream: 'stderr'
+
+        if result?.data['text/plain']?
+            result.data['text/plain'] = result.data['text/plain'].trim()
+
+        return result
+
 
     destroy: ->
         console.log "sending shutdown"
@@ -337,6 +451,7 @@ class Kernel
         @ioSocket.close()
 
         @kernelProcess.kill('SIGKILL')
+
 
     getGrammarForLanguage: (language) ->
         matchingGrammars = atom.grammars.getGrammars().filter (grammar) ->
