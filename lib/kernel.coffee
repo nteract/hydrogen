@@ -199,40 +199,58 @@ class Kernel
         @watchCallbacks.push(watchCallback)
 
     onShellMessage: (message) ->
-        message.type = message.header.msg_type
-
         console.log "shell message:", message
 
-        if _.has(message, ['parent_header', 'msg_id'])
-            callback = @executionCallbacks[message.parent_header.msg_id]
-        if callback? and _.has(message, ['content', 'status'])
+        msg_id = message.parent_header?.msg_id
+        if msg_id?
+            callback = @executionCallbacks[msg_id]
 
-            if message.content.status == 'ok'
-                if message.type == 'complete_reply'
-                    matches = message.content.matches
-                    # matches = _.map matches, (match) -> {text: match}
-                    callback(matches)
-                else if message.type == 'inspect_reply'
-                    callback {
-                        data: message.content.data
-                        found: message.content.found
-                    }
-                else
-                    callback {
-                        data: 'ok'
-                        type: 'text'
-                        stream: 'status'
-                    }
+        unless callback?
+            return
 
-            else if message.content.status == 'error'
-                errorString = message.content.ename
-                if message.content.evalue.length > 0
-                    errorString = errorString + "\n" + message.content.evalue
-                callback {
-                    data: errorString
-                    type: 'text'
-                    stream: 'error'
-                }
+        unless message.content?
+            console.log "onShellMessage: Missing message.content"
+            return
+
+        status = message.content.status
+        if status is 'error'
+            errorLines = []
+
+            ename = message.content.ename
+            if ename?
+                errorLines.push ename
+
+            evalue = message.content.evalue
+            if evalue?.length
+                errorLines = errorLines.concat evalue
+
+            callback
+                data:   errorLines.join '\n'
+                type:   'text'
+                stream: 'error'
+
+        else if status is 'ok'
+            msg_type = message.header?.msg_type
+
+            if msg_type is 'execution_reply'
+                callback
+                    data:   'ok'
+                    type:   'text'
+                    stream: 'status'
+
+            else if msg_type is 'complete_reply'
+                callback message.content.matches
+
+            else if msg_type is 'inspect_reply'
+                callback
+                    data:  message.content.data
+                    found: message.content.found
+
+            else
+                callback
+                    data:   'ok'
+                    type:   'text'
+                    stream: 'status'
 
 
     onIOMessage: (message) ->
