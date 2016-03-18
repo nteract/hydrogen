@@ -29,7 +29,7 @@
   "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
-    "atom": ">=0.174.0 <2.0.0"
+    "atom": ">=1.6.0 <2.0.0"
   },
   "dependencies": {
     "ansi-to-html": "0.4.1",

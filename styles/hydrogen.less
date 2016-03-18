@@ -5,20 +5,6 @@
 @import "ui-variables";
 @import "syntax-variables";
 
-// this is a hack to deal with a failing of the markers API
-// https://github.com/atom/atom/issues/6857
-.tab-bar {
-    z-index: 5;
-}
-
-.bottom{
-    z-index: 4;
-}
-
-atom-overlay.autocomplete-plus {
-  z-index: 6;
-}
-
 .hydrogen.output-bubble {
     @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
     @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
@@ -26,12 +12,9 @@ atom-overlay.autocomplete-plus {
     @button-text-color: lighten(@syntax-text-color, 20%);
     color: lighten(@syntax-text-color, 10%);
 
-    position: absolute;
     padding-left: 2px;
     padding-right: 2px;
-    background-color: @bubble-background;
     border-radius: 3px;
-    margin-left: 20px;
     white-space: pre;
 
     &.rich {
@@ -44,8 +27,8 @@ atom-overlay.autocomplete-plus {
         .rich-close-button {
             &::before {
                 color: @button-text-color;
+                background-color: @bubble-background;
                 display: block;
-                position: absolute;
                 top: -12px;
                 right: -12px;
                 cursor: pointer;
@@ -54,7 +37,6 @@ atom-overlay.autocomplete-plus {
                 height: 1.5em;
                 line-height: 1.5em;
                 text-align: center;
-                background-color: darken(@bubble-background, 10%);
                 box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
                 margin: 0;
             }
@@ -74,7 +56,6 @@ atom-overlay.autocomplete-plus {
         border: none;
         padding-right: 0px;
         display: flex;
-        box-shadow: 0 0 3px 1px rgba(0,0,0,0.3);
 
         font-size: @font-size * 5/6;
 
@@ -104,22 +85,34 @@ atom-overlay.autocomplete-plus {
     }
 
     .bubble-output-container {
+        color: lighten(@syntax-text-color, 20%);
+        background-color: @bubble-background;
+
         display: inline-block;
         max-width: 500px;
         max-height: 500px;
-        overflow: hidden;
+        overflow: scroll;
     }
 
+    .bubble-result-container > * {
+        width: fit-content !important;
+        height: fit-content !important;
+        max-width: unset !important;
+        max-height: unset !important;
+        overflow: hidden !important;
+    }
 
     .bubble-result-container {
-        position: relative;
+        width: inherit;
+        height: inherit;
 
-	pre {
-            margin: 0;
-            padding: 0;
+        pre {
             color: lighten(@syntax-text-color, 20%);
             background-color: @bubble-background;
-	}
+
+            margin: 0;
+            padding: 0;
+        }
 
         img, svg {
             background-color: white;
@@ -127,8 +120,6 @@ atom-overlay.autocomplete-plus {
 
         video, img, svg {
             display: block;
-            max-width: 450px;
-            max-height: 450px;
         }
     }
 
@@ -138,10 +129,11 @@ atom-overlay.autocomplete-plus {
         // font-size: @font-size * 7/8;
 
 	pre {
-            margin: 0;
-            padding: 0;
             color: @error-base-color;
             background-color: @bubble-background;
+
+            margin: 0;
+            padding: 0;
 	}
     }
 
@@ -192,6 +184,7 @@ atom-overlay.autocomplete-plus {
     .close-button {
         &::after {
             color: @button-text-color;
+            background-color: @bubble-background;
             display: none;
             position: absolute;
             top: -12px;
@@ -202,7 +195,6 @@ atom-overlay.autocomplete-plus {
             width: 1.5em;
             height: 1.5em;
             text-align: center;
-            background-color: darken(@bubble-background, 10%);
             box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
         }
     }
@@ -332,18 +324,21 @@ atom-overlay.autocomplete-plus {
             display: inline-block;
             width: 100%;
             max-height: 400px;
-            overflow-y: overlay;
+            overflow: scroll;
             white-space: pre-wrap;
         }
 
 
         .bubble-result-container {
+            max-width: inherit;
+            max-height: inherit;
+
             position: relative;
 
             video, img, svg {
                 display: block;
-                max-width: 100%;
-                max-height: 450px;
+                max-width: 100% !important;
+                max-height: 450px !important;
             }
         }
 
