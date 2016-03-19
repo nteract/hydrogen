@@ -37,11 +37,11 @@ module.exports = Hydrogen =
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': -> KernelManager.updateKernels()
             'hydrogen:inspect': -> Inspector.inspect()
-            'hydrogen:close-inspector': -> Inspector.closeInspector()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
             'hydrogen:toggle-inspector-size': -> Inspector.toggleInspectorSize()
+            'hydrogen:close-inspector': -> Inspector.closeInspector()
 
         @subscriptions.add(atom.workspace.observeActivePaneItem(
             @updateCurrentEditor.bind(this)))

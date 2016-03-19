@@ -230,7 +230,8 @@ class Kernel
 
             else if msg_type is 'inspect_reply'
                 callback
-                    data:  message.content.data
+                    data:
+                        'jupyter/console-text': message.content.data['text/plain']
                     found: message.content.found
 
             else
