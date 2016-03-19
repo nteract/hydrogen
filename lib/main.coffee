@@ -143,7 +143,7 @@ module.exports = Hydrogen =
 
         marker = @editor.markBufferPosition {
             row: row
-            column: lineLength
+            column: 0
         }, {
             invalidate: 'touch'
         }
@@ -160,9 +160,9 @@ module.exports = Hydrogen =
         view.statusContainer.setAttribute('style', "height: #{lineHeight}px")
 
         @editor.decorateMarker marker,
-            type: 'overlay'
+            type: 'block'
             item: element
-            position: 'tail'
+            position: 'after'
 
         @markerBubbleMap[marker.id] = view
         marker.onDidChange (event) =>

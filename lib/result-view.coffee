@@ -106,7 +106,8 @@ class ResultView
             mimeType = mimetype
             htmlElement = el
 
-            console.log "ResultView: Rendering as " + mimeType
+            console.log "ResultView: Rendering as MIME", mimeType
+            console.log "ResultView: Rendering as ", htmlElement
 
             if mimeType is 'text/plain'
                 @element.classList.remove 'rich'
@@ -206,14 +207,21 @@ class ResultView
     getElement: ->
         @element
 
-
 transformime = require 'transformime'
 transformimeJupyter = require 'transformime-jupyter-transformers'
+
+SVGTransform = (mimetype, value, document) ->
+    el = document.createElement 'img'
+    el.setAttribute 'src',
+        "data:image/svg+xml;base64," + (new Buffer value).toString 'base64'
+    return el
+SVGTransform.mimetype = 'image/svg+xml'
+
 transformer = new transformime.Transformime [
     transformime.TextTransformer,
     transformimeJupyter.PDFTransform,
     transformime.ImageTransformer,
-    transformimeJupyter.SVGTransform,
+    SVGTransform,
     transformimeJupyter.consoleTextTransform,
     transformimeJupyter.LaTeXTransform,
     transformimeJupyter.markdownTransform,
