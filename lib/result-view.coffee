@@ -1,6 +1,5 @@
 {CompositeDisposable} = require 'atom'
 _ = require 'lodash'
-stripAnsi = require('strip-ansi')
 
 module.exports =
 class ResultView
