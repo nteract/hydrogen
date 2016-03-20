@@ -127,10 +127,8 @@
 
     .bubble-error-container {
         @error-base-color: average(@syntax-text-color, red);
-        color: @error-base-color;
-        // font-size: @font-size * 7/8;
 
-	pre {
+        pre {
             font-size: @font-size;
 
             color: @error-base-color;
@@ -138,7 +136,11 @@
 
             margin: 0;
             padding: 0;
-	}
+
+            span {
+                color: @error-base-color !important;
+            }
+        }
     }
 
     .bubble-status-container::before {

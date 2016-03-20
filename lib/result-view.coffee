@@ -1,6 +1,5 @@
 {CompositeDisposable} = require 'atom'
 _ = require 'lodash'
-stripAnsi = require('strip-ansi')
 
 module.exports =
 class ResultView
@@ -218,7 +217,6 @@ SVGTransform = (mimetype, value, document) ->
 SVGTransform.mimetype = 'image/svg+xml'
 
 transformer = new transformime.Transformime [
-    transformime.TextTransformer,
     transformimeJupyter.PDFTransform,
     transformime.ImageTransformer,
     SVGTransform,
@@ -227,6 +225,9 @@ transformer = new transformime.Transformime [
     transformimeJupyter.markdownTransform,
     transformime.HTMLTransformer,
     transformimeJupyter.ScriptTransform
+]
+transformimeJupyter.consoleTextTransform.mimetype = [
+    'jupyter/console-text', 'text/plain'
 ]
 transform = (mimeBundle) ->
     return transformer.transform mimeBundle, document
