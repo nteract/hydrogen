@@ -385,7 +385,7 @@ class Kernel
 
         result =
             data:
-                'jupyter/console-text': errorString
+                'text/plain': errorString
             type:   'text'
             stream: 'error'
 
