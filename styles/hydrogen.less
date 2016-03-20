@@ -16,7 +16,6 @@
     padding-right: 2px;
     border-radius: 3px;
     white-space: pre;
-    background-color: @bubble-background;
     display: inline-block;
 
     &.rich {
@@ -46,6 +45,7 @@
     }
 
     &:not(.multiline) {
+        background-color: @bubble-background;
         .bubble-output-container {
             display: inline;
             pre {
@@ -59,9 +59,13 @@
     }
 
     &.multiline {
-        border: none;
         padding-right: 0px;
-        display: inline-flex;
+        display: flex;
+
+        .bubble-output-container {
+            box-shadow: 0 0 2px 1px rgba(0,0,0,0.3);
+            border-radius: 3px 0 0 3px;
+        }
     }
 
     &.multiline:not(.rich) {
@@ -87,11 +91,18 @@
     .bubble-output-container {
         color: lighten(@syntax-text-color, 10%);
         background-color: @bubble-background;
+        border-radius: 3px;
 
         display: inline-block;
-        max-width: 500px;
-        max-height: 500px;
+        max-height: 250px;
+        max-width: 95%;
         overflow: scroll;
+    }
+
+    &.rich {
+        .bubble-output-container{
+            max-height: 500px;
+        }
     }
 
     .bubble-result-container > * {
@@ -157,7 +168,7 @@
         flex-direction: column;
         width: 30px;
         background-color: darken(@bubble-background, 10%);
-        box-shadow: inset 1px 0px 1px 0px rgba(0,0,0,0.4);
+        box-shadow: 0 0 2px 1px rgba(0,0,0,0.3);
         border-radius: 0 3px 3px 0;
 
         .action-button {
@@ -214,7 +225,7 @@
     height: 100%;
     width: 300px;
     min-width: 200px;
-    overflow-y: overlay;
+    overflow-y: scroll;
     padding: 10px;
     border-left: 1px solid @base-border-color;
 
@@ -325,7 +336,6 @@
                 display: flex;
                 flex-direction: column;
                 width: 30px;
-                border-radius: 0 3px 3px 0;
             }
         }
 
@@ -343,6 +353,10 @@
             max-height: inherit;
 
             position: relative;
+            pre {
+                font-size: inherit;
+                display: block;
+            }
 
             video, img, svg {
                 display: block;
@@ -352,7 +366,10 @@
         }
 
         .bubble-error-container {
-            // font-size: @font-size;
+            pre {
+                font-size: inherit;
+                display: block;
+            }
         }
     }
 }
