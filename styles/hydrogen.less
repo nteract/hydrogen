@@ -21,6 +21,10 @@
     &.rich {
         border: none;
 
+        .bubble-output-container{
+            max-height: 500px;
+        }
+
         &.svg {
             background-color: white;
         }
@@ -46,25 +50,26 @@
 
     &:not(.multiline) {
         background-color: @bubble-background;
+        float: left;
+        margin-left: 20px;
+        box-shadow: 0 0 2px 1px rgba(0,0,0,0.2);
         .bubble-output-container {
             display: inline;
             pre {
                 display: inline;
                 font-size: inherit;
+                cursor: pointer;
             }
-        }
-        .bubble-result-container{
-            cursor: pointer;
         }
     }
 
     &.multiline {
         padding-right: 0px;
         display: flex;
+        margin: 0px !important;
 
         .bubble-output-container {
-            box-shadow: 0 0 2px 1px rgba(0,0,0,0.3);
-            border-radius: 3px 0 0 3px;
+            box-shadow: 0 0 2px 1px rgba(0,0,0,0.2);
         }
     }
 
@@ -74,6 +79,7 @@
         }
 
         .bubble-output-container {
+            border-radius: 3px 0 0 3px;
             padding: 3px;
             padding-right: 10px;
             overflow: auto;
@@ -97,12 +103,6 @@
         max-height: 250px;
         max-width: 95%;
         overflow: scroll;
-    }
-
-    &.rich {
-        .bubble-output-container{
-            max-height: 500px;
-        }
     }
 
     .bubble-result-container > * {
@@ -318,6 +318,7 @@
     .output-bubble {
         position: static;
         display: flex;
+        float: none;
         border-radius: 3px;
         margin: 0px;
         font-size: @font-size * 5/6;
@@ -354,6 +355,7 @@
 
             position: relative;
             pre {
+                padding: 3px;
                 font-size: inherit;
                 display: block;
             }

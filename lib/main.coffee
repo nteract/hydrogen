@@ -158,6 +158,9 @@ module.exports = Hydrogen =
         view.spinner.setAttribute('style',
                 "width: #{lineHeight + 2}px; height: #{lineHeight - 4}px;")
         view.statusContainer.setAttribute('style', "height: #{lineHeight}px")
+        element.setAttribute('style',
+                "margin-left: #{lineLength + 1}ch;
+                margin-top: -#{lineHeight}px")
 
         @editor.decorateMarker marker,
             type: 'block'
