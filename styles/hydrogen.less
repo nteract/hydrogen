@@ -51,7 +51,6 @@
     &:not(.multiline) {
         background-color: @bubble-background;
         float: left;
-        margin-left: 20px;
         box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
         .bubble-output-container {
             display: inline;
@@ -81,8 +80,8 @@
         .bubble-output-container {
             border-radius: 3px 0 0 3px;
             padding: 3px;
-            padding-right: 10px;
-            overflow: auto;
+            padding-right: 7px;
+            overflow: overlay;
         }
 
         .rich-close-button::before {
@@ -119,7 +118,6 @@
         pre {
             font-size: @font-size;
             font-family: inherit;
-            display: inline-block;
 
             color: lighten(@syntax-text-color, 10%);
             background-color: @bubble-background;
@@ -143,7 +141,6 @@
         pre {
             font-size: @font-size;
             font-family: inherit;
-            display: inline-block;
 
             color: @error-base-color;
             background-color: @bubble-background;
@@ -173,7 +170,6 @@
         .action-button {
             @separator-color: fade(darken(@bubble-background, 20%), 20%);
             flex: none;
-
 
             border-top: 1px solid @separator-color;
 
@@ -315,6 +311,9 @@
     }
 
     .output-bubble {
+        @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
+        @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
+        @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
         position: static;
         display: flex;
         float: none;
@@ -333,13 +332,16 @@
 
         &:not(.rich) {
             .bubble-action-panel {
+                box-shadow: none;
                 display: flex;
                 flex-direction: column;
                 width: 30px;
+                background-color: darken(@bubble-background, 10%);
             }
         }
 
         .bubble-output-container {
+            box-shadow: 1px 0 2px 0 rgba(0,0,0,0.3);
             display: inline-block;
             width: 100%;
             max-height: 400px;
@@ -369,7 +371,6 @@
         .bubble-error-container {
             pre {
                 font-size: inherit;
-                display: block;
             }
         }
     }
