@@ -216,7 +216,11 @@ SVGTransform = (mimetype, value, document) ->
     return el
 SVGTransform.mimetype = 'image/svg+xml'
 
-transformer = new transformime.Transformime [
+transformimeJupyter.consoleTextTransform.mimetype = [
+    'jupyter/console-text', 'text/plain'
+]
+
+transform = transformime.createTransform [
     transformimeJupyter.PDFTransform,
     transformime.ImageTransformer,
     SVGTransform,
@@ -226,8 +230,3 @@ transformer = new transformime.Transformime [
     transformime.HTMLTransformer,
     transformimeJupyter.ScriptTransform
 ]
-transformimeJupyter.consoleTextTransform.mimetype = [
-    'jupyter/console-text', 'text/plain'
-]
-transform = (mimeBundle) ->
-    return transformer.transform mimeBundle, document
