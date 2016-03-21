@@ -16,9 +16,14 @@
     padding-right: 2px;
     border-radius: 3px;
     white-space: pre;
+    display: inline-block;
 
     &.rich {
         border: none;
+
+        .bubble-output-container{
+            max-height: 500px;
+        }
 
         &.svg {
             background-color: white;
@@ -44,24 +49,27 @@
     }
 
     &:not(.multiline) {
+        background-color: @bubble-background;
+        float: left;
+        box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
         .bubble-output-container {
             display: inline;
-        }
-        .bubble-result-container{
-            cursor: pointer;
+            pre {
+                display: inline;
+                font-size: inherit;
+                cursor: pointer;
+            }
         }
     }
 
     &.multiline {
-        border: none;
         padding-right: 0px;
         display: flex;
+        margin: 0px !important;
 
-        font-size: @font-size * 5/6;
-
-        // .bubble-result-container {
-        //     font-size: @font-size * 7/8;
-        // }
+        .bubble-output-container {
+            box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+        }
     }
 
     &.multiline:not(.rich) {
@@ -70,9 +78,10 @@
         }
 
         .bubble-output-container {
+            border-radius: 3px 0 0 3px;
             padding: 3px;
-            padding-right: 10px;
-            overflow: auto;
+            padding-right: 7px;
+            overflow: overlay;
         }
 
         .rich-close-button::before {
@@ -85,12 +94,13 @@
     }
 
     .bubble-output-container {
-        color: lighten(@syntax-text-color, 20%);
+        color: lighten(@syntax-text-color, 10%);
         background-color: @bubble-background;
+        border-radius: 3px;
 
         display: inline-block;
-        max-width: 500px;
-        max-height: 500px;
+        max-height: 250px;
+        max-width: 95%;
         overflow: scroll;
     }
 
@@ -105,11 +115,11 @@
     .bubble-result-container {
         width: inherit;
         height: inherit;
-
         pre {
             font-size: @font-size;
+            font-family: inherit;
 
-            color: lighten(@syntax-text-color, 20%);
+            color: lighten(@syntax-text-color, 10%);
             background-color: @bubble-background;
 
             margin: 0;
@@ -130,6 +140,7 @@
 
         pre {
             font-size: @font-size;
+            font-family: inherit;
 
             color: @error-base-color;
             background-color: @bubble-background;
@@ -153,14 +164,12 @@
         display: none;
         flex-direction: column;
         width: 30px;
-        background-color: darken(@bubble-background, 10%);
-        box-shadow: inset 1px 0px 1px 0px rgba(0,0,0,0.4);
+        box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
         border-radius: 0 3px 3px 0;
 
         .action-button {
             @separator-color: fade(darken(@bubble-background, 20%), 20%);
             flex: none;
-
 
             border-top: 1px solid @separator-color;
 
@@ -211,7 +220,7 @@
     height: 100%;
     width: 300px;
     min-width: 200px;
-    overflow-y: overlay;
+    overflow-y: scroll;
     padding: 10px;
     border-left: 1px solid @base-border-color;
 
@@ -302,8 +311,12 @@
     }
 
     .output-bubble {
+        @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
+        @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
+        @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
         position: static;
         display: flex;
+        float: none;
         border-radius: 3px;
         margin: 0px;
         font-size: @font-size * 5/6;
@@ -319,14 +332,16 @@
 
         &:not(.rich) {
             .bubble-action-panel {
+                box-shadow: none;
                 display: flex;
                 flex-direction: column;
                 width: 30px;
-                border-radius: 0 3px 3px 0;
+                background-color: darken(@bubble-background, 10%);
             }
         }
 
         .bubble-output-container {
+            box-shadow: 1px 0 2px 0 rgba(0,0,0,0.3);
             display: inline-block;
             width: 100%;
             max-height: 400px;
@@ -340,6 +355,11 @@
             max-height: inherit;
 
             position: relative;
+            pre {
+                padding: 3px;
+                font-size: inherit;
+                display: block;
+            }
 
             video, img, svg {
                 display: block;
@@ -349,7 +369,9 @@
         }
 
         .bubble-error-container {
-            // font-size: @font-size;
+            pre {
+                font-size: inherit;
+            }
         }
     }
 }
