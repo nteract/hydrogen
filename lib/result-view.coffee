@@ -213,8 +213,8 @@ SVGTransform = (mimetype, value, document) ->
     container = document.createElement 'div'
     container.innerHTML = value
 
-    svgElement = container.firstElementChild
-    unless svgElement?.tagName is 'svg'
+    svgElement = (container.getElementsByTagName 'svg')[0]
+    unless svgElement?
         throw new Error 'SVGTransform: Error: Failed to create an <svg> element'
 
     return svgElement
