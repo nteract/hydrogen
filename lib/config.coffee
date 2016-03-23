@@ -1,17 +1,8 @@
 module.exports =
-    languageMappings:
-        title: "Language Mappings"
-        description: 'Some packages may change the name of the grammar for
-                      a language (e.g. "Python" -> "Python Django"). That
-                      leaves Hydrogen unable to figure out what kernel to
-                      use for your code.
-
-                      This field should be valid JSON mapping a nonstandard
-                      language name to a standard one, e.g.
-
-                      ```{"Python Django": "python", "Ruby (Rails)": "ruby"}```'
-        type: 'string'
-        default: '{}'
+    autocomplete:
+        title: "Enable Autocomplete"
+        type: 'boolean'
+        default: true
     grammarToKernel:
         description: 'JSON mappings between specific kernel and a
                       language/grammar. This value is updated automatically
@@ -57,10 +48,19 @@ module.exports =
         ```'
         type: 'string'
         default: '{}'
-    autocomplete:
-        title: "Enable Autocomplete"
-        type: 'boolean'
-        default: true
+    languageMappings:
+        title: "Language Mappings"
+        description: 'Some packages may change the name of the grammar for
+                      a language (e.g. "Python" -> "Python Django"). That
+                      leaves Hydrogen unable to figure out what kernel to
+                      use for your code.
+
+                      This field should be valid JSON mapping a nonstandard
+                      language name to a standard one, e.g.
+
+                      ```{"Python Django": "python", "Ruby (Rails)": "ruby"}```'
+        type: 'string'
+        default: '{}'
     startupCode:
         title: "Startup Code"
         description: 'This code will be executed on kernel startup. Format: `{"kernel": "your code \\nmore code"}`. Example: `{"Python 2": "%matplotlib inline"}`'
