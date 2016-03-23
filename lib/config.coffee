@@ -62,3 +62,11 @@ module.exports =
             Example: `{"Python 2": "%matplotlib inline"}`'
         type: 'string'
         default: '{}'
+    kernelNotifications:
+        title: "Enable kernel notifications"
+        description: 'By default, kernel notifications are only displayed in the
+            developer console. This setting defines a RegExp to filter what
+            kernel notifications will also be shown as Atom notification
+            bubbles. Example: `error|warning`'
+        type: 'string'
+        default: '(?!)'

@@ -52,24 +52,39 @@ class Kernel
                 else
                     return arg
 
-        console.log "launching kernel:", commandString, args
+        console.log 'Kernel: Spawning:', commandString, args
         @kernelProcess = child_process.spawn commandString, args,
             cwd: projectPath
 
-        @kernelProcess.stdout.on 'data', (data) ->
-            console.log "kernel process received on stdout:", data.toString()
+        getKernelNotificationsRegExp = ->
+            try
+                pattern = atom.config.get 'Hydrogen.kernelNotifications'
+                flags = 'im'
+                return new RegExp pattern, flags
+            catch err
+                return null
 
-        @kernelProcess.stderr.on 'data', (data, caption) =>
-            detail = data.toString()
-            method = 'addInfo'
-            if /warning/gi.test detail
-                method = 'addWarning'
-            if /error/gi.test detail
-                method = 'addError'
+        @kernelProcess.stdout.on 'data', (data) =>
+            data = data.toString()
 
-            console.error "kernel process received on stderr:", detail
-            atom.notifications[method] "#{@language} Kernel: #{caption}",
-                detail: detail, dismissable: /error/i.test method
+            console.log 'Kernel: stdout:', data
+
+            regexp = getKernelNotificationsRegExp()
+            if regexp?.test data
+                kernelName = @kernelInfo.display_name ? @language
+                atom.notifications.addInfo kernelName + ' kernel:',
+                    detail: data, dismissable: true
+
+        @kernelProcess.stderr.on 'data', (data) =>
+            data = data.toString()
+
+            console.log 'Kernel: stderr:', data
+
+            regexp = getKernelNotificationsRegExp()
+            if regexp?.test data
+                kernelName = @kernelInfo.display_name ? @language
+                atom.notifications.addError kernelName + ' kernel:',
+                    detail: data, dismissable: true
 
     connect: ->
         scheme = @config.signature_scheme.slice 'hmac-'.length
