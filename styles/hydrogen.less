@@ -138,19 +138,21 @@
     .bubble-error-container {
         @error-base-color: average(@syntax-text-color, red);
 
+        &.plain-error {
+            pre {
+                color: @error-base-color;
+            }
+        }
+
         pre {
             font-size: @font-size;
             font-family: inherit;
 
-            color: @error-base-color;
+            color: lighten(@syntax-text-color, 10%);
             background-color: @bubble-background;
 
             margin: 0;
             padding: 0;
-
-            span {
-                color: @error-base-color !important;
-            }
         }
     }
 
