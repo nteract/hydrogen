@@ -138,6 +138,11 @@ class ResultView
 
             container.appendChild htmlElement
 
+            if @errorContainer.getElementsByTagName('span').length is 0
+                @errorContainer.classList.add('plain-error')
+            else
+                @errorContainer.classList.remove('plain-error')
+
         onError = (error) ->
             console.error "ResultView: Rendering error:", error
 
