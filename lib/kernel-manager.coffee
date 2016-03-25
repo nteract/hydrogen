@@ -156,13 +156,6 @@ module.exports = KernelManager =
         kernelInfo = @getKernelInfoForLanguage language
         @startKernel kernelInfo, onStarted
 
-    complete: (language, code, onResults) ->
-        kernel = @getRunningKernelForLanguage(language)
-        if kernel?
-            kernel.complete(code, onResults)
-        else
-            throw "No such kernel!"
-
     inspect: (language, code, cursor_pos, onResults) ->
         kernel = @getRunningKernelForLanguage(language)
         if kernel?

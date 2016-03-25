@@ -34,25 +34,26 @@ module.exports = AutocompleteProvider = do ->
 
         # Required: Return a promise, an array of suggestions, or null.
         getSuggestions: ({editor, bufferPosition, scopeDescriptor, prefix}) ->
-            console.log "suggestions requested for prefix:", prefix
-            prefix = @getPrefix(editor, bufferPosition)
-            console.log "new prefix:", prefix
-            language = editor.getGrammar().name.toLowerCase()
-
-            hasKernel = KernelManager.languageHasRunningKernel(language)
-            if prefix.trim().length < 3 or not hasKernel
+            console.log "getSuggestions: prefix:", prefix
+            prefix = @getPrefix editor, bufferPosition
+            console.log "getSuggestions: new prefix:", prefix
+            if prefix.trim().length < 3
                 return null
-            else
-                new Promise (resolve) ->
-                    KernelManager.complete language, prefix, (matches) ->
-                        matches = _.map matches, (match) ->
-                            text: match
-                            replacementPrefix: prefix
-                            iconHTML: "<img
-                                src='#{__dirname}/../static/logo.svg'
-                                style='width: 100%;'>"
-                        resolve(matches)
-                # resolve([text: 'something'])
+
+            language = editor.getGrammar().name.toLowerCase()
+            kernel = KernelManager.getRunningKernelForLanguage language
+            unless kernel?
+                return null
+
+            return new Promise (resolve) ->
+                kernel.complete prefix, (matches) ->
+                    matches = _.map matches, (match) ->
+                        text: match
+                        replacementPrefix: prefix
+                        iconHTML: "<img
+                            src='#{__dirname}/../static/logo.svg'
+                            style='width: 100%;'>"
+                    resolve(matches)
 
         getPrefix: (editor, bufferPosition) ->
             language = editor.getGrammar().name.toLowerCase()
