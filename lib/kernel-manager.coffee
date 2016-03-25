@@ -41,7 +41,7 @@ module.exports = KernelManager =
 
     getTrueLanguage: (language) ->
         if language?
-            languageMappings = @getLanguageMappings()
+            languageMappings = @getConfigJson 'languageMappings'
             languageMatches = _.filter languageMappings,
                 (trueLanguage, languageKey) ->
                     return languageKey?.toLowerCase() is language.toLowerCase()
@@ -61,8 +61,6 @@ module.exports = KernelManager =
     setConfigJson: (key, value, merge=false) ->
         value = _.merge @getConfigJson(key), value if merge
         atom.config.set "Hydrogen.#{key}", JSON.stringify value
-
-    getLanguageMappings: -> @getConfigJson('languageMappings')
 
     getKernelInfoForLanguage: (grammarLanguage) ->
         kernels = @getAvailableKernels()
