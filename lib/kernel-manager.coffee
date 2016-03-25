@@ -134,7 +134,7 @@ module.exports = KernelManager =
             if startupCode?
                 console.log "executing startup code"
                 startupCode = startupCode + ' \n'
-                @execute kernelInfo.language, startupCode
+                kernel.execute startupCode
             onStarted?(kernel)
 
     startKernelIfNeeded: (language, onStarted) ->
@@ -155,13 +155,6 @@ module.exports = KernelManager =
 
         kernelInfo = @getKernelInfoForLanguage language
         @startKernel kernelInfo, onStarted
-
-    execute: (language, code, onResults) ->
-        kernel = @getRunningKernelForLanguage(language)
-        if kernel?
-            kernel.execute(code, onResults)
-        else
-            throw "No such kernel!"
 
     complete: (language, code, onResults) ->
         kernel = @getRunningKernelForLanguage(language)

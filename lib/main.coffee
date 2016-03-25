@@ -132,7 +132,7 @@ module.exports = Hydrogen =
 
             @clearBubblesOnRow row
             view = @insertResultBubble row
-            KernelManager.execute language, code, (result) ->
+            kernel.execute code, (result) ->
                 view.spin false
                 view.addResult result
 
