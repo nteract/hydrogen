@@ -1,6 +1,7 @@
 _ = require 'lodash'
 child_process = require 'child_process'
 
+Config = require './config'
 ConfigManager = require './config-manager'
 Kernel = require './kernel'
 
@@ -9,9 +10,10 @@ module.exports = KernelManager =
     kernelsUpdatedOnce: false
 
     getAvailableKernels: ->
-        kernels = _.pluck @getConfigJson('kernelspec', {kernelspecs:{}}).kernelspecs, 'spec'
+        kernelspec = Config.getJson 'kernelspec', { kernelspecs:{} }
+        kernels = _.pluck kernelspec.kernelspecs, 'spec'
         @updateKernels() unless @kernelsUpdatedOnce
-        kernels
+        return kernels
 
     updateKernels: ->
       saveKernelsToConfig = (out) =>
@@ -26,7 +28,7 @@ module.exports = KernelManager =
               $ jupyter kernelspec list --json || ipython kernelspec list --json
               """
         if kernelspec?
-          @setConfigJson 'kernelspec', kernelspec
+          Config.setJson 'kernelspec', kernelspec
           atom.notifications.addInfo 'Hydrogen Kernels updated:',
             detail: (_.pluck @getAvailableKernels(), 'display_name').join('\n')
 
@@ -41,7 +43,7 @@ module.exports = KernelManager =
 
     getTrueLanguage: (language) ->
         if language?
-            languageMappings = @getConfigJson 'languageMappings'
+            languageMappings = Config.getJson 'languageMappings'
             languageMatches = _.filter languageMappings,
                 (trueLanguage, languageKey) ->
                     return languageKey?.toLowerCase() is language.toLowerCase()
@@ -50,17 +52,6 @@ module.exports = KernelManager =
                 return languageMatches[0].toLowerCase()
 
         return language
-
-    getConfigJson: (key, _default = {}) ->
-        return _default unless value = atom.config.get "Hydrogen.#{key}"
-        try
-          return JSON.parse value
-        catch error
-          atom.notifications.addError "Your Hydrogen config is broken: #{key}", detail: error
-
-    setConfigJson: (key, value, merge=false) ->
-        value = _.merge @getConfigJson(key), value if merge
-        atom.config.set "Hydrogen.#{key}", JSON.stringify value
 
     getKernelInfoForLanguage: (grammarLanguage) ->
         kernels = @getAvailableKernels()
@@ -82,7 +73,7 @@ module.exports = KernelManager =
         if matchingKernels[0]?
             kernelInfo = matchingKernels[0]
 
-        if display_name = @getConfigJson('grammarToKernel')[grammarLanguage]
+        if display_name = Config.getJson('grammarToKernel')[grammarLanguage]
             kernelInfo = _.filter(
                 matchingKernels,
                 (kernel) -> kernel.display_name is display_name
@@ -113,7 +104,7 @@ module.exports = KernelManager =
         ConfigManager.writeConfigFile (filepath, config) =>
             kernel = new Kernel(kernelInfo, config, filepath)
             @runningKernels[kernelInfo.language.toLowerCase()] = kernel
-            startupCode = @getConfigJson('startupCode')[kernelInfo.display_name]
+            startupCode = Config.getJson('startupCode')[kernelInfo.display_name]
             if startupCode?
                 console.log "executing startup code"
                 startupCode = startupCode + ' \n'

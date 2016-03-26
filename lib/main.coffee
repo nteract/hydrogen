@@ -4,6 +4,7 @@ fs = require 'fs'
 _ = require 'lodash'
 
 
+Config = require './config'
 KernelManager = require './kernel-manager'
 ResultView = require './result-view'
 SignalListView = require './signal-list-view'
@@ -13,12 +14,13 @@ AutocompleteProvider = require './autocomplete-provider'
 Inspector = require './inspector'
 
 module.exports = Hydrogen =
-    config: require './config'
-
+    config: Config.schema
 
     subscriptions: null
+
     statusBarElement: null
     statusBarTile: null
+
     editor: null
     markerBubbleMap: {}
 
@@ -67,7 +69,7 @@ module.exports = Hydrogen =
 
 
     provide: ->
-        if KernelManager.getConfigJson('autocomplete') is true
+        if atom.config.get("Hydrogen.autocomplete") is true
             return AutocompleteProvider
 
     updateCurrentEditor: (currentPaneItem) ->
@@ -115,7 +117,7 @@ module.exports = Hydrogen =
 
             mapping = {}
             mapping[grammar] = kernelInfo.display_name
-            KernelManager.setConfigJson 'grammarToKernel', mapping, true
+            Config.setJson 'grammarToKernel', mapping, true
 
             KernelManager.startKernel kernelInfo
 
