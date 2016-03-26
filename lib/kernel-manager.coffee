@@ -90,9 +90,6 @@ module.exports = KernelManager =
 
         return _.assign kernelInfo, grammarLanguage: grammarLanguage
 
-    languageHasKernel: (language) ->
-        return @getKernelInfoForLanguage(language)?
-
     getRunningKernelForLanguage: (language) ->
         runningKernel = null
 
@@ -129,7 +126,8 @@ module.exports = KernelManager =
     startKernelIfNeeded: (language, onStarted) ->
         console.log "startKernelIfNeeded:", language
 
-        unless @languageHasKernel(language)
+        kernelInfo = @getKernelInfoForLanguage language
+        unless kernelInfo?
             message = "No kernel for language `#{language}` found"
             options =
                 detail: "Check that the language for this file is set in Atom
@@ -142,7 +140,6 @@ module.exports = KernelManager =
             onStarted?(runningKernel)
             return
 
-        kernelInfo = @getKernelInfoForLanguage language
         @startKernel kernelInfo, onStarted
 
     destroyRunningKernelForLanguage: (language) ->
