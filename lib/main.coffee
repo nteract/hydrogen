@@ -99,9 +99,10 @@ module.exports = Hydrogen =
         language = command.language
         grammar = command.grammar
         kernelInfo = command.kernelInfo
+        kernel = KernelManager.getRunningKernelForLanguage language
 
         if request is 'interrupt-kernel'
-            KernelManager.interruptKernelForLanguage language
+            kernel?.interrupt()
 
         else if request is 'restart-kernel'
             KernelManager.destroyKernelForLanguage language

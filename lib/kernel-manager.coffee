@@ -105,11 +105,6 @@ module.exports = KernelManager =
     languageHasRunningKernel: (language) ->
         return @getRunningKernelForLanguage(language)?
 
-    interruptKernelForLanguage: (language) ->
-        kernel = @getRunningKernelForLanguage language
-        if kernel?
-            kernel.interrupt()
-
     destroyKernelForLanguage: (language) ->
         kernel = @getRunningKernelForLanguage language
         if kernel?
