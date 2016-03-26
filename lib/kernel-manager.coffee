@@ -156,12 +156,5 @@ module.exports = KernelManager =
         kernelInfo = @getKernelInfoForLanguage language
         @startKernel kernelInfo, onStarted
 
-    inspect: (language, code, cursor_pos, onResults) ->
-        kernel = @getRunningKernelForLanguage(language)
-        if kernel?
-            kernel.inspect(code, cursor_pos, onResults)
-        else
-            throw "No such kernel!"
-
     destroy: ->
         _.forEach @runningKernels, (kernel) -> kernel.destroy()

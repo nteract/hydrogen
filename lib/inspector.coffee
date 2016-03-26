@@ -8,11 +8,16 @@ module.exports = Inspector =
     inspect: ->
         @editor = atom.workspace.getActiveTextEditor()
         language = @editor.getGrammar().name.toLowerCase()
+        kernel = KernelManager.getRunningKernelForLanguage language
+        unless kernel?
+            atom.notifications.addInfo "No kernel running!"
+            @inspector?.close()
+            return
 
         [code, cursor_pos] = @getCodeToInspect()
 
-        KernelManager.inspect language, code, cursor_pos, (result) =>
-            console.log 'inspect result:', result
+        kernel.inspect code, cursor_pos, (result) =>
+            console.log 'Inspector: Result:', result
             found = result.found
             if found is true
                 onInspectResult = ({mimetype, el}) =>
@@ -29,9 +34,8 @@ module.exports = Inspector =
                 transform(result.data).then onInspectResult, onError
 
             else
-                atom.notifications.addInfo("No introspection available!")
-                if @inspector
-                    @inspector.close()
+                atom.notifications.addInfo "No introspection available!"
+                @inspector?.close()
 
     getCodeToInspect: ->
         if @editor.getSelectedText() != ''
