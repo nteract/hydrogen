@@ -41,7 +41,7 @@ module.exports = KernelManager =
 
     getTrueLanguage: (language) ->
         if language?
-            languageMappings = @getLanguageMappings()
+            languageMappings = @getConfigJson 'languageMappings'
             languageMatches = _.filter languageMappings,
                 (trueLanguage, languageKey) ->
                     return languageKey?.toLowerCase() is language.toLowerCase()
@@ -61,8 +61,6 @@ module.exports = KernelManager =
     setConfigJson: (key, value, merge=false) ->
         value = _.merge @getConfigJson(key), value if merge
         atom.config.set "Hydrogen.#{key}", JSON.stringify value
-
-    getLanguageMappings: -> @getConfigJson('languageMappings')
 
     getKernelInfoForLanguage: (grammarLanguage) ->
         kernels = @getAvailableKernels()
@@ -92,9 +90,6 @@ module.exports = KernelManager =
 
         return _.assign kernelInfo, grammarLanguage: grammarLanguage
 
-    languageHasKernel: (language) ->
-        return @getKernelInfoForLanguage(language)?
-
     getRunningKernelForLanguage: (language) ->
         runningKernel = null
 
@@ -103,20 +98,6 @@ module.exports = KernelManager =
             runningKernel = @runningKernels[trueLanguage]
 
         return runningKernel
-
-    languageHasRunningKernel: (language) ->
-        return @getRunningKernelForLanguage(language)?
-
-    interruptKernelForLanguage: (language) ->
-        kernel = @getRunningKernelForLanguage language
-        if kernel?
-            kernel.interrupt()
-
-    destroyKernelForLanguage: (language) ->
-        kernel = @getRunningKernelForLanguage language
-        if kernel?
-            kernel.destroy()
-            delete @runningKernels[kernel.language]
 
     startKernel: (kernelInfo, onStarted) ->
         console.log "startKernel:", kernelInfo
@@ -136,13 +117,14 @@ module.exports = KernelManager =
             if startupCode?
                 console.log "executing startup code"
                 startupCode = startupCode + ' \n'
-                @execute kernelInfo.language, startupCode
+                kernel.execute startupCode
             onStarted?(kernel)
 
     startKernelIfNeeded: (language, onStarted) ->
         console.log "startKernelIfNeeded:", language
 
-        unless @languageHasKernel(language)
+        kernelInfo = @getKernelInfoForLanguage language
+        unless kernelInfo?
             message = "No kernel for language `#{language}` found"
             options =
                 detail: "Check that the language for this file is set in Atom
@@ -155,29 +137,13 @@ module.exports = KernelManager =
             onStarted?(runningKernel)
             return
 
-        kernelInfo = @getKernelInfoForLanguage language
         @startKernel kernelInfo, onStarted
 
-    execute: (language, code, onResults) ->
-        kernel = @getRunningKernelForLanguage(language)
+    destroyRunningKernelForLanguage: (language) ->
+        kernel = @getRunningKernelForLanguage language
         if kernel?
-            kernel.execute(code, onResults)
-        else
-            throw "No such kernel!"
-
-    complete: (language, code, onResults) ->
-        kernel = @getRunningKernelForLanguage(language)
-        if kernel?
-            kernel.complete(code, onResults)
-        else
-            throw "No such kernel!"
-
-    inspect: (language, code, cursor_pos, onResults) ->
-        kernel = @getRunningKernelForLanguage(language)
-        if kernel?
-            kernel.inspect(code, cursor_pos, onResults)
-        else
-            throw "No such kernel!"
+            kernel.destroy()
+            delete @runningKernels[kernel.language]
 
     destroy: ->
         _.forEach @runningKernels, (kernel) -> kernel.destroy()

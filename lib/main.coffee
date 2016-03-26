@@ -99,17 +99,18 @@ module.exports = Hydrogen =
         language = command.language
         grammar = command.grammar
         kernelInfo = command.kernelInfo
+        kernel = KernelManager.getRunningKernelForLanguage language
 
         if request is 'interrupt-kernel'
-            KernelManager.interruptKernelForLanguage language
+            kernel?.interrupt()
 
         else if request is 'restart-kernel'
-            KernelManager.destroyKernelForLanguage language
+            KernelManager.destroyRunningKernelForLanguage language
             @clearResultBubbles()
             KernelManager.startKernelIfNeeded language
 
         else if request is 'switch-kernel'
-            KernelManager.destroyKernelForLanguage language
+            KernelManager.destroyRunningKernelForLanguage language
             @clearResultBubbles()
 
             mapping = {}
@@ -132,7 +133,7 @@ module.exports = Hydrogen =
 
             @clearBubblesOnRow row
             view = @insertResultBubble row
-            KernelManager.execute language, code, (result) ->
+            kernel.execute code, (result) ->
                 view.spin false
                 view.addResult result
 
