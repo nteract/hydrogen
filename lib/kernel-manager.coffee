@@ -99,9 +99,6 @@ module.exports = KernelManager =
 
         return runningKernel
 
-    languageHasRunningKernel: (language) ->
-        return @getRunningKernelForLanguage(language)?
-
     startKernel: (kernelInfo, onStarted) ->
         console.log "startKernel:", kernelInfo
 
