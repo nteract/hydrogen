@@ -105,12 +105,12 @@ module.exports = Hydrogen =
             kernel?.interrupt()
 
         else if request is 'restart-kernel'
-            KernelManager.destroyKernelForLanguage language
+            KernelManager.destroyRunningKernelForLanguage language
             @clearResultBubbles()
             KernelManager.startKernelIfNeeded language
 
         else if request is 'switch-kernel'
-            KernelManager.destroyKernelForLanguage language
+            KernelManager.destroyRunningKernelForLanguage language
             @clearResultBubbles()
 
             mapping = {}

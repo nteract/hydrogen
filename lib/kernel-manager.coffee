@@ -105,12 +105,6 @@ module.exports = KernelManager =
     languageHasRunningKernel: (language) ->
         return @getRunningKernelForLanguage(language)?
 
-    destroyKernelForLanguage: (language) ->
-        kernel = @getRunningKernelForLanguage language
-        if kernel?
-            kernel.destroy()
-            delete @runningKernels[kernel.language]
-
     startKernel: (kernelInfo, onStarted) ->
         console.log "startKernel:", kernelInfo
 
@@ -150,6 +144,12 @@ module.exports = KernelManager =
 
         kernelInfo = @getKernelInfoForLanguage language
         @startKernel kernelInfo, onStarted
+
+    destroyRunningKernelForLanguage: (language) ->
+        kernel = @getRunningKernelForLanguage language
+        if kernel?
+            kernel.destroy()
+            delete @runningKernels[kernel.language]
 
     destroy: ->
         _.forEach @runningKernels, (kernel) -> kernel.destroy()
