@@ -159,12 +159,11 @@ module.exports = Hydrogen =
         buffer = @editor.getBuffer()
         lineLength = buffer.lineLengthForRow(row)
 
-        marker = @editor.markBufferPosition {
+        marker = @editor.markBufferPosition
             row: row
             column: lineLength
-        }, {
+        ,
             invalidate: 'touch'
-        }
 
         view = new ResultView(marker)
         view.spin(true)
