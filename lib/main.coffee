@@ -11,6 +11,7 @@ WatchSidebar = require './watch-sidebar'
 KernelPicker = require './kernel-picker'
 AutocompleteProvider = require './autocomplete-provider'
 Inspector = require './inspector'
+CellManager = require './cell-manager'
 
 module.exports = Hydrogen =
     config: Config.schema
@@ -31,6 +32,8 @@ module.exports = Hydrogen =
             'hydrogen:run-all': => @runAll()
             'hydrogen:run-all-above': => @runAllAbove()
             'hydrogen:run-and-move-down': => @runAndMoveDown()
+            'hydrogen:run-cell': => @runCell()
+            'hydrogen:run-cell-and-move-down': => @runCellAndMoveDown()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
             'hydrogen:select-kernel': => @showKernelPicker()
@@ -40,6 +43,9 @@ module.exports = Hydrogen =
             'hydrogen:inspect': -> Inspector.inspect()
             'hydrogen:interrupt-kernel': => @handleKernelCommand(command: 'interrupt-kernel')
             'hydrogen:restart-kernel':   => @handleKernelCommand(command: 'restart-kernel')
+            'hydrogen:add-break-point': -> CellManager.addBreakPoint()
+            'hydrogen:remove-all-break-points': -> CellManager.removeAllBreakPoints()
+            'hydrogen:remove-latest-break-point': -> CellManager.removeLatestBreakPoint()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -105,12 +111,12 @@ module.exports = Hydrogen =
             language = KernelManager.getGrammarLanguageFor grammar
         unless kernel
             kernel = KernelManager.getRunningKernelFor language
-           
+
         console.log "handleKernelCommand:", command, grammar, language, kernel
         if kernel
           KernelManager.destroyRunningKernel kernel
         @clearResultBubbles()
-        
+
         if command is 'restart-kernel'
             KernelManager.startKernelFor grammar
         else if command is 'switch-kernel'
@@ -122,7 +128,7 @@ module.exports = Hydrogen =
         grammarLanguage = KernelManager.getGrammarLanguageFor grammar
         kernel = KernelManager.getRunningKernelFor grammarLanguage
         {grammar, grammarLanguage, kernel}
-      
+
     createResultBubble: (code, row) ->
         {kernel, grammar} = @getCurrentKernel()
         if kernel
@@ -263,6 +269,24 @@ module.exports = Hydrogen =
             @createResultBubble code, row
             @moveDown row
 
+    runCell: () ->
+        [startRow, endRow] = CellManager.getCurrentCell()
+        if endRow > startRow
+            for i in [startRow .. endRow - 1] when @blank(endRow)
+                endRow -= 1
+        code = @getRows(startRow, endRow)
+        if code?
+            @createResultBubble code, endRow
+
+    runCellAndMoveDown: () ->
+        [startRow, endRow] = CellManager.getCurrentCell()
+        if endRow > startRow
+            for i in [startRow .. endRow - 1] when @blank(endRow)
+                endRow -= 1
+        code = @getRows(startRow, endRow)
+        if code?
+            @createResultBubble code, endRow
+            @moveDown endRow
 
     removeStatusBarElement: ->
         if @statusBarElement?
@@ -314,7 +338,7 @@ module.exports = Hydrogen =
                   kernelSpec: kernel
                 }
         @kernelPicker.toggle()
-    
+
     showWatchKernelPicker: ->
         unless @watchKernelPicker?
             @watchKernelPicker = new KernelPicker(
