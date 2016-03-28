@@ -116,6 +116,7 @@
     .bubble-result-container {
         width: inherit;
         height: inherit;
+        white-space: nowrap;
         pre {
             font-size: @font-size;
             font-family: inherit;
@@ -133,6 +134,12 @@
 
         video, img, svg {
             display: block;
+        }
+
+        td, th {
+            border: 1px solid darken(@bubble-background, 10%);
+            padding: 0.35em 0.7em;
+            font-size: @font-size;
         }
     }
 
@@ -348,6 +355,7 @@
             max-height: 400px;
             overflow: scroll;
             white-space: pre-wrap;
+            border-radius: 3px 0 0 3px;
         }
 
 
