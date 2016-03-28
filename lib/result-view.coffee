@@ -88,10 +88,6 @@ class ResultView
                 @statusContainer.style.display = 'inline-block'
             return
 
-        console.log "ResultView: Hide status container"
-        @_hasResult = true
-        @statusContainer.style.display = 'none'
-
         if result.stream is 'stderr'
             container = @errorContainer
         else if result.stream is 'stdout'
@@ -102,6 +98,10 @@ class ResultView
             container = @resultContainer
 
         onSuccess = ({mimetype, el}) =>
+            console.log "ResultView: Hide status container"
+            @_hasResult = true
+            @statusContainer.style.display = 'none'
+
             mimeType = mimetype
             htmlElement = el
 
