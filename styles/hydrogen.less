@@ -347,15 +347,19 @@
                 width: 30px;
                 background-color: darken(@bubble-background, 10%);
             }
+
+            .bubble-output-container {
+                border-radius: 3px 0 0 3px;
+            }
         }
 
         .bubble-output-container {
             display: inline-block;
             width: 100%;
+            max-width: 100%;
             max-height: 400px;
             overflow: scroll;
             white-space: pre-wrap;
-            border-radius: 3px 0 0 3px;
         }
 
 
@@ -371,6 +375,8 @@
             }
 
             video, img, svg {
+                height: 100%;
+                width: 100%;
                 display: block;
                 max-width: 100% !important;
                 max-height: 450px !important;
