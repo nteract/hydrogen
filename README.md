@@ -120,7 +120,7 @@ If your code starts getting cluttered up with results, run "Hydrogen: Clear Resu
 
 After you've run some code with Hydrogen, you can use the "Hydrogen: Toggle Watches" command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code.
 
-<img src="http://i.imgur.com/PAQ3Jvf.gif">
+<img width=770 src="https://cloud.githubusercontent.com/assets/13285808/14125700/e5cb587a-f60c-11e5-9c28-5aef83088da2.gif">
 
 **IMPORTANT:** Be careful what you put in your watch expressions. If you write code that mutates state in a watch expression, that code will get run after every execute command and likely result in some _extremely confusing_ bugs.
 
