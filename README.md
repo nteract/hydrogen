@@ -15,6 +15,7 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 - rich media support for plots, images, and video
 - watch expressions let you keep track of variables and re-run snippets after every change
 - completions from the running kernel, just like autocomplete in the Chrome dev tools
+- code can be inspected to show useful information provided by the running kernel
 - one kernel per language (so you can run snippets from several files, all in the same namespace)
 - interrupt or restart the kernel if anything goes wrong
 
@@ -24,7 +25,7 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 
 For all systems, you'll need
 
-- [`npm`](https://docs.npmjs.com/getting-started/installing-node)
+- [Atom](https://atom.io/) `1.6.0+`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software)
 - IPython notebook `pip install ipython[notebook]`
 - Python 2 (for builds - you can still run Python 3 code)
@@ -80,7 +81,7 @@ Tested and works with:
 - [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
 - [IRkernel](https://github.com/IRkernel/IRkernel) (install the "Development" version from `master` — necessary changes haven't gotten released as binaries yet)
 
-But it _should_ work with any kernel — [post an issue](https://github.com/willwhitney/hydrogen/issues) if anything is broken!
+But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages) — [post an issue](https://github.com/willwhitney/hydrogen/issues) if anything is broken!
 
 <img src="http://i.imgur.com/1cGSHzo.png" width=350>
 <img src="http://i.imgur.com/I5kO69B.png" width=350>
@@ -128,7 +129,17 @@ You can re-run the watch expressions by using the normal run shortcut (⌘-⌥-�
 
 If you have multiple kernels running, you can switch between their watch expressions with the "Hydrogen: Select Watch Kernel" command (or just click on the "Kernel: <language>" text).
 
+### Completion
 
+Receive completions from the running kernel.
+
+<img width="416" src="https://cloud.githubusercontent.com/assets/13285808/14108987/35d17fae-f5c0-11e5-9c0b-ee899387f4d9.png">
+
+### Code Introspection
+
+You can use the "Hydrogen: Inspect" command from the Command Palette to get metadata from the kernel about the object under the cursor.
+
+<img width="770" src="https://cloud.githubusercontent.com/assets/13285808/14108719/d72762bc-f5be-11e5-8188-32725e3d2726.png">
 
 ### Managing kernels
 
