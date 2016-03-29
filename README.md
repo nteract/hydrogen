@@ -35,14 +35,14 @@ Each operating system has their own instruction set. Please read on down to save
 
 ##### homebrew on OS X
 
-- [`pkg-config`](http://www.freedesktop.org/wiki/Software/pkg-config/): `brew install pkg-config`
+- [`pkg-config`](https://www.freedesktop.org/wiki/Software/pkg-config/): `brew install pkg-config`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software): `brew install zeromq`
 - [IPython (Jupyter)](http://ipython.org/install.html): needs to be installed and on your `$PATH`. `pip install "ipython[notebook]"`
 
 #### Windows
 
 - You'll need a compiler! [Visual Studio 2013 Community Edition](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx) is required to build zmq.node.
-- Python (tread on your own or install [Anaconda](http://continuum.io/downloads))
+- Python (tread on your own or install [Anaconda](https://www.continuum.io/downloads))
 - [IPython notebook](http://ipython.org/install.html) - If you installed Anaconda, you're already done
 
 After these are installed, you'll likely need to restart your machine (especially after Visual Studio).
@@ -62,12 +62,12 @@ pip install ipython[notebook]
 
 Assuming you followed the dependencies steps above, you can now `apm install hydrogen` (recommended) or search for "hydrogen" in the Install pane of the Atom settings. Note that installing from within Atom will only work if you start Atom from the command line! See [Jank](#Jank).
 
-If your default `python` is 3.x, you need to instead run `PYTHON=python2.7 apm install hydrogen`. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://code.google.com/p/gyp/issues/detail?id=36)
+If your default `python` is 3.x, you need to instead run `PYTHON=python2.7 apm install hydrogen`. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36)
 
 
 ### Troubleshooting
 
-We have a [troubleshooting guide](https://github.com/willwhitney/hydrogen/wiki/Troubleshooting) in the wiki! It's pretty sparse at the moment, so please share how the resolution to any rough spots that you find.
+We have a [troubleshooting guide](https://github.com/nteract/hydrogen/wiki/Troubleshooting) in the wiki! It's pretty sparse at the moment, so please share how the resolution to any rough spots that you find.
 
 ### Kernels
 
@@ -80,7 +80,7 @@ Tested and works with:
 - [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
 - [IRkernel](https://github.com/IRkernel/IRkernel) (install the "Development" version from `master` — necessary changes haven't gotten released as binaries yet)
 
-But it _should_ work with any kernel — [post an issue](https://github.com/willwhitney/hydrogen/issues) if anything is broken!
+But it _should_ work with any kernel — [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 
 <img src="http://i.imgur.com/1cGSHzo.png" width=350>
 <img src="http://i.imgur.com/I5kO69B.png" width=350>
