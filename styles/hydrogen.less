@@ -23,6 +23,7 @@
 
         .bubble-output-container{
             max-height: 500px;
+            border-radius: 3px 0 3px 3px;
         }
 
         &.svg {
@@ -30,19 +31,17 @@
         }
 
         .rich-close-button {
-            z-index: 0;
             &::before {
                 color: @button-text-color;
                 background-color: @bubble-background;
                 display: block;
                 cursor: pointer;
-                border-radius: 50%;
+                border-radius: 0 3px 3px 0;
                 width: 1.5em;
                 height: 1.5em;
                 line-height: 1.5em;
                 text-align: center;
-                box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
-                margin: -50% 0 0 -50%;
+                box-shadow: 0 0 3px 0px rgba(0,0,0,0.3);
             }
         }
     }
