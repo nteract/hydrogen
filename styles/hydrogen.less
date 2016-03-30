@@ -102,7 +102,7 @@
         display: inline-block;
         max-height: 250px;
         max-width: 95%;
-        overflow: scroll;
+        overflow: auto;
     }
 
     .bubble-result-container > * {
@@ -134,6 +134,10 @@
 
         video, img, svg {
             display: block;
+            max-height: 500px !important;
+            max-width: 100% !important;
+            width: unset;
+            height: unset;
         }
 
         td, th {
@@ -357,8 +361,7 @@
             display: inline-block;
             width: 100%;
             max-width: 100%;
-            max-height: 400px;
-            overflow: scroll;
+            max-height: 350px;
             white-space: pre-wrap;
         }
 
@@ -377,9 +380,7 @@
             video, img, svg {
                 height: 100%;
                 width: 100%;
-                display: block;
-                max-width: 100% !important;
-                max-height: 450px !important;
+                max-height: 350px !important;
             }
         }
 
