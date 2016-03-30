@@ -30,12 +30,11 @@
         }
 
         .rich-close-button {
+            z-index: 0;
             &::before {
                 color: @button-text-color;
                 background-color: @bubble-background;
                 display: block;
-                top: -12px;
-                right: -12px;
                 cursor: pointer;
                 border-radius: 50%;
                 width: 1.5em;
@@ -43,7 +42,7 @@
                 line-height: 1.5em;
                 text-align: center;
                 box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
-                margin: 0;
+                margin: -50% 0 0 -50%;
             }
         }
     }
