@@ -141,6 +141,10 @@ class ResultView
             if mimeType is 'image/svg+xml'
                 container.classList.add('svg')
 
+            if mimeType is 'text/markdown'
+                @element.classList.add 'markdown'
+                @element.classList.remove 'rich'
+
             if @errorContainer.getElementsByTagName('span').length is 0
                 @errorContainer.classList.add('plain-error')
             else
