@@ -220,6 +220,7 @@ class ResultView
 
 transformime = require 'transformime'
 transformimeJupyter = require 'transformime-jupyter-transformers'
+marked = require 'marked'
 
 SVGTransform = (mimetype, value, document) ->
     container = document.createElement 'div'
@@ -233,6 +234,19 @@ SVGTransform = (mimetype, value, document) ->
 
 SVGTransform.mimetype = 'image/svg+xml'
 
+MarkdownTransform = (mimetype, value, document) ->
+    container = document.createElement 'div'
+    marked.setOptions
+        renderer: new marked.Renderer()
+        gfm: true
+        tables: true
+        breaks: true
+
+    container.innerHTML = marked(value)
+    return container
+
+MarkdownTransform.mimetype = 'text/markdown'
+
 transformimeJupyter.consoleTextTransform.mimetype = [
     'jupyter/console-text', 'text/plain'
 ]
@@ -243,7 +257,7 @@ transform = transformime.createTransform [
     SVGTransform,
     transformimeJupyter.consoleTextTransform,
     transformimeJupyter.LaTeXTransform,
-    transformimeJupyter.markdownTransform,
+    MarkdownTransform,
     transformime.HTMLTransformer,
     transformimeJupyter.ScriptTransform
 ]
