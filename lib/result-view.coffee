@@ -130,6 +130,8 @@ class ResultView
                 @element.classList.add 'rich'
                 @setMultiline true
 
+            # @getAllText must be called after appending the htmlElement
+            # in order to obtain innerText
             container.appendChild htmlElement
 
             if mimeType is 'text/html'
