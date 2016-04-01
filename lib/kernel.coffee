@@ -111,9 +111,12 @@ class Kernel
         @controlSocket.on 'connect', () -> console.log "controlSocket connected"
         @ioSocket.on 'connect', () -> console.log "ioSocket connected"
 
-        @shellSocket.monitor()
-        @controlSocket.monitor()
-        @ioSocket.monitor()
+        try
+            @shellSocket.monitor()
+            @controlSocket.monitor()
+            @ioSocket.monitor()
+        catch err
+            console.log "Kernel:", err
 
     interrupt: ->
         console.log "sending SIGINT"
