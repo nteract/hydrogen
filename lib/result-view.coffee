@@ -130,13 +130,14 @@ class ResultView
                 @element.classList.add 'rich'
                 @setMultiline true
 
+            container.appendChild htmlElement
+
             if mimeType is 'text/html'
-                container.classList.add('html')
+                if @getAllText() isnt ''
+                    @element.classList.remove 'rich'
 
             if mimeType is 'image/svg+xml'
                 container.classList.add('svg')
-
-            container.appendChild htmlElement
 
             if @errorContainer.getElementsByTagName('span').length is 0
                 @errorContainer.classList.add('plain-error')
