@@ -38,7 +38,7 @@
     "lodash": "^3.8.0",
     "transformime": "^2.2.0",
     "transformime-jupyter-transformers": "^0.4.1",
-    "marked": "0.3.5",
+    "transformime-marked": "0.0.1",
     "uuid": "^2.0.1"
   },
   "consumedServices": {
