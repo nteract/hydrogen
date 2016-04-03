@@ -141,6 +141,10 @@ class ResultView
             if mimeType is 'image/svg+xml'
                 container.classList.add('svg')
 
+            if mimeType is 'text/markdown'
+                @element.classList.add 'markdown'
+                @element.classList.remove 'rich'
+
             if @errorContainer.getElementsByTagName('span').length is 0
                 @errorContainer.classList.add('plain-error')
             else
@@ -216,6 +220,7 @@ class ResultView
 
 transformime = require 'transformime'
 transformimeJupyter = require 'transformime-jupyter-transformers'
+MarkdownTransform = require 'transformime-marked'
 
 SVGTransform = (mimetype, value, document) ->
     container = document.createElement 'div'
@@ -239,7 +244,7 @@ transform = transformime.createTransform [
     SVGTransform,
     transformimeJupyter.consoleTextTransform,
     transformimeJupyter.LaTeXTransform,
-    transformimeJupyter.markdownTransform,
+    MarkdownTransform,
     transformime.HTMLTransformer,
     transformimeJupyter.ScriptTransform
 ]
