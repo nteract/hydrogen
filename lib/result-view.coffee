@@ -222,18 +222,6 @@ transformime = require 'transformime'
 transformimeJupyter = require 'transformime-jupyter-transformers'
 MarkdownTransform = require 'transformime-marked'
 
-SVGTransform = (mimetype, value, document) ->
-    container = document.createElement 'div'
-    container.innerHTML = value
-
-    svgElement = (container.getElementsByTagName 'svg')[0]
-    unless svgElement?
-        throw new Error 'SVGTransform: Error: Failed to create an <svg> element'
-
-    return svgElement
-
-SVGTransform.mimetype = 'image/svg+xml'
-
 transformimeJupyter.consoleTextTransform.mimetype = [
     'jupyter/console-text', 'text/plain'
 ]
@@ -241,7 +229,7 @@ transformimeJupyter.consoleTextTransform.mimetype = [
 transform = transformime.createTransform [
     transformimeJupyter.PDFTransform,
     transformime.ImageTransformer,
-    SVGTransform,
+    transformimeJupyter.SVGTransform,
     transformimeJupyter.consoleTextTransform,
     transformimeJupyter.LaTeXTransform,
     MarkdownTransform,
