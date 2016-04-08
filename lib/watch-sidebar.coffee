@@ -20,7 +20,7 @@ class WatchSidebar
         languageDisplay = document.createElement('button')
         languageDisplay.classList.add('btn', 'icon', 'icon-sync')
         languageDisplay.innerText = "Watch: #{@language}"
-        languageDisplay.onclick = =>
+        languageDisplay.onclick = ->
             editor = atom.workspace.getActiveTextEditor()
             editorView = atom.views.getView(editor)
             atom.commands.dispatch(editorView, 'hydrogen:select-watch-kernel')
@@ -95,18 +95,18 @@ class WatchSidebar
         @show()
 
     removeWatch: ->
-      watches = (for v,k in @watchViews
-          name: v.getCode()
-          value: k)
-      WatchesPicker.onConfirmed = (item) =>
-        @watchViews[item.value].destroy()
-        @watchViews.splice item.value, 1
-      WatchesPicker.setItems watches
-      WatchesPicker.toggle()
+        watches = (for v,k in @watchViews
+            name: v.getCode()
+            value: k)
+        WatchesPicker.onConfirmed = (item) =>
+            @watchViews[item.value].destroy()
+            @watchViews.splice item.value, 1
+        WatchesPicker.setItems watches
+        WatchesPicker.toggle()
 
     run: ->
         if @visible
-            _.forEach @watchViews, (watchView) =>
+            _.forEach @watchViews, (watchView) ->
                 watchView.run()
 
     resizeStarted: =>

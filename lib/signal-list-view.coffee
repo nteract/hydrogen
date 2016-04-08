@@ -53,13 +53,13 @@ class SignalListView extends SelectListView
     getSwitchKernelCommands: (language) ->
         kernels = []
         for kernel in KernelManager.getAvailableKernels() when kernel.language is language
-          kernel.grammarLanguage = language
-          kernels.push {
-            name: "Switch to #{kernel.display_name}"
-            value: 'switch-kernel'
-            kernelInfo: kernel
-            grammar: @editor.getGrammar().name.toLowerCase()
-          }
+            kernel.grammarLanguage = language
+            kernels.push {
+                name: "Switch to #{kernel.display_name}"
+                value: 'switch-kernel'
+                kernelInfo: kernel
+                grammar: @editor.getGrammar().name.toLowerCase()
+            }
         kernels
 
     attach: ->

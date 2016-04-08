@@ -1,6 +1,4 @@
 child_process = require 'child_process'
-crypto = require 'crypto'
-fs = require 'fs'
 path = require 'path'
 
 _ = require 'lodash'
