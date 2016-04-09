@@ -75,8 +75,6 @@ module.exports = Inspector =
         if @inspector?
             @inspector.close()
 
-transformer = new transformime.Transformime [
-    transformimeJupyter.consoleTextTransform
+transform = transformime.createTransform [
+    transformimeJupyter.consoleTextTransform,
 ]
-transform = (mimeBundle) ->
-    return transformer.transform mimeBundle, document

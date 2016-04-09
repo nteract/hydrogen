@@ -1,5 +1,4 @@
 {CompositeDisposable} = require 'atom'
-_ = require 'lodash'
 
 module.exports =
 class ResultView
@@ -227,12 +226,9 @@ transformimeJupyter.consoleTextTransform.mimetype = [
 ]
 
 transform = transformime.createTransform [
-    transformimeJupyter.PDFTransform,
     transformime.ImageTransformer,
     transformimeJupyter.SVGTransform,
     transformimeJupyter.consoleTextTransform,
-    transformimeJupyter.LaTeXTransform,
     MarkdownTransform,
     transformime.HTMLTransformer,
-    transformimeJupyter.ScriptTransform
 ]

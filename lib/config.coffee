@@ -1,3 +1,5 @@
+_ = require 'lodash'
+
 module.exports = Config =
     getJson: (key, _default = {}) ->
         return _default unless value = atom.config.get "Hydrogen.#{key}"

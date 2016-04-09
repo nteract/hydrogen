@@ -1,6 +1,5 @@
 {CompositeDisposable} = require 'atom'
 
-fs = require 'fs'
 _ = require 'lodash'
 
 
