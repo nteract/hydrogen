@@ -364,6 +364,9 @@ class Kernel
             else if data.hasOwnProperty 'text/markdown'
                 mime = 'text/markdown'
 
+            else if data.hasOwnProperty 'text/latex'
+                mime = 'text/latex'
+
             else if data.hasOwnProperty 'text/plain'
                 mime = 'text/plain'
 

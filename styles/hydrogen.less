@@ -10,6 +10,7 @@
     @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
     @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
     @button-text-color: lighten(@syntax-text-color, 20%);
+    @error-base-color: average(@syntax-text-color, red);
     color: lighten(@syntax-text-color, 10%);
 
     padding-left: 2px;
@@ -147,11 +148,24 @@
             padding: 0.35em 0.7em;
             font-size: @font-size;
         }
+
+        .MathJax_SVG {
+            display: block !important;
+
+            .noError {
+                padding: 3px;
+                border: none;
+                color: @error-base-color
+            }
+            svg {
+                background-color: unset;
+                margin: 0 !important;
+                padding: 3px;
+            }
+        }
     }
 
     .bubble-error-container {
-        @error-base-color: average(@syntax-text-color, red);
-
         &.plain-error {
             pre {
                 color: @error-base-color;

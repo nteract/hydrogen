@@ -230,5 +230,6 @@ transform = transformime.createTransform [
     transformimeJupyter.SVGTransform,
     transformimeJupyter.consoleTextTransform,
     MarkdownTransform,
+    transformimeJupyter.LaTeXTransform,
     transformime.HTMLTransformer,
 ]
