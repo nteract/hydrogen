@@ -104,9 +104,6 @@ class ResultView
             mimeType = mimetype
             htmlElement = el
 
-            console.log "ResultView: Rendering as MIME", mimeType
-            console.log "ResultView: Rendering as ", htmlElement
-
             if mimeType is 'text/plain'
                 @element.classList.remove 'rich'
 
@@ -129,6 +126,13 @@ class ResultView
                 @element.classList.add 'rich'
                 @setMultiline true
 
+            if mimeType is 'application/pdf'
+                webview = document.createElement('webview')
+                webview.src = htmlElement.href
+                htmlElement = webview
+
+            console.log "ResultView: Rendering as MIME", mimeType
+            console.log "ResultView: Rendering as ", htmlElement
             # @getAllText must be called after appending the htmlElement
             # in order to obtain innerText
             container.appendChild htmlElement
@@ -230,6 +234,7 @@ transform = transformime.createTransform [
     transformimeJupyter.SVGTransform,
     transformimeJupyter.consoleTextTransform,
     MarkdownTransform,
+    transformimeJupyter.PDFTransform,
     transformimeJupyter.LaTeXTransform,
     transformime.HTMLTransformer,
 ]
