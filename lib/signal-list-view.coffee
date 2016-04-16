@@ -11,12 +11,12 @@ class SignalListView extends SelectListView
 
         @basicCommands = [
             {
-                name: "Interrupt"
+                name: 'Interrupt'
                 value: 'interrupt-kernel'
                 language: null
             },
             {
-                name: "Restart"
+                name: 'Restart'
                 value: 'restart-kernel'
                 language: null
             },
@@ -26,6 +26,43 @@ class SignalListView extends SelectListView
         @addClass('kernel-signal-selector')
         @list.addClass('mark-active')
         @setItems([])
+
+    toggle: ->
+        if @panel?
+            @cancel()
+        else if @editor = atom.workspace.getActiveTextEditor()
+            @attach()
+
+    attach: ->
+        @storeFocusedElement()
+        @panel ?= atom.workspace.addModalPanel(item: @)
+        @focusFilterEditor()
+        language = @editor.getGrammar().name.toLowerCase()
+        language = KernelManager.getTrueLanguage(language)
+        kernel = KernelManager.getRunningKernelForLanguage(language)
+
+        return @setItems [] unless kernel?
+
+        commands = _.map _.cloneDeep(@basicCommands), (command) ->
+            command.name = _.capitalize(language) + ' kernel: ' + command.name
+            command.language = language
+            return command
+        @setItems _.union commands, @getSwitchKernelCommands(language)
+
+    getSwitchKernelCommands: (language) ->
+        kernels = []
+        for kernel in KernelManager.getAvailableKernels() when kernel.language is language
+            kernel.grammarLanguage = language
+            kernels.push {
+                name: "Switch to #{kernel.display_name}"
+                value: 'switch-kernel'
+                kernelInfo: kernel
+                grammar: @editor.getGrammar().name.toLowerCase()
+            }
+        kernels
+
+    getEmptyMessage: ->
+        'No running kernels for this file type.'
 
     getFilterKey: ->
         'name'
@@ -44,45 +81,8 @@ class SignalListView extends SelectListView
         @editor = null
 
     confirmed: (item) ->
-        console.log "Selected command:", item
+        console.log 'Selected command:', item
 
         if @onConfirmed?
             @onConfirmed(item)
         @cancel()
-
-    getSwitchKernelCommands: (language) ->
-        kernels = []
-        for kernel in KernelManager.getAvailableKernels() when kernel.language is language
-            kernel.grammarLanguage = language
-            kernels.push {
-                name: "Switch to #{kernel.display_name}"
-                value: 'switch-kernel'
-                kernelInfo: kernel
-                grammar: @editor.getGrammar().name.toLowerCase()
-            }
-        kernels
-
-    attach: ->
-        @storeFocusedElement()
-        @panel ?= atom.workspace.addModalPanel(item: this)
-        @focusFilterEditor()
-        language = @editor.getGrammar().name.toLowerCase()
-        language = KernelManager.getTrueLanguage(language)
-        kernel = KernelManager.getRunningKernelForLanguage(language)
-
-        return @setItems [] unless kernel?
-
-        commands = _.map _.cloneDeep(@basicCommands), (command) ->
-            command.name = _.capitalize(language) + ' kernel: ' + command.name
-            command.language = language
-            return command
-        @setItems _.union commands, @getSwitchKernelCommands(language)
-
-    getEmptyMessage: ->
-        "No running kernels for this file type."
-
-    toggle: ->
-        if @panel?
-            @cancel()
-        else if @editor = atom.workspace.getActiveTextEditor()
-            @attach()
