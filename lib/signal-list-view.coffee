@@ -27,62 +27,78 @@ class SignalListView extends SelectListView
         @list.addClass('mark-active')
         @setItems([])
 
+
     toggle: ->
         if @panel?
             @cancel()
         else if @editor = atom.workspace.getActiveTextEditor()
             @attach()
 
+
     attach: ->
+        # get language from editor
         @storeFocusedElement()
-        @panel ?= atom.workspace.addModalPanel(item: @)
+        @panel ?= atom.workspace.addModalPanel item: @
         @focusFilterEditor()
-        language = @editor.getGrammar().name.toLowerCase()
-        language = KernelManager.getTrueLanguage(language)
-        kernel = KernelManager.getRunningKernelForLanguage(language)
+        grammar = @editor.getGrammar()
+        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
 
-        return @setItems [] unless kernel?
+        # disable all commands if no kernel is running
+        kernel = KernelManager.getRunningKernelFor grammarLanguage
+        unless kernel?
+            return @setItems []
 
-        commands = _.map _.cloneDeep(@basicCommands), (command) ->
-            command.name = _.capitalize(language) + ' kernel: ' + command.name
-            command.language = language
-            return command
-        @setItems _.union commands, @getSwitchKernelCommands(language)
-
-    getSwitchKernelCommands: (language) ->
-        kernels = []
-        for kernel in KernelManager.getAvailableKernels() when kernel.language is language
-            kernel.grammarLanguage = language
-            kernels.push {
-                name: "Switch to #{kernel.display_name}"
-                value: 'switch-kernel'
-                kernelInfo: kernel
-                grammar: @editor.getGrammar().name.toLowerCase()
+        # add basic commands for the current grammar language
+        basicCommands = @basicCommands.map (command) ->
+            return {
+                name: _.capitalize grammarLanguage + ' kernel: ' + command.name
+                value: command.value
+                grammar: grammar
+                language: grammarLanguage
+                kernel: kernel
             }
-        kernels
+
+        # add commands to switch to other kernels
+        kernelSpecs = KernelManager.getAllKernelSpecsFor grammarLanguage
+
+        switchCommands = kernelSpecs.map (spec) ->
+            spec.grammarLanguage = grammarLanguage
+            return {
+                name: 'Switch to ' + spec.display_name
+                value: 'switch-kernel'
+                grammar: grammar
+                language: grammarLanguage
+                kernelSpec: spec
+            }
+
+        @setItems _.union basicCommands, switchCommands
+
+
+    confirmed: (item) ->
+        console.log 'Selected command:', item
+        @onConfirmed?(item)
+        @cancel()
+
 
     getEmptyMessage: ->
         'No running kernels for this file type.'
 
+
     getFilterKey: ->
         'name'
 
+
     destroy: ->
         @cancel()
+
 
     viewForItem: (item) ->
         element = document.createElement('li')
         element.textContent = item.name
         element
 
+
     cancelled: ->
         @panel?.destroy()
         @panel = null
         @editor = null
-
-    confirmed: (item) ->
-        console.log 'Selected command:', item
-
-        if @onConfirmed?
-            @onConfirmed(item)
-        @cancel()

@@ -11,16 +11,15 @@ WatchSidebar = require './watch-sidebar'
 
 module.exports =
 class Kernel
-    constructor: (@kernelInfo, @config, @configPath) ->
-        console.log "Kernel info:", @kernelInfo
+    constructor: (@kernelSpec, @grammar, @config, @configPath) ->
+        console.log "Kernel spec:", @kernelSpec
         console.log "Kernel configuration:", @config
         console.log "Kernel configuration file path:", @configPath
-        @language = @kernelInfo.language.toLowerCase()
+        @language = @kernelSpec.grammarLanguage
         @executionCallbacks = {}
         @watchCallbacks = []
 
-        grammar = @getGrammarForLanguage(@kernelInfo.grammarLanguage)
-        @watchSidebar = new WatchSidebar(this, grammar)
+        @watchSidebar = new WatchSidebar(@)
         @statusView = new StatusView(@language)
 
         projectPath = path.dirname(
@@ -28,7 +27,7 @@ class Kernel
         )
 
         @connect()
-        if @language == 'python' and not @kernelInfo.argv?
+        if @language == 'python' and not @kernelSpec.argv?
             commandString = "ipython"
             args = [
                 "kernel",
@@ -42,8 +41,8 @@ class Kernel
                 ]
 
         else
-            commandString = _.first(@kernelInfo.argv)
-            args = _.rest(@kernelInfo.argv)
+            commandString = _.first(@kernelSpec.argv)
+            args = _.rest(@kernelSpec.argv)
             args = _.map args, (arg) =>
                 if arg == '{connection_file}'
                     return @configPath
@@ -69,7 +68,7 @@ class Kernel
 
             regexp = getKernelNotificationsRegExp()
             if regexp?.test data
-                kernelName = @kernelInfo.display_name ? @language
+                kernelName = @kernelSpec.display_name ? @language
                 atom.notifications.addInfo kernelName + ' kernel:',
                     detail: data, dismissable: true
 
@@ -80,7 +79,7 @@ class Kernel
 
             regexp = getKernelNotificationsRegExp()
             if regexp?.test data
-                kernelName = @kernelInfo.display_name ? @language
+                kernelName = @kernelSpec.display_name ? @language
                 atom.notifications.addError kernelName + ' kernel:',
                     detail: data, dismissable: true
 
@@ -473,16 +472,3 @@ class Kernel
         @ioSocket.close()
 
         @kernelProcess.kill('SIGKILL')
-
-
-    getGrammarForLanguage: (language) ->
-        matchingGrammars = atom.grammars.getGrammars().filter (grammar) ->
-            grammar != atom.grammars.nullGrammar and
-                grammar.name? and
-                grammar.name.toLowerCase? and
-                grammar.name.toLowerCase() == language
-
-        if !matchingGrammars[0]?
-            throw new Error "No grammar found for language #{language}"
-        else
-            return matchingGrammars[0]

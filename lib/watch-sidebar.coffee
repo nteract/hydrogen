@@ -7,9 +7,9 @@ WatchesPicker = require './watches-picker'
 
 module.exports =
 class WatchSidebar
-    constructor: (@kernel, @grammar) ->
+    constructor: (@kernel) ->
         KernelManager = require './kernel-manager'
-        @language = KernelManager.getTrueLanguage(@grammar.name)
+        @language = KernelManager.getGrammarLanguageFor @kernel.grammar
 
         @element = document.createElement('div')
         @element.classList.add('hydrogen', 'watch-sidebar')
@@ -38,8 +38,6 @@ class WatchSidebar
         @tooltips.add atom.tooltips.add(@toggleButton, {title: "Toggle Watches"})
         @tooltips.add atom.tooltips.add(languageDisplay, {title: "Change Watch Kernel"})
         @tooltips.add atom.tooltips.add(@removeButton, {title: "Remove Watch"})
-
-        # watch = new WatchView(@kernel, @grammar)
 
 
         @watchesContainer = document.createElement('div')
@@ -79,7 +77,7 @@ class WatchSidebar
     createWatch: ->
         watch = _.last @watchViews
         if not watch or watch.getCode().replace /\s/g, '' != ''
-            watch = new WatchView(@kernel, @grammar)
+            watch = new WatchView(@kernel)
             @watchViews.push watch
             @watchesContainer.appendChild watch.element
         watch
