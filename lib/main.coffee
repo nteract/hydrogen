@@ -36,7 +36,7 @@ module.exports = Hydrogen =
             'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
-            'hydrogen:update-kernels': -> KernelManager.updateKernels()
+            'hydrogen:update-kernels': -> KernelManager.updateKernelSpecs()
             'hydrogen:inspect': -> Inspector.inspect()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
@@ -45,9 +45,11 @@ module.exports = Hydrogen =
             'hydrogen:close-inspector': -> Inspector.closeInspector()
 
         @subscriptions.add(atom.workspace.observeActivePaneItem(
-            @updateCurrentEditor.bind(this)))
+            @updateCurrentEditor.bind(@)))
 
         @editor = atom.workspace.getActiveTextEditor()
+
+        KernelManager.updateKernelSpecs()
 
 
     deactivate: ->
@@ -79,9 +81,10 @@ module.exports = Hydrogen =
 
         @editor = currentPaneItem
 
-        language = @editor.getGrammar?()?.name.toLowerCase()
-        if language?
-            kernel = KernelManager.getRunningKernelForLanguage language
+        grammar = @editor.getGrammar?()
+        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+        if grammarLanguage?
+            kernel = KernelManager.getRunningKernelFor grammarLanguage
 
         if kernel?
             @setStatusBarElement kernel.statusView.getElement()
@@ -91,52 +94,55 @@ module.exports = Hydrogen =
     showKernelCommands: ->
         unless @signalListView?
             @signalListView = new SignalListView()
-            @signalListView.onConfirmed = @handleKernelCommand.bind(this)
+            @signalListView.onConfirmed = @handleKernelCommand.bind(@)
         @signalListView.toggle()
 
     handleKernelCommand: (command) ->
         console.log "handleKernelCommand:", command
+
         request = command.value
-        language = command.language
-        grammar = command.grammar
-        kernelInfo = command.kernelInfo
-        kernel = KernelManager.getRunningKernelForLanguage language
 
         if request is 'interrupt-kernel'
-            kernel?.interrupt()
+            KernelManager.destroyRunningKernel command.kernel
 
         else if request is 'restart-kernel'
-            KernelManager.destroyRunningKernelForLanguage language
+            KernelManager.destroyRunningKernel command.kernel
             @clearResultBubbles()
-            KernelManager.startKernelIfNeeded language
+            KernelManager.startKernelFor command.grammar
 
         else if request is 'switch-kernel'
-            KernelManager.destroyRunningKernelForLanguage language
+            kernel = KernelManager.getRunningKernelFor command.language
+            KernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-
-            mapping = {}
-            mapping[grammar] = kernelInfo.display_name
-            Config.setJson 'grammarToKernel', mapping, true
-
-            KernelManager.startKernel kernelInfo
+            KernelManager.startKernel command.kernelSpec, command.grammar
 
     createResultBubble: (code, row) ->
-        language = @editor.getGrammar().name.toLowerCase()
+        grammar = @editor.getGrammar()
+        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+        kernel = KernelManager.getRunningKernelFor grammarLanguage
 
-        KernelManager.startKernelIfNeeded language, (kernel) =>
-            unless @watchSidebar?
-                @setWatchSidebar kernel.watchSidebar
-            else if @watchSidebar.element.contains document.activeElement
-                @watchSidebar.run()
-                return
+        if kernel
+            @_createResultBubble kernel, code, row
+            return
 
-            @setStatusBarElement kernel.statusView.getElement()
+        KernelManager.startKernelFor grammar, (kernel) =>
+            @_createResultBubble kernel, code, row
 
-            @clearBubblesOnRow row
-            view = @insertResultBubble row
-            kernel.execute code, (result) ->
-                view.spin false
-                view.addResult result
+
+    _createResultBubble: (kernel, code, row) ->
+        unless @watchSidebar?
+            @setWatchSidebar kernel.watchSidebar
+        else if @watchSidebar.element.contains document.activeElement
+            @watchSidebar.run()
+            return
+
+        @setStatusBarElement kernel.statusView.getElement()
+
+        @clearBubblesOnRow row
+        view = @insertResultBubble row
+        kernel.execute code, (result) ->
+            view.spin false
+            view.addResult result
 
 
     insertResultBubble: (row) ->
@@ -285,7 +291,7 @@ module.exports = Hydrogen =
 
     setWatchSidebar: (sidebar) ->
         console.log "setting watch sidebar"
-        if @watchSidebar? and @watchSidebar != sidebar and @watchSidebar.visible
+        if @watchSidebar isnt sidebar and @watchSidebar?.visible
             @watchSidebar.hide()
             @watchSidebar = sidebar
             @watchSidebar.show()
@@ -295,17 +301,9 @@ module.exports = Hydrogen =
     showWatchLanguagePicker: ->
         unless @watchLanguagePicker?
             @watchLanguagePicker = new WatchLanguagePicker()
-            @watchLanguagePicker.onConfirmed =
-                    @handleWatchLanguageCommand.bind(this)
+            @watchLanguagePicker.onConfirmed = (command) =>
+                @setWatchSidebar command.kernel.watchSidebar
         @watchLanguagePicker.toggle()
-
-    handleWatchLanguageCommand: (command) ->
-        kernel = KernelManager.getRunningKernelForLanguage(command.value)
-        @setWatchSidebar(kernel.watchSidebar)
-
-    # updateWatches: ->
-    #     if @watchSidebar?
-    #         @watchSidebar.run()
 
     findCodeBlock: (runAllAbove = false) ->
         buffer = @editor.getBuffer()

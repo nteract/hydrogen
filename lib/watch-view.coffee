@@ -5,7 +5,7 @@ ResultView = require './result-view'
 module.exports =
 class WatchView
 
-    constructor: (@kernel, @grammar) ->
+    constructor: (@kernel) ->
         @element = document.createElement('div')
         @element.classList.add('hydrogen', 'watch-view')
 
@@ -13,7 +13,7 @@ class WatchView
         @inputElement.element.classList.add('watch-input')
 
         @inputEditor = @inputElement.getModel()
-        @inputEditor.setGrammar(@grammar)
+        @inputEditor.setGrammar(@kernel.grammar)
         @inputEditor.setSoftWrapped(true)
         @inputEditor.setLineNumberGutterVisible(false)
         @inputEditor.moveToTop()

@@ -33,42 +33,27 @@ class SignalListView extends SelectListView
         @editor = null
 
     confirmed: (item) ->
-        console.log "Selected command:", item
-
-        if @onConfirmed?
-            @onConfirmed(item)
+        console.log 'Selected command:', item
+        @onConfirmed?(item)
         @cancel()
 
     attach: ->
-
-
         @storeFocusedElement()
-        @panel ?= atom.workspace.addModalPanel(item: this)
+        @panel ?= atom.workspace.addModalPanel(item: @)
         @focusFilterEditor()
 
-        kernels = KernelManager.getRunningKernels()
+        kernels = KernelManager.getAllRunningKernels()
         @languageOptions = _.map kernels, (kernel) ->
             return {
-                name: kernel.language
+                name: kernel.kernelSpec.display_name
                 value: kernel.language
+                kernel: kernel
             }
-            
+
         @setItems(@languageOptions)
-        # language = @editor.getGrammar().name.toLowerCase()
-        # language = KernelManager.getTrueLanguage(language)
-        # kernel = KernelManager.getRunningKernelForLanguage(language)
-        #
-        # if kernel?
-        #     commands = _.map _.cloneDeep(@basicCommands), (command) ->
-        #         command.name = _.capitalize(language) + ' kernel: ' + command.name
-        #         command.language = language
-        #         return command
-        #     @setItems(commands)
-        # else
-        #     @setItems([])
 
     getEmptyMessage: ->
-        "No running kernels found."
+        'No running kernels found.'
 
     toggle: ->
         if @panel?

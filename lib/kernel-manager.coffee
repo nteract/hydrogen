@@ -6,135 +6,164 @@ ConfigManager = require './config-manager'
 Kernel = require './kernel'
 
 module.exports = KernelManager =
-    runningKernels: {}
-    kernelsUpdatedOnce: false
+    _runningKernels: {}
 
-    getAvailableKernels: ->
-        kernelspec = Config.getJson 'kernelspec', { kernelspecs:{} }
-        kernels = _.pluck kernelspec.kernelspecs, 'spec'
-        @updateKernels() unless @kernelsUpdatedOnce
-        return kernels
 
-    updateKernels: ->
-        saveKernelsToConfig = (out) =>
-            try
-                kernelspec = JSON.parse(out)
-            catch e
-                unless @getAvailableKernels().length
-                    atom.notifications.addError """
-              Can't parse neither 'ipython kernelspecs nor 'jupyter kernelspecs'
-              """, detail: """Use kernelspec option in Hydrogen options OR update
-              your ipython/jupyter to version that supports kernelspec option:
-              $ jupyter kernelspec list --json || ipython kernelspec list --json
-              """
-            if kernelspec?
-                Config.setJson 'kernelspec', kernelspec
-                atom.notifications.addInfo 'Hydrogen Kernels updated:',
-                    detail: (_.pluck @getAvailableKernels(), 'display_name').join('\n')
+    parseKernelSpecSettings: ->
+        settings = Config.getJson 'kernelspec'
 
-        @kernelsUpdatedOnce = true
-        child_process.exec 'jupyter kernelspec list --json --log-level=CRITICAL', (e, stdout, stderr) ->
-            return saveKernelsToConfig stdout unless e
-            child_process.exec 'ipython kernelspec list --json --log-level=CRITICAL', (e, stdout, stderr) ->
-                saveKernelsToConfig stdout
+        unless settings.kernelspecs
+            return {}
 
-    getRunningKernels: ->
-        return _.clone(@runningKernels)
+        # remove invalid entries
+        return _.pick settings.kernelspecs, ({spec}) ->
+            return spec?.language and spec.display_name and spec.argv
 
-    getTrueLanguage: (language) ->
-        if language?
-            languageMappings = Config.getJson 'languageMappings'
-            languageMatches = _.filter languageMappings,
-                (trueLanguage, languageKey) ->
-                    return languageKey?.toLowerCase() is language.toLowerCase()
 
-            if languageMatches[0]?
-                return languageMatches[0].toLowerCase()
+    saveKernelSpecs: (jsonString) ->
+        console.log 'saveKernelSpecs:', jsonString
 
-        return language
+        try
+            newKernelSpecs = JSON.parse(jsonString).kernelspecs
 
-    getKernelInfoForLanguage: (grammarLanguage) ->
-        kernels = @getAvailableKernels()
-        console.log "Available kernels:", kernels
-        if not kernels?
-            return null
-
-        language = @getTrueLanguage(grammarLanguage)
-        console.log "Grammar language:", grammarLanguage
-        console.log "True language:", language
-        if not language?
-            return null
-
-        matchingKernels = _.filter kernels, (kernel) ->
-            kernelLanguage = kernel.language
-            kernelLanguage ?= kernel.display_name
-            return language is kernelLanguage?.toLowerCase()
-
-        if matchingKernels[0]?
-            kernelInfo = matchingKernels[0]
-
-        if display_name = Config.getJson('grammarToKernel')[grammarLanguage]
-            kernelInfo = _.filter(
-                matchingKernels,
-                (kernel) -> kernel.display_name is display_name
-            )[0]
-
-        return _.assign kernelInfo, grammarLanguage: grammarLanguage
-
-    getRunningKernelForLanguage: (language) ->
-        runningKernel = null
-
-        trueLanguage = @getTrueLanguage language
-        if trueLanguage?
-            runningKernel = @runningKernels[trueLanguage]
-
-        return runningKernel
-
-    startKernel: (kernelInfo, onStarted) ->
-        console.log "startKernel:", kernelInfo
-
-        unless kernelInfo?
-            message = "No kernel info for language `#{language}` found"
-            options =
-                detail: "Check that the language for this file is set in Atom
-                         and that you have a Jupyter kernel installed for it."
+        catch e
+            message =
+                'Cannot parse `ipython kernelspecs` or `jupyter kernelspecs`'
+            options = detail:
+                'Use kernelSpec option in Hydrogen or update IPython/Jupyter to
+                a version that supports: `jupyter kernelspec list --json` or
+                `ipython kernelspec list --json`'
             atom.notifications.addError message, options
             return
+
+        unless newKernelSpecs?
+            return
+
+        kernelSpecs = @parseKernelSpecSettings()
+
+        _.assign kernelSpecs, newKernelSpecs
+
+        Config.setJson 'kernelspec', kernelspecs: kernelSpecs
+
+        message = 'Hydrogen Kernels updated:'
+        options = detail: (_.pluck kernelSpecs, 'spec.display_name').join('\n')
+        atom.notifications.addInfo message, options
+
+
+    updateKernelSpecs: ->
+        commands = [
+            'jupyter kernelspec list --json --log-level=CRITICAL',
+            'ipython kernelspec list --json --log-level=CRITICAL',
+        ]
+
+        child_process.exec commands[0], (err, stdout, stderr) =>
+            unless err
+                @saveKernelSpecs stdout
+                return
+
+            console.log 'updateKernelSpecs: `jupyter kernelspec` failed', err
+
+            child_process.exec commands[1], (err, stdout, stderr) =>
+                unless err
+                    @saveKernelSpecs stdout
+                    return
+
+                console.log 'updateKernelSpecs: `ipython kernelspec` failed',
+                    err
+
+
+    getGrammarLanguageFor: (grammar) ->
+        return grammar?.name.toLowerCase()
+
+
+    kernelSpecProvidesGrammarLanguage: (kernelSpec, grammarLanguage) ->
+        kernelLanguage = kernelSpec.language
+        mappedLanguage = Config.getJson('languageMappings')[kernelLanguage]
+
+        if mappedLanguage
+            return mappedLanguage is grammarLanguage
+
+        return kernelLanguage.toLowerCase() is grammarLanguage
+
+
+    getAllKernelSpecs: ->
+        kernelSpecs = _.pluck @parseKernelSpecSettings(), 'spec'
+        return kernelSpecs
+
+
+    getAllKernelSpecsFor: (grammarLanguage) ->
+        unless grammarLanguage?
+            return []
+
+        kernelSpecs = @getAllKernelSpecs().filter (spec) =>
+            return @kernelSpecProvidesGrammarLanguage spec, grammarLanguage
+
+        return kernelSpecs
+
+
+    getKernelSpecFor: (grammarLanguage) ->
+        unless grammarLanguage?
+            return null
+
+        kernelMapping = Config.getJson('kernelMappings')?[grammarLanguage]
+        if kernelMapping?
+            kernelSpecs = @getAllKernelSpecs().filter (spec) ->
+                return spec.display_name is kernelMapping
+        else
+            kernelSpecs = @getAllKernelSpecsFor grammarLanguage
+
+        return kernelSpecs[0]
+
+
+    getAllRunningKernels: ->
+        return _.clone(@_runningKernels)
+
+
+    getRunningKernelFor: (grammarLanguage) ->
+        return @_runningKernels[grammarLanguage]
+
+
+    startKernelFor: (grammar, onStarted) ->
+        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+
+        console.log 'startKernelFor:', grammarLanguage
+
+        kernelSpec = @getKernelSpecFor grammarLanguage
+
+        unless kernelSpec?
+            message = "No kernel for language `#{grammarLanguage}` found"
+            options =
+                detail: 'Check that the language for this file is set in Atom
+                         and that you have a Jupyter kernel installed for it.'
+            atom.notifications.addError message, options
+            return
+
+        @startKernel kernelSpec, grammar, onStarted
+
+
+    startKernel: (kernelSpec, grammar, onStarted) ->
+        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+
+        kernelSpec.grammarLanguage = grammarLanguage
 
         ConfigManager.writeConfigFile (filepath, config) =>
-            kernel = new Kernel(kernelInfo, config, filepath)
-            @runningKernels[kernelInfo.language.toLowerCase()] = kernel
-            startupCode = Config.getJson('startupCode')[kernelInfo.display_name]
+            kernel = new Kernel kernelSpec, grammar, config, filepath
+
+            @_runningKernels[grammarLanguage] = kernel
+
+            startupCode = Config.getJson('startupCode')[kernelSpec.display_name]
             if startupCode?
-                console.log "executing startup code"
+                console.log 'executing startup code'
                 startupCode = startupCode + ' \n'
                 kernel.execute startupCode
+
             onStarted?(kernel)
 
-    startKernelIfNeeded: (language, onStarted) ->
-        console.log "startKernelIfNeeded:", language
 
-        kernelInfo = @getKernelInfoForLanguage language
-        unless kernelInfo?
-            message = "No kernel for language `#{language}` found"
-            options =
-                detail: "Check that the language for this file is set in Atom
-                         and that you have a Jupyter kernel installed for it."
-            atom.notifications.addError message, options
-            return
+    destroyRunningKernel: (kernel) ->
+        delete @_runningKernels[kernel.kernelSpec.grammarLanguage]
+        kernel.destroy()
 
-        runningKernel = @getRunningKernelForLanguage language
-        if runningKernel?
-            onStarted?(runningKernel)
-            return
-
-        @startKernel kernelInfo, onStarted
-
-    destroyRunningKernelForLanguage: (language) ->
-        kernel = @getRunningKernelForLanguage language
-        if kernel?
-            kernel.destroy()
-            delete @runningKernels[kernel.language]
 
     destroy: ->
-        _.forEach @runningKernels, (kernel) -> kernel.destroy()
+        _.forEach @_runningKernels, (kernel) -> kernel.destroy()

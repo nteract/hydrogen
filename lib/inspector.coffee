@@ -7,8 +7,9 @@ KernelManager = require './kernel-manager'
 module.exports = Inspector =
     inspect: ->
         @editor = atom.workspace.getActiveTextEditor()
-        language = @editor.getGrammar().name.toLowerCase()
-        kernel = KernelManager.getRunningKernelForLanguage language
+        grammar = @editor.getGrammar()
+        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+        kernel = KernelManager.getRunningKernelFor grammarLanguage
         unless kernel?
             atom.notifications.addInfo "No kernel running!"
             @inspector?.close()

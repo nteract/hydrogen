@@ -1,13 +1,22 @@
 _ = require 'lodash'
 
+Config = require './config'
 KernelManager = require './kernel-manager'
 
 module.exports = AutocompleteProvider = do ->
-    selectors = _.map KernelManager.getAvailableKernels(), ({language}) ->
-        '.source.' + language
-            .replace 'coffeescript', 'coffee'
-            .replace 'javascript', 'js'
-    selector = selectors.join(', ')
+    languageMappings = Config.getJson 'languageMappings'
+
+    selectors = _.uniq KernelManager.getAllKernelSpecs().map ({language}) ->
+        if language in languageMappings
+            return '.source.' + languageMappings[language].toLowerCase()
+        return '.source.' + language.toLowerCase()
+
+    selector = selectors.join ', '
+        .replace 'coffeescript', 'coffee'
+        .replace 'javascript', 'js'
+
+    console.log 'AutocompleteProvider: selector =', selector
+
     return {
         selector: selector
         disableForSelector: '.comment'
@@ -40,8 +49,9 @@ module.exports = AutocompleteProvider = do ->
             if prefix.trim().length < 3
                 return null
 
-            language = editor.getGrammar().name.toLowerCase()
-            kernel = KernelManager.getRunningKernelForLanguage language
+            grammar = editor.getGrammar()
+            grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+            kernel = KernelManager.getRunningKernelFor grammarLanguage
             unless kernel?
                 return null
 
@@ -56,21 +66,16 @@ module.exports = AutocompleteProvider = do ->
                     resolve(matches)
 
         getPrefix: (editor, bufferPosition) ->
-            language = editor.getGrammar().name.toLowerCase()
-            regex = @getRegexForLanguage(language)
+            grammar = editor.getGrammar()
+            grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+
+            regex = @regexes[grammarLanguage] ? @defaultRegex
 
             # Get the text for the line up to the triggered buffer position
             line = editor.getTextInRange([[bufferPosition.row, 0], bufferPosition])
 
             # Match the regex to the line, and return the match
             line.match(regex)?[0] or ''
-
-        getRegexForLanguage: (language) ->
-            trueLanguage = KernelManager.getTrueLanguage(language)
-            if @regexes[trueLanguage]?
-                return @regexes[trueLanguage]
-            else
-                return @defaultRegex
 
         # (optional): called _after_ the suggestion `replacementPrefix` is replaced
         # by the suggestion `text` in the buffer
