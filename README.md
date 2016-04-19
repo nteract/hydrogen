@@ -6,7 +6,7 @@ This package lets you run your code directly in Atom using any [Jupyter](https:/
 
 Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous feedback and the design of [Light Table](http://lighttable.com/). Running code inline and in real time is a more natural way to develop. By bringing the interactive style of Light Table to the rock-solid usability of Atom, Hydrogen makes it easy to write code the way you want to.
 
-<img src="https://cloud.githubusercontent.com/assets/836375/14054128/bf86cf70-f2a4-11e5-8014-57840c9b7a30.gif" width=600>
+<img src="https://cloud.githubusercontent.com/assets/13285808/14598778/1cff1b32-0554-11e6-8181-504307ca6b56.gif" width=600>
 
 
 ## Features
