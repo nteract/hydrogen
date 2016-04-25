@@ -37,7 +37,7 @@
     "jmp": "0.4.x",
     "lodash": "^3.8.0",
     "transformime": "^2.2.0",
-    "transformime-jupyter-transformers": "^0.6.0",
+    "transformime-jupyter-transformers": "^1.0.0",
     "transformime-marked": "0.0.1",
     "uuid": "^2.0.1"
   },
