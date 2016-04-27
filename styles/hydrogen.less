@@ -90,6 +90,10 @@
         max-height: 500px;
     }
 
+    &.latex .bubble-output-container{
+        padding: 3px;
+    }
+
     .rich-close-button::before {
         display: none;
     }
@@ -149,18 +153,20 @@
             font-size: @font-size;
         }
 
-        .MathJax_SVG {
-            display: block !important;
+        .MathJax_SVG_Display {
+            margin: 0;
+        }
 
+        .MathJax_SVG {
             .noError {
-                padding: 3px;
+                padding: 0;
                 border: none;
                 color: @error-base-color
             }
             svg {
                 background-color: unset;
                 margin: 0 !important;
-                padding: 3px;
+                display: inline;
             }
         }
     }

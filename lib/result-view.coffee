@@ -148,6 +148,9 @@ class ResultView
                 @element.classList.add 'markdown'
                 @element.classList.remove 'rich'
 
+            if mimeType is 'text/latex'
+                @element.classList.add 'latex'
+
             if @errorContainer.getElementsByTagName('span').length is 0
                 @errorContainer.classList.add('plain-error')
             else
