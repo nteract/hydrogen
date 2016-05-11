@@ -219,7 +219,6 @@ class ResultView
         if @marker?
             @marker.destroy()
         @element.innerHTML = ''
-        @element.remove()
 
     getElement: ->
         @element
