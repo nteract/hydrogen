@@ -1,6 +1,5 @@
 {MessagePanelView, PlainMessageView} = require 'atom-message-panel'
 transformime = require 'transformime'
-transformimeJupyter = require 'transformime-jupyter-transformers'
 
 KernelManager = require './kernel-manager'
 
@@ -76,6 +75,4 @@ module.exports = Inspector =
         if @inspector?
             @inspector.close()
 
-transform = transformime.createTransform [
-    transformimeJupyter.consoleTextTransform,
-]
+transform = transformime.createTransform()
