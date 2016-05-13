@@ -224,19 +224,6 @@ class ResultView
         @element
 
 transformime = require 'transformime'
-transformimeJupyter = require 'transformime-jupyter-transformers'
 MarkdownTransform = require 'transformime-marked'
 
-transformimeJupyter.consoleTextTransform.mimetype = [
-    'jupyter/console-text', 'text/plain'
-]
-
-transform = transformime.createTransform [
-    transformime.ImageTransformer,
-    transformimeJupyter.SVGTransform,
-    transformimeJupyter.consoleTextTransform,
-    MarkdownTransform,
-    transformimeJupyter.PDFTransform,
-    transformimeJupyter.LaTeXTransform,
-    transformime.HTMLTransformer,
-]
+transform = transformime.createTransform([MarkdownTransform])
