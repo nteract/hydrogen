@@ -38,8 +38,8 @@ module.exports = Hydrogen =
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': -> KernelManager.updateKernelSpecs()
             'hydrogen:inspect': -> Inspector.inspect()
-            'hydrogen:interrupt-kernel': => @handleKernelCommand(value: 'interrupt-kernel')
-            'hydrogen:restart-kernel': => @handleKernelCommand(value: 'restart-kernel')
+            'hydrogen:interrupt-kernel': => @handleKernelCommand(command: 'interrupt-kernel')
+            'hydrogen:restart-kernel':   => @handleKernelCommand(command: 'restart-kernel')
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -99,7 +99,7 @@ module.exports = Hydrogen =
             @signalListView.onConfirmed = @handleKernelCommand.bind(@)
         @signalListView.toggle()
 
-    handleKernelCommand: ({kernel, value, grammar, language, kernelSpec}) ->
+    handleKernelCommand: ({kernel, command, grammar, language, kernelSpec}) ->
         unless grammar
           grammar = @editor.getGrammar()
         unless language
@@ -107,14 +107,14 @@ module.exports = Hydrogen =
         unless kernel
           kernel = KernelManager.getRunningKernelFor language
            
-        console.log "handleKernelCommand:", value, grammar, language, kernel
+        console.log "handleKernelCommand:", command, grammar, language, kernel
         
         KernelManager.destroyRunningKernel kernel
         @clearResultBubbles()
         
-        if value is 'restart-kernel'
+        if command is 'restart-kernel'
             KernelManager.startKernelFor grammar
-        else if value is 'switch-kernel'
+        else if command is 'switch-kernel'
             KernelManager.startKernel kernelSpec, grammar
 
     createResultBubble: (code, row) ->

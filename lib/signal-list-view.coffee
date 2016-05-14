@@ -76,6 +76,7 @@ class SignalListView extends SelectListView
 
     confirmed: (item) ->
         console.log 'Selected command:', item
+        item.command = item.value
         @onConfirmed?(item)
         @cancel()
 
