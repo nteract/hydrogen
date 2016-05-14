@@ -38,6 +38,8 @@ module.exports = Hydrogen =
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': -> KernelManager.updateKernelSpecs()
             'hydrogen:inspect': -> Inspector.inspect()
+            'hydrogen:interrupt-kernel': => @handleKernelCommand(value: 'interrupt-kernel')
+            'hydrogen:restart-kernel': => @handleKernelCommand(value: 'restart-kernel')
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -97,24 +99,23 @@ module.exports = Hydrogen =
             @signalListView.onConfirmed = @handleKernelCommand.bind(@)
         @signalListView.toggle()
 
-    handleKernelCommand: (command) ->
-        console.log "handleKernelCommand:", command
-
-        request = command.value
-
-        if request is 'interrupt-kernel'
-            KernelManager.destroyRunningKernel command.kernel
-
-        else if request is 'restart-kernel'
-            KernelManager.destroyRunningKernel command.kernel
-            @clearResultBubbles()
-            KernelManager.startKernelFor command.grammar
-
-        else if request is 'switch-kernel'
-            kernel = KernelManager.getRunningKernelFor command.language
-            KernelManager.destroyRunningKernel kernel
-            @clearResultBubbles()
-            KernelManager.startKernel command.kernelSpec, command.grammar
+    handleKernelCommand: ({kernel, value, grammar, language, kernelSpec}) ->
+        unless grammar
+          grammar = @editor.getGrammar()
+        unless language
+          language = KernelManager.getGrammarLanguageFor grammar
+        unless kernel
+          kernel = KernelManager.getRunningKernelFor language
+           
+        console.log "handleKernelCommand:", value, grammar, language, kernel
+        
+        KernelManager.destroyRunningKernel kernel
+        @clearResultBubbles()
+        
+        if value is 'restart-kernel'
+            KernelManager.startKernelFor grammar
+        else if value is 'switch-kernel'
+            KernelManager.startKernel kernelSpec, grammar
 
     createResultBubble: (code, row) ->
         grammar = @editor.getGrammar()
