@@ -8,7 +8,7 @@ KernelManager = require './kernel-manager'
 ResultView = require './result-view'
 SignalListView = require './signal-list-view'
 WatchSidebar = require './watch-sidebar'
-WatchLanguagePicker = require './watch-language-picker'
+KernelPicker = require './kernel-picker'
 AutocompleteProvider = require './autocomplete-provider'
 Inspector = require './inspector'
 
@@ -33,7 +33,8 @@ module.exports = Hydrogen =
             'hydrogen:run-and-move-down': => @runAndMoveDown()
             'hydrogen:show-kernel-commands': => @showKernelCommands()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
-            'hydrogen:select-watch-kernel': => @showWatchLanguagePicker()
+            'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
+            'hydrogen:select-kernel': => @showKernelPicker()
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': -> KernelManager.updateKernelSpecs()
@@ -83,6 +84,7 @@ module.exports = Hydrogen =
 
         @editor = currentPaneItem
 
+        #TODO: use getCurrentKernel
         grammar = @editor.getGrammar?()
         grammarLanguage = KernelManager.getGrammarLanguageFor grammar
         if grammarLanguage?
@@ -101,15 +103,15 @@ module.exports = Hydrogen =
 
     handleKernelCommand: ({kernel, command, grammar, language, kernelSpec}) ->
         unless grammar
-          grammar = @editor.getGrammar()
+            grammar = @editor.getGrammar()
         unless language
-          language = KernelManager.getGrammarLanguageFor grammar
+            language = KernelManager.getGrammarLanguageFor grammar
         unless kernel
-          kernel = KernelManager.getRunningKernelFor language
+            kernel = KernelManager.getRunningKernelFor language
            
         console.log "handleKernelCommand:", command, grammar, language, kernel
-        
-        KernelManager.destroyRunningKernel kernel
+        if kernel
+          KernelManager.destroyRunningKernel kernel
         @clearResultBubbles()
         
         if command is 'restart-kernel'
@@ -117,11 +119,14 @@ module.exports = Hydrogen =
         else if command is 'switch-kernel'
             KernelManager.startKernel kernelSpec, grammar
 
-    createResultBubble: (code, row) ->
+    getCurrentKernel: ->
         grammar = @editor.getGrammar()
         grammarLanguage = KernelManager.getGrammarLanguageFor grammar
         kernel = KernelManager.getRunningKernelFor grammarLanguage
-
+        {grammar, grammarLanguage, kernel}
+      
+    createResultBubble: (code, row) ->
+        {kernel, grammar} = @getCurrentKernel()
         if kernel
             @_createResultBubble kernel, code, row
             return
@@ -299,12 +304,27 @@ module.exports = Hydrogen =
         else
             @watchSidebar = sidebar
 
-    showWatchLanguagePicker: ->
-        unless @watchLanguagePicker?
-            @watchLanguagePicker = new WatchLanguagePicker()
-            @watchLanguagePicker.onConfirmed = (command) =>
+    showKernelPicker: ->
+        unless @kernelPicker?
+            @kernelPicker = new KernelPicker( =>
+              KernelManager.getAllKernelSpecsFor(
+                KernelManager.getGrammarLanguageFor(@editor.getGrammar())
+            ))
+            @kernelPicker.onConfirmed = ({kernel}) =>
+                @handleKernelCommand {
+                  command: 'switch-kernel'
+                  kernelSpec: kernel
+                }
+        @kernelPicker.toggle()
+    
+    showWatchKernelPicker: ->
+        unless @watchKernelPicker?
+            @watchKernelPicker = new KernelPicker(
+              KernelManager.getAllRunningKernels.bind(KernelManager)
+            )
+            @watchKernelPicker.onConfirmed = (command) =>
                 @setWatchSidebar command.kernel.watchSidebar
-        @watchLanguagePicker.toggle()
+        @watchKernelPicker.toggle()
 
     findCodeBlock: (runAllAbove = false) ->
         buffer = @editor.getBuffer()
