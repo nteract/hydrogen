@@ -16,7 +16,7 @@ module.exports = KernelManager =
             return {}
 
         # remove invalid entries
-        return _.pick settings.kernelspecs, ({spec}) ->
+        return _.pickBy settings.kernelspecs, ({spec}) ->
             return spec?.language and spec.display_name and spec.argv
 
 
@@ -46,7 +46,7 @@ module.exports = KernelManager =
         Config.setJson 'kernelspec', kernelspecs: kernelSpecs
 
         message = 'Hydrogen Kernels updated:'
-        options = detail: (_.pluck kernelSpecs, 'spec.display_name').join('\n')
+        options = detail: (_.map kernelSpecs, 'spec.display_name').join('\n')
         atom.notifications.addInfo message, options
 
 
@@ -87,7 +87,7 @@ module.exports = KernelManager =
 
 
     getAllKernelSpecs: ->
-        kernelSpecs = _.pluck @parseKernelSpecSettings(), 'spec'
+        kernelSpecs = _.map @parseKernelSpecSettings(), 'spec'
         return kernelSpecs
 
 

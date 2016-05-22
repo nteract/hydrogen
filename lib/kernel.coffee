@@ -41,8 +41,8 @@ class Kernel
                 ]
 
         else
-            commandString = _.first(@kernelSpec.argv)
-            args = _.rest(@kernelSpec.argv)
+            commandString = _.head(@kernelSpec.argv)
+            args = _.tail(@kernelSpec.argv)
             args = _.map args, (arg) =>
                 if arg == '{connection_file}'
                     return @configPath
