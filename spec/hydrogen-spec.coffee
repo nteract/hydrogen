@@ -1,6 +1,7 @@
 Config = require '../lib/config'
 ConfigManager = require '../lib/config-manager'
 portfinder = require '../lib/find-port'
+KernelManager = require '../lib/kernel-manager'
 
 path = require 'path'
 fs = require 'fs'
@@ -60,3 +61,13 @@ describe "Port finder", ->
             expect(ports[0]).toEqual(60000)
             expect(ports[1]).toMatch(/\d{1,}/)
             expect(ports[2]).toMatch(/\d{1,}/)
+
+describe "Kernel manager", ->
+    it "should update kernelspecs", ->
+        KernelManager.updateKernelSpecs()
+
+        waits(1500)
+        runs ->
+            kernelspec = JSON.parse atom.config.get "Hydrogen.kernelspec"
+            expect(kernelspec).not.toBeUndefined()
+            expect(kernelspec.kernelspecs).not.toBeUndefined()
