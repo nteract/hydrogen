@@ -39,8 +39,8 @@ module.exports = Config =
             title: 'Kernel Specs'
             description: 'This field is populated on every launch or by invoking
             the command `hydrogen:update-kernels`. It contains the JSON string
-            resulting from running `jupyter kernelspecs list --json` or
-            `ipython kernelspecs list --json`. You can also edit this field
+            resulting from running `jupyter kernelspec list --json` or
+            `ipython kernelspec list --json`. You can also edit this field
             and specify custom kernel specs , like this:
             ```
             {
