@@ -1,0 +1,30 @@
+sudo: false
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+
+script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
+
+os:
+  - osx
+
+env:
+  global:
+    - APM_TEST_PACKAGES=""
+
+  matrix:
+    - ATOM_CHANNEL=stable
+
+before_install:
+  - brew update
+  - brew outdated pkg-config || brew upgrade pkg-config
+  - brew install zeromq
+  - wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda info -a
+  - conda install jupyter
