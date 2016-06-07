@@ -306,10 +306,7 @@ module.exports = Hydrogen =
 
     showKernelPicker: ->
         unless @kernelPicker?
-            @kernelPicker = new KernelPicker( =>
-              KernelManager.getAllKernelSpecsFor(
-                KernelManager.getGrammarLanguageFor(@editor.getGrammar())
-            ))
+            @kernelPicker = new KernelPicker KernelManager.getAllKernelSpecs.bind(KernelManager)
             @kernelPicker.onConfirmed = ({kernel}) =>
                 @handleKernelCommand {
                   command: 'switch-kernel'
