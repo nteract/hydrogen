@@ -19,6 +19,10 @@ module.exports = KernelManager =
         return _.pickBy settings.kernelspecs, ({spec}) ->
             return spec?.language and spec.display_name and spec.argv
 
+    setKernelMapping: (kernel, grammar) ->
+        mapping = {}
+        mapping[@getGrammarLanguageFor grammar] = kernel.display_name
+        Config.setJson 'kernelMappings', mapping, true
 
     saveKernelSpecs: (jsonString) ->
         console.log 'saveKernelSpecs:', jsonString
@@ -40,7 +44,6 @@ module.exports = KernelManager =
             return
 
         kernelSpecs = @parseKernelSpecSettings()
-
         _.assign kernelSpecs, newKernelSpecs
 
         Config.setJson 'kernelspec', kernelspecs: kernelSpecs

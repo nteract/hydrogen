@@ -311,6 +311,7 @@ module.exports = Hydrogen =
                 KernelManager.getGrammarLanguageFor(@editor.getGrammar())
             ))
             @kernelPicker.onConfirmed = ({kernel}) =>
+                KernelManager.setKernelMapping kernel, @editor.getGrammar()
                 @handleKernelCommand {
                   command: 'switch-kernel'
                   kernelSpec: kernel
