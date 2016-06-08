@@ -31,7 +31,6 @@ module.exports = Hydrogen =
             'hydrogen:run-all': => @runAll()
             'hydrogen:run-all-above': => @runAllAbove()
             'hydrogen:run-and-move-down': => @runAndMoveDown()
-            'hydrogen:show-kernel-commands': => @showKernelCommands()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
             'hydrogen:select-kernel': => @showKernelPicker()
