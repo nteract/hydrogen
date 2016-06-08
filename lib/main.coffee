@@ -117,6 +117,7 @@ module.exports = Hydrogen =
         if command is 'restart-kernel'
             KernelManager.startKernelFor grammar
         else if command is 'switch-kernel'
+            KernelManager.setKernelMapping kernelSpec, @editor.getGrammar()
             KernelManager.startKernel kernelSpec, grammar
 
     getCurrentKernel: ->
@@ -311,7 +312,6 @@ module.exports = Hydrogen =
                 KernelManager.getGrammarLanguageFor(@editor.getGrammar())
             ))
             @kernelPicker.onConfirmed = ({kernel}) =>
-                KernelManager.setKernelMapping kernel, @editor.getGrammar()
                 @handleKernelCommand {
                   command: 'switch-kernel'
                   kernelSpec: kernel
