@@ -64,11 +64,9 @@ module.exports = Hydrogen =
         @statusBarElement = document.createElement('div')
         @statusBarElement.classList.add('hydrogen')
         @statusBarElement.classList.add('status-container')
-        @statusBarElement.onclick = ->
-            editorView = atom.views.getView atom.workspace.getActiveTextEditor()
-            atom.commands.dispatch(editorView, 'hydrogen:show-kernel-commands')
-        @statusBarTile = statusBar.addLeftTile(item: @statusBarElement,
-                                               priority: 100)
+        @statusBarElement.onclick = @showKernelCommands.bind this
+        @statusBarTile = statusBar.addLeftTile
+          item: @statusBarElement, priority: 100
 
 
     provide: ->
