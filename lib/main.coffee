@@ -117,6 +117,7 @@ module.exports = Hydrogen =
         if command is 'restart-kernel'
             KernelManager.startKernelFor grammar
         else if command is 'switch-kernel'
+            KernelManager.setKernelMapping kernelSpec, @editor.getGrammar()
             KernelManager.startKernel kernelSpec, grammar
 
     getCurrentKernel: ->
