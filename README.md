@@ -169,3 +169,30 @@ Hydrogen atoms make up 90% of Jupiter by volume.
 Plus, it was easy to make a logo.
 
 ![hydrogen logo](https://cdn.rawgit.com/nteract/hydrogen/master/static/logo.svg)
+
+## Development
+#### Quick and dirty setup
+
+`apm develop hydrogen`
+
+This will clone the `hydrogen` repository to `~/github` unless you set the
+`ATOM_REPOS_HOME` environment variable.
+
+#### I already cloned it!
+
+If you cloned it somewhere else, you'll want to use `apm link --dev` within the
+package directory, followed by `apm install` to get dependencies.
+
+### Workflow
+
+After pulling upstream changes, make sure to run `apm update`.
+
+To start hacking, make sure to run `atom --dev` from the package directory.
+Cut a branch while you're working then either submit a Pull Request when done
+or when you want some feedback!
+
+#### Running specs
+
+You can run specs by triggering the `window:run-package-specs` command in Atom. To run tests on the command line use `apm test` within the package directory.
+
+You can learn more about how to write specs [here](http://flight-manual.atom.io/hacking-atom/sections/writing-specs/).
