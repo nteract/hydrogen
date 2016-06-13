@@ -149,8 +149,8 @@ module.exports = KernelManager =
 
         kernelSpec.grammarLanguage = grammarLanguage
 
-        ConfigManager.writeConfigFile (filepath, config) =>
-            kernel = new Kernel kernelSpec, grammar, config, filepath
+        ConfigManager.writeConfigFile (filepath, config, onlyConnect = false) =>
+            kernel = new Kernel kernelSpec, grammar, config, filepath, onlyConnect
 
             @_runningKernels[grammarLanguage] = kernel
 

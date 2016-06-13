@@ -9,18 +9,31 @@ module.exports = ConfigManager =
     fileStoragePath: path.join(__dirname, '..', 'kernel-configs')
 
     writeConfigFile: (onCompleted) ->
-        try
-            fs.mkdirSync(@fileStoragePath)
-        catch e
-            if e.code != 'EEXIST'
-                throw e
-        filename = 'kernel-' + uuid.v4() + '.json'
-        portfinder.findMany 5, (ports) =>
-            config = @buildConfiguration ports
-            configString = JSON.stringify config
-            filepath = path.join(@fileStoragePath, filename)
-            fs.writeFileSync filepath, configString
-            onCompleted filepath, config
+        customKernelConnectionPath = path.join atom.project.rootDirectories[0].path, 'hydrogen', 'kernel', 'hydrogen-kernel.json'
+        fs.access customKernelConnectionPath, (err) =>
+            if err?
+                try
+                    console.log "fileStoragePath: ", @fileStoragePath
+                    fs.mkdirSync(@fileStoragePath)
+                catch e
+                    if e.code != 'EEXIST'
+                        throw e
+                filename = 'kernel-' + uuid.v4() + '.json'
+                portfinder.findMany 5, (ports) =>
+                    config = @buildConfiguration ports
+                    configString = JSON.stringify config
+                    filepath = path.join(@fileStoragePath, filename)
+                    fs.writeFileSync filepath, configString
+                    console.log "Creating kernel connection: ", filepath
+                    onCompleted filepath, config
+            else
+                fs.readFile customKernelConnectionPath, 'utf8', (err, data) ->
+                    unless err?
+                        config = JSON.parse data
+                        console.log "Using custom kernel connection: ", customKernelConnectionPath
+                        atom.notifications.addInfo 'Custom kernel connection:',
+                            detail: "Make sure to manually start the custom kernel that serves the connection in #{customKernelConnectionPath}", dismissable: true
+                        onCompleted customKernelConnectionPath, config, true
 
     buildConfiguration: (ports) ->
         config =

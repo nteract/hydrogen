@@ -11,7 +11,7 @@ WatchSidebar = require './watch-sidebar'
 
 module.exports =
 class Kernel
-    constructor: (@kernelSpec, @grammar, @config, @configPath) ->
+    constructor: (@kernelSpec, @grammar, @config, @configPath, @onlyConnect = false) ->
         console.log "Kernel spec:", @kernelSpec
         console.log "Kernel configuration:", @config
         console.log "Kernel configuration file path:", @configPath
@@ -27,61 +27,65 @@ class Kernel
         )
 
         @connect()
-        if @language == 'python' and not @kernelSpec.argv?
-            commandString = "ipython"
-            args = [
-                "kernel",
-                "--no-secure",
-                "--hb=#{@config.hb_port}",
-                "--control=#{@config.control_port}",
-                "--shell=#{@config.shell_port}",
-                "--stdin=#{@config.stdin_port}",
-                "--iopub=#{@config.iopub_port}",
-                "--colors=NoColor"
-                ]
+        if @onlyConnect
+          atom.notifications.addInfo 'Using custom kernel connection:',
+              detail: @configPath
+        unless @onlyConnect
+            if @language == 'python' and not @kernelSpec.argv?
+                commandString = "ipython"
+                args = [
+                    "kernel",
+                    "--no-secure",
+                    "--hb=#{@config.hb_port}",
+                    "--control=#{@config.control_port}",
+                    "--shell=#{@config.shell_port}",
+                    "--stdin=#{@config.stdin_port}",
+                    "--iopub=#{@config.iopub_port}",
+                    "--colors=NoColor"
+                    ]
 
-        else
-            commandString = _.head(@kernelSpec.argv)
-            args = _.tail(@kernelSpec.argv)
-            args = _.map args, (arg) =>
-                if arg == '{connection_file}'
-                    return @configPath
-                else
-                    return arg
+            else
+                commandString = _.head(@kernelSpec.argv)
+                args = _.tail(@kernelSpec.argv)
+                args = _.map args, (arg) =>
+                    if arg == '{connection_file}'
+                        return @configPath
+                    else
+                        return arg
 
-        console.log 'Kernel: Spawning:', commandString, args
-        @kernelProcess = child_process.spawn commandString, args,
-            cwd: projectPath
+            console.log 'Kernel: Spawning:', commandString, args
+            @kernelProcess = child_process.spawn commandString, args,
+                cwd: projectPath
 
-        getKernelNotificationsRegExp = ->
-            try
-                pattern = atom.config.get 'Hydrogen.kernelNotifications'
-                flags = 'im'
-                return new RegExp pattern, flags
-            catch err
-                return null
+            getKernelNotificationsRegExp = ->
+                try
+                    pattern = atom.config.get 'Hydrogen.kernelNotifications'
+                    flags = 'im'
+                    return new RegExp pattern, flags
+                catch err
+                    return null
 
-        @kernelProcess.stdout.on 'data', (data) =>
-            data = data.toString()
+            @kernelProcess.stdout.on 'data', (data) =>
+                data = data.toString()
 
-            console.log 'Kernel: stdout:', data
+                console.log 'Kernel: stdout:', data
 
-            regexp = getKernelNotificationsRegExp()
-            if regexp?.test data
-                kernelName = @kernelSpec.display_name ? @language
-                atom.notifications.addInfo kernelName + ' kernel:',
-                    detail: data, dismissable: true
+                regexp = getKernelNotificationsRegExp()
+                if regexp?.test data
+                    kernelName = @kernelSpec.display_name ? @language
+                    atom.notifications.addInfo kernelName + ' kernel:',
+                        detail: data, dismissable: true
 
-        @kernelProcess.stderr.on 'data', (data) =>
-            data = data.toString()
+            @kernelProcess.stderr.on 'data', (data) =>
+                data = data.toString()
 
-            console.log 'Kernel: stderr:', data
+                console.log 'Kernel: stderr:', data
 
-            regexp = getKernelNotificationsRegExp()
-            if regexp?.test data
-                kernelName = @kernelSpec.display_name ? @language
-                atom.notifications.addError kernelName + ' kernel:',
-                    detail: data, dismissable: true
+                regexp = getKernelNotificationsRegExp()
+                if regexp?.test data
+                    kernelName = @kernelSpec.display_name ? @language
+                    atom.notifications.addError kernelName + ' kernel:',
+                        detail: data, dismissable: true
 
     connect: ->
         scheme = @config.signature_scheme.slice 'hmac-'.length
@@ -117,7 +121,8 @@ class Kernel
 
     interrupt: ->
         console.log "sending SIGINT"
-        @kernelProcess.kill('SIGINT')
+        unless @onlyConnect
+            @kernelProcess.kill('SIGINT')
 
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
@@ -473,4 +478,9 @@ class Kernel
         @shellSocket.close()
         @ioSocket.close()
 
-        @kernelProcess.kill('SIGKILL')
+        if @onlyConnect
+            atom.notifications.addInfo 'Custom kernel connection:',
+                detail: "Shutdown request sent to custom kernel connection in #{@configPath}"
+
+        unless @onlyConnect
+            @kernelProcess.kill('SIGKILL')
