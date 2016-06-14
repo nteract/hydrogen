@@ -1,5 +1,7 @@
 _ = require 'lodash'
 child_process = require 'child_process'
+fs = require 'fs'
+path = require 'path'
 
 Config = require './config'
 ConfigManager = require './config-manager'
@@ -149,9 +151,9 @@ module.exports = KernelManager =
 
         kernelSpec.grammarLanguage = grammarLanguage
 
-        ConfigManager.writeConfigFile (filepath, config, onlyConnect = false) =>
-            kernel = new Kernel kernelSpec, grammar, config, filepath, onlyConnect
+        customKernelConnectionPath = path.join atom.project.rootDirectories[0].path, 'hydrogen', 'connection.json'
 
+        finishKernelStartup = (kernel) =>
             @_runningKernels[grammarLanguage] = kernel
 
             startupCode = Config.getJson('startupCode')[kernelSpec.display_name]
@@ -161,6 +163,23 @@ module.exports = KernelManager =
                 kernel.execute startupCode
 
             onStarted?(kernel)
+
+        try
+            data = fs.readFileSync customKernelConnectionPath, 'utf8'
+            config = JSON.parse data
+            console.log "Using custom kernel connection: ", customKernelConnectionPath
+            kernel = new Kernel kernelSpec, grammar, config, customKernelConnectionPath, true
+            finishKernelStartup kernel
+        catch e
+            if e.code != 'ENOENT'
+                trow e
+            console.log(e)
+            ConfigManager.writeConfigFile (filepath, config, onlyConnect = false) =>
+                kernel = new Kernel kernelSpec, grammar, config, filepath, onlyConnect
+                finishKernelStartup kernel
+
+
+
 
 
     destroyRunningKernel: (kernel) ->
