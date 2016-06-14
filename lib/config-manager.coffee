@@ -9,7 +9,7 @@ module.exports = ConfigManager =
     fileStoragePath: path.join(__dirname, '..', 'kernel-configs')
 
     writeConfigFile: (onCompleted) ->
-        customKernelConnectionPath = path.join atom.project.rootDirectories[0].path, 'hydrogen', 'kernel', 'hydrogen-kernel.json'
+        customKernelConnectionPath = path.join atom.project.rootDirectories[0].path, 'hydrogen', 'connection.json'
         fs.access customKernelConnectionPath, (err) =>
             if err?
                 try
