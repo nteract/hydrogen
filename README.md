@@ -169,7 +169,7 @@ You can use a custom kernel connection file to connect to a previously created k
 
 For example, you can run a kernel inside a Docker container and make Hydrogen connect to it automatically. If you are using Docker this would allow you to develop from Atom but with all the dependencies, autocompletion, environment, etc of a Docker container.
 
-Hydrogen will look for a kernel JSON connection file under `./hydrogen/kernel/hydrogen-kernel.json` inside your project. If that file exists, Hydrogen will try to connect to the kernel specified by that connection file.
+Hydrogen will look for a kernel JSON connection file under `./hydrogen/connection.json` inside your project. If that file exists, Hydrogen will try to connect to the kernel specified by that connection file.
 
 Here's a simple recipe for doing and testing that with Python:
 
@@ -181,7 +181,7 @@ FROM python:2.7
 RUN pip install markdown
 
 RUN pip install ipykernel
-RUN echo "alias hydrokernel='python -m ipykernel "'--ip=$(hostname -I)'" -f /tmp/kernel/hydrogen-kernel.json'" >> /etc/bash.bashrc
+RUN echo "alias hydrokernel='python -m ipykernel "'--ip=$(hostname -I)'" -f /tmp/hydrogen/connection.json'" >> /etc/bash.bashrc
 ```
 
 You will test using the Python package `markdown` from inside the Docker container in your local Atom editor, with autocompletion, etc.
@@ -190,12 +190,12 @@ The last two lines are the only (temporal) addition to your `Dockerfile` that wi
 
 ```
 RUN pip install ipykernel
-RUN echo "alias hydrokernel='python -m ipykernel "'--ip=$(hostname -I)'" -f /tmp/kernel/hydrogen-kernel.json'" >> /etc/bash.bashrc
+RUN echo "alias hydrokernel='python -m ipykernel "'--ip=$(hostname -I)'" -f /tmp/hydrogen/connection.json'" >> /etc/bash.bashrc
 ```
 
 The first of those two lines will install the Python package `ipykernel`, which is the only requisite to run the remote Python kernel.
 
-The second line creates a handy shortcut named `hydrokernel` to run a Python kernel that listens on the container's IP address and writes the connection file to `/tmp/kernel/hydrogen-kernel.json`.
+The second line creates a handy shortcut named `hydrokernel` to run a Python kernel that listens on the container's IP address and writes the connection file to `/tmp/hydrogen/connection.json`.
 
 * Build your container with:
 
@@ -203,10 +203,10 @@ The second line creates a handy shortcut named `hydrokernel` to run a Python ker
 docker build -t python-docker .
 ```
 
-* Run your container mounting a volume that maps `./hydrogen/kernel/` in your local project directory to `/tmp/kernel/` in your container. That's the trick that will allow Hydrogen to connect to the kernel running inside your container automatically. It's probably better to run it with the command `bash` and start the kernel manually, so that you can restart it if you need to (or if it dies).
+* Run your container mounting a volume that maps `./hydrogen/` in your local project directory to `/tmp/hydrogen/` in your container. That's the trick that will allow Hydrogen to connect to the kernel running inside your container automatically. It's probably better to run it with the command `bash` and start the kernel manually, so that you can restart it if you need to (or if it dies).
 
 ```
-docker run -it --name python-docker -v $(pwd)/hydrogen/kernel:/tmp/kernel python-docker bash
+docker run -it --name python-docker -v $(pwd)/hydrogen:/tmp/hydrogen python-docker bash
 ```
 
 * Next, you just have to call the alias command we created in the `Dockerfile`, that will start the kernel with all the parameters needed:
@@ -228,10 +228,10 @@ To read more about this, see https://github.com/ipython/ipython/issues/2049
 
 
 To connect another client to this kernel, use:
-    --existing /tmp/kernel/hydrogen-kernel.json
+    --existing /tmp/hydrogen/connection.json
 ```
 
-* And you will see that a file was created in `./hydrogen/kernel/hydrogen-kernel.json` inside your project directory.
+* And you will see that a file was created in `./hydrogen/connection.json` inside your project directory.
 
 * Now you can create a file `test.py` with:
 
