@@ -16,11 +16,12 @@ class Kernel
         console.log "Kernel configuration:", @config
         console.log "Kernel configuration file path:", @configPath
         @language = @kernelSpec.grammarLanguage
+        @kernelName = @kernelSpec.display_name
         @executionCallbacks = {}
         @watchCallbacks = []
 
         @watchSidebar = new WatchSidebar(@)
-        @statusView = new StatusView(@language)
+        @statusView = new StatusView(@kernelName)
 
         projectPath = path.dirname(
             atom.workspace.getActiveTextEditor().getPath()
@@ -28,8 +29,8 @@ class Kernel
 
         @connect()
         if @onlyConnect
-          atom.notifications.addInfo 'Using custom kernel connection:',
-              detail: @configPath
+            atom.notifications.addInfo 'Using custom kernel connection:',
+                detail: @configPath
         else
             if @language == 'python' and not @kernelSpec.argv?
                 commandString = "ipython"
@@ -72,8 +73,7 @@ class Kernel
 
                 regexp = getKernelNotificationsRegExp()
                 if regexp?.test data
-                    kernelName = @kernelSpec.display_name ? @language
-                    atom.notifications.addInfo kernelName + ' kernel:',
+                    atom.notifications.addInfo @kernelName,
                         detail: data, dismissable: true
 
             @kernelProcess.stderr.on 'data', (data) =>
@@ -83,8 +83,7 @@ class Kernel
 
                 regexp = getKernelNotificationsRegExp()
                 if regexp?.test data
-                    kernelName = @kernelSpec.display_name ? @language
-                    atom.notifications.addError kernelName + ' kernel:',
+                    atom.notifications.addError @kernelName,
                         detail: data, dismissable: true
 
     connect: ->

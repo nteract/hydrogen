@@ -2,18 +2,17 @@ module.exports =
 class StatusView
 
     constructor: (@language) ->
-        @title = @language + " kernel"
         @element = document.createElement('div')
         @element.classList.add('hydrogen')
         @element.classList.add('status')
 
-        @element.innerText = @title
+        @element.innerText = @language
 
         return this
 
 
     setStatus: (status) ->
-        @element.innerText = @title + ": " + status
+        @element.innerText = @language + ": " + status
 
     destroy: ->
         @element.innerHTML = ''
