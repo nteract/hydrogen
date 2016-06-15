@@ -30,7 +30,7 @@ class Kernel
         if @onlyConnect
           atom.notifications.addInfo 'Using custom kernel connection:',
               detail: @configPath
-        unless @onlyConnect
+        else
             if @language == 'python' and not @kernelSpec.argv?
                 commandString = "ipython"
                 args = [
