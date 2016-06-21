@@ -174,7 +174,7 @@ module.exports = KernelManager =
             if e.code != 'ENOENT'
                 trow e
             console.log(e)
-            ConfigManager.writeConfigFile (filepath, config) =>
+            ConfigManager.writeConfigFile (filepath, config) ->
                 kernel = new Kernel kernelSpec, grammar, config, filepath, onlyConnect=false
                 finishKernelStartup kernel
 

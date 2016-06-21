@@ -66,7 +66,7 @@ module.exports = Hydrogen =
         @statusBarElement.classList.add('status-container')
         @statusBarElement.onclick = @showKernelCommands.bind this
         @statusBarTile = statusBar.addLeftTile
-          item: @statusBarElement, priority: 100
+            item: @statusBarElement, priority: 100
 
 
     provide: ->
@@ -105,12 +105,12 @@ module.exports = Hydrogen =
             language = KernelManager.getGrammarLanguageFor grammar
         unless kernel
             kernel = KernelManager.getRunningKernelFor language
-           
+
         console.log "handleKernelCommand:", command, grammar, language, kernel
         if kernel
-          KernelManager.destroyRunningKernel kernel
+            KernelManager.destroyRunningKernel kernel
         @clearResultBubbles()
-        
+
         if command is 'restart-kernel'
             KernelManager.startKernelFor grammar
         else if command is 'switch-kernel'
@@ -122,7 +122,7 @@ module.exports = Hydrogen =
         grammarLanguage = KernelManager.getGrammarLanguageFor grammar
         kernel = KernelManager.getRunningKernelFor grammarLanguage
         {grammar, grammarLanguage, kernel}
-      
+
     createResultBubble: (code, row) ->
         {kernel, grammar} = @getCurrentKernel()
         if kernel
@@ -305,20 +305,20 @@ module.exports = Hydrogen =
     showKernelPicker: ->
         unless @kernelPicker?
             @kernelPicker = new KernelPicker( =>
-              KernelManager.getAllKernelSpecsFor(
-                KernelManager.getGrammarLanguageFor(@editor.getGrammar())
+                KernelManager.getAllKernelSpecsFor(
+                    KernelManager.getGrammarLanguageFor(@editor.getGrammar())
             ))
             @kernelPicker.onConfirmed = ({kernel}) =>
                 @handleKernelCommand {
-                  command: 'switch-kernel'
-                  kernelSpec: kernel
+                    command: 'switch-kernel'
+                    kernelSpec: kernel
                 }
         @kernelPicker.toggle()
-    
+
     showWatchKernelPicker: ->
         unless @watchKernelPicker?
             @watchKernelPicker = new KernelPicker(
-              KernelManager.getAllRunningKernels.bind(KernelManager)
+                KernelManager.getAllRunningKernels.bind(KernelManager)
             )
             @watchKernelPicker.onConfirmed = (command) =>
                 @setWatchSidebar command.kernel.watchSidebar
