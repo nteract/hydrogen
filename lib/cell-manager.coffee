@@ -1,19 +1,19 @@
 _ = require 'lodash'
 
 module.exports = CellManager =
-    removeAllBreakPoints: ->
+    removeAllBreakpoints: ->
         editor = atom.workspace.getActiveTextEditor()
-        decorations = editor.getLineNumberDecorations({class: 'break-point'})
+        decorations = editor.getLineNumberDecorations({class: 'breakpoint'})
         for decoration in decorations
             decoration.marker.destroy()
 
-    removeLatestBreakPoint: ->
+    removeLatestBreakpoint: ->
         editor = atom.workspace.getActiveTextEditor()
-        decorations = editor.getLineNumberDecorations({class: 'break-point'})
+        decorations = editor.getLineNumberDecorations({class: 'breakpoint'})
         if decorations.length isnt 0
             _.last(decorations).marker.destroy()
 
-    addBreakPoint: ->
+    addBreakpoint: ->
         editor = atom.workspace.getActiveTextEditor()
         row = editor.getLastCursor().getBufferRow()
 
@@ -25,18 +25,18 @@ module.exports = CellManager =
 
         editor.decorateMarker marker,
             type: 'line-number'
-            class: 'break-point'
+            class: 'breakpoint'
 
     getCurrentCell: ->
         editor = atom.workspace.getActiveTextEditor()
         row = editor.getLastCursor().getBufferRow()
-        decorations = editor.getLineNumberDecorations({class: 'break-point'})
-        breakPoints = []
+        decorations = editor.getLineNumberDecorations({class: 'breakpoint'})
+        breakpoints = []
         for decoration in decorations
-            breakPoints.push(decoration.marker.getStartBufferPosition()['row'])
+            breakpoints.push(decoration.marker.getStartBufferPosition()['row'])
 
-        endArr = breakPoints.filter (x) -> x >= row
-        startArr = breakPoints.filter (x) -> x < row
+        endArr = breakpoints.filter (x) -> x >= row
+        startArr = breakpoints.filter (x) -> x < row
 
         if startArr.length is 0
             start = 0
