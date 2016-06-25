@@ -31,22 +31,17 @@ module.exports = CellManager =
         editor = atom.workspace.getActiveTextEditor()
         row = editor.getLastCursor().getBufferRow()
         decorations = editor.getLineNumberDecorations({class: 'breakpoint'})
-        breakpoints = []
+
+        start = 0
+        end = editor.getLastBufferRow()
         for decoration in decorations
-            breakpoints.push(decoration.marker.getStartBufferPosition()['row'])
+            decorationRow = decoration.marker.getStartBufferPosition().row
 
-        endArr = breakpoints.filter (x) -> x >= row
-        startArr = breakpoints.filter (x) -> x < row
+            if decorationRow >= row
+                end = decorationRow
+                break
 
-        if startArr.length is 0
-            start = 0
-        else
-            start = Math.max(startArr...) + 1
+            start = decorationRow + 1
 
-        if endArr.length is 0
-            end = editor.getLastBufferRow()
-        else
-            end = Math.min(endArr...)
-
-        console.log "CellManager: Cell [start, end]:", [start, end]
+        console.log 'CellManager: Cell [start, end]:', [start, end], 'row:', row
         return [start, end]
