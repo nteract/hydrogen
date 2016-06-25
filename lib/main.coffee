@@ -11,6 +11,7 @@ WatchSidebar = require './watch-sidebar'
 KernelPicker = require './kernel-picker'
 AutocompleteProvider = require './autocomplete-provider'
 Inspector = require './inspector'
+CellManager = require './cell-manager'
 
 module.exports = Hydrogen =
     config: Config.schema
@@ -31,6 +32,8 @@ module.exports = Hydrogen =
             'hydrogen:run-all': => @runAll()
             'hydrogen:run-all-above': => @runAllAbove()
             'hydrogen:run-and-move-down': => @runAndMoveDown()
+            'hydrogen:run-cell': => @runCell()
+            'hydrogen:run-cell-and-move-down': => @runCellAndMoveDown()
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
             'hydrogen:select-kernel': => @showKernelPicker()
@@ -40,6 +43,9 @@ module.exports = Hydrogen =
             'hydrogen:inspect': -> Inspector.inspect()
             'hydrogen:interrupt-kernel': => @handleKernelCommand(command: 'interrupt-kernel')
             'hydrogen:restart-kernel':   => @handleKernelCommand(command: 'restart-kernel')
+            'hydrogen:add-breakpoint': -> CellManager.addBreakpoint()
+            'hydrogen:remove-all-breakpoints': -> CellManager.removeAllBreakpoints()
+            'hydrogen:remove-latest-breakpoint': -> CellManager.removeLatestBreakpoint()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -153,12 +159,11 @@ module.exports = Hydrogen =
         buffer = @editor.getBuffer()
         lineLength = buffer.lineLengthForRow(row)
 
-        marker = @editor.markBufferPosition {
+        marker = @editor.markBufferPosition
             row: row
             column: lineLength
-        }, {
+        ,
             invalidate: 'touch'
-        }
 
         view = new ResultView(marker)
         view.spin(true)
@@ -263,6 +268,24 @@ module.exports = Hydrogen =
             @createResultBubble code, row
             @moveDown row
 
+    runCell: () ->
+        [startRow, endRow] = CellManager.getCurrentCell()
+        if endRow > startRow
+            for i in [startRow .. endRow - 1] when @blank(endRow)
+                endRow -= 1
+        code = @getRows(startRow, endRow)
+        if code?
+            @createResultBubble code, endRow
+
+    runCellAndMoveDown: () ->
+        [startRow, endRow] = CellManager.getCurrentCell()
+        if endRow > startRow
+            for i in [startRow .. endRow - 1] when @blank(endRow)
+                endRow -= 1
+        code = @getRows(startRow, endRow)
+        if code?
+            @createResultBubble code, endRow
+            @moveDown endRow
 
     removeStatusBarElement: ->
         if @statusBarElement?
