@@ -53,9 +53,11 @@ After these are installed, you'll likely need to restart your machine (especiall
 #### Linux
 
 For Debian/Ubuntu based variants, you'll need `libzmq3-dev` (preferred) or alternatively `libzmq-dev`.   
-For RedHat/CentOS/Fedora based variants, you'll need `zeromq` and `zeromq-devel`.
+For RedHat/CentOS/Fedora/openSUSE based variants, you'll need `zeromq` and `zeromq-devel`.
+For Arch Linux based variants, you'll need `zeromq` or `zeromq3` (which has to be built from the <abbr title="Arch User Repository">AUR</abbr>).
+For Gentoo Linux based variants, you'll need `net-libs/zeromq`. 
 
-If you have Python and pip setup, install the notebook directly:
+If you have Python and pip setup, install the notebook directly, via running (as root):
 
 ```
 pip install ipython[notebook]
