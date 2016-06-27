@@ -38,10 +38,11 @@ module.exports = CellManager =
             decorationRow = decoration.marker.getStartBufferPosition().row
 
             if decorationRow >= row
-                end = decorationRow
-                break
-
-            start = decorationRow + 1
+                if (decorationRow < end)
+                    end = decorationRow
+            else
+                if (decorationRow >= start)
+                    start = decorationRow + 1
 
         console.log 'CellManager: Cell [start, end]:', [start, end], 'row:', row
         return [start, end]
