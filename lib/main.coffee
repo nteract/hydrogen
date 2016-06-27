@@ -43,10 +43,8 @@ module.exports = Hydrogen =
             'hydrogen:inspect': -> Inspector.inspect()
             'hydrogen:interrupt-kernel': => @handleKernelCommand(command: 'interrupt-kernel')
             'hydrogen:restart-kernel':   => @handleKernelCommand(command: 'restart-kernel')
-            'hydrogen:add-breakpoint': -> CellManager.addBreakpoint()
             'hydrogen:toggle-breakpoint': -> CellManager.toggleBreakpoint()
             'hydrogen:remove-all-breakpoints': -> CellManager.removeAllBreakpoints()
-            'hydrogen:remove-latest-breakpoint': -> CellManager.removeLatestBreakpoint()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
