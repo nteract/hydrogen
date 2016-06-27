@@ -25,20 +25,6 @@ module.exports = CellManager =
         for decoration in decorations
             decoration.marker.destroy()
 
-    removeLatestBreakpoint: ->
-        editor = atom.workspace.getActiveTextEditor()
-        decorations = editor.getLineNumberDecorations({class: 'breakpoint'})
-        if decorations.length isnt 0
-            _.last(decorations).marker.destroy()
-
-    addBreakpoint: ->
-        editor = atom.workspace.getActiveTextEditor()
-        row = editor.getLastCursor().getBufferRow()
-        decoration = CellManager._getBreakprointDecorationAt editor, row
-
-        unless decoration
-            CellManager._setBreakpointDecorationAt editor, row
-
     toggleBreakpoint: ->
         editor = atom.workspace.getActiveTextEditor()
         row = editor.getLastCursor().getBufferRow()
