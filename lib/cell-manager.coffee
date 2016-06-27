@@ -1,6 +1,24 @@
 _ = require 'lodash'
 
 module.exports = CellManager =
+    _setBreakpointDecorationAt: (editor, row) ->
+        marker = editor.markBufferPosition
+            row: row
+            column: 0
+        ,
+            invalidate: 'never'
+
+        editor.decorateMarker marker,
+            type: 'line-number'
+            class: 'breakpoint'
+
+    _getBreakprointDecorationAt: (editor, row) ->
+        decorations = editor
+            .getLineNumberDecorations({class: 'breakpoint'})
+            .filter (decoration) ->
+                return decoration.marker.getStartBufferPosition().row is row
+        return decorations[0]
+
     removeAllBreakpoints: ->
         editor = atom.workspace.getActiveTextEditor()
         decorations = editor.getLineNumberDecorations({class: 'breakpoint'})
@@ -16,16 +34,21 @@ module.exports = CellManager =
     addBreakpoint: ->
         editor = atom.workspace.getActiveTextEditor()
         row = editor.getLastCursor().getBufferRow()
+        decoration = CellManager._getBreakprointDecorationAt editor, row
 
-        marker = editor.markBufferPosition
-            row: row
-            column: 0
-        ,
-            invalidate: 'never'
+        unless decoration
+            CellManager._setBreakpointDecorationAt editor, row
 
-        editor.decorateMarker marker,
-            type: 'line-number'
-            class: 'breakpoint'
+    toggleBreakpoint: ->
+        editor = atom.workspace.getActiveTextEditor()
+        row = editor.getLastCursor().getBufferRow()
+        decoration = CellManager._getBreakprointDecorationAt editor, row
+
+        if decoration
+            decoration.marker.destroy()
+            return
+
+        CellManager._setBreakpointDecorationAt editor, row
 
     getCurrentCell: ->
         editor = atom.workspace.getActiveTextEditor()

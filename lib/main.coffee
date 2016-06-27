@@ -44,6 +44,7 @@ module.exports = Hydrogen =
             'hydrogen:interrupt-kernel': => @handleKernelCommand(command: 'interrupt-kernel')
             'hydrogen:restart-kernel':   => @handleKernelCommand(command: 'restart-kernel')
             'hydrogen:add-breakpoint': -> CellManager.addBreakpoint()
+            'hydrogen:toggle-breakpoint': -> CellManager.toggleBreakpoint()
             'hydrogen:remove-all-breakpoints': -> CellManager.removeAllBreakpoints()
             'hydrogen:remove-latest-breakpoint': -> CellManager.removeLatestBreakpoint()
 
