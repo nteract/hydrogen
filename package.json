@@ -1,21 +1,17 @@
 {
-  "name": "Hydrogen",
+  "name": "deuterium",
   "main": "./lib/main",
-  "version": "0.10.0",
-  "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
-  "author": "Will Whitney <me@willwhitney.com>",
+  "version": "0.0.0",
+  "description": "Run Python 3 code and get results inline (Python3-only fork of Hydrogen)",
+  "author": "Nikita Kitaev <nikitakit@gmail.com>",
   "keywords": [
     "execute",
     "run",
     "jupyter",
     "ipython",
-    "julia",
     "python",
-    "torch",
-    "ijulia",
-    "itorch",
-    "plot",
-    "image"
+    "xdbg",
+    "live"
   ],
   "activationCommands": {
     "atom-text-editor": [
@@ -26,7 +22,7 @@
     ]
   },
   "scripts": {},
-  "repository": "https://github.com/nteract/hydrogen",
+  "repository": "https://github.com/nikitakit/deuterium",
   "license": "MIT",
   "engines": {
     "atom": ">=1.6.0 <2.0.0"

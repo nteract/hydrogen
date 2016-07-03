@@ -1,11 +1,10 @@
-# Hydrogen
+# deuterium
 
-[![slack in](http://slack.nteract.in/badge.svg)](http://slack.nteract.in)
-[![Build Status](https://travis-ci.org/nteract/hydrogen.svg?branch=master)](https://travis-ci.org/nteract/hydrogen)
+A Python3-only fork of [Hydrogen](http://github.com/nteract/hydrogen) designed to be used together with [xdbg](http://github.com/nikitakit/xdbg).
 
-This package lets you run your code directly in Atom using any [Jupyter](https://jupyter.org/) kernels you have installed.
+This package builds on stock Hydrogen to provide even more powerful introspection capabilites, specific to Python (only Python 3.5+ is currently supported). It integrates with the [xdbg](http://github.com/nikitakit/xdbg) extensions for IPython to allow live-coding at any scope within your program, including inside modules and functions.
 
-Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous feedback and the design of [Light Table](http://lighttable.com/). Running code inline and in real time is a more natural way to develop. By bringing the interactive style of Light Table to the rock-solid usability of Atom, Hydrogen makes it easy to write code the way you want to.
+**WARNING**: this package is _incompatible_ with Hydrogen proper, because it does not define its own namespaces!
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/14598778/1cff1b32-0554-11e6-8181-504307ca6b56.gif" width=600>
 
@@ -13,15 +12,17 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 ## Features
 
 - execute a line, selection, or block at a time
+- execute code in multiple modules' namespaces, by simply switching to a module's source file in Atom
+- set breakpoints inside functions and execute code interactively inside the function's scope
+- autocomplete based on inspecting live objects
 - rich media support for plots, images, and video
-- watch expressions let you keep track of variables and re-run snippets after every change
-- completions from the running kernel, just like autocomplete in the Chrome dev tools
 - code can be inspected to show useful information provided by the running kernel
-- one kernel per language (so you can run snippets from several files, all in the same namespace)
-- interrupt or restart the kernel if anything goes wrong
-- use a custom kernel connection (for example to run code inside Docker), read more in the "Custom kernel connection (inside Docker)" section
 
-<!-- <img src="http://i.imgur.com/KiHQFO4.png?1" width=300> -->
+## Why a fork?
+
+Given that this package is still very early in development, forking the Hydrogen code is the easiest way to experiment with new features. The changes here are not a good candidate for merging into mainline Hydrogen because they includes Python3-specific features that may interfere with correct functionality of other Jupyter kernels.
+
+Once the interaction design for this package is more mature, it will be ported to a Hydrogen extension instead.
 
 ## Dependencies
 
@@ -30,7 +31,8 @@ For all systems, you'll need
 - [Atom](https://atom.io/) `1.6.0+`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software)
 - IPython notebook `pip install ipython[notebook]`
-- Python 2 (for builds - you can still run Python 3 code)
+- Python 2 (for builds) and Python 3 (for actually running code)
+- [xdbg](http://github.com/nikitakit/xdbg)
 
 Each operating system has their own instruction set. Please read on down to save yourself time.
 
@@ -55,7 +57,7 @@ After these are installed, you'll likely need to restart your machine (especiall
 For Debian/Ubuntu based variants, you'll need `libzmq3-dev` (preferred) or alternatively `libzmq-dev`.   
 For RedHat/CentOS/Fedora/openSUSE based variants, you'll need `zeromq` and `zeromq-devel`.
 For Arch Linux based variants, you'll need `zeromq` or `zeromq3` (which has to be built from the <abbr title="Arch User Repository">AUR</abbr>).
-For Gentoo Linux based variants, you'll need `net-libs/zeromq`. 
+For Gentoo Linux based variants, you'll need `net-libs/zeromq`.
 
 If you have Python and pip setup, install the notebook directly, via running (as root):
 
@@ -65,225 +67,11 @@ pip install ipython[notebook]
 
 ## Installation
 
-Assuming you followed the dependencies steps above, you can now `apm install hydrogen` (recommended) or search for "hydrogen" in the Install pane of the Atom settings. Note that installing from within Atom will only work if you start Atom from the command line! See [Jank](#Jank).
+Assuming you followed the dependencies steps above, you can now `apm install deuterium` (recommended) or search for "hydrogen" in the Install pane of the Atom settings. Note that installing from within Atom will only work if you start Atom from the command line! See [Jank](#Jank).
 
-If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install hydrogen` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
+If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install deuterium` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
 
-
-### Troubleshooting
-
-We have a [troubleshooting guide](https://github.com/nteract/hydrogen/wiki/Troubleshooting) in the wiki! It's pretty sparse at the moment, so please share how the resolution to any rough spots that you find.
-
-### Kernels
-
-Tested and works with:
-
-- [IPython](http://ipython.org/)
-- [IJulia](https://github.com/JuliaLang/IJulia.jl)
-- [iTorch](https://github.com/facebook/iTorch)
-- [IJavascript](https://github.com/n-riesco/ijavascript)
-- [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
-- [IRkernel](https://github.com/IRkernel/IRkernel) (install the "Development" version from `master` — necessary changes haven't gotten released as binaries yet)
-
-But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages) — [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
-
-<img src="http://i.imgur.com/1cGSHzo.png" width=350>
-<img src="http://i.imgur.com/I5kO69B.png" width=350>
-
-Note that if you install a new kernel, you'll need to reload Atom (search in the Command Palette for "reload") for Hydrogen to find it. For performance reasons, Hydrogen only looks for available kernels when it first starts.
 
 ## Usage
 
-Make sure to start Atom from the command line (with `atom <directory or file>`) for this package to work! See [Jank](#Jank).
-
-### Running code
-
-Hydrogen adds a command "Hydrogen: Run" to the command palette when you're in any text editor. Press ⌘-⇧-P to open the command palette and type "hydrogen" — it'll come up.
-
-The "Hydrogen: Run" command is bound to the keyboard shortcut ⌘-⌥-↩ by default.
-
-There are two ways to tell Hydrogen which code in your file to run.
-
-1. **Selected code:** If you have code selected when you hit Run, Hydrogen will run exactly that code.
-2. **Current block:** With no code selected, Hydrogen will try to find the complete block that's on or before the current line.
-
-    - If the line you're on is already a complete expression (like `s = "abracadabra"`), Hydrogen will run just that line.
-
-    - If the line you're on is the start of a block like a `for` loop, Hydrogen will run the whole block.
-
-    - If the line you're on is blank, Hydrogen will run the first block above that line.
-
-It's easiest to see these interactions visually:
-
-<img src="http://g.recordit.co/4ViVmKtKAr.gif">
-
-If your code starts getting cluttered up with results, run "Hydrogen: Clear Results" to remove them all at once. You can also run this command with ⌘-⌥-⌫.
-
-
-### Watch Expressions
-
-After you've run some code with Hydrogen, you can use the "Hydrogen: Toggle Watches" command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code.
-
-<img width=770 src="https://cloud.githubusercontent.com/assets/13285808/14125700/e5cb587a-f60c-11e5-9c28-5aef83088da2.gif">
-
-**IMPORTANT:** Be careful what you put in your watch expressions. If you write code that mutates state in a watch expression, that code will get run after every execute command and likely result in some _extremely confusing_ bugs.
-
-
-You can re-run the watch expressions by using the normal run shortcut (⌘-⌥-↩ by default) inside a watch expression's edit field.
-
-If you have multiple kernels running, you can switch between their watch expressions with the "Hydrogen: Select Watch Kernel" command (or just click on the "Kernel: <language>" text).
-
-### Completion
-
-Receive completions from the running kernel.
-
-<img width="416" src="https://cloud.githubusercontent.com/assets/13285808/14108987/35d17fae-f5c0-11e5-9c0b-ee899387f4d9.png">
-
-### Code Introspection
-
-You can use the "Hydrogen: Inspect" command from the Command Palette to get metadata from the kernel about the object under the cursor.
-
-<img width="770" src="https://cloud.githubusercontent.com/assets/13285808/14108719/d72762bc-f5be-11e5-8188-32725e3d2726.png">
-
-### Managing kernels
-
-Sometimes things go wrong. Maybe you've written an infinite loop, maybe the kernel has crashed, or maybe you just want to clear the kernel's namespace. Use the command palette to open "Hydrogen: Show Kernel Commands" and select "Interrupt" to interrupt (think `Ctrl-C` in a REPL) the kernel or "Restart" to kill the kernel and start a new one, clearing the namespace.
-
-You can also access these commands by clicking on the kernel status in the status bar. It looks like this:
-
-<img src="http://i.imgur.com/oQB5mpB.png" width=300>
-
-Additionally, if you have two or more kernels for a particular language (grammar), you can select which kernel to use with the "Switch to <kernel>" option in the Kernel Commands menu. This change is automatically saved into the Hydrogen configuration's ```grammarToKernel``` map. For example, if Hydrogen is using the kernel for Python 2 by default, you could switch to Python 3. Then next time you open a `.py` file, Hydrogen will remember your selection and use Python 3.
-
-## How it works
-
-Hydrogen implements the [messaging protocol](http://ipython.org/ipython-doc/stable/development/messaging.html) for [Jupyter](https://jupyter.org/). Jupyter (formerly IPython) uses ZeroMQ to connect a client (like Hydrogen) to a running kernel (like IJulia or iTorch). The client sends code to be executed to the kernel, which runs it and sends back results.
-
-
-## Jank
-
-- In order to have access to your `$PATH` to find where IPython and other binaries are, Atom has to be launched from the command line with `atom <location>`. If you launch Atom as an app, this package won't work.
-
-
-## Custom kernel connection (inside Docker)
-
-You can use a custom kernel connection file to connect to a previously created kernel.
-
-For example, you can run a kernel inside a Docker container and make Hydrogen connect to it automatically. If you are using Docker this would allow you to develop from Atom but with all the dependencies, autocompletion, environment, etc of a Docker container.
-
-Hydrogen will look for a kernel JSON connection file under `./hydrogen/connection.json` inside your project. If that file exists, Hydrogen will try to connect to the kernel specified by that connection file.
-
-Here's a simple recipe for doing and testing that with Python:
-
-* In your project directory, create a `Dockerfile` with:
-
-```
-FROM python:2.7
-
-RUN pip install markdown
-
-RUN pip install ipykernel
-RUN echo "alias hydrokernel='python -m ipykernel "'--ip=$(hostname -I)'" -f /tmp/hydrogen/connection.json'" >> /etc/bash.bashrc
-```
-
-You will test using the Python package `markdown` from inside the Docker container in your local Atom editor, with autocompletion, etc.
-
-The last two lines are the only (temporal) addition to your `Dockerfile` that will allow you to develop locally using the remote Python kernel. If you already have a Python project with a `Dockerfile` you only need to copy those 2 lines and add them to it:
-
-```
-RUN pip install ipykernel
-RUN echo "alias hydrokernel='python -m ipykernel "'--ip=$(hostname -I)'" -f /tmp/hydrogen/connection.json'" >> /etc/bash.bashrc
-```
-
-The first of those two lines will install the Python package `ipykernel`, which is the only requisite to run the remote Python kernel.
-
-The second line creates a handy shortcut named `hydrokernel` to run a Python kernel that listens on the container's IP address and writes the connection file to `/tmp/hydrogen/connection.json`.
-
-* Build your container with:
-
-```
-docker build -t python-docker .
-```
-
-* Run your container mounting a volume that maps `./hydrogen/` in your local project directory to `/tmp/hydrogen/` in your container. That's the trick that will allow Hydrogen to connect to the kernel running inside your container automatically. It's probably better to run it with the command `bash` and start the kernel manually, so that you can restart it if you need to (or if it dies).
-
-```
-docker run -it --name python-docker -v $(pwd)/hydrogen:/tmp/hydrogen python-docker bash
-```
-
-* Next, you just have to call the alias command we created in the `Dockerfile`, that will start the kernel with all the parameters needed:
-
-```
-hydrokernel
-```
-
-* You will see an output similar to:
-
-```
-root@24ae5d04ef3c:/# hydrokernel
-NOTE: When using the `ipython kernel` entry point, Ctrl-C will not work.
-
-To exit, you will have to explicitly quit this process, by either sending
-"quit" from a client, or using Ctrl-\ in UNIX-like environments.
-
-To read more about this, see https://github.com/ipython/ipython/issues/2049
-
-
-To connect another client to this kernel, use:
-    --existing /tmp/hydrogen/connection.json
-```
-
-* And you will see that a file was created in `./hydrogen/connection.json` inside your project directory.
-
-* Now you can create a file `test.py` with:
-
-```
-import markdown
-markdown.version
-```
-
-* Select the contents and run them with Hydrogen ("`cmd-shift-P`" and "`Hydrogen: run`").
-
-* You will see the inline execution and output that just ran from your kernel, even if you don't have the Python package `mardown` installed locally, because it's running inside your container.
-
-```
-import markdown [✓]
-markdown.version ['2.6.6']
-```
-
-
-
-## Why "Hydrogen"?
-
-Hydrogen atoms make up 90% of Jupiter by volume.
-
-Plus, it was easy to make a logo.
-
-![hydrogen logo](https://cdn.rawgit.com/nteract/hydrogen/master/static/logo.svg)
-
-## Development
-#### Quick and dirty setup
-
-`apm develop hydrogen`
-
-This will clone the `hydrogen` repository to `~/github` unless you set the
-`ATOM_REPOS_HOME` environment variable.
-
-#### I already cloned it!
-
-If you cloned it somewhere else, you'll want to use `apm link --dev` within the
-package directory, followed by `apm install` to get dependencies.
-
-### Workflow
-
-After pulling upstream changes, make sure to run `apm update`.
-
-To start hacking, make sure to run `atom --dev` from the package directory.
-Cut a branch while you're working then either submit a Pull Request when done
-or when you want some feedback!
-
-#### Running specs
-
-You can run specs by triggering the `window:run-package-specs` command in Atom. To run tests on the command line use `apm test` within the package directory.
-
-You can learn more about how to write specs [here](http://flight-manual.atom.io/hacking-atom/sections/writing-specs/).
+Please consult the [original Hydrogen documentation](http://github.com/nteract/hydrogen#readme) and the [xdbg readme](http://github.com/nikitakit/xdbg#readme)
