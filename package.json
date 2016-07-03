@@ -1,7 +1,7 @@
 {
   "name": "deuterium",
   "main": "./lib/main",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Run Python 3 code and get results inline (Python3-only fork of Hydrogen)",
   "author": "Nikita Kitaev <nikitakit@gmail.com>",
   "keywords": [
