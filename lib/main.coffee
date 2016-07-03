@@ -103,7 +103,10 @@ module.exports = Hydrogen =
             @signalListView.onConfirmed = @handleKernelCommand.bind(@)
         @signalListView.toggle()
 
+
     handleKernelCommand: ({kernel, command, grammar, language, kernelSpec}) ->
+        console.log "handleKernelCommand:", arguments
+
         unless grammar
             grammar = @editor.getGrammar()
         unless language
@@ -111,15 +114,19 @@ module.exports = Hydrogen =
         unless kernel
             kernel = KernelManager.getRunningKernelFor language
 
-        console.log "handleKernelCommand:", command, grammar, language, kernel
-        if kernel
-            KernelManager.destroyRunningKernel kernel
-        @clearResultBubbles()
+        if command is 'interrupt-kernel'
+            kernel.interrupt()
 
-        if command is 'restart-kernel'
+        else if command is 'restart-kernel'
+            KernelManager.destroyRunningKernel kernel
+            @clearResultBubbles()
             KernelManager.startKernelFor grammar
+
         else if command is 'switch-kernel'
-            KernelManager.setKernelMapping kernelSpec, @editor.getGrammar()
+            kernel = KernelManager.getRunningKernelFor language
+            KernelManager.destroyRunningKernel kernel
+            @clearResultBubbles()
+            KernelManager.setKernelMapping kernelSpec, grammar
             KernelManager.startKernel kernelSpec, grammar
 
     getCurrentKernel: ->
