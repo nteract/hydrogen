@@ -27,6 +27,9 @@ class Kernel
             atom.workspace.getActiveTextEditor().getPath()
         )
 
+        @kernelScopePath = atom.workspace.getActiveTextEditor().getPath()
+        @xdbgComm = "NONE"
+
         @connect()
         if @onlyConnect
             atom.notifications.addInfo 'Using custom kernel connection:',
@@ -123,6 +126,17 @@ class Kernel
         unless @onlyConnect
             @kernelProcess.kill('SIGINT')
 
+    withScope: (callback) ->
+        currentPath = atom.workspace.getActiveTextEditor().getPath()
+        if @kernelScopePath == currentPath
+            callback()
+            return
+        @kernelScopePath = currentPath
+
+        requestId = "scope_" + uuid.v4()
+        @_execute "%scope #{@kernelScopePath}", requestId, (result) ->
+            callback()
+
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
     _execute: (code, requestId, onResults) ->
@@ -152,7 +166,8 @@ class Kernel
 
     execute: (code, onResults) ->
         requestId = "execute_" + uuid.v4()
-        @_execute(code, requestId, onResults)
+        myExecute =  @_execute.bind(this)
+        @withScope () -> myExecute(code, requestId, onResults)
 
     executeWatch: (code, onResults) ->
         requestId = "watch_" + uuid.v4()
@@ -294,6 +309,9 @@ class Kernel
         unless result?
             result = @_parseStreamIOMessage message
 
+        unless result?
+            result = @_parseCommIOMessage message
+
         if result?
             callback result
 
@@ -333,6 +351,15 @@ class Kernel
 
         return true
 
+    _parseCommIOMessage: (message) ->
+        if message.header.msg_type is 'comm_open'
+            if message.content.target_name is 'xdbg'
+                @xdbgComm = message.content.comm_id
+        else if message.header.msg_type is 'comm_msg'
+            if message.content.comm_id is @xdbgComm
+                @statusView.setScope(message.content.data.scope)
+
+        return undefined
 
     _parseDisplayIOMessage: (message) ->
         if message.header.msg_type is 'display_data'

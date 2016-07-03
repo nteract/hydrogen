@@ -113,7 +113,11 @@ module.exports = Hydrogen =
 
         console.log "handleKernelCommand:", command, grammar, language, kernel
         if kernel
-            KernelManager.destroyRunningKernel kernel
+            if command is "interrupt-kernel"
+                kernel.interrupt()
+                return
+            else
+                KernelManager.destroyRunningKernel kernel
         @clearResultBubbles()
 
         if command is 'restart-kernel'

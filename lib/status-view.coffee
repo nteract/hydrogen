@@ -8,11 +8,18 @@ class StatusView
 
         @element.innerText = @language
 
+        @status = ''
+        @scope = ''
         return this
 
 
     setStatus: (status) ->
-        @element.innerText = @language + ": " + status
+        @status = status
+        @element.innerText = @language + ": " + status + " [#{@scope}]"
+
+    setScope: (scope) ->
+        @scope = scope
+        @element.innerText = @language + ": " + @status + " [#{@scope}]"
 
     destroy: ->
         @element.innerHTML = ''
