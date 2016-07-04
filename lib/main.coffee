@@ -120,14 +120,16 @@ module.exports = Hydrogen =
         else if command is 'restart-kernel'
             KernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            KernelManager.startKernelFor grammar
+            KernelManager.startKernelFor grammar, (kernel) =>
+                @setStatusBarElement kernel.statusView.getElement()
 
         else if command is 'switch-kernel'
             kernel = KernelManager.getRunningKernelFor language
             KernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
             KernelManager.setKernelMapping kernelSpec, grammar
-            KernelManager.startKernel kernelSpec, grammar
+            KernelManager.startKernel kernelSpec, grammar, (kernel) =>
+                @setStatusBarElement kernel.statusView.getElement()
 
     getCurrentKernel: ->
         grammar = @editor.getGrammar()
