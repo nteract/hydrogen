@@ -1,0 +1,9 @@
+'scopeName': 'hydrogen.breakpoints'
+'name': 'Hydrogen breakpoints'
+'injectionSelector': 'comment'
+'patterns': [
+  {
+    'match': ' %%| <codecell>| In\\[[0-9 ]+\\]:'
+    'name': 'entity.name.section.breakpoint'
+  }
+]

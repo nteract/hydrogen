@@ -23,4 +23,5 @@ module.exports = CellManager =
             console.log 'CellManager: Cell [start, end]:', [start, end], 'row:', row
         else
             console.log 'CellManager: No comment string available for this scope'
+
         return [start, end]
