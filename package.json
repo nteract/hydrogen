@@ -22,7 +22,9 @@
       "hydrogen:run",
       "hydrogen:run-and-move-down",
       "hydrogen:run-all",
-      "hydrogen:run-all-above"
+      "hydrogen:run-all-above",
+      "hydrogen:run-cell",
+      "hydrogen:run-cell-and-move-down"
     ]
   },
   "scripts": {},
