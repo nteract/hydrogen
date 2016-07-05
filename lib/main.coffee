@@ -56,7 +56,13 @@ module.exports = Hydrogen =
             'hydrogen:toggle-inspector-size': -> Inspector.toggleInspectorSize()
             'hydrogen:close-inspector': -> Inspector.closeInspector()
 
+        @statusBarElement = document.createElement('div')
+        @statusBarElement.classList.add('hydrogen')
+        @statusBarElement.classList.add('status-container')
+        @statusBarElement.onclick = @showKernelCommands.bind @
+
         @editor = atom.workspace.getActiveTextEditor()
+
         @subscriptions.add atom.workspace.observeActivePaneItem (item) =>
             @editor = item
             @setStatusBarElement()
@@ -71,11 +77,6 @@ module.exports = Hydrogen =
 
 
     consumeStatusBar: (statusBar) ->
-        console.log 'making status bar'
-        @statusBarElement = document.createElement('div')
-        @statusBarElement.classList.add('hydrogen')
-        @statusBarElement.classList.add('status-container')
-        @statusBarElement.onclick = @showKernelCommands.bind @
         @statusBarTile = statusBar.addLeftTile
             item: @statusBarElement, priority: 100
 
