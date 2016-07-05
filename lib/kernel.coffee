@@ -12,9 +12,9 @@ WatchSidebar = require './watch-sidebar'
 module.exports =
 class Kernel
     constructor: (@kernelSpec, @grammar, @config, @configPath, @onlyConnect = false) ->
-        console.log "Kernel spec:", @kernelSpec
-        console.log "Kernel configuration:", @config
-        console.log "Kernel configuration file path:", @configPath
+        console.log 'Kernel spec:', @kernelSpec
+        console.log 'Kernel configuration:', @config
+        console.log 'Kernel configuration file path:', @configPath
         @language = @kernelSpec.grammarLanguage
         @kernelName = @kernelSpec.display_name
         @executionCallbacks = {}
@@ -32,24 +32,24 @@ class Kernel
             atom.notifications.addInfo 'Using custom kernel connection:',
                 detail: @configPath
         else
-            if @language == 'python' and not @kernelSpec.argv?
-                commandString = "ipython"
+            if @language is 'python' and not @kernelSpec.argv?
+                commandString = 'ipython'
                 args = [
-                    "kernel",
-                    "--no-secure",
+                    'kernel',
+                    '--no-secure',
                     "--hb=#{@config.hb_port}",
                     "--control=#{@config.control_port}",
                     "--shell=#{@config.shell_port}",
                     "--stdin=#{@config.stdin_port}",
                     "--iopub=#{@config.iopub_port}",
-                    "--colors=NoColor"
+                    '--colors=NoColor'
                     ]
 
             else
                 commandString = _.head(@kernelSpec.argv)
                 args = _.tail(@kernelSpec.argv)
                 args = _.map args, (arg) =>
-                    if arg == '{connection_file}'
+                    if arg is '{connection_file}'
                         return @configPath
                     else
                         return arg
@@ -104,36 +104,36 @@ class Kernel
         @ioSocket.connect(address + @config.iopub_port)
         @ioSocket.subscribe('')
 
-        @shellSocket.on 'message', @onShellMessage.bind(this)
-        @ioSocket.on 'message', @onIOMessage.bind(this)
+        @shellSocket.on 'message', @onShellMessage.bind @
+        @ioSocket.on 'message', @onIOMessage.bind @
 
-        @shellSocket.on 'connect', () -> console.log "shellSocket connected"
-        @controlSocket.on 'connect', () -> console.log "controlSocket connected"
-        @ioSocket.on 'connect', () -> console.log "ioSocket connected"
+        @shellSocket.on 'connect', () -> console.log 'shellSocket connected'
+        @controlSocket.on 'connect', () -> console.log 'controlSocket connected'
+        @ioSocket.on 'connect', () -> console.log 'ioSocket connected'
 
         try
             @shellSocket.monitor()
             @controlSocket.monitor()
             @ioSocket.monitor()
         catch err
-            console.log "Kernel:", err
+            console.error 'Kernel:', err
 
     interrupt: ->
-        console.log "sending SIGINT"
+        console.log 'sending SIGINT'
         unless @onlyConnect
             @kernelProcess.kill('SIGINT')
 
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
     _execute: (code, requestId, onResults) ->
-        console.log "sending execute"
+        console.log 'sending execute'
 
         header =
                 msg_id: requestId,
-                username: "",
-                session: "00000000-0000-0000-0000-000000000000",
-                msg_type: "execute_request",
-                version: "5.0"
+                username: '',
+                session: '00000000-0000-0000-0000-000000000000',
+                msg_type: 'execute_request',
+                version: '5.0'
 
         content =
                 code: code
@@ -151,26 +151,26 @@ class Kernel
         @shellSocket.send new jmp.Message message
 
     execute: (code, onResults) ->
-        requestId = "execute_" + uuid.v4()
+        requestId = 'execute_' + uuid.v4()
         @_execute(code, requestId, onResults)
 
     executeWatch: (code, onResults) ->
-        requestId = "watch_" + uuid.v4()
+        requestId = 'watch_' + uuid.v4()
         @_execute(code, requestId, onResults)
 
     complete: (code, onResults) ->
-        console.log "sending completion"
+        console.log 'sending completion'
 
-        requestId = "complete_" + uuid.v4()
+        requestId = 'complete_' + uuid.v4()
 
         column = code.length
 
         header =
                 msg_id: requestId
-                username: ""
-                session: "00000000-0000-0000-0000-000000000000"
-                msg_type: "complete_request"
-                version: "5.0"
+                username: ''
+                session: '00000000-0000-0000-0000-000000000000'
+                msg_type: 'complete_request'
+                version: '5.0'
 
         content =
                 code: code
@@ -188,16 +188,16 @@ class Kernel
 
 
     inspect: (code, cursor_pos, onResults) ->
-        console.log "sending inspect"
+        console.log 'sending inspect'
 
-        requestId = "inspect_" + uuid.v4()
+        requestId = 'inspect_' + uuid.v4()
 
         header =
                 msg_id: requestId
-                username: ""
-                session: "00000000-0000-0000-0000-000000000000"
-                msg_type: "inspect_request"
-                version: "5.0"
+                username: ''
+                session: '00000000-0000-0000-0000-000000000000'
+                msg_type: 'inspect_request'
+                version: '5.0'
 
         content =
                 code: code
@@ -218,7 +218,7 @@ class Kernel
 
 
     onShellMessage: (message) ->
-        console.log "shell message:", message
+        console.log 'shell message:', message
 
         unless @_isValidMessage message
             return
@@ -260,7 +260,7 @@ class Kernel
 
 
     onIOMessage: (message) ->
-        console.log "IO message:", message
+        console.log 'IO message:', message
 
         unless @_isValidMessage message
             return
@@ -283,6 +283,54 @@ class Kernel
         unless callback?
             return
 
+        result = @_parseIOMessage message
+
+        if result?
+            callback result
+
+
+    _isValidMessage: (message) ->
+        unless message?
+            console.log 'Invalid message: null'
+            return false
+
+        unless message.content?
+            console.log 'Invalid message: Missing content'
+            return false
+
+        if message.content.execution_state is 'starting'
+            # Kernels send a starting status message with an empty parent_header
+            console.log 'Dropped starting status IO message'
+            return false
+
+        unless message.parent_header?
+            console.log 'Invalid message: Missing parent_header'
+            return false
+
+        unless message.parent_header.msg_id?
+            console.log 'Invalid message: Missing parent_header.msg_id'
+            return false
+
+        unless message.parent_header.msg_type?
+            console.log 'Invalid message: Missing parent_header.msg_type'
+            return false
+
+        unless message.header?
+            console.log 'Invalid message: Missing header'
+            return false
+
+        unless message.header.msg_id?
+            console.log 'Invalid message: Missing header.msg_id'
+            return false
+
+        unless message.header.msg_type?
+            console.log 'Invalid message: Missing header.msg_type'
+            return false
+
+        return true
+
+
+    _parseIOMessage: (message) ->
         result = @_parseDisplayIOMessage message
 
         unless result?
@@ -294,49 +342,7 @@ class Kernel
         unless result?
             result = @_parseStreamIOMessage message
 
-        if result?
-            callback result
-
-
-    _isValidMessage: (message) ->
-        unless message?
-            console.log "Invalid message: null"
-            return false
-
-        unless message.content?
-            console.log "Invalid message: Missing content"
-            return false
-
-        if message.content.execution_state is 'starting'
-            # Kernels send a starting status message with an empty parent_header
-            console.log "Dropped starting status IO message"
-            return false
-
-        unless message.parent_header?
-            console.log "Invalid message: Missing parent_header"
-            return false
-
-        unless message.parent_header.msg_id?
-            console.log "Invalid message: Missing parent_header.msg_id"
-            return false
-
-        unless message.parent_header.msg_type?
-            console.log "Invalid message: Missing parent_header.msg_type"
-            return false
-
-        unless message.header?
-            console.log "Invalid message: Missing header"
-            return false
-
-        unless message.header.msg_id?
-            console.log "Invalid message: Missing header.msg_id"
-            return false
-
-        unless message.header.msg_type?
-            console.log "Invalid message: Missing header.msg_type"
-            return false
-
-        return true
+        return result
 
 
     _parseDisplayIOMessage: (message) ->
@@ -356,29 +362,13 @@ class Kernel
 
 
     _parseDataMime: (data) ->
-        if data?
-            imageMimes = Object.getOwnPropertyNames(data).filter (mime) ->
-                return mime.startsWith 'image/'
+        unless data?
+            return null
 
-            if data.hasOwnProperty 'text/html'
-                mime = 'text/html'
+        mime = @_getMimeType data
 
-            else if data.hasOwnProperty 'image/svg+xml'
-                mime = 'image/svg+xml'
-
-            else if not (imageMimes.length is 0)
-                mime = imageMimes[0]
-
-            else if data.hasOwnProperty 'text/markdown'
-                mime = 'text/markdown'
-            else if data.hasOwnProperty 'application/pdf'
-                mime = 'application/pdf'
-
-            else if data.hasOwnProperty 'text/latex'
-                mime = 'text/latex'
-
-            else if data.hasOwnProperty 'text/plain'
-                mime = 'text/plain'
+        unless mime?
+            return null
 
         if mime is 'text/plain'
             result =
@@ -388,7 +378,7 @@ class Kernel
                 stream: 'pyout'
             result.data['text/plain'] = result.data['text/plain'].trim()
 
-        else if mime?
+        else
             result =
                 data:   {}
                 type:   mime
@@ -398,10 +388,38 @@ class Kernel
         return result
 
 
+    _getMimeType: (data) ->
+        imageMimes = Object.getOwnPropertyNames(data).filter (mime) ->
+            return mime.startsWith 'image/'
+
+        if data.hasOwnProperty 'text/html'
+            mime = 'text/html'
+
+        else if data.hasOwnProperty 'image/svg+xml'
+            mime = 'image/svg+xml'
+
+        else if not (imageMimes.length is 0)
+            mime = imageMimes[0]
+
+        else if data.hasOwnProperty 'text/markdown'
+            mime = 'text/markdown'
+
+        else if data.hasOwnProperty 'application/pdf'
+            mime = 'application/pdf'
+
+        else if data.hasOwnProperty 'text/latex'
+            mime = 'text/latex'
+
+        else if data.hasOwnProperty 'text/plain'
+            mime = 'text/plain'
+
+        return mime
+
+
     _parseErrorIOMessage: (message) ->
         msg_type = message.header.msg_type
 
-        if msg_type is 'error' or msg_type == 'pyerr'
+        if msg_type is 'error' or msg_type is 'pyerr'
             result = @_parseErrorMessage message
 
         return result
@@ -459,16 +477,16 @@ class Kernel
 
 
     destroy: ->
-        console.log "sending shutdown"
+        console.log 'sending shutdown'
 
         requestId = uuid.v4()
 
         header =
                 msg_id: requestId,
-                username: "",
+                username: '',
                 session: 0,
-                msg_type: "shutdown_request",
-                version: "5.0"
+                msg_type: 'shutdown_request',
+                version: '5.0'
 
         content =
                 restart: false
@@ -483,8 +501,10 @@ class Kernel
         @ioSocket.close()
 
         if @onlyConnect
+            detail = 'Shutdown request sent to custom kernel connection in ' +
+                @configPath
             atom.notifications.addInfo 'Custom kernel connection:',
-                detail: "Shutdown request sent to custom kernel connection in #{@configPath}"
+                detail: detail
 
         unless @onlyConnect
-            @kernelProcess.kill('SIGKILL')
+            @kernelProcess.kill 'SIGKILL'
