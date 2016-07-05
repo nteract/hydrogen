@@ -4,10 +4,8 @@ _ = require 'lodash'
 # View to display a list of grammars to apply to the current editor.
 module.exports =
 class SignalListView extends SelectListView
-    initialize: (@getKernels)->
+    initialize: (@getKernelSpecs) ->
         super
-
-
 
         @onConfirmed = null
         @addClass('watch-language-picker')
@@ -40,11 +38,11 @@ class SignalListView extends SelectListView
         @panel ?= atom.workspace.addModalPanel(item: @)
         @focusFilterEditor()
 
-        @languageOptions = _.map @getKernels(), (kernel) ->
+        @languageOptions = _.map @getKernelSpecs(), (kernelSpec) ->
             return {
-                name: kernel.display_name or kernel.kernelSpec.display_name
-                value: kernel.language
-                kernel: kernel
+                name: kernelSpec.display_name
+                value: kernelSpec.language
+                kernelSpec: kernelSpec
             }
 
         @setItems(@languageOptions)

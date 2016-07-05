@@ -6,17 +6,17 @@ class StatusView
         @element.classList.add('hydrogen')
         @element.classList.add('status')
 
-        @element.innerText = @language
-
-        return this
+        @element.innerText = @language + ': starting'
 
 
     setStatus: (status) ->
-        @element.innerText = @language + ": " + status
+        @element.innerText = @language + ': ' + status
+
 
     destroy: ->
         @element.innerHTML = ''
         @element.remove()
+
 
     getElement: ->
         @element
