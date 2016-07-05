@@ -307,6 +307,11 @@ class Kernel
             console.log "Invalid message: Missing content"
             return false
 
+        if message.content.execution_state is 'starting'
+            # Kernels send a starting status message with an empty parent_header
+            console.log "Dropped starting status IO message"
+            return false
+
         unless message.parent_header?
             console.log "Invalid message: Missing parent_header"
             return false
