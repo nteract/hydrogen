@@ -64,8 +64,9 @@ module.exports = Hydrogen =
         @editor = atom.workspace.getActiveTextEditor()
 
         @subscriptions.add atom.workspace.observeActivePaneItem (item) =>
-            @editor = item
-            @setStatusBarElement()
+            if item
+                @editor = item
+                @setStatusBarElement()
 
         KernelManager.updateKernelSpecs()
 
