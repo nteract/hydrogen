@@ -12,7 +12,7 @@ module.exports = CellManager =
             editor.languageMode.commentStartAndEndStringsForScope(scope)
 
         if commentStartString
-            regex = new RegExp(commentStartString + '%%|<codecell>|In\[[0-9 ]+\]:')
+            regex = new RegExp(commentStartString.trimRight() + '%%| %%| <codecell>| In\[[0-9 ]+\]:')
 
             buffer.scanInRange regex, [[row + 1, 0], [end, 100]], ({range}) ->
                 end = range.start.row
