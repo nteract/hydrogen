@@ -266,8 +266,8 @@ module.exports = Hydrogen =
 
         [code, row] = codeBlock
         if code? and row?
-            @createResultBubble code, row
             @moveDown row
+            @createResultBubble code, row
 
     runCell: () ->
         [startRow, endRow] = CellManager.getCurrentCell()
@@ -285,8 +285,8 @@ module.exports = Hydrogen =
                 endRow -= 1
         code = @getRows(startRow, endRow)
         if code?
-            @createResultBubble code, endRow
             @moveDown endRow
+            @createResultBubble code, endRow
 
     removeStatusBarElement: ->
         unless @statusBarElement?
