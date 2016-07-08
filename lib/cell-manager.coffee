@@ -3,7 +3,7 @@ module.exports = CellManager =
         editor = atom.workspace.getActiveTextEditor()
         buffer = editor.getBuffer()
         row = editor.getLastCursor().getBufferRow()
-        scope = editor.scopeDescriptorForBufferPosition([row, 0])
+        scope = editor.getRootScopeDescriptor()
 
         start = 0
         end = editor.getLastBufferRow()
