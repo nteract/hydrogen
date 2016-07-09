@@ -5,7 +5,7 @@ module.exports = portfinder =
     find: (onFound) ->
         srv = net.createServer()
 
-        srv.listen 0, () ->
+        srv.listen 0, ->
             port = srv.address().port
             srv.close (err) ->
                 if err?
@@ -17,7 +17,7 @@ module.exports = portfinder =
         @findManyHelper numPorts, [], onFound
 
     findManyHelper: (numPorts, foundPorts, onFound) ->
-        if numPorts == 0
+        if numPorts is 0
             onFound(foundPorts)
         else
             @find (port) =>
