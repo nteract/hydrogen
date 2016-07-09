@@ -60,7 +60,7 @@ module.exports = Hydrogen =
         @editor = atom.workspace.getActiveTextEditor()
 
         @subscriptions.add atom.workspace.observeActivePaneItem (item) =>
-            if item
+            if item and item is atom.workspace.getActiveTextEditor()
                 @editor = item
                 @setStatusBarElement()
 
