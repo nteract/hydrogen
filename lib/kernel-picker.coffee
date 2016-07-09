@@ -35,7 +35,7 @@ class SignalListView extends SelectListView
 
     attach: ->
         @storeFocusedElement()
-        @panel ?= atom.workspace.addModalPanel(item: @)
+        @panel ?= atom.workspace.addModalPanel(item: this)
         @focusFilterEditor()
 
         @languageOptions = _.map @getKernelSpecs(), (kernelSpec) ->
