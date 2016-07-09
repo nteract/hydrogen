@@ -126,8 +126,6 @@ class Kernel
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
     _execute: (code, requestId, onResults) ->
-        console.log 'sending execute'
-
         header =
                 msg_id: requestId,
                 username: '',
@@ -151,15 +149,19 @@ class Kernel
         @shellSocket.send new jmp.Message message
 
     execute: (code, onResults) ->
+        console.log 'Kernel.execute:', code
+
         requestId = 'execute_' + uuid.v4()
         @_execute(code, requestId, onResults)
 
     executeWatch: (code, onResults) ->
+        console.log 'Kernel.executeWatch:', code
+
         requestId = 'watch_' + uuid.v4()
         @_execute(code, requestId, onResults)
 
     complete: (code, onResults) ->
-        console.log 'sending completion'
+        console.log 'Kernel.complete:', code
 
         requestId = 'complete_' + uuid.v4()
 
@@ -188,7 +190,7 @@ class Kernel
 
 
     inspect: (code, cursor_pos, onResults) ->
-        console.log 'sending inspect'
+        console.log 'Kernel.inspect:', code, cursor_pos
 
         requestId = 'inspect_' + uuid.v4()
 
