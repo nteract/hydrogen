@@ -41,7 +41,6 @@ class SignalListView extends SelectListView
         @languageOptions = _.map @getKernelSpecs(), (kernelSpec) ->
             return {
                 name: kernelSpec.display_name
-                value: kernelSpec.language
                 kernelSpec: kernelSpec
             }
 
