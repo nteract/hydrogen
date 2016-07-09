@@ -1,3 +1,5 @@
+escapeStringRegexp = require 'escape-string-regexp'
+
 module.exports = CellManager =
     getCurrentCell: ->
         editor = atom.workspace.getActiveTextEditor()
@@ -12,7 +14,8 @@ module.exports = CellManager =
             editor.languageMode.commentStartAndEndStringsForScope(scope)
 
         if commentStartString
-            regex = new RegExp(commentStartString.trimRight() + '%%| %%| <codecell>| In\[[0-9 ]+\]:')
+            escapedCommentStartString = escapeStringRegexp commentStartString.trimRight()
+            regex = new RegExp(escapedCommentStartString + '(%%| %%| <codecell>| In\[[0-9 ]+\]:)')
 
             buffer.scanInRange regex, [[row + 1, 0], [end, 100]], ({range}) ->
                 end = range.start.row
