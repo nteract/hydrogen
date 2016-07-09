@@ -112,7 +112,8 @@ module.exports = Hydrogen =
 
         else if command is 'switch-kernel'
             kernel = KernelManager.getRunningKernelFor language
-            KernelManager.destroyRunningKernel kernel
+            if kernel
+                KernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
             KernelManager.setKernelMapping kernelSpec, grammar
             KernelManager.startKernel kernelSpec, grammar, =>

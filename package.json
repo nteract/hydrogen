@@ -19,6 +19,7 @@
   ],
   "activationCommands": {
     "atom-text-editor": [
+      "hydrogen:select-kernel",
       "hydrogen:run",
       "hydrogen:run-and-move-down",
       "hydrogen:run-all",
