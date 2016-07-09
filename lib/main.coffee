@@ -253,11 +253,13 @@ module.exports = Hydrogen =
 
 
     runAllAbove: ->
-        codeBlock = @findCodeBlock(true)
-        unless codeBlock?
-            return
+        cursor = @editor.getLastCursor()
+        row = cursor.getBufferRow()
+        if row > 0
+            for i in [0 .. row - 1] when @blank(row)
+                row -= 1
+        code = @getRows(0, row)
 
-        [code, row] = codeBlock
         if code? and row?
             @createResultBubble code, row
 
@@ -372,7 +374,7 @@ module.exports = Hydrogen =
                     @watchSidebar.show()
         @watchKernelPicker.toggle()
 
-    findCodeBlock: (runAllAbove = false) ->
+    findCodeBlock: ->
         buffer = @editor.getBuffer()
         selectedText = @editor.getSelectedText()
 
@@ -389,12 +391,6 @@ module.exports = Hydrogen =
 
         row = cursor.getBufferRow()
         console.log 'findCodeBlock:', row
-
-        if runAllAbove
-            if row > 0
-                for i in [0 .. row - 1] when @blank(row)
-                    row -= 1
-            return [@getRows(0, row), row]
 
         indentLevel = cursor.getIndentLevel()
 
