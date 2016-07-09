@@ -51,7 +51,7 @@ class ResultView
             'copy-button', 'icon', 'icon-clippy'
         @copyButton.onclick = =>
             atom.clipboard.write(@getAllText())
-            atom.notifications.addSuccess("Copied to clipboard")
+            atom.notifications.addSuccess('Copied to clipboard')
         @actionPanel.appendChild(@copyButton)
 
         @openButton = document.createElement('div')
@@ -67,22 +67,22 @@ class ResultView
 
         @tooltips = new CompositeDisposable()
         @tooltips.add atom.tooltips.add @copyButton,
-            title: "Copy to clipboard"
+            title: 'Copy to clipboard'
         @tooltips.add atom.tooltips.add @openButton,
-            title: "Open in new editor"
+            title: 'Open in new editor'
 
         @_hasResult = false
 
         return this
 
     addResult: (result) ->
-        console.log "ResultView: Add result", result
+        console.log 'ResultView: Add result', result
 
         @element.classList.remove('empty')
 
         if result.stream is 'status'
             if not @_hasResult and result.data is 'ok'
-                console.log "ResultView: Show status container"
+                console.log 'ResultView: Show status container'
                 @statusContainer.classList.add 'icon', 'icon-check'
                 @statusContainer.style.display = 'inline-block'
             return
@@ -97,7 +97,7 @@ class ResultView
             container = @resultContainer
 
         onSuccess = ({mimetype, el}) =>
-            console.log "ResultView: Hide status container"
+            console.log 'ResultView: Hide status container'
             @_hasResult = true
             @statusContainer.style.display = 'none'
 
@@ -114,11 +114,11 @@ class ResultView
                     @setMultiline false
 
                     @tooltips.add atom.tooltips.add container,
-                        title: "Copy to clipboard"
+                        title: 'Copy to clipboard'
 
                     container.onclick = =>
                         atom.clipboard.write @getAllText()
-                        atom.notifications.addSuccess "Copied to clipboard"
+                        atom.notifications.addSuccess 'Copied to clipboard'
                 else
                     @setMultiline true
 
@@ -131,8 +131,8 @@ class ResultView
                 webview.src = htmlElement.href
                 htmlElement = webview
 
-            console.log "ResultView: Rendering as MIME", mimeType
-            console.log "ResultView: Rendering as ", htmlElement
+            console.log 'ResultView: Rendering as MIME ', mimeType
+            console.log 'ResultView: Rendering as ', htmlElement
             # @getAllText must be called after appending the htmlElement
             # in order to obtain innerText
             container.appendChild htmlElement
@@ -157,7 +157,7 @@ class ResultView
                 @errorContainer.classList.remove('plain-error')
 
         onError = (error) ->
-            console.error "ResultView: Rendering error:", error
+            console.error 'ResultView: Rendering error:', error
 
         transform(result.data).then onSuccess, onError
 
