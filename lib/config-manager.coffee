@@ -12,7 +12,7 @@ module.exports = ConfigManager =
         try
             fs.mkdirSync(@fileStoragePath)
         catch e
-            if e.code != 'EEXIST'
+            if e.code isnt 'EEXIST'
                 throw e
         filename = 'kernel-' + uuid.v4() + '.json'
         portfinder.findMany 5, (ports) =>
@@ -26,9 +26,9 @@ module.exports = ConfigManager =
         config =
             version: 5
             key: uuid.v4()
-            signature_scheme: "hmac-sha256"
-            transport: "tcp"
-            ip: "127.0.0.1"
+            signature_scheme: 'hmac-sha256'
+            transport: 'tcp'
+            ip: '127.0.0.1'
             hb_port: ports[0]
             control_port: ports[1]
             shell_port: ports[2]
