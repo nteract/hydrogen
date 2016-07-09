@@ -35,7 +35,7 @@ module.exports = Hydrogen =
         @statusBarElement = document.createElement('div')
         @statusBarElement.classList.add('hydrogen')
         @statusBarElement.classList.add('status-container')
-        @statusBarElement.onclick = @showKernelCommands.bind @
+        @statusBarElement.onclick = @showKernelCommands.bind this
 
         @subscriptions = new CompositeDisposable
 
@@ -233,7 +233,7 @@ module.exports = Hydrogen =
             column: 0
 
 
-    run: () ->
+    run: ->
         codeBlock = @findCodeBlock()
         unless codeBlock?
             return
@@ -243,7 +243,7 @@ module.exports = Hydrogen =
             @createResultBubble code, row
 
 
-    runAll: () ->
+    runAll: ->
         code = @editor.getText()
         row = @editor.getLastBufferRow()
         if row > 0
@@ -252,7 +252,7 @@ module.exports = Hydrogen =
         @createResultBubble code, row
 
 
-    runAllAbove: () ->
+    runAllAbove: ->
         codeBlock = @findCodeBlock(true)
         unless codeBlock?
             return
@@ -262,7 +262,7 @@ module.exports = Hydrogen =
             @createResultBubble code, row
 
 
-    runAndMoveDown: () ->
+    runAndMoveDown: ->
         codeBlock = @findCodeBlock()
         unless codeBlock?
             return
@@ -272,7 +272,7 @@ module.exports = Hydrogen =
             @moveDown row
             @createResultBubble code, row
 
-    runCell: () ->
+    runCell: ->
         [startRow, endRow] = CellManager.getCurrentCell()
         if endRow > startRow
             for i in [startRow .. endRow - 1] when @blank(endRow)
@@ -281,7 +281,7 @@ module.exports = Hydrogen =
         if code?
             @createResultBubble code, endRow
 
-    runCellAndMoveDown: () ->
+    runCellAndMoveDown: ->
         [startRow, endRow] = CellManager.getCurrentCell()
         if endRow > startRow
             for i in [startRow .. endRow - 1] when @blank(endRow)
