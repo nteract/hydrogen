@@ -36,7 +36,7 @@ class SignalListView extends SelectListView
     attach: ->
         # get language from editor
         @storeFocusedElement()
-        @panel ?= atom.workspace.addModalPanel item: @
+        @panel ?= atom.workspace.addModalPanel item: this
         @focusFilterEditor()
         grammar = @editor.getGrammar()
         grammarLanguage = @kernelManager.getLanguageFor grammar
