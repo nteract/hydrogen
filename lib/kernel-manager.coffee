@@ -11,6 +11,7 @@ module.exports =
 class KernelManager
     constructor: ->
         @_runningKernels = {}
+        @_kernelSpecs = []
 
 
     destroy: ->
@@ -91,8 +92,7 @@ class KernelManager
 
 
     getAllKernelSpecs: ->
-        kernelSpecs = _.map @parseKernelSpecSettings(), 'spec'
-        return kernelSpecs
+        return _.clone @_kernelSpecs
 
 
     getAllKernelSpecsFor: (language) ->
@@ -162,10 +162,10 @@ class KernelManager
         kernelSpecs = @parseKernelSpecSettings()
         _.assign kernelSpecs, newKernelSpecs
 
-        Config.setJson 'kernelspec', kernelspecs: kernelSpecs
+        @_kernelSpecs = _.map kernelSpecs, 'spec'
 
         message = 'Hydrogen Kernels updated:'
-        options = detail: (_.map kernelSpecs, 'spec.display_name').join('\n')
+        options = detail: (_.map @_kernelSpecs, 'display_name').join('\n')
         atom.notifications.addInfo message, options
 
 
