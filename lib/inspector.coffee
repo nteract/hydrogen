@@ -1,16 +1,18 @@
 {MessagePanelView, PlainMessageView} = require 'atom-message-panel'
 transformime = require 'transformime'
 
-KernelManager = require './kernel-manager'
+module.exports =
+class Inspector
+    constructor: (@kernelManager) ->
+        @editor = atom.workspace.getActiveTextEditor()
 
-module.exports = Inspector =
     inspect: ->
         @editor = atom.workspace.getActiveTextEditor()
         grammar = @editor.getGrammar()
-        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
-        kernel = KernelManager.getRunningKernelFor grammarLanguage
+        grammarLanguage = @kernelManager.getGrammarLanguageFor grammar
+        kernel = @kernelManager.getRunningKernelFor grammarLanguage
         unless kernel?
-            atom.notifications.addInfo "No kernel running!"
+            atom.notifications.addInfo 'No kernel running!'
             @inspector?.close()
             return
 
@@ -23,22 +25,22 @@ module.exports = Inspector =
                 onInspectResult = ({mimetype, el}) =>
                     lines = el.innerHTML.split('\n')
                     firstline = lines[0]
-                    lines.splice(0,1)
+                    lines.splice(0, 1)
                     message = lines.join('\n')
                     @getInspector()
                     @addInspectResult(firstline, message)
 
                 onError = (error) ->
-                    console.error "Inspector: Rendering error:", error
+                    console.error 'Inspector: Rendering error:', error
 
                 transform(result.data).then onInspectResult, onError
 
             else
-                atom.notifications.addInfo "No introspection available!"
+                atom.notifications.addInfo 'No introspection available!'
                 @inspector?.close()
 
     getCodeToInspect: ->
-        if @editor.getSelectedText() != ''
+        if @editor.getSelectedText()
             code = @editor.getSelectedText()
             cursor_pos = code.length
         else
@@ -50,7 +52,7 @@ module.exports = Inspector =
 
     getInspector: ->
         if not @inspector?
-            console.log "Opening Inspector"
+            console.log 'Opening Inspector'
             @inspector = new MessagePanelView
                 title: 'Hydrogen Inspector'
         else
