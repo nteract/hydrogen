@@ -57,5 +57,8 @@
         "2.0.0": "provide"
       }
     }
+  },
+  "devDependencies": {
+    "coffeelint": "^1.15.7"
   }
 }
