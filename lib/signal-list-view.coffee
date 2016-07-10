@@ -39,7 +39,7 @@ class SignalListView extends SelectListView
         @panel ?= atom.workspace.addModalPanel item: @
         @focusFilterEditor()
         grammar = @editor.getGrammar()
-        grammarLanguage = @kernelManager.getGrammarLanguageFor grammar
+        grammarLanguage = @kernelManager.getLanguageFor grammar
 
         # disable all commands if no kernel is running
         kernel = @kernelManager.getRunningKernelFor grammarLanguage

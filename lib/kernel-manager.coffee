@@ -18,19 +18,19 @@ class KernelManager
 
 
     destroyRunningKernel: (kernel) ->
-        delete @_runningKernels[kernel.kernelSpec.grammarLanguage]
+        delete @_runningKernels[kernel.kernelSpec.language]
         kernel.destroy()
 
 
     startKernelFor: (grammar, onStarted) ->
-        grammarLanguage = @getGrammarLanguageFor grammar
+        language = @getLanguageFor grammar
 
-        console.log 'startKernelFor:', grammarLanguage
+        console.log 'startKernelFor:', language
 
-        kernelSpec = @getKernelSpecFor grammarLanguage
+        kernelSpec = @getKernelSpecFor language
 
         unless kernelSpec?
-            message = "No kernel for language `#{grammarLanguage}` found"
+            message = "No kernel for language `#{language}` found"
             options =
                 detail: 'Check that the language for this file is set in Atom
                          and that you have a Jupyter kernel installed for it.'
@@ -41,15 +41,15 @@ class KernelManager
 
 
     startKernel: (kernelSpec, grammar, onStarted) ->
-        grammarLanguage = @getGrammarLanguageFor grammar
+        language = @getLanguageFor grammar
 
-        kernelSpec.grammarLanguage = grammarLanguage
+        kernelSpec.language = language
 
         rootDirectory = atom.project.rootDirectories[0].path
         connectionFile = path.join rootDirectory, 'hydrogen', 'connection.json'
 
         finishKernelStartup = (kernel) =>
-            @_runningKernels[grammarLanguage] = kernel
+            @_runningKernels[language] = kernel
 
             startupCode = Config.getJson('startupCode')[kernelSpec.display_name]
             if startupCode?
@@ -82,11 +82,11 @@ class KernelManager
         return _.clone @_runningKernels
 
 
-    getRunningKernelFor: (grammarLanguage) ->
-        return @_runningKernels[grammarLanguage]
+    getRunningKernelFor: (language) ->
+        return @_runningKernels[language]
 
 
-    getGrammarLanguageFor: (grammar) ->
+    getLanguageFor: (grammar) ->
         return grammar?.name.toLowerCase()
 
 
@@ -95,38 +95,38 @@ class KernelManager
         return kernelSpecs
 
 
-    getAllKernelSpecsFor: (grammarLanguage) ->
-        unless grammarLanguage?
+    getAllKernelSpecsFor: (language) ->
+        unless language?
             return []
 
         kernelSpecs = @getAllKernelSpecs().filter (spec) =>
-            @kernelSpecProvidesLanguage spec, grammarLanguage
+            @kernelSpecProvidesLanguage spec, language
 
         return kernelSpecs
 
 
-    getKernelSpecFor: (grammarLanguage) ->
-        unless grammarLanguage?
+    getKernelSpecFor: (language) ->
+        unless language?
             return null
 
-        kernelMapping = Config.getJson('kernelMappings')?[grammarLanguage]
+        kernelMapping = Config.getJson('kernelMappings')?[language]
         if kernelMapping?
             kernelSpecs = @getAllKernelSpecs().filter (spec) ->
                 return spec.display_name is kernelMapping
         else
-            kernelSpecs = @getAllKernelSpecsFor grammarLanguage
+            kernelSpecs = @getAllKernelSpecsFor language
 
         return kernelSpecs[0]
 
 
-    kernelSpecProvidesLanguage: (kernelSpec, grammarLanguage) ->
+    kernelSpecProvidesLanguage: (kernelSpec, language) ->
         kernelLanguage = kernelSpec.language
         mappedLanguage = Config.getJson('languageMappings')[kernelLanguage]
 
         if mappedLanguage
-            return mappedLanguage is grammarLanguage
+            return mappedLanguage is language
 
-        return kernelLanguage.toLowerCase() is grammarLanguage
+        return kernelLanguage.toLowerCase() is language
 
 
     parseKernelSpecSettings: ->
@@ -192,7 +192,7 @@ class KernelManager
 
 
     setKernelMapping: (kernel, grammar) ->
-        language = @getGrammarLanguageFor grammar
+        language = @getLanguageFor grammar
 
         mapping = {}
         mapping[language] = kernel.display_name

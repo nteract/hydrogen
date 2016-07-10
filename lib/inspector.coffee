@@ -9,8 +9,8 @@ class Inspector
     inspect: ->
         @editor = atom.workspace.getActiveTextEditor()
         grammar = @editor.getGrammar()
-        grammarLanguage = @kernelManager.getGrammarLanguageFor grammar
-        kernel = @kernelManager.getRunningKernelFor grammarLanguage
+        language = @kernelManager.getLanguageFor grammar
+        kernel = @kernelManager.getRunningKernelFor language
         unless kernel?
             atom.notifications.addInfo 'No kernel running!'
             @inspector?.close()

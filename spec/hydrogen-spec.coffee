@@ -187,7 +187,7 @@ describe "Kernel manager", ->
 
     it "should read lower case name from grammar", ->
         grammar = atom.grammars.getGrammars()[0]
-        expect(KernelManager::getGrammarLanguageFor grammar).toEqual("null grammar")
+        expect(KernelManager::getLanguageFor grammar).toEqual("null grammar")
 
     it "should update kernelspecs", ->
         KernelManager::updateKernelSpecs()

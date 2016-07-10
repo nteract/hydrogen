@@ -102,7 +102,7 @@ module.exports = Hydrogen =
         unless grammar
             grammar = @editor.getGrammar()
         unless language
-            language = @kernelManager.getGrammarLanguageFor grammar
+            language = @kernelManager.getLanguageFor grammar
         unless kernel
             kernel = @kernelManager.getRunningKernelFor language
 
@@ -127,7 +127,7 @@ module.exports = Hydrogen =
 
     getCurrentKernel: ->
         grammar = @editor.getGrammar()
-        language = @kernelManager.getGrammarLanguageFor grammar
+        language = @kernelManager.getLanguageFor grammar
         kernel = @kernelManager.getRunningKernelFor language
 
         return {grammar, language, kernel}
@@ -346,7 +346,7 @@ module.exports = Hydrogen =
         unless @kernelPicker?
             @kernelPicker = new KernelPicker =>
                 grammar = @editor.getGrammar()
-                language = @kernelManager.getGrammarLanguageFor grammar
+                language = @kernelManager.getLanguageFor grammar
                 kernelSpecs = @kernelManager.getAllKernelSpecsFor language
                 return kernelSpecs
             @kernelPicker.onConfirmed = ({kernelSpec}) =>

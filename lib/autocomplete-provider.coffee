@@ -50,8 +50,8 @@ module.exports = (kernelManager) ->
                 return null
 
             grammar = editor.getGrammar()
-            grammarLanguage = kernelManager.getGrammarLanguageFor grammar
-            kernel = kernelManager.getRunningKernelFor grammarLanguage
+            language = kernelManager.getLanguageFor grammar
+            kernel = kernelManager.getRunningKernelFor language
             unless kernel?
                 return null
 
@@ -67,9 +67,9 @@ module.exports = (kernelManager) ->
 
         getPrefix: (editor, bufferPosition) ->
             grammar = editor.getGrammar()
-            grammarLanguage = kernelManager.getGrammarLanguageFor grammar
+            language = kernelManager.getLanguageFor grammar
 
-            regex = @regexes[grammarLanguage] ? @defaultRegex
+            regex = @regexes[language] ? @defaultRegex
 
             # Get the text for the line up to the triggered buffer position
             line = editor.getTextInRange(
