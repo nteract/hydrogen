@@ -22,7 +22,7 @@ class SignalListView extends SelectListView
         @editor = null
 
     confirmed: (item) ->
-        console.log "Selected command:", item
+        console.log 'Selected command:', item
 
         if @onConfirmed?
             @onConfirmed(item)
@@ -34,7 +34,7 @@ class SignalListView extends SelectListView
         @focusFilterEditor()
 
     getEmptyMessage: ->
-        "No watches found."
+        'No watches found.'
 
     toggle: ->
         if @panel?

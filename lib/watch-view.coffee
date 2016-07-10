@@ -59,7 +59,7 @@ class WatchView
         @nextButton = document.createElement('button')
         @nextButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-right', 'next-btn')
         @nextButton.onclick = =>
-            if @currentHistory.pos != @currentHistory.length - 1 and @currentHistory.pos?
+            if @currentHistory.pos isnt @currentHistory.length - 1 and @currentHistory.pos?
                 @currentHistory.pos += 1
                 @counter.innerText = "#{@currentHistory.pos+1} / #{@currentHistory.length}"
                 @scrollbar.scrollLeft = @currentHistory.pos * (@scrollbar.offsetWidth+1)
@@ -69,7 +69,7 @@ class WatchView
         @prevButton = document.createElement('button')
         @prevButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-left')
         @prevButton.onclick = =>
-            if @currentHistory.pos != 0 and @currentHistory.pos?
+            if @currentHistory.pos isnt 0 and @currentHistory.pos?
                 @currentHistory.pos -= 1
                 @counter.innerText = "#{@currentHistory.pos+1} / #{@currentHistory.length}"
                 @scrollbar.scrollLeft = @currentHistory.pos * (@scrollbar.offsetWidth+1)
@@ -86,14 +86,14 @@ class WatchView
     run: ->
         code = @getCode()
         @clearResults()
-        console.log "watchview running:", code
+        console.log 'watchview running:', code
         if code? and code.length? and code.length > 0
             @kernel.executeWatch code, (result) =>
-                console.log "watchview got result:", result
+                console.log 'watchview got result:', result
                 @resultView.addResult(result)
                 @addToHistory result
 
-    setCode: (code)->
+    setCode: (code) ->
         @inputEditor.setText code
         this
 

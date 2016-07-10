@@ -35,7 +35,7 @@ module.exports = Hydrogen =
         @statusBarElement = document.createElement('div')
         @statusBarElement.classList.add('hydrogen')
         @statusBarElement.classList.add('status-container')
-        @statusBarElement.onclick = @showKernelCommands.bind @
+        @statusBarElement.onclick = @showKernelCommands.bind this
 
         @subscriptions = new CompositeDisposable
 
@@ -43,9 +43,9 @@ module.exports = Hydrogen =
             'hydrogen:run': => @run()
             'hydrogen:run-all': => @runAll()
             'hydrogen:run-all-above': => @runAllAbove()
-            'hydrogen:run-and-move-down': => @runAndMoveDown()
+            'hydrogen:run-and-move-down': => @run(true)
             'hydrogen:run-cell': => @runCell()
-            'hydrogen:run-cell-and-move-down': => @runCellAndMoveDown()
+            'hydrogen:run-cell-and-move-down': => @runCell(true)
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
             'hydrogen:select-kernel': => @showKernelPicker()
@@ -232,64 +232,46 @@ module.exports = Hydrogen =
             row: row
             column: 0
 
-
-    run: () ->
+    run: (moveDown = false) ->
         codeBlock = @findCodeBlock()
         unless codeBlock?
             return
 
         [code, row] = codeBlock
         if code? and row?
+            if moveDown is true
+                @moveDown row
             @createResultBubble code, row
 
-
-    runAll: () ->
+    runAll: ->
         code = @editor.getText()
-        row = @editor.getLastBufferRow()
-        if row > 0
-            for i in [0 .. row - 1] when @blank(row)
-                row -= 1
+        row = @escapeBlankRows 0, @editor.getLastBufferRow()
         @createResultBubble code, row
 
 
-    runAllAbove: () ->
-        codeBlock = @findCodeBlock(true)
-        unless codeBlock?
-            return
+    runAllAbove: ->
+        cursor = @editor.getLastCursor()
+        row = @escapeBlankRows 0, cursor.getBufferRow()
+        code = @getRows(0, row)
 
-        [code, row] = codeBlock
         if code? and row?
             @createResultBubble code, row
 
-
-    runAndMoveDown: () ->
-        codeBlock = @findCodeBlock()
-        unless codeBlock?
-            return
-
-        [code, row] = codeBlock
-        if code? and row?
-            @moveDown row
-            @createResultBubble code, row
-
-    runCell: () ->
+    runCell: (moveDown = false) ->
         [startRow, endRow] = CellManager.getCurrentCell()
+        endRow = @escapeBlankRows startRow, endRow
+        code = @getRows(startRow, endRow)
+
+        if code?
+            if moveDown is true
+                @moveDown endRow
+            @createResultBubble code, endRow
+
+    escapeBlankRows: (startRow, endRow) ->
         if endRow > startRow
             for i in [startRow .. endRow - 1] when @blank(endRow)
                 endRow -= 1
-        code = @getRows(startRow, endRow)
-        if code?
-            @createResultBubble code, endRow
-
-    runCellAndMoveDown: () ->
-        [startRow, endRow] = CellManager.getCurrentCell()
-        if endRow > startRow
-            for i in [startRow .. endRow - 1] when @blank(endRow)
-                endRow -= 1
-        code = @getRows(startRow, endRow)
-        if code?
-            @moveDown endRow
-            @createResultBubble code, endRow
+        return endRow
 
     removeStatusBarElement: ->
         unless @statusBarElement?
@@ -372,7 +354,7 @@ module.exports = Hydrogen =
                     @watchSidebar.show()
         @watchKernelPicker.toggle()
 
-    findCodeBlock: (runAllAbove = false) ->
+    findCodeBlock: ->
         buffer = @editor.getBuffer()
         selectedText = @editor.getSelectedText()
 
@@ -389,12 +371,6 @@ module.exports = Hydrogen =
 
         row = cursor.getBufferRow()
         console.log 'findCodeBlock:', row
-
-        if runAllAbove
-            if row > 0
-                for i in [0 .. row - 1] when @blank(row)
-                    row -= 1
-            return [@getRows(0, row), row]
 
         indentLevel = cursor.getIndentLevel()
 

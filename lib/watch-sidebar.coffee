@@ -29,12 +29,12 @@ class WatchSidebar
         @removeButton.onclick = => @removeWatch()
         @toggleButton = document.createElement('button')
         @toggleButton.classList.add('btn', 'icon', 'icon-remove-close')
-        @toggleButton.onclick = => this.hide()
+        @toggleButton.onclick = => @hide()
 
         @tooltips = new CompositeDisposable()
-        @tooltips.add atom.tooltips.add(@toggleButton, {title: "Toggle Watches"})
-        @tooltips.add atom.tooltips.add(languageDisplay, {title: "Change Watch Kernel"})
-        @tooltips.add atom.tooltips.add(@removeButton, {title: "Remove Watch"})
+        @tooltips.add atom.tooltips.add(@toggleButton, {title: 'Toggle Watches'})
+        @tooltips.add atom.tooltips.add(languageDisplay, {title: 'Change Watch Kernel'})
+        @tooltips.add atom.tooltips.add(@removeButton, {title: 'Remove Watch'})
 
 
         @watchesContainer = document.createElement('div')
@@ -44,7 +44,7 @@ class WatchSidebar
         @addButton = document.createElement('button')
         @addButton.classList.add('add-watch', 'btn', 'btn-primary',
                                  'icon', 'icon-plus', 'inline-block')
-        @addButton.innerText = "Add watch"
+        @addButton.innerText = 'Add watch'
         @addButton.onclick = => @addWatch()
 
         @resizeHandle = document.createElement('div')
@@ -73,7 +73,7 @@ class WatchSidebar
 
     createWatch: ->
         watch = _.last @watchViews
-        if not watch or watch.getCode().replace /\s/g, '' != ''
+        if not watch or watch.getCode().replace /\s/g, '' isnt ''
             watch = new WatchView(@kernel)
             @watchViews.push watch
             @watchesContainer.appendChild watch.element
@@ -90,7 +90,7 @@ class WatchSidebar
         @show()
 
     removeWatch: ->
-        watches = (for v,k in @watchViews
+        watches = (for v, k in @watchViews
             name: v.getCode()
             value: k)
         WatchesPicker.onConfirmed = (item) =>

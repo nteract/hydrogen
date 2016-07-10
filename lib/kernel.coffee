@@ -20,7 +20,7 @@ class Kernel
         @executionCallbacks = {}
         @watchCallbacks = []
 
-        @watchSidebar = new WatchSidebar(@)
+        @watchSidebar = new WatchSidebar(this)
         @statusView = new StatusView(@kernelName)
 
         projectPath = path.dirname(
@@ -104,12 +104,12 @@ class Kernel
         @ioSocket.connect(address + @config.iopub_port)
         @ioSocket.subscribe('')
 
-        @shellSocket.on 'message', @onShellMessage.bind @
-        @ioSocket.on 'message', @onIOMessage.bind @
+        @shellSocket.on 'message', @onShellMessage.bind this
+        @ioSocket.on 'message', @onIOMessage.bind this
 
-        @shellSocket.on 'connect', () -> console.log 'shellSocket connected'
-        @controlSocket.on 'connect', () -> console.log 'controlSocket connected'
-        @ioSocket.on 'connect', () -> console.log 'ioSocket connected'
+        @shellSocket.on 'connect', -> console.log 'shellSocket connected'
+        @controlSocket.on 'connect', -> console.log 'controlSocket connected'
+        @ioSocket.on 'connect', -> console.log 'ioSocket connected'
 
         try
             @shellSocket.monitor()
@@ -204,7 +204,7 @@ class Kernel
         content =
                 code: code
                 cursor_pos: cursor_pos
-                detail_level : 0
+                detail_level: 0
 
         message =
                 header: header
@@ -242,8 +242,8 @@ class Kernel
 
             if msg_type is 'execution_reply'
                 callback
-                    data:   'ok'
-                    type:   'text'
+                    data: 'ok'
+                    type: 'text'
                     stream: 'status'
 
             else if msg_type is 'complete_reply'
@@ -256,8 +256,8 @@ class Kernel
 
             else
                 callback
-                    data:   'ok'
-                    type:   'text'
+                    data: 'ok'
+                    type: 'text'
                     stream: 'status'
 
 
@@ -376,14 +376,14 @@ class Kernel
             result =
                 data:
                     'text/plain': data[mime]
-                type:   'text'
+                type: 'text'
                 stream: 'pyout'
             result.data['text/plain'] = result.data['text/plain'].trim()
 
         else
             result =
-                data:   {}
-                type:   mime
+                data: {}
+                type: mime
                 stream: 'pyout'
             result.data[mime] = data[mime]
 
@@ -438,7 +438,7 @@ class Kernel
         result =
             data:
                 'text/plain': errorString
-            type:   'text'
+            type: 'text'
             stream: 'error'
 
         return result
@@ -449,7 +449,7 @@ class Kernel
             result =
                 data:
                     'text/plain': message.content.text ? message.content.data
-                type:   'text'
+                type: 'text'
                 stream: message.content.name
 
         # For kernels that do not conform to the messaging standard
@@ -459,7 +459,7 @@ class Kernel
             result =
                 data:
                     'text/plain': message.content.text ? message.content.data
-                type:   'text'
+                type: 'text'
                 stream: 'stdout'
 
         # For kernels that do not conform to the messaging standard
@@ -469,7 +469,7 @@ class Kernel
             result =
                 data:
                     'text/plain': message.content.text ? message.content.data
-                type:   'text'
+                type: 'text'
                 stream: 'stderr'
 
         if result?.data['text/plain']?
