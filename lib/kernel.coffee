@@ -15,7 +15,7 @@ class Kernel
         console.log 'Kernel spec:', @kernelSpec
         console.log 'Kernel configuration:', @config
         console.log 'Kernel configuration file path:', @configPath
-        @language = @kernelSpec.grammarLanguage
+        @language = @kernelSpec.language
         @kernelName = @kernelSpec.display_name
         @executionCallbacks = {}
         @watchCallbacks = []
@@ -32,27 +32,13 @@ class Kernel
             atom.notifications.addInfo 'Using custom kernel connection:',
                 detail: @configPath
         else
-            if @language is 'python' and not @kernelSpec.argv?
-                commandString = 'ipython'
-                args = [
-                    'kernel',
-                    '--no-secure',
-                    "--hb=#{@config.hb_port}",
-                    "--control=#{@config.control_port}",
-                    "--shell=#{@config.shell_port}",
-                    "--stdin=#{@config.stdin_port}",
-                    "--iopub=#{@config.iopub_port}",
-                    '--colors=NoColor'
-                    ]
-
-            else
-                commandString = _.head(@kernelSpec.argv)
-                args = _.tail(@kernelSpec.argv)
-                args = _.map args, (arg) =>
-                    if arg is '{connection_file}'
-                        return @configPath
-                    else
-                        return arg
+            commandString = _.head(@kernelSpec.argv)
+            args = _.tail(@kernelSpec.argv)
+            args = _.map args, (arg) =>
+                if arg is '{connection_file}'
+                    return @configPath
+                else
+                    return arg
 
             console.log 'Kernel: Spawning:', commandString, args
             @kernelProcess = child_process.spawn commandString, args,
