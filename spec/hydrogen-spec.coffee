@@ -106,94 +106,76 @@ describe 'Kernel manager', ->
 
     kernelSpecs = JSON.parse firstKernelSpecString
     kernelSpecs.kernelspecs.python2 = secondKernelSpec.kernelspecs.python2
+    kernelSpecsString = JSON.stringify kernelSpecs
 
     beforeEach ->
+        @kernelManager = new KernelManager()
         atom.config.set 'Hydrogen.kernelspec', ''
 
-    describe 'parseKernelSpecSettings', ->
+    describe 'getKernelSpecsFromSettings', ->
         it 'should parse kernelspecs from settings', ->
             atom.config.set 'Hydrogen.kernelspec', firstKernelSpecString
 
-            parsed = KernelManager::parseKernelSpecSettings()
+            parsed = @kernelManager.getKernelSpecsFromSettings()
 
             expect(parsed).toEqual(firstKernelSpec.kernelspecs)
 
         it 'should return {} if no kernelspec is set', ->
-            expect(KernelManager::parseKernelSpecSettings()).toEqual({})
+            expect(@kernelManager.getKernelSpecsFromSettings()).toEqual({})
 
         it 'should return {} if invalid kernelspec is set', ->
             atom.config.set 'Hydrogen.kernelspec', 'invalid'
-            expect(KernelManager::parseKernelSpecSettings()).toEqual({})
+            expect(@kernelManager.getKernelSpecsFromSettings()).toEqual({})
 
-    describe 'saveKernelSpecs', ->
-        it 'should not write invalid json strings to settings', ->
-            KernelManager::saveKernelSpecs('invalid')
-            expect(atom.config.get 'Hydrogen.kernelspec').toEqual('')
+    describe 'mergeKernelSpecs', ->
+        it 'should merge kernelspecs', ->
+            @kernelManager._kernelSpecs = firstKernelSpec.kernelspecs
+            @kernelManager.mergeKernelSpecs secondKernelSpec.kernelspecs
 
-        it 'should not write invalid kernelspecs to json', ->
-            KernelManager::saveKernelSpecs('{"invalid": "kernel"}')
-            expect(atom.config.get 'Hydrogen.kernelspec').toEqual('')
-
-        it 'should save kernelspecs to settings', ->
-            KernelManager::saveKernelSpecs(firstKernelSpecString)
-
-            config = JSON.parse atom.config.get 'Hydrogen.kernelspec'
-            expect(config).toEqual(firstKernelSpec)
-
-        it 'should add kernelspecs to settings', ->
-            atom.config.set 'Hydrogen.kernelspec', firstKernelSpecString
-            KernelManager::saveKernelSpecs(secondKernelSpecString)
-            config = JSON.parse atom.config.get 'Hydrogen.kernelspec'
-
-            expect(config.kernelspecs.ijavascript).toEqual(firstKernelSpec.kernelspecs.ijavascript)
-            expect(config.kernelspecs.python2).toEqual(secondKernelSpec.kernelspecs.python2)
+            specs = @kernelManager._kernelSpecs
+            expect(specs).toEqual(kernelSpecs.kernelspecs)
 
     describe 'getAllKernelSpecs', ->
         it 'should return an array with specs', ->
-            atom.config.set 'Hydrogen.kernelspec', JSON.stringify kernelSpecs
-            allKernelSpecs = KernelManager::getAllKernelSpecs()
+            @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+            specs = @kernelManager.getAllKernelSpecs()
 
-            expect(allKernelSpecs.length).toEqual(2)
-            expect(allKernelSpecs[0]).toEqual(kernelSpecs.kernelspecs.ijavascript.spec)
-            expect(allKernelSpecs[1]).toEqual(kernelSpecs.kernelspecs.python2.spec)
+            expect(specs.length).toEqual(2)
+            expect(specs[0]).toEqual(kernelSpecs.kernelspecs.ijavascript.spec)
+            expect(specs[1]).toEqual(kernelSpecs.kernelspecs.python2.spec)
 
     describe 'getAllKernelSpecsFor', ->
         it 'should return an array with specs for given language', ->
-            atom.config.set 'Hydrogen.kernelspec', JSON.stringify kernelSpecs
-            allKernelSpecsForPython = KernelManager::getAllKernelSpecsFor('python')
+            @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+            allKernelSpecsForPython = @kernelManager.getAllKernelSpecsFor('python')
 
             expect(allKernelSpecsForPython.length).toEqual(1)
             expect(allKernelSpecsForPython[0]).toEqual(kernelSpecs.kernelspecs.python2.spec)
 
         it 'should return an empty array', ->
-            atom.config.set 'Hydrogen.kernelspec', JSON.stringify kernelSpecs
-            allKernelSpecsForJulia = KernelManager::getAllKernelSpecsFor('julia')
+            @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+            allKernelSpecsForJulia = @kernelManager.getAllKernelSpecsFor('julia')
 
             expect(allKernelSpecsForJulia).toEqual([])
 
     describe 'getKernelSpecFor', ->
         it 'should return spec for given language', ->
-            atom.config.set 'Hydrogen.kernelspec', JSON.stringify kernelSpecs
-            kernelSpecForPython = KernelManager::getKernelSpecFor('python')
+            @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+            kernelSpecForPython = @kernelManager.getKernelSpecFor('python')
 
-            console.log kernelSpecForPython
             expect(kernelSpecForPython).toEqual(kernelSpecs.kernelspecs.python2.spec)
 
         it 'should return undefined', ->
-            atom.config.set 'Hydrogen.kernelspec', JSON.stringify kernelSpecs
-            kernelSpecForJulia = KernelManager::getKernelSpecFor('julia')
+            @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+            kernelSpecForJulia = @kernelManager.getKernelSpecFor('julia')
 
             expect(kernelSpecForJulia).toBeUndefined()
 
     it 'should read lower case name from grammar', ->
         grammar = atom.grammars.getGrammars()[0]
-        expect(KernelManager::getLanguageFor grammar).toEqual('null grammar')
+        expect(@kernelManager.getLanguageFor grammar).toEqual('null grammar')
 
-    it 'should update kernelspecs', ->
-        KernelManager::updateKernelSpecs()
-
-        waits(3000)
-        runs ->
-            kernelspec = JSON.parse atom.config.get 'Hydrogen.kernelspec'
-            expect(kernelspec).not.toBeUndefined()
-            expect(kernelspec.kernelspecs).not.toBeUndefined()
+    it 'should update kernelspecs', (done) ->
+        @kernelManager.getKernelSpecsFromJupyter (err, specs) ->
+            expect(specs).toEqual(jasmine.any(Object))
+            done
