@@ -1,12 +1,10 @@
 {SelectListView} = require 'atom-space-pen-views'
 _ = require 'lodash'
 
-KernelManager = require './kernel-manager'
-
 # View to display a list of grammars to apply to the current editor.
 module.exports =
 class SignalListView extends SelectListView
-    initialize: ->
+    initialize: (@kernelManager) ->
         super
 
         @basicCommands = [
@@ -41,10 +39,10 @@ class SignalListView extends SelectListView
         @panel ?= atom.workspace.addModalPanel item: @
         @focusFilterEditor()
         grammar = @editor.getGrammar()
-        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+        grammarLanguage = @kernelManager.getLanguageFor grammar
 
         # disable all commands if no kernel is running
-        kernel = KernelManager.getRunningKernelFor grammarLanguage
+        kernel = @kernelManager.getRunningKernelFor grammarLanguage
         unless kernel?
             return @setItems []
 
@@ -59,7 +57,7 @@ class SignalListView extends SelectListView
             }
 
         # add commands to switch to other kernels
-        kernelSpecs = KernelManager.getAllKernelSpecsFor grammarLanguage
+        kernelSpecs = @kernelManager.getAllKernelSpecsFor grammarLanguage
 
         switchCommands = kernelSpecs.map (spec) ->
             spec.grammarLanguage = grammarLanguage

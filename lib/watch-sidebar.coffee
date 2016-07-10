@@ -8,9 +8,6 @@ WatchesPicker = require './watches-picker'
 module.exports =
 class WatchSidebar
     constructor: (@kernel) ->
-        KernelManager = require './kernel-manager'
-        @language = KernelManager.getGrammarLanguageFor @kernel.grammar
-
         @element = document.createElement('div')
         @element.classList.add('hydrogen', 'watch-sidebar')
 
@@ -19,7 +16,7 @@ class WatchSidebar
 
         languageDisplay = document.createElement('button')
         languageDisplay.classList.add('btn', 'icon', 'icon-sync')
-        languageDisplay.innerText = "Watch: #{@language}"
+        languageDisplay.innerText = "Watch: #{@kernel.kernelSpec.display_name}"
         languageDisplay.onclick = ->
             editor = atom.workspace.getActiveTextEditor()
             editorView = atom.views.getView(editor)

@@ -2,30 +2,41 @@
 
 _ = require 'lodash'
 
+ResultView = require './result-view'
+SignalListView = require './signal-list-view'
+KernelPicker = require './kernel-picker'
+CellManager = require './cell-manager'
 
 Config = require './config'
 KernelManager = require './kernel-manager'
-ResultView = require './result-view'
-SignalListView = require './signal-list-view'
-WatchSidebar = require './watch-sidebar'
-KernelPicker = require './kernel-picker'
-AutocompleteProvider = require './autocomplete-provider'
 Inspector = require './inspector'
-CellManager = require './cell-manager'
+AutocompleteProvider = require './autocomplete-provider'
 
 module.exports = Hydrogen =
     config: Config.schema
-
     subscriptions: null
+
+    kernelManager: null
+    inspector: null
+
+    editor: null
+    markerBubbleMap: null
 
     statusBarElement: null
     statusBarTile: null
 
-    editor: null
-
-    markerBubbleMap: {}
-
     activate: (state) ->
+        @kernelManager = new KernelManager()
+        @inspector = new Inspector @kernelManager
+
+        @editor = atom.workspace.getActiveTextEditor()
+        @markerBubbleMap = {}
+
+        @statusBarElement = document.createElement('div')
+        @statusBarElement.classList.add('hydrogen')
+        @statusBarElement.classList.add('status-container')
+        @statusBarElement.onclick = @showKernelCommands.bind @
+
         @subscriptions = new CompositeDisposable
 
         @subscriptions.add atom.commands.add 'atom-text-editor',
@@ -40,8 +51,8 @@ module.exports = Hydrogen =
             'hydrogen:select-kernel': => @showKernelPicker()
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
-            'hydrogen:update-kernels': -> KernelManager.updateKernelSpecs()
-            'hydrogen:inspect': -> Inspector.inspect()
+            'hydrogen:update-kernels': => @kernelManager.updateKernelSpecs()
+            'hydrogen:inspect': => @inspector.inspect()
             'hydrogen:interrupt-kernel': =>
                 @handleKernelCommand command: 'interrupt-kernel'
             'hydrogen:restart-kernel': =>
@@ -49,27 +60,21 @@ module.exports = Hydrogen =
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
-            'hydrogen:toggle-inspector-size': -> Inspector.toggleInspectorSize()
-            'hydrogen:close-inspector': -> Inspector.closeInspector()
-
-        @statusBarElement = document.createElement('div')
-        @statusBarElement.classList.add('hydrogen')
-        @statusBarElement.classList.add('status-container')
-        @statusBarElement.onclick = @showKernelCommands.bind @
-
-        @editor = atom.workspace.getActiveTextEditor()
+            'hydrogen:toggle-inspector-size': =>
+                @inspector.toggleInspectorSize()
+            'hydrogen:close-inspector': => @inspector.closeInspector()
 
         @subscriptions.add atom.workspace.observeActivePaneItem (item) =>
             if item and item is atom.workspace.getActiveTextEditor()
                 @editor = item
                 @setStatusBarElement()
 
-        KernelManager.updateKernelSpecs()
+        @kernelManager.updateKernelSpecs()
 
 
     deactivate: ->
         @subscriptions.dispose()
-        KernelManager.destroy()
+        @kernelManager.destroy()
         @statusBarTile.destroy()
 
 
@@ -80,12 +85,12 @@ module.exports = Hydrogen =
 
     provide: ->
         if atom.config.get('Hydrogen.autocomplete') is true
-            return AutocompleteProvider
+            return AutocompleteProvider @kernelManager
 
 
     showKernelCommands: ->
         unless @signalListView?
-            @signalListView = new SignalListView()
+            @signalListView = new SignalListView @kernelManager
             @signalListView.onConfirmed = (kernelCommand) =>
                 @handleKernelCommand kernelCommand
         @signalListView.toggle()
@@ -97,33 +102,33 @@ module.exports = Hydrogen =
         unless grammar
             grammar = @editor.getGrammar()
         unless language
-            language = KernelManager.getGrammarLanguageFor grammar
+            language = @kernelManager.getLanguageFor grammar
         unless kernel
-            kernel = KernelManager.getRunningKernelFor language
+            kernel = @kernelManager.getRunningKernelFor language
 
         if command is 'interrupt-kernel'
             kernel.interrupt()
 
         else if command is 'restart-kernel'
-            KernelManager.destroyRunningKernel kernel
+            @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            KernelManager.startKernelFor grammar, =>
+            @kernelManager.startKernelFor grammar, =>
                 @setStatusBarElement()
 
         else if command is 'switch-kernel'
-            kernel = KernelManager.getRunningKernelFor language
+            kernel = @kernelManager.getRunningKernelFor language
             if kernel
-                KernelManager.destroyRunningKernel kernel
+                @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            KernelManager.setKernelMapping kernelSpec, grammar
-            KernelManager.startKernel kernelSpec, grammar, =>
+            @kernelManager.setKernelMapping kernelSpec, grammar
+            @kernelManager.startKernel kernelSpec, grammar, =>
                 @setStatusBarElement()
 
 
     getCurrentKernel: ->
         grammar = @editor.getGrammar()
-        language = KernelManager.getGrammarLanguageFor grammar
-        kernel = KernelManager.getRunningKernelFor language
+        language = @kernelManager.getLanguageFor grammar
+        kernel = @kernelManager.getRunningKernelFor language
 
         return {grammar, language, kernel}
 
@@ -135,7 +140,7 @@ module.exports = Hydrogen =
             @_createResultBubble kernel, code, row
             return
 
-        KernelManager.startKernelFor grammar, (kernel) =>
+        @kernelManager.startKernelFor grammar, (kernel) =>
             @setStatusBarElement()
             @_createResultBubble kernel, code, row
 
@@ -341,8 +346,9 @@ module.exports = Hydrogen =
         unless @kernelPicker?
             @kernelPicker = new KernelPicker =>
                 grammar = @editor.getGrammar()
-                language = KernelManager.getGrammarLanguageFor grammar
-                return KernelManager.getAllKernelSpecsFor language
+                language = @kernelManager.getLanguageFor grammar
+                kernelSpecs = @kernelManager.getAllKernelSpecsFor language
+                return kernelSpecs
             @kernelPicker.onConfirmed = ({kernelSpec}) =>
                 @handleKernelCommand
                     command: 'switch-kernel'
@@ -352,10 +358,18 @@ module.exports = Hydrogen =
 
     showWatchKernelPicker: ->
         unless @watchKernelPicker?
-            @watchKernelPicker = new KernelPicker ->
-                KernelManager.getAllRunningKernels()
+            @watchKernelPicker = new KernelPicker =>
+                kernels = @kernelManager.getAllRunningKernels()
+                kernelSpecs = _.map kernels, 'kernelSpec'
+                return kernelSpecs
             @watchKernelPicker.onConfirmed = (command) =>
-                @setWatchSidebar command.kernel.watchSidebar
+                kernelSpec = command.kernelSpec
+                kernels = _.filter @kernelManager.getAllRunningKernels(), (k) ->
+                    k.kernelSpec is kernelSpec
+                kernel = kernels[0]
+                if kernel
+                    @setWatchSidebar kernel.watchSidebar
+                    @watchSidebar.show()
         @watchKernelPicker.toggle()
 
     findCodeBlock: (runAllAbove = false) ->

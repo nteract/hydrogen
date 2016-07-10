@@ -7,8 +7,126 @@ Config = require './config'
 ConfigManager = require './config-manager'
 Kernel = require './kernel'
 
-module.exports = KernelManager =
-    _runningKernels: {}
+module.exports =
+class KernelManager
+    constructor: ->
+        @_runningKernels = {}
+
+
+    destroy: ->
+        _.forEach @_runningKernels, (kernel) => @destroyRunningKernel kernel
+
+
+    destroyRunningKernel: (kernel) ->
+        delete @_runningKernels[kernel.kernelSpec.language]
+        kernel.destroy()
+
+
+    startKernelFor: (grammar, onStarted) ->
+        language = @getLanguageFor grammar
+
+        console.log 'startKernelFor:', language
+
+        kernelSpec = @getKernelSpecFor language
+
+        unless kernelSpec?
+            message = "No kernel for language `#{language}` found"
+            options =
+                detail: 'Check that the language for this file is set in Atom
+                         and that you have a Jupyter kernel installed for it.'
+            atom.notifications.addError message, options
+            return
+
+        @startKernel kernelSpec, grammar, onStarted
+
+
+    startKernel: (kernelSpec, grammar, onStarted) ->
+        language = @getLanguageFor grammar
+
+        kernelSpec.language = language
+
+        rootDirectory = atom.project.rootDirectories[0].path
+        connectionFile = path.join rootDirectory, 'hydrogen', 'connection.json'
+
+        finishKernelStartup = (kernel) =>
+            @_runningKernels[language] = kernel
+
+            startupCode = Config.getJson('startupCode')[kernelSpec.display_name]
+            if startupCode?
+                console.log 'executing startup code'
+                startupCode = startupCode + ' \n'
+                kernel.execute startupCode
+
+            onStarted?(kernel)
+
+        try
+            data = fs.readFileSync connectionFile, 'utf8'
+            config = JSON.parse data
+            console.log 'KernelManager: Using connection file: ', connectionFile
+            kernel = new Kernel(
+                kernelSpec, grammar, config, connectionFile, true
+            )
+            finishKernelStartup kernel
+
+        catch e
+            unless e.code is 'ENOENT'
+                throw e
+            ConfigManager.writeConfigFile (filepath, config) ->
+                kernel = new Kernel(
+                    kernelSpec, grammar, config, filepath, onlyConnect = false
+                )
+                finishKernelStartup kernel
+
+
+    getAllRunningKernels: ->
+        return _.clone @_runningKernels
+
+
+    getRunningKernelFor: (language) ->
+        return @_runningKernels[language]
+
+
+    getLanguageFor: (grammar) ->
+        return grammar?.name.toLowerCase()
+
+
+    getAllKernelSpecs: ->
+        kernelSpecs = _.map @parseKernelSpecSettings(), 'spec'
+        return kernelSpecs
+
+
+    getAllKernelSpecsFor: (language) ->
+        unless language?
+            return []
+
+        kernelSpecs = @getAllKernelSpecs().filter (spec) =>
+            @kernelSpecProvidesLanguage spec, language
+
+        return kernelSpecs
+
+
+    getKernelSpecFor: (language) ->
+        unless language?
+            return null
+
+        kernelMapping = Config.getJson('kernelMappings')?[language]
+        if kernelMapping?
+            kernelSpecs = @getAllKernelSpecs().filter (spec) ->
+                return spec.display_name is kernelMapping
+        else
+            kernelSpecs = @getAllKernelSpecsFor language
+
+        return kernelSpecs[0]
+
+
+    kernelSpecProvidesLanguage: (kernelSpec, language) ->
+        kernelLanguage = kernelSpec.language
+        mappedLanguage = Config.getJson('languageMappings')[kernelLanguage]
+
+        if mappedLanguage
+            return mappedLanguage is language
+
+        return kernelLanguage.toLowerCase() is language
 
 
     parseKernelSpecSettings: ->
@@ -21,10 +139,6 @@ module.exports = KernelManager =
         return _.pickBy settings.kernelspecs, ({spec}) ->
             return spec?.language and spec.display_name and spec.argv
 
-    setKernelMapping: (kernel, grammar) ->
-        mapping = {}
-        mapping[@getGrammarLanguageFor grammar] = kernel.display_name
-        Config.setJson 'kernelMappings', mapping, true
 
     saveKernelSpecs: (jsonString) ->
         console.log 'saveKernelSpecs:', jsonString
@@ -77,115 +191,10 @@ module.exports = KernelManager =
                     err
 
 
-    getGrammarLanguageFor: (grammar) ->
-        return grammar?.name.toLowerCase()
+    setKernelMapping: (kernel, grammar) ->
+        language = @getLanguageFor grammar
 
+        mapping = {}
+        mapping[language] = kernel.display_name
 
-    kernelSpecProvidesGrammarLanguage: (kernelSpec, grammarLanguage) ->
-        kernelLanguage = kernelSpec.language
-        mappedLanguage = Config.getJson('languageMappings')[kernelLanguage]
-
-        if mappedLanguage
-            return mappedLanguage is grammarLanguage
-
-        return kernelLanguage.toLowerCase() is grammarLanguage
-
-
-    getAllKernelSpecs: ->
-        kernelSpecs = _.map @parseKernelSpecSettings(), 'spec'
-        return kernelSpecs
-
-
-    getAllKernelSpecsFor: (grammarLanguage) ->
-        unless grammarLanguage?
-            return []
-
-        kernelSpecs = @getAllKernelSpecs().filter (spec) =>
-            return @kernelSpecProvidesGrammarLanguage spec, grammarLanguage
-
-        return kernelSpecs
-
-
-    getKernelSpecFor: (grammarLanguage) ->
-        unless grammarLanguage?
-            return null
-
-        kernelMapping = Config.getJson('kernelMappings')?[grammarLanguage]
-        if kernelMapping?
-            kernelSpecs = @getAllKernelSpecs().filter (spec) ->
-                return spec.display_name is kernelMapping
-        else
-            kernelSpecs = @getAllKernelSpecsFor grammarLanguage
-
-        return kernelSpecs[0]
-
-
-    getAllRunningKernels: ->
-        return _.clone(@_runningKernels)
-
-
-    getRunningKernelFor: (grammarLanguage) ->
-        return @_runningKernels[grammarLanguage]
-
-
-    startKernelFor: (grammar, onStarted) ->
-        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
-
-        console.log 'startKernelFor:', grammarLanguage
-
-        kernelSpec = @getKernelSpecFor grammarLanguage
-
-        unless kernelSpec?
-            message = "No kernel for language `#{grammarLanguage}` found"
-            options =
-                detail: 'Check that the language for this file is set in Atom
-                         and that you have a Jupyter kernel installed for it.'
-            atom.notifications.addError message, options
-            return
-
-        @startKernel kernelSpec, grammar, onStarted
-
-
-    startKernel: (kernelSpec, grammar, onStarted) ->
-        grammarLanguage = KernelManager.getGrammarLanguageFor grammar
-
-        kernelSpec.grammarLanguage = grammarLanguage
-
-        customKernelConnectionPath = path.join atom.project.rootDirectories[0].path, 'hydrogen', 'connection.json'
-
-        finishKernelStartup = (kernel) =>
-            @_runningKernels[grammarLanguage] = kernel
-
-            startupCode = Config.getJson('startupCode')[kernelSpec.display_name]
-            if startupCode?
-                console.log 'executing startup code'
-                startupCode = startupCode + ' \n'
-                kernel.execute startupCode
-
-            onStarted?(kernel)
-
-        try
-            data = fs.readFileSync customKernelConnectionPath, 'utf8'
-            config = JSON.parse data
-            console.log "Using custom kernel connection: ", customKernelConnectionPath
-            kernel = new Kernel kernelSpec, grammar, config, customKernelConnectionPath, true
-            finishKernelStartup kernel
-        catch e
-            if e.code != 'ENOENT'
-                trow e
-            console.log(e)
-            ConfigManager.writeConfigFile (filepath, config) ->
-                kernel = new Kernel kernelSpec, grammar, config, filepath, onlyConnect=false
-                finishKernelStartup kernel
-
-
-
-
-
-    destroyRunningKernel: (kernel) ->
-        delete @_runningKernels[kernel.kernelSpec.grammarLanguage]
-        kernel.destroy()
-
-
-    destroy: ->
-        _.forEach @_runningKernels, (kernel) -> kernel.destroy()
+        Config.setJson 'kernelMappings', mapping, true

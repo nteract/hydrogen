@@ -114,35 +114,35 @@ describe "Kernel manager", ->
         it "should parse kernelspecs from settings", ->
             atom.config.set "Hydrogen.kernelspec", firstKernelSpecString
 
-            parsed = KernelManager.parseKernelSpecSettings()
+            parsed = KernelManager::parseKernelSpecSettings()
 
             expect(parsed).toEqual(firstKernelSpec.kernelspecs)
 
         it "should return {} if no kernelspec is set", ->
-            expect(KernelManager.parseKernelSpecSettings()).toEqual({})
+            expect(KernelManager::parseKernelSpecSettings()).toEqual({})
 
         it "should return {} if invalid kernelspec is set", ->
             atom.config.set "Hydrogen.kernelspec", "invalid"
-            expect(KernelManager.parseKernelSpecSettings()).toEqual({})
+            expect(KernelManager::parseKernelSpecSettings()).toEqual({})
 
     describe "saveKernelSpecs", ->
         it "should not write invalid json strings to settings", ->
-            KernelManager.saveKernelSpecs("invalid")
+            KernelManager::saveKernelSpecs("invalid")
             expect(atom.config.get "Hydrogen.kernelspec").toEqual("")
 
         it "should not write invalid kernelspecs to json", ->
-            KernelManager.saveKernelSpecs('{"invalid": "kernel"}')
+            KernelManager::saveKernelSpecs('{"invalid": "kernel"}')
             expect(atom.config.get "Hydrogen.kernelspec").toEqual("")
 
         it "should save kernelspecs to settings", ->
-            KernelManager.saveKernelSpecs(firstKernelSpecString)
+            KernelManager::saveKernelSpecs(firstKernelSpecString)
 
             config = JSON.parse atom.config.get "Hydrogen.kernelspec"
             expect(config).toEqual(firstKernelSpec)
 
         it "should add kernelspecs to settings", ->
             atom.config.set "Hydrogen.kernelspec", firstKernelSpecString
-            KernelManager.saveKernelSpecs(secondKernelSpecString)
+            KernelManager::saveKernelSpecs(secondKernelSpecString)
             config = JSON.parse atom.config.get "Hydrogen.kernelspec"
 
             expect(config.kernelspecs.ijavascript).toEqual(firstKernelSpec.kernelspecs.ijavascript)
@@ -151,7 +151,7 @@ describe "Kernel manager", ->
     describe "getAllKernelSpecs", ->
         it "should return an array with specs", ->
             atom.config.set "Hydrogen.kernelspec", JSON.stringify kernelSpecs
-            allKernelSpecs = KernelManager.getAllKernelSpecs()
+            allKernelSpecs = KernelManager::getAllKernelSpecs()
 
             expect(allKernelSpecs.length).toEqual(2)
             expect(allKernelSpecs[0]).toEqual(kernelSpecs.kernelspecs.ijavascript.spec)
@@ -160,37 +160,37 @@ describe "Kernel manager", ->
     describe "getAllKernelSpecsFor", ->
         it "should return an array with specs for given language", ->
             atom.config.set "Hydrogen.kernelspec", JSON.stringify kernelSpecs
-            allKernelSpecsForPython = KernelManager.getAllKernelSpecsFor("python")
+            allKernelSpecsForPython = KernelManager::getAllKernelSpecsFor("python")
 
             expect(allKernelSpecsForPython.length).toEqual(1)
             expect(allKernelSpecsForPython[0]).toEqual(kernelSpecs.kernelspecs.python2.spec)
 
         it "should return an empty array", ->
             atom.config.set "Hydrogen.kernelspec", JSON.stringify kernelSpecs
-            allKernelSpecsForJulia = KernelManager.getAllKernelSpecsFor("julia")
+            allKernelSpecsForJulia = KernelManager::getAllKernelSpecsFor("julia")
 
             expect(allKernelSpecsForJulia).toEqual([])
 
     describe "getKernelSpecFor", ->
         it "should return spec for given language", ->
             atom.config.set "Hydrogen.kernelspec", JSON.stringify kernelSpecs
-            kernelSpecForPython = KernelManager.getKernelSpecFor("python")
+            kernelSpecForPython = KernelManager::getKernelSpecFor("python")
 
             console.log kernelSpecForPython
             expect(kernelSpecForPython).toEqual(kernelSpecs.kernelspecs.python2.spec)
 
         it "should return undefined", ->
             atom.config.set "Hydrogen.kernelspec", JSON.stringify kernelSpecs
-            kernelSpecForJulia = KernelManager.getKernelSpecFor("julia")
+            kernelSpecForJulia = KernelManager::getKernelSpecFor("julia")
 
             expect(kernelSpecForJulia).toBeUndefined()
 
     it "should read lower case name from grammar", ->
         grammar = atom.grammars.getGrammars()[0]
-        expect(KernelManager.getGrammarLanguageFor grammar).toEqual("null grammar")
+        expect(KernelManager::getLanguageFor grammar).toEqual("null grammar")
 
     it "should update kernelspecs", ->
-        KernelManager.updateKernelSpecs()
+        KernelManager::updateKernelSpecs()
 
         waits(3000)
         runs ->

@@ -1,12 +1,11 @@
 _ = require 'lodash'
 
 Config = require './config'
-KernelManager = require './kernel-manager'
 
-module.exports = AutocompleteProvider = do ->
+module.exports = (kernelManager) ->
     languageMappings = Config.getJson 'languageMappings'
 
-    selectors = _.uniq KernelManager.getAllKernelSpecs().map ({language}) ->
+    selectors = _.uniq kernelManager.getAllKernelSpecs().map ({language}) ->
         if language in languageMappings
             return '.source.' + languageMappings[language].toLowerCase()
         return '.source.' + language.toLowerCase()
@@ -36,22 +35,23 @@ module.exports = AutocompleteProvider = do ->
             # adapted from http://php.net/manual/en/language.variables.basics.php
             php: /[$a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/
 
-        # This will take priority over the default provider, which has a priority of 0.
-        # `excludeLowerPriority` will suppress any providers with a lower priority
-        # i.e. The default provider will be suppressed
+        # This will take priority over the default provider, which has a
+        # priority of 0.
+        # `excludeLowerPriority` will suppress any providers with a lower
+        # priority i.e. The default provider will be suppressed
         inclusionPriority: 1
 
         # Required: Return a promise, an array of suggestions, or null.
         getSuggestions: ({editor, bufferPosition, scopeDescriptor, prefix}) ->
-            console.log "getSuggestions: prefix:", prefix
+            console.log 'getSuggestions: prefix:', prefix
             prefix = @getPrefix editor, bufferPosition
-            console.log "getSuggestions: new prefix:", prefix
+            console.log 'getSuggestions: new prefix:', prefix
             if prefix.trim().length < 3
                 return null
 
             grammar = editor.getGrammar()
-            grammarLanguage = KernelManager.getGrammarLanguageFor grammar
-            kernel = KernelManager.getRunningKernelFor grammarLanguage
+            language = kernelManager.getLanguageFor grammar
+            kernel = kernelManager.getRunningKernelFor language
             unless kernel?
                 return null
 
@@ -67,21 +67,23 @@ module.exports = AutocompleteProvider = do ->
 
         getPrefix: (editor, bufferPosition) ->
             grammar = editor.getGrammar()
-            grammarLanguage = KernelManager.getGrammarLanguageFor grammar
+            language = kernelManager.getLanguageFor grammar
 
-            regex = @regexes[grammarLanguage] ? @defaultRegex
+            regex = @regexes[language] ? @defaultRegex
 
             # Get the text for the line up to the triggered buffer position
-            line = editor.getTextInRange([[bufferPosition.row, 0], bufferPosition])
+            line = editor.getTextInRange(
+                [[bufferPosition.row, 0], bufferPosition]
+            )
 
             # Match the regex to the line, and return the match
             line.match(regex)?[0] or ''
 
-        # (optional): called _after_ the suggestion `replacementPrefix` is replaced
-        # by the suggestion `text` in the buffer
+        # (optional): called _after_ the suggestion `replacementPrefix` is
+        # replaced by the suggestion `text` in the buffer
         onDidInsertSuggestion: ({editor, triggerPosition, suggestion}) ->
 
-        # (optional): called when your provider needs to be cleaned up. Unsubscribe
-        # from things, kill any processes, etc.
+        # (optional): called when your provider needs to be cleaned up.
+        # Unsubscribe from things, kill any processes, etc.
         dispose: ->
     }
