@@ -5,6 +5,7 @@ module.exports =
 class Inspector
     constructor: (@kernelManager) ->
         @editor = atom.workspace.getActiveTextEditor()
+        @_lastInspectionResult = ''
 
     inspect: ->
         @editor = atom.workspace.getActiveTextEditor()
@@ -13,7 +14,7 @@ class Inspector
         kernel = @kernelManager.getRunningKernelFor language
         unless kernel?
             atom.notifications.addInfo 'No kernel running!'
-            @inspector?.close()
+            @closeInspector()
             return
 
         [code, cursor_pos] = @getCodeToInspect()
@@ -27,8 +28,13 @@ class Inspector
                     firstline = lines[0]
                     lines.splice(0, 1)
                     message = lines.join('\n')
-                    @getInspector()
-                    @addInspectResult(firstline, message)
+                    if @_lastInspectionResult is message
+                        @closeInspector()
+                    else
+                        @initializeInspector()
+                        @addInspectResult(firstline, message)
+                        @_lastInspectionResult = message
+
 
                 onError = (error) ->
                     console.error 'Inspector: Rendering error:', error
@@ -37,7 +43,7 @@ class Inspector
 
             else
                 atom.notifications.addInfo 'No introspection available!'
-                @inspector?.close()
+                @closeInspector()
 
     getCodeToInspect: ->
         if @editor.getSelectedText()
@@ -50,7 +56,7 @@ class Inspector
             cursor_pos = cursor.getBufferColumn()
         return [code, cursor_pos]
 
-    getInspector: ->
+    initializeInspector: ->
         if not @inspector?
             console.log 'Opening Inspector'
             @inspector = new MessagePanelView
@@ -69,11 +75,8 @@ class Inspector
             className: 'inspect-message'
             raw: true
 
-    toggleInspectorSize: ->
-        if @inspector?
-            @inspector.toggle()
-
     closeInspector: ->
+        @_lastInspectionResult = ''
         if @inspector?
             @inspector.close()
 

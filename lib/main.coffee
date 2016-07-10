@@ -52,7 +52,7 @@ module.exports = Hydrogen =
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': => @kernelManager.updateKernelSpecs()
-            'hydrogen:inspect': => @inspector.inspect()
+            'hydrogen:toggle-inspector': => @inspector.inspect()
             'hydrogen:interrupt-kernel': =>
                 @handleKernelCommand command: 'interrupt-kernel'
             'hydrogen:restart-kernel': =>
@@ -60,9 +60,6 @@ module.exports = Hydrogen =
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
-            'hydrogen:toggle-inspector-size': =>
-                @inspector.toggleInspectorSize()
-            'hydrogen:close-inspector': => @inspector.closeInspector()
 
         @subscriptions.add atom.workspace.observeActivePaneItem (item) =>
             if item and item is atom.workspace.getActiveTextEditor()
