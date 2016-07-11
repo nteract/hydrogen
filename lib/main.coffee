@@ -52,7 +52,7 @@ module.exports = Hydrogen =
             'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
             'hydrogen:remove-watch': => @watchSidebar.removeWatch()
             'hydrogen:update-kernels': => @kernelManager.updateKernelSpecs()
-            'hydrogen:toggle-inspector': => @inspector.inspect()
+            'hydrogen:toggle-inspector': => @inspector.toggle()
             'hydrogen:interrupt-kernel': =>
                 @handleKernelCommand command: 'interrupt-kernel'
             'hydrogen:restart-kernel': =>
