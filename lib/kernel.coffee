@@ -15,7 +15,6 @@ class Kernel
         console.log 'Kernel spec:', @kernelSpec
         console.log 'Kernel configuration:', @config
         console.log 'Kernel configuration file path:', @configPath
-        @language = @kernelSpec.language
         @kernelName = @kernelSpec.display_name
         @executionCallbacks = {}
         @watchCallbacks = []
@@ -80,9 +79,10 @@ class Kernel
         @controlSocket = new jmp.Socket 'dealer', scheme, key
         @ioSocket    = new jmp.Socket 'sub', scheme, key
 
-        @shellSocket.identity = 'dealer' + @language + process.pid
-        @controlSocket.identity = 'control' + @language + process.pid
-        @ioSocket.identity = 'sub' + @language + process.pid
+        id = uuid.v4()
+        @shellSocket.identity = 'dealer' + id
+        @controlSocket.identity = 'control' + id
+        @ioSocket.identity = 'sub' + id
 
         address = "#{ @config.transport }://#{ @config.ip }:"
         @shellSocket.connect(address + @config.shell_port)
