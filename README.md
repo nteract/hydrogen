@@ -92,6 +92,37 @@ But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/I
 
 Note that if you install a new kernel, you'll need to reload Atom (search in the Command Palette for "reload") for Hydrogen to find it. For performance reasons, Hydrogen only looks for available kernels when it first starts.
 
+#### Debian 8 and Ubuntu 16.04 LTS
+
+Unfortunately, the versions of IPython provided in Debian's and Ubuntu's
+repositories are rather old and Hydrogen is unable to detect the kernel specs
+installed in your machine. To workaround this issue, Hydrogen provides the
+setting `KernelSpec`, where the user can declare the kernel specs manually.
+Below is an example for IPython 2 and 3:
+
+```json
+{
+  "kernelspecs": {
+    "python2": {
+      "spec": {
+        "display_name": "Python 2",
+        "language": "python",
+        "argv": ["python2.7", "-m", "ipykernel", "-f", "{connection_file}"],
+        "env": {}
+      }
+    },
+    "python3": {
+      "spec": {
+        "display_name": "Python 3",
+        "language": "python",
+        "argv": ["python3.4", "-m", "ipykernel", "-f", "{connection_file}"],
+        "env": {}
+      }
+    }
+  }
+}
+```
+
 ## Usage
 
 Make sure to start Atom from the command line (with `atom <directory or file>`) for this package to work! See [Jank](#Jank).
