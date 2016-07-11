@@ -29,8 +29,8 @@ For all systems, you'll need
 
 - [Atom](https://atom.io/) `1.6.0+`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software)
-- [Jupyter notebook](http://jupyter.org): `pip install jupyter[notebook]`
-- Python 2 (for builds - you can still run Python 3 code)
+- [Jupyter notebook](http://jupyter.org): `pip install jupyter`
+- Python 2 for builds (you can still run Python 3 code)
 
 Each operating system has their own instruction set. Please read on down to save yourself time.
 
@@ -40,7 +40,7 @@ Each operating system has their own instruction set. Please read on down to save
 
 - [`pkg-config`](https://www.freedesktop.org/wiki/Software/pkg-config/): `brew install pkg-config`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software): `brew install zeromq`
-- [Jupyter notebook](http://jupyter.org): needs to be installed and on your `$PATH`. `pip install "jupyter[notebook]"`
+- [Jupyter notebook](http://jupyter.org): needs to be installed and on your `$PATH`. `pip install jupyter`
 
 #### Windows
 
@@ -52,15 +52,18 @@ After these are installed, you'll likely need to restart your machine (especiall
 
 #### Linux
 
-For Debian/Ubuntu based variants, you'll need `libzmq3-dev` (preferred) or alternatively `libzmq-dev`.   
-For RedHat/CentOS/Fedora/openSUSE based variants, you'll need `zeromq` and `zeromq-devel`.
-For Arch Linux based variants, you'll need `zeromq` or `zeromq3` (which has to be built from the <abbr title="Arch User Repository">AUR</abbr>).
-For Gentoo Linux based variants, you'll need `net-libs/zeromq`. 
+For **Debian/Ubuntu** based variants, you'll need `libzmq3-dev` (preferred) or alternatively `libzmq-dev`.
+
+For **RedHat/CentOS/Fedora/openSUSE** based variants, you'll need `zeromq` and `zeromq-devel`.
+
+For **Arch** Linux based variants, you'll need `zeromq` or `zeromq3` (which has to be built from the <abbr title="Arch User Repository">AUR</abbr>).
+
+For **Gentoo** Linux based variants, you'll need `net-libs/zeromq`. 
 
 If you have Python and pip setup, install the notebook directly, via running (as root):
 
 ```
-pip install jupyter[notebook]
+pip install jupyter
 ```
 
 ## Installation
