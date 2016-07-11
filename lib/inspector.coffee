@@ -5,15 +5,16 @@ module.exports =
 class Inspector
     constructor: (@kernelManager) ->
         @editor = atom.workspace.getActiveTextEditor()
+        @_lastInspectionResult = ''
 
-    inspect: ->
+    toggle: ->
         @editor = atom.workspace.getActiveTextEditor()
         grammar = @editor.getGrammar()
         language = @kernelManager.getLanguageFor grammar
         kernel = @kernelManager.getRunningKernelFor language
         unless kernel?
             atom.notifications.addInfo 'No kernel running!'
-            @inspector?.close()
+            @view?.close()
             return
 
         [code, cursor_pos] = @getCodeToInspect()
@@ -27,8 +28,17 @@ class Inspector
                     firstline = lines[0]
                     lines.splice(0, 1)
                     message = lines.join('\n')
-                    @getInspector()
-                    @addInspectResult(firstline, message)
+
+                    @view ?= new MessagePanelView
+                        title: 'Hydrogen Inspector'
+                        closeMethod: 'destroy'
+
+                    if @_lastInspectionResult is message and @view.panel?
+                        @view?.close()
+                    else
+                        @addInspectResult(firstline, message)
+                        @_lastInspectionResult = message
+
 
                 onError = (error) ->
                     console.error 'Inspector: Rendering error:', error
@@ -37,7 +47,7 @@ class Inspector
 
             else
                 atom.notifications.addInfo 'No introspection available!'
-                @inspector?.close()
+                @view?.close()
 
     getCodeToInspect: ->
         if @editor.getSelectedText()
@@ -50,31 +60,16 @@ class Inspector
             cursor_pos = cursor.getBufferColumn()
         return [code, cursor_pos]
 
-    getInspector: ->
-        if not @inspector?
-            console.log 'Opening Inspector'
-            @inspector = new MessagePanelView
-                title: 'Hydrogen Inspector'
-        else
-            @inspector.clear()
-
     addInspectResult: (firstline, message) ->
-        @inspector.attach()
-        @inspector.add new PlainMessageView
+        @view.clear()
+        @view.attach()
+        @view.add new PlainMessageView
             message: firstline
             className: 'inspect-message'
             raw: true
-        @inspector.add new PlainMessageView
+        @view.add new PlainMessageView
             message: message
             className: 'inspect-message'
             raw: true
-
-    toggleInspectorSize: ->
-        if @inspector?
-            @inspector.toggle()
-
-    closeInspector: ->
-        if @inspector?
-            @inspector.close()
 
 transform = transformime.createTransform()
