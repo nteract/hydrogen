@@ -48,8 +48,10 @@ class SignalListView extends SelectListView
 
         # add basic commands for the current grammar language
         basicCommands = @basicCommands.map (command) ->
+            name =
+                command.name + ' ' + kernel.kernelSpec.display_name + ' kernel'
             return {
-                name: kernel.kernelSpec.display_name + ' kernel: ' + command.name
+                name: name
                 value: command.value
                 grammar: grammar
                 language: language
