@@ -29,7 +29,7 @@ For all systems, you'll need
 
 - [Atom](https://atom.io/) `1.6.0+`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software)
-- IPython notebook `pip install ipython[notebook]`
+- [Jupyter notebook](http://jupyter.org): `pip install jupyter[notebook]`
 - Python 2 (for builds - you can still run Python 3 code)
 
 Each operating system has their own instruction set. Please read on down to save yourself time.
@@ -40,13 +40,13 @@ Each operating system has their own instruction set. Please read on down to save
 
 - [`pkg-config`](https://www.freedesktop.org/wiki/Software/pkg-config/): `brew install pkg-config`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software): `brew install zeromq`
-- [IPython (Jupyter)](http://ipython.org/install.html): needs to be installed and on your `$PATH`. `pip install "ipython[notebook]"`
+- [Jupyter notebook](http://jupyter.org): needs to be installed and on your `$PATH`. `pip install "jupyter[notebook]"`
 
 #### Windows
 
 - You'll need a compiler! [Visual Studio 2013 Community Edition](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx) is required to build zmq.node.
 - Python (tread on your own or install [Anaconda](https://www.continuum.io/downloads))
-- [IPython notebook](http://ipython.org/install.html) - If you installed Anaconda, you're already done
+- [Jupyter notebook](http://jupyter.org): if you installed Anaconda, you're already done
 
 After these are installed, you'll likely need to restart your machine (especially after Visual Studio).
 
@@ -60,7 +60,7 @@ For Gentoo Linux based variants, you'll need `net-libs/zeromq`.
 If you have Python and pip setup, install the notebook directly, via running (as root):
 
 ```
-pip install ipython[notebook]
+pip install jupyter[notebook]
 ```
 
 ## Installation
@@ -188,7 +188,7 @@ Additionally, if you have two or more kernels for a particular language (grammar
 
 ## How it works
 
-Hydrogen implements the [messaging protocol](http://ipython.org/ipython-doc/stable/development/messaging.html) for [Jupyter](https://jupyter.org/). Jupyter (formerly IPython) uses ZeroMQ to connect a client (like Hydrogen) to a running kernel (like IJulia or iTorch). The client sends code to be executed to the kernel, which runs it and sends back results.
+Hydrogen implements the [messaging protocol](http://jupyter-client.readthedocs.io/en/latest/messaging.html) for [Jupyter](https://jupyter.org/). Jupyter (formerly IPython) uses ZeroMQ to connect a client (like Hydrogen) to a running kernel (like IJulia or iTorch). The client sends code to be executed to the kernel, which runs it and sends back results.
 
 
 ## Jank
