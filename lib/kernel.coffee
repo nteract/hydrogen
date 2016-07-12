@@ -233,7 +233,7 @@ class Kernel
                     stream: 'status'
 
             else if msg_type is 'complete_reply'
-                callback message.content.matches
+                callback message.content
 
             else if msg_type is 'inspect_reply'
                 callback
