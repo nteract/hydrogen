@@ -24,10 +24,15 @@ class KernelManager
 
 
     startKernelFor: (grammar, onStarted) ->
+        if _.isEmpty @_kernelSpecs
+            @updateKernelSpecs =>
+                @_startKernelFor grammar, onStarted
+        else
+            @_startKernelFor grammar, onStarted
+
+
+    _startKernelFor: (grammar, onStarted) ->
         language = @getLanguageFor grammar
-
-        console.log 'startKernelFor:', language
-
         kernelSpec = @getKernelSpecFor language
 
         unless kernelSpec?
@@ -38,6 +43,7 @@ class KernelManager
             atom.notifications.addError message, options
             return
 
+        console.log 'startKernelFor:', language
         @startKernel kernelSpec, grammar, onStarted
 
 
