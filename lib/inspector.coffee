@@ -4,12 +4,11 @@ transformime = require 'transformime'
 module.exports =
 class Inspector
     constructor: (@kernelManager) ->
-        @editor = atom.workspace.getActiveTextEditor()
         @_lastInspectionResult = ''
 
     toggle: ->
-        @editor = atom.workspace.getActiveTextEditor()
-        grammar = @editor.getGrammar()
+        editor = atom.workspace.getActiveTextEditor()
+        grammar = editor.getGrammar()
         language = @kernelManager.getLanguageFor grammar
         kernel = @kernelManager.getRunningKernelFor language
         unless kernel?
@@ -21,20 +20,30 @@ class Inspector
             title: 'Hydrogen Inspector'
             closeMethod: 'destroy'
 
-        [code, cursor_pos] = @getCodeToInspect()
+        [code, cursor_pos] = @getCodeToInspect editor
+        if cursor_pos is 0
+            return
 
         kernel.inspect code, cursor_pos, (result) =>
+            # TODO: handle case when inspect request returns an error
             @showInspectionResult result
 
-    getCodeToInspect: ->
-        if @editor.getSelectedText()
-            code = @editor.getSelectedText()
+    getCodeToInspect: (editor) ->
+        selectedText = editor.getSelectedText()
+        if selectedText
+            code = selectedText
             cursor_pos = code.length
         else
-            cursor = @editor.getLastCursor()
+            cursor = editor.getLastCursor()
             row = cursor.getBufferRow()
-            code = @editor.lineTextForBufferRow(row)
+            code = editor.lineTextForBufferRow row
             cursor_pos = cursor.getBufferColumn()
+
+            # TODO: use kernel.complete to find a selection
+            identifier_end = code.slice(cursor_pos).search /\W/
+            if identifier_end isnt -1
+                cursor_pos += identifier_end
+
         return [code, cursor_pos]
 
     showInspectionResult: (result) ->
