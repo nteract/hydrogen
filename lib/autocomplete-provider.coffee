@@ -16,7 +16,8 @@ module.exports = (kernelManager) ->
         selector: '.source'
         disableForSelector: '.comment, .string'
 
-        # `excludeLowerPriority` will suppress any providers with lower priority
+        # `excludeLowerPriority: false` won't suppress providers with lower
+        # priority.
         # The default provider has a priority of 0.
         inclusionPriority: 1
         excludeLowerPriority: false
