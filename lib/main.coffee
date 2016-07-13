@@ -66,8 +66,6 @@ module.exports = Hydrogen =
                 @editor = item
                 @setStatusBarElement()
 
-        @kernelManager.updateKernelSpecs()
-
 
     deactivate: ->
         @subscriptions.dispose()

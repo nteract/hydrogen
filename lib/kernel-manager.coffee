@@ -11,6 +11,7 @@ module.exports =
 class KernelManager
     constructor: ->
         @_runningKernels = {}
+        @_kernelSpecs = @getKernelSpecsFromSettings()
 
 
     destroy: ->
@@ -23,10 +24,15 @@ class KernelManager
 
 
     startKernelFor: (grammar, onStarted) ->
+        if _.isEmpty @_kernelSpecs
+            @updateKernelSpecs =>
+                @_startKernelFor grammar, onStarted
+        else
+            @_startKernelFor grammar, onStarted
+
+
+    _startKernelFor: (grammar, onStarted) ->
         language = @getLanguageFor grammar
-
-        console.log 'startKernelFor:', language
-
         kernelSpec = @getKernelSpecFor language
 
         unless kernelSpec?
@@ -37,6 +43,7 @@ class KernelManager
             atom.notifications.addError message, options
             return
 
+        console.log 'startKernelFor:', language
         @startKernel kernelSpec, grammar, onStarted
 
 
@@ -91,8 +98,7 @@ class KernelManager
 
 
     getAllKernelSpecs: ->
-        kernelSpecs = _.map @parseKernelSpecSettings(), 'spec'
-        return kernelSpecs
+        return _.map @_kernelSpecs, 'spec'
 
 
     getAllKernelSpecsFor: (language) ->
@@ -129,7 +135,7 @@ class KernelManager
         return kernelLanguage.toLowerCase() is language
 
 
-    parseKernelSpecSettings: ->
+    getKernelSpecsFromSettings: ->
         settings = Config.getJson 'kernelspec'
 
         unless settings.kernelspecs
@@ -140,55 +146,60 @@ class KernelManager
             return spec?.language and spec.display_name and spec.argv
 
 
-    saveKernelSpecs: (jsonString) ->
-        console.log 'saveKernelSpecs:', jsonString
-
-        try
-            newKernelSpecs = JSON.parse(jsonString).kernelspecs
-
-        catch e
-            message =
-                'Cannot parse `ipython kernelspecs` or `jupyter kernelspecs`'
-            options = detail:
-                'Use kernelSpec option in Hydrogen or update IPython/Jupyter to
-                a version that supports: `jupyter kernelspec list --json` or
-                `ipython kernelspec list --json`'
-            atom.notifications.addError message, options
-            return
-
-        unless newKernelSpecs?
-            return
-
-        kernelSpecs = @parseKernelSpecSettings()
-        _.assign kernelSpecs, newKernelSpecs
-
-        Config.setJson 'kernelspec', kernelspecs: kernelSpecs
-
-        message = 'Hydrogen Kernels updated:'
-        options = detail: (_.map kernelSpecs, 'spec.display_name').join('\n')
-        atom.notifications.addInfo message, options
+    mergeKernelSpecs: (kernelSpecs) ->
+        _.assign @_kernelSpecs, kernelSpecs
 
 
-    updateKernelSpecs: ->
-        commands = [
-            'jupyter kernelspec list --json --log-level=CRITICAL',
-            'ipython kernelspec list --json --log-level=CRITICAL',
-        ]
-
-        child_process.exec commands[0], (err, stdout, stderr) =>
+    updateKernelSpecs: (callback) ->
+        @_kernelSpecs = @getKernelSpecsFromSettings
+        @getKernelSpecsFromJupyter (err, kernelSpecsFromJupyter) =>
             unless err
-                @saveKernelSpecs stdout
+                @mergeKernelSpecs kernelSpecsFromJupyter
+
+            if _.isEmpty @_kernelSpecs
+                message = 'No kernel specs found'
+                options =
+                    detail: 'Use kernelSpec option in Hydrogen or update
+                    IPython/Jupyter to a version that supports: `jupyter
+                    kernelspec list --json` or `ipython kernelspec list --json`'
+                    dismissable: true
+                atom.notifications.addError message, options
+            else
+                err = null
+                message = 'Hydrogen Kernels updated:'
+                options =
+                    detail: (_.map @_kernelSpecs, 'spec.display_name').join('\n')
+                atom.notifications.addInfo message, options
+
+            callback? err, @_kernelSpecs
+
+
+    getKernelSpecsFromJupyter: (callback) =>
+        jupyter = 'jupyter kernelspec list --json --log-level=CRITICAL'
+        ipython = 'ipython kernelspec list --json --log-level=CRITICAL'
+
+        @getKernelSpecsFrom jupyter, (jupyterError, kernelSpecs) =>
+            unless jupyterError
+                callback? jupyterError, kernelSpecs
                 return
 
-            console.log 'updateKernelSpecs: `jupyter kernelspec` failed', err
+            @getKernelSpecsFrom ipython, (ipythonError, kernelSpecs) ->
+                unless ipythonError
+                    callback? ipythonError, kernelSpecs
+                else
+                    callback? jupyterError, kernelSpecs
 
-            child_process.exec commands[1], (err, stdout, stderr) =>
-                unless err
-                    @saveKernelSpecs stdout
-                    return
 
-                console.log 'updateKernelSpecs: `ipython kernelspec` failed',
-                    err
+    getKernelSpecsFrom: (command, callback) ->
+        child_process.exec command, (err, stdout, stderr) ->
+            unless err
+                try
+                    kernelSpecs = JSON.parse(stdout).kernelspecs
+                catch error
+                    err = error
+                    console.log 'Could not parse kernelspecs:', err
+
+            callback? err, kernelSpecs
 
 
     setKernelMapping: (kernel, grammar) ->
