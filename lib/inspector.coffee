@@ -4,12 +4,11 @@ transformime = require 'transformime'
 module.exports =
 class Inspector
     constructor: (@kernelManager) ->
-        @editor = atom.workspace.getActiveTextEditor()
         @_lastInspectionResult = ''
 
     toggle: ->
-        @editor = atom.workspace.getActiveTextEditor()
-        grammar = @editor.getGrammar()
+        editor = atom.workspace.getActiveTextEditor()
+        grammar = editor.getGrammar()
         language = @kernelManager.getLanguageFor grammar
         kernel = @kernelManager.getRunningKernelFor language
         unless kernel?
@@ -17,59 +16,97 @@ class Inspector
             @view?.close()
             return
 
-        [code, cursor_pos] = @getCodeToInspect()
+        @view ?= new MessagePanelView
+            title: 'Hydrogen Inspector'
+            closeMethod: 'destroy'
+
+        [code, cursor_pos] = @getCodeToInspect editor
+        if cursor_pos is 0
+            return
 
         kernel.inspect code, cursor_pos, (result) =>
-            console.log 'Inspector: Result:', result
-            found = result.found
-            if found is true
-                onInspectResult = ({mimetype, el}) =>
-                    lines = el.innerHTML.split('\n')
-                    firstline = lines[0]
-                    lines.splice(0, 1)
-                    message = lines.join('\n')
+            # TODO: handle case when inspect request returns an error
+            @showInspectionResult result
 
-                    @view ?= new MessagePanelView
-                        title: 'Hydrogen Inspector'
-                        closeMethod: 'destroy'
-
-                    if @_lastInspectionResult is message and @view.panel?
-                        @view?.close()
-                    else
-                        @addInspectResult(firstline, message)
-                        @_lastInspectionResult = message
-
-
-                onError = (error) ->
-                    console.error 'Inspector: Rendering error:', error
-
-                transform(result.data).then onInspectResult, onError
-
-            else
-                atom.notifications.addInfo 'No introspection available!'
-                @view?.close()
-
-    getCodeToInspect: ->
-        if @editor.getSelectedText()
-            code = @editor.getSelectedText()
+    getCodeToInspect: (editor) ->
+        selectedText = editor.getSelectedText()
+        if selectedText
+            code = selectedText
             cursor_pos = code.length
         else
-            cursor = @editor.getLastCursor()
+            cursor = editor.getLastCursor()
             row = cursor.getBufferRow()
-            code = @editor.lineTextForBufferRow(row)
+            code = editor.lineTextForBufferRow row
             cursor_pos = cursor.getBufferColumn()
+
+            # TODO: use kernel.complete to find a selection
+            identifier_end = code.slice(cursor_pos).search /\W/
+            if identifier_end isnt -1
+                cursor_pos += identifier_end
+
         return [code, cursor_pos]
 
-    addInspectResult: (firstline, message) ->
-        @view.clear()
-        @view.attach()
-        @view.add new PlainMessageView
-            message: firstline
-            className: 'inspect-message'
-            raw: true
-        @view.add new PlainMessageView
-            message: message
-            className: 'inspect-message'
-            raw: true
+    showInspectionResult: (result) ->
+        console.log 'Inspector: Result:', result
+
+        unless result.found
+            atom.notifications.addInfo 'No introspection available!'
+            @view?.close()
+            return
+
+        onInspectResult = ({mimetype, el}) =>
+            if mimetype is 'text/plain'
+                lines = el.innerHTML.split('\n')
+                firstline = lines[0]
+                lines.splice(0, 1)
+                message = lines.join('\n')
+
+                if @_lastInspectionResult is message and @view.panel?
+                    @view?.close()
+                    return
+
+                @view.clear()
+                @view.attach()
+                @view.add new PlainMessageView
+                    message: firstline
+                    className: 'inspect-message'
+                    raw: true
+                @view.add new PlainMessageView
+                    message: message
+                    className: 'inspect-message'
+                    raw: true
+
+                @_lastInspectionResult = message
+                return
+
+            else if mimetype is 'text/html'
+                container = document.createElement('div')
+                container.appendChild(el)
+                message = container.innerHTML
+                if @_lastInspectionResult is message and @view.panel?
+                    @view?.close()
+                    return
+
+                @view.clear()
+                @view.attach()
+                @view.add new PlainMessageView
+                    message: message
+                    className: 'inspect-message'
+                    raw: true
+
+                @_lastInspectionResult = message
+                return
+
+            console.error 'Inspector: Rendering error:', mimetype, el
+            atom.notifications.addInfo 'Cannot render introspection result!'
+            @view?.close()
+            return
+
+        onError = (error) =>
+            console.error 'Inspector: Rendering error:', error
+            atom.notifications.addInfo 'Cannot render introspection result!'
+            @view?.close()
+
+        transform(result.data).then onInspectResult, onError
 
 transform = transformime.createTransform()
