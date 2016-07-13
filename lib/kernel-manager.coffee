@@ -168,7 +168,8 @@ class KernelManager
                 err = null
                 message = 'Hydrogen Kernels updated:'
                 options =
-                    detail: (_.map @_kernelSpecs, 'spec.display_name').join('\n')
+                    detail:
+                        (_.map @_kernelSpecs, 'spec.display_name').join('\n')
                 atom.notifications.addInfo message, options
 
             callback? err, @_kernelSpecs
@@ -191,7 +192,8 @@ class KernelManager
 
 
     getKernelSpecsFrom: (command, callback) ->
-        child_process.exec command, (err, stdout, stderr) ->
+        options = killSignal: 'SIGINT'
+        child_process.exec command, options, (err, stdout, stderr) ->
             unless err
                 try
                     kernelSpecs = JSON.parse(stdout).kernelspecs
