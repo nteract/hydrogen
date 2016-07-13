@@ -165,6 +165,7 @@ class KernelManager
                     dismissable: true
                 atom.notifications.addError message, options
             else
+                err = null
                 message = 'Hydrogen Kernels updated:'
                 options =
                     detail: (_.map @_kernelSpecs, 'spec.display_name').join('\n')
