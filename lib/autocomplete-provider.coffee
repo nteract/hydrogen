@@ -1,89 +1,65 @@
-_ = require 'lodash'
+iconHTML = "<img src='#{__dirname}/../static/logo.svg' style='width: 100%;'>"
 
-Config = require './config'
+regexes =
+    # pretty dodgy, adapted from http://stackoverflow.com/a/8396658
+    r: /([^\d\W]|[.])[\w.$]*$/
+
+    # adapted from http://stackoverflow.com/q/5474008
+    python: /([^\d\W]|[\u00A0-\uFFFF])[\w.\u00A0-\uFFFF]*$/
+
+    # adapted from http://php.net/manual/en/language.variables.basics.php
+    php: /[$a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/
+
 
 module.exports = (kernelManager) ->
-    languageMappings = Config.getJson 'languageMappings'
+    autocompleteProvider =
+        selector: '.source'
+        disableForSelector: '.comment, .string'
 
-    selectors = _.uniq kernelManager.getAllKernelSpecs().map ({language}) ->
-        if language in languageMappings
-            return '.source.' + languageMappings[language].toLowerCase()
-        return '.source.' + language.toLowerCase()
-
-    selector = selectors.join ', '
-        .replace 'coffeescript', 'coffee'
-        .replace 'javascript', 'js'
-
-    console.log 'AutocompleteProvider: selector =', selector
-
-    return {
-        selector: selector
-        disableForSelector: '.comment'
-
-        defaultRegex: /([\w-][\.:\$]?)+$/
-        regexes:
-
-            # pretty dodgy, adapted from http://stackoverflow.com/questions/8396577/check-if-character-value-is-a-valid-r-object-name/8396658#8396658
-            r: /([^\d\W]|[.])[\w.$]*$/
-
-            # this is NOT correct. using the python one until I get an alternative
-            julia: /([^\d\W]|[\u00A0-\uFFFF])[\w.!\u00A0-\uFFFF]*$/
-
-            # adapted from http://stackoverflow.com/questions/5474008/regular-expression-to-confirm-whether-a-string-is-a-valid-identifier-in-python
-            python: /([^\d\W]|[\u00A0-\uFFFF])[\w.\u00A0-\uFFFF]*$/
-
-            # adapted from http://php.net/manual/en/language.variables.basics.php
-            php: /[$a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/
-
-        # This will take priority over the default provider, which has a
-        # priority of 0.
-        # `excludeLowerPriority` will suppress any providers with a lower
-        # priority i.e. The default provider will be suppressed
+        # `excludeLowerPriority: false` won't suppress providers with lower
+        # priority.
+        # The default provider has a priority of 0.
         inclusionPriority: 1
+        excludeLowerPriority: false
 
         # Required: Return a promise, an array of suggestions, or null.
         getSuggestions: ({editor, bufferPosition, scopeDescriptor, prefix}) ->
-            console.log 'getSuggestions: prefix:', prefix
-            prefix = @getPrefix editor, bufferPosition
-            console.log 'getSuggestions: new prefix:', prefix
-            if prefix.trim().length < 3
-                return null
-
             grammar = editor.getGrammar()
             language = kernelManager.getLanguageFor grammar
             kernel = kernelManager.getRunningKernelFor language
             unless kernel?
                 return null
 
+            line = editor.getTextInRange [
+                [bufferPosition.row, 0],
+                bufferPosition
+            ]
+
+            regex = regexes[language]
+            if regex
+                prefix = line.match(regex)?[0] or ''
+            else
+                prefix = line
+
+            # return if cursor is at whitespace
+            if prefix.trimRight().length < prefix.length
+                return null
+
+            if prefix.trim().length < 3
+                return null
+
+            console.log 'autocompleteProvider: request:',
+                line, bufferPosition, prefix
+
             return new Promise (resolve) ->
-                kernel.complete prefix, (matches) ->
-                    matches = _.map matches, (match) ->
+                kernel.complete prefix, ({matches, cursor_start, cursor_end}) ->
+                    replacementPrefix = prefix.slice cursor_start, cursor_end
+
+                    matches = matches.map (match) ->
                         text: match
-                        replacementPrefix: prefix
-                        iconHTML: "<img
-                            src='#{__dirname}/../static/logo.svg'
-                            style='width: 100%;'>"
+                        replacementPrefix: replacementPrefix
+                        iconHTML: iconHTML
+
                     resolve(matches)
 
-        getPrefix: (editor, bufferPosition) ->
-            grammar = editor.getGrammar()
-            language = kernelManager.getLanguageFor grammar
-
-            regex = @regexes[language] ? @defaultRegex
-
-            # Get the text for the line up to the triggered buffer position
-            line = editor.getTextInRange(
-                [[bufferPosition.row, 0], bufferPosition]
-            )
-
-            # Match the regex to the line, and return the match
-            line.match(regex)?[0] or ''
-
-        # (optional): called _after_ the suggestion `replacementPrefix` is
-        # replaced by the suggestion `text` in the buffer
-        onDidInsertSuggestion: ({editor, triggerPosition, suggestion}) ->
-
-        # (optional): called when your provider needs to be cleaned up.
-        # Unsubscribe from things, kill any processes, etc.
-        dispose: ->
-    }
+    return autocompleteProvider
