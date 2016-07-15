@@ -319,7 +319,7 @@ module.exports = Hydrogen =
         else
             @watchSidebar = sidebar
 
-    showKernelPicker: ->
+    _showKernelPicker: ->
         unless @kernelPicker?
             @kernelPicker = new KernelPicker =>
                 grammar = @editor.getGrammar()
@@ -330,8 +330,16 @@ module.exports = Hydrogen =
                 @handleKernelCommand
                     command: 'switch-kernel'
                     kernelSpec: kernelSpec
-
         @kernelPicker.toggle()
+
+
+    showKernelPicker: ->
+        if @kernelManager.getAllKernelSpecs().length is 0
+            @kernelManager.updateKernelSpecs =>
+                @_showKernelPicker()
+        else
+            @_showKernelPicker()
+
 
     showWatchKernelPicker: ->
         unless @watchKernelPicker?
