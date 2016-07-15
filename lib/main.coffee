@@ -101,17 +101,17 @@ module.exports = Hydrogen =
         unless kernel
             kernel = @kernelManager.getRunningKernelFor language
 
-        message = "No running kernel for language `#{language}` found"
+        errorMessage = "No running kernel for language `#{language}` found"
 
         if command is 'interrupt-kernel'
             unless kernel
-                atom.notifications.addError message
+                atom.notifications.addError errorMessage
                 return
             kernel.interrupt()
 
         else if command is 'restart-kernel'
             unless kernel
-                atom.notifications.addError message
+                atom.notifications.addError errorMessage
                 return
             kernelSpec = kernel.kernelSpec
             @kernelManager.destroyRunningKernel kernel
