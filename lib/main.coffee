@@ -105,9 +105,10 @@ module.exports = Hydrogen =
             kernel.interrupt()
 
         else if command is 'restart-kernel'
+            kernelSpec = kernel.kernelSpec
             @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            @kernelManager.startKernelFor grammar, =>
+            @kernelManager.startKernel kernelSpec, grammar, =>
                 @setStatusBarElement()
 
         else if command is 'switch-kernel'
@@ -115,7 +116,6 @@ module.exports = Hydrogen =
             if kernel
                 @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            @kernelManager.setKernelMapping kernelSpec, grammar
             @kernelManager.startKernel kernelSpec, grammar, =>
                 @setStatusBarElement()
 

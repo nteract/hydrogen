@@ -10,23 +10,11 @@ module.exports = Config =
             atom.notifications.addError message, detail: error
         return _default
 
-    setJson: (key, value, merge=false) ->
-        value = _.merge Config.getJson(key), value if merge
-        atom.config.set "Hydrogen.#{key}", JSON.stringify value
-
     schema:
         autocomplete:
             title: 'Enable Autocomplete'
             type: 'boolean'
             default: true
-        kernelMappings:
-            title: 'Kernel Mappings'
-            description: 'This field is JSON string that maps grammar languages
-            to kernel display names. You can use it, for example, to specify
-            which Python kernel will be started to execute Python code, like
-            this: `{"python":"Python 3"}`'
-            type: 'string'
-            default: '{}'
         kernelNotifications:
             title: 'Enable Kernel Notifications'
             description: 'By default, kernel notifications are only displayed in

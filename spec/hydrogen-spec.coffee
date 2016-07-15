@@ -7,10 +7,6 @@ path = require 'path'
 fs = require 'fs'
 
 describe 'Atom config', ->
-    it 'should set config value', ->
-        Config.setJson 'set', 'foo'
-        expect(JSON.parse atom.config.get 'Hydrogen.set').toEqual('foo')
-
     it 'should read config values', ->
         atom.config.set 'Hydrogen.read', JSON.stringify 'bar'
         expect(Config.getJson 'read').toEqual('bar')
@@ -159,17 +155,17 @@ describe 'Kernel manager', ->
             expect(allKernelSpecsForJulia).toEqual([])
 
     describe 'getKernelSpecFor', ->
-        it 'should return spec for given language', ->
+        it 'should return spec for given language', (done) ->
             @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-            kernelSpecForPython = @kernelManager.getKernelSpecFor('python')
+            @kernelManager.getKernelSpecFor 'python', (kernelSpecForPython) ->
+                expect(kernelSpecForPython).toEqual(kernelSpecs.kernelspecs.python2.spec)
+                done
 
-            expect(kernelSpecForPython).toEqual(kernelSpecs.kernelspecs.python2.spec)
-
-        it 'should return undefined', ->
+        it 'should return undefined', (done) ->
             @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-            kernelSpecForJulia = @kernelManager.getKernelSpecFor('julia')
-
-            expect(kernelSpecForJulia).toBeUndefined()
+            @kernelManager.getKernelSpecFor 'julia', (kernelSpecForJulia) ->
+                expect(kernelSpecForJulia).toBeUndefined()
+                done
 
     it 'should read lower case name from grammar', ->
         grammar = atom.grammars.getGrammars()[0]

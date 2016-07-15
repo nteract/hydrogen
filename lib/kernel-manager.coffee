@@ -6,6 +6,7 @@ path = require 'path'
 Config = require './config'
 ConfigManager = require './config-manager'
 Kernel = require './kernel'
+KernelPicker = require './kernel-picker'
 
 module.exports =
 class KernelManager
@@ -33,18 +34,18 @@ class KernelManager
 
     _startKernelFor: (grammar, onStarted) ->
         language = @getLanguageFor grammar
-        kernelSpec = @getKernelSpecFor language
+        @getKernelSpecFor language, (kernelSpec) =>
 
-        unless kernelSpec?
-            message = "No kernel for language `#{language}` found"
-            options =
-                detail: 'Check that the language for this file is set in Atom
-                         and that you have a Jupyter kernel installed for it.'
-            atom.notifications.addError message, options
-            return
+            unless kernelSpec?
+                message = "No kernel for language `#{language}` found"
+                options =
+                    detail: 'Check that the language for this file is set in Atom
+                             and that you have a Jupyter kernel installed for it.'
+                atom.notifications.addError message, options
+                return
 
-        console.log 'startKernelFor:', language
-        @startKernel kernelSpec, grammar, onStarted
+            console.log 'startKernelFor:', language
+            @startKernel kernelSpec, grammar, onStarted
 
 
     startKernel: (kernelSpec, grammar, onStarted) ->
@@ -111,18 +112,19 @@ class KernelManager
         return kernelSpecs
 
 
-    getKernelSpecFor: (language) ->
+    getKernelSpecFor: (language, callback) ->
         unless language?
             return null
 
-        kernelMapping = Config.getJson('kernelMappings')?[language]
-        if kernelMapping?
-            kernelSpecs = @getAllKernelSpecs().filter (spec) ->
-                return spec.display_name is kernelMapping
+        kernelSpecs = @getAllKernelSpecsFor language
+        if kernelSpecs.length <= 1
+            callback kernelSpecs[0]
         else
-            kernelSpecs = @getAllKernelSpecsFor language
-
-        return kernelSpecs[0]
+            @kernelPicker = new KernelPicker ->
+                return kernelSpecs
+            @kernelPicker.onConfirmed = ({kernelSpec}) ->
+                callback kernelSpec
+            @kernelPicker.toggle()
 
 
     kernelSpecProvidesLanguage: (kernelSpec, language) ->
@@ -200,12 +202,3 @@ class KernelManager
                     console.log 'Could not parse kernelspecs:', err
 
             callback? err, kernelSpecs
-
-
-    setKernelMapping: (kernel, grammar) ->
-        language = @getLanguageFor grammar
-
-        mapping = {}
-        mapping[language] = kernel.display_name
-
-        Config.setJson 'kernelMappings', mapping, true
