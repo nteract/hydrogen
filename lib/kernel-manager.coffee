@@ -25,14 +25,6 @@ class KernelManager
 
 
     startKernelFor: (grammar, onStarted) ->
-        if _.isEmpty @_kernelSpecs
-            @updateKernelSpecs =>
-                @_startKernelFor grammar, onStarted
-        else
-            @_startKernelFor grammar, onStarted
-
-
-    _startKernelFor: (grammar, onStarted) ->
         language = @getLanguageFor grammar
         @getKernelSpecFor language, (kernelSpec) =>
 
@@ -98,33 +90,39 @@ class KernelManager
         return grammar?.name.toLowerCase()
 
 
-    getAllKernelSpecs: ->
-        return _.map @_kernelSpecs, 'spec'
+    getAllKernelSpecs: (callback) =>
+        if _.isEmpty @_kernelSpecs
+            @updateKernelSpecs =>
+                callback _.map @_kernelSpecs, 'spec'
+        else
+            callback _.map @_kernelSpecs, 'spec'
 
 
-    getAllKernelSpecsFor: (language) ->
-        unless language?
-            return []
+    getAllKernelSpecsFor: (language, callback) ->
+        if language?
+            @getAllKernelSpecs (kernelSpecs) =>
+                specs = kernelSpecs.filter (spec) =>
+                    @kernelSpecProvidesLanguage spec, language
 
-        kernelSpecs = @getAllKernelSpecs().filter (spec) =>
-            @kernelSpecProvidesLanguage spec, language
-
-        return kernelSpecs
+                callback specs
+        else
+            callback []
 
 
     getKernelSpecFor: (language, callback) ->
         unless language?
             return null
 
-        kernelSpecs = @getAllKernelSpecsFor language
-        if kernelSpecs.length <= 1
-            callback kernelSpecs[0]
-        else
-            @kernelPicker = new KernelPicker ->
-                return kernelSpecs
-            @kernelPicker.onConfirmed = ({kernelSpec}) ->
-                callback kernelSpec
-            @kernelPicker.toggle()
+        @getAllKernelSpecsFor language, (kernelSpecs) ->
+            if kernelSpecs.length <= 1
+                callback kernelSpecs[0]
+            else
+                unless @kernelPicker?
+                    @kernelPicker = new KernelPicker (onUpdated) ->
+                        onUpdated kernelSpecs
+                    @kernelPicker.onConfirmed = ({kernelSpec}) ->
+                        callback kernelSpec
+                @kernelPicker.toggle()
 
 
     kernelSpecProvidesLanguage: (kernelSpec, language) ->

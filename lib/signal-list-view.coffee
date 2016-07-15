@@ -59,18 +59,17 @@ class SignalListView extends SelectListView
             }
 
         # add commands to switch to other kernels
-        kernelSpecs = @kernelManager.getAllKernelSpecsFor language
+        @kernelManager.getAllKernelSpecsFor language, (kernelSpecs) =>
+            switchCommands = kernelSpecs.map (spec) ->
+                return {
+                    name: 'Switch to ' + spec.display_name
+                    value: 'switch-kernel'
+                    grammar: grammar
+                    language: language
+                    kernelSpec: spec
+                }
 
-        switchCommands = kernelSpecs.map (spec) ->
-            return {
-                name: 'Switch to ' + spec.display_name
-                value: 'switch-kernel'
-                grammar: grammar
-                language: language
-                kernelSpec: spec
-            }
-
-        @setItems _.union basicCommands, switchCommands
+            @setItems _.union basicCommands, switchCommands
 
 
     confirmed: (item) ->
