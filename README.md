@@ -90,8 +90,8 @@ Tested and works with:
 
 But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages) — [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 
-<img src="http://i.imgur.com/1cGSHzo.png" width=350>
-<img src="http://i.imgur.com/I5kO69B.png" width=350>
+<img src="https://cloud.githubusercontent.com/assets/13285808/16894731/e4e30a2c-4b5f-11e6-8cd8-bd0a6e8a1209.png" width=400>
+<img src="https://cloud.githubusercontent.com/assets/13285808/16894730/e4e0a606-4b5f-11e6-9154-ee00d57a9f13.png" width=400>
 
 Note that if you install a new kernel, you'll need to reload Atom (search in the Command Palette for "reload") for Hydrogen to find it. For performance reasons, Hydrogen only looks for available kernels when it first starts.
 
@@ -185,7 +185,7 @@ Sometimes things go wrong. Maybe you've written an infinite loop, maybe the kern
 
 You can also access these commands by clicking on the kernel status in the status bar. It looks like this:
 
-<img src="http://i.imgur.com/oQB5mpB.png" width=300>
+<img src="https://cloud.githubusercontent.com/assets/13285808/16894732/e4e5b4de-4b5f-11e6-8b8e-facf17a7c6c4.png" width=300>
 
 Additionally, if you have two or more kernels for a particular language (grammar), you can select which kernel to use with the "Switch to <kernel>" option in the Kernel Commands menu. This change is automatically saved into the Hydrogen configuration's ```grammarToKernel``` map. For example, if Hydrogen is using the kernel for Python 2 by default, you could switch to Python 3. Then next time you open a `.py` file, Hydrogen will remember your selection and use Python 3.
 
