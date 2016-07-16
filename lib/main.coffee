@@ -328,7 +328,7 @@ module.exports = Hydrogen =
 
     showKernelPicker: ->
         unless @kernelPicker?
-            @kernelPicker = new KernelPicker (callback) =>
+            @kernelPicker = new KernelPicker @kernelManager, (callback) =>
                 grammar = @editor.getGrammar()
                 language = @kernelManager.getLanguageFor grammar
                 @kernelManager.getAllKernelSpecsFor language, (kernelSpecs) ->
@@ -336,13 +336,15 @@ module.exports = Hydrogen =
             @kernelPicker.onConfirmed = ({kernelSpec}) =>
                 @handleKernelCommand
                     command: 'switch-kernel'
+                    grammar: grammar
+                    language: language
                     kernelSpec: kernelSpec
         @kernelPicker.toggle()
 
 
     showWatchKernelPicker: ->
         unless @watchKernelPicker?
-            @watchKernelPicker = new KernelPicker (callback) =>
+            @watchKernelPicker = new KernelPicker null, (callback) =>
                 kernels = @kernelManager.getAllRunningKernels()
                 kernelSpecs = _.map kernels, 'kernelSpec'
                 callback kernelSpecs

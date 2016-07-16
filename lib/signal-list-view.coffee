@@ -10,20 +10,23 @@ class SignalListView extends SelectListView
         @basicCommands = [
             {
                 name: 'Interrupt'
-                value: 'interrupt-kernel'
+                command: 'interrupt-kernel'
                 language: null
             },
             {
                 name: 'Restart'
-                value: 'restart-kernel'
+                command: 'restart-kernel'
                 language: null
-            },
+            }
+        ]
+
+        @switchToNonStandardKernel = [
+            name: 'Switch to non standard kernel'
+            command: 'switch-to-non-standard-kernel'
         ]
 
         @onConfirmed = null
-        @addClass('kernel-signal-selector')
         @list.addClass('mark-active')
-        @setItems([])
 
 
     toggle: ->
@@ -38,45 +41,52 @@ class SignalListView extends SelectListView
         @storeFocusedElement()
         @panel ?= atom.workspace.addModalPanel item: this
         @focusFilterEditor()
-        grammar = @editor.getGrammar()
-        language = @kernelManager.getLanguageFor grammar
+        @grammar = @editor.getGrammar()
+        @language = @kernelManager.getLanguageFor @grammar
 
         # disable all commands if no kernel is running
-        kernel = @kernelManager.getRunningKernelFor language
+        kernel = @kernelManager.getRunningKernelFor @language
         unless kernel?
             return @setItems []
 
         # add basic commands for the current grammar language
-        basicCommands = @basicCommands.map (command) ->
+        basicCommands = @basicCommands.map (cmd) ->
             name =
-                command.name + ' ' + kernel.kernelSpec.display_name + ' kernel'
+                cmd.name + ' ' + kernel.kernelSpec.display_name + ' kernel'
             return {
                 name: name
-                value: command.value
-                grammar: grammar
-                language: language
+                command: cmd.value
+                grammar: @grammar
+                language: @language
                 kernel: kernel
             }
 
         # add commands to switch to other kernels
-        @kernelManager.getAllKernelSpecsFor language, (kernelSpecs) =>
-            switchCommands = kernelSpecs.map (spec) ->
-                return {
-                    name: 'Switch to ' + spec.display_name
-                    value: 'switch-kernel'
-                    grammar: grammar
-                    language: language
-                    kernelSpec: spec
-                }
+        @kernelManager.getAllKernelSpecsFor @language, (kernelSpecs) =>
+            @switchCommands = @parseCommands kernelSpecs
 
-            @setItems _.union basicCommands, switchCommands
-
+            @setItems _.union basicCommands, @switchCommands, @switchToNonStandardKernel
 
     confirmed: (item) ->
         console.log 'Selected command:', item
-        item.command = item.value
-        @onConfirmed?(item)
-        @cancel()
+        if item.command is 'switch-to-non-standard-kernel'
+            @kernelManager.getAllKernelSpecs (kernelSpecs) =>
+                allKernelCommands = @parseCommands kernelSpecs
+
+                @setItems _.differenceWith allKernelCommands, @switchCommands, _.isEqual
+        else
+            @onConfirmed?(item)
+            @cancel()
+
+    parseCommands: (kernelSpecs) ->
+        return _.map kernelSpecs, (kernelSpec) ->
+            return {
+                name: 'Switch to ' + kernelSpec.display_name
+                command: 'switch-kernel'
+                grammar: @grammar
+                language: @language
+                kernelSpec: kernelSpec
+            }
 
 
     getEmptyMessage: ->
