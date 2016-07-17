@@ -109,6 +109,8 @@ module.exports = Hydrogen =
             @clearResultBubbles()
             @kernelManager.startKernelFor grammar, =>
                 @setStatusBarElement()
+                kernel = @kernelManager.getRunningKernelFor language
+                @setWatchSidebar kernel
 
         else if command is 'switch-kernel'
             kernel = @kernelManager.getRunningKernelFor language
@@ -118,6 +120,8 @@ module.exports = Hydrogen =
             @kernelManager.setKernelMapping kernelSpec, grammar
             @kernelManager.startKernel kernelSpec, grammar, =>
                 @setStatusBarElement()
+                kernel = @kernelManager.getRunningKernelFor language
+                @setWatchSidebar kernel
 
 
     getCurrentKernel: ->
@@ -142,7 +146,7 @@ module.exports = Hydrogen =
 
     _createResultBubble: (kernel, code, row) ->
         unless @watchSidebar?
-            @setWatchSidebar kernel.watchSidebar
+            @setWatchSidebar kernel
         else if @watchSidebar.element.contains document.activeElement
             @watchSidebar.run()
             return
@@ -310,7 +314,8 @@ module.exports = Hydrogen =
             console.log 'toggleWatchSidebar: showing sidebar'
             @watchSidebar.show()
 
-    setWatchSidebar: (sidebar) ->
+    setWatchSidebar: (kernel) ->
+        sidebar = kernel.watchSidebar
         console.log 'setting watch sidebar'
         if @watchSidebar isnt sidebar and @watchSidebar?.visible
             @watchSidebar.hide()
@@ -345,7 +350,7 @@ module.exports = Hydrogen =
                     k.kernelSpec is kernelSpec
                 kernel = kernels[0]
                 if kernel
-                    @setWatchSidebar kernel.watchSidebar
+                    @setWatchSidebar kernel
                     @watchSidebar.show()
         @watchKernelPicker.toggle()
 
