@@ -58,7 +58,7 @@ For **RedHat/CentOS/Fedora/openSUSE** based variants, you'll need `zeromq` and `
 
 For **Arch** Linux based variants, you'll need `zeromq` or `zeromq3` (which has to be built from the <abbr title="Arch User Repository">AUR</abbr>).
 
-For **Gentoo** Linux based variants, you'll need `net-libs/zeromq`. 
+For **Gentoo** Linux based variants, you'll need `net-libs/zeromq`.
 
 If you have Python and pip setup, install the notebook directly, via running (as root):
 
@@ -68,7 +68,7 @@ pip install jupyter
 
 ## Installation
 
-Assuming you followed the dependencies steps above, you can now `apm install hydrogen` (recommended) or search for "hydrogen" in the Install pane of the Atom settings. Note that installing from within Atom will only work if you start Atom from the command line! See [Jank](#Jank).
+Assuming you followed the dependencies steps above, you can now `apm install hydrogen` (recommended) or search for "hydrogen" in the Install pane of the Atom settings.
 
 If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install hydrogen` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
 
@@ -127,8 +127,6 @@ Below is an example for IPython 2 and 3:
 ```
 
 ## Usage
-
-Make sure to start Atom from the command line (with `atom <directory or file>`) for this package to work! See [Jank](#Jank).
 
 ### Running code
 
@@ -192,11 +190,6 @@ Additionally, if you have two or more kernels for a particular language (grammar
 ## How it works
 
 Hydrogen implements the [messaging protocol](http://jupyter-client.readthedocs.io/en/latest/messaging.html) for [Jupyter](https://jupyter.org/). Jupyter (formerly IPython) uses ZeroMQ to connect a client (like Hydrogen) to a running kernel (like IJulia or iTorch). The client sends code to be executed to the kernel, which runs it and sends back results.
-
-
-## Jank
-
-- In order to have access to your `$PATH` to find where IPython and other binaries are, Atom has to be launched from the command line with `atom <location>`. If you launch Atom as an app, this package won't work.
 
 
 ## Custom kernel connection (inside Docker)
