@@ -21,8 +21,6 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 - interrupt or restart the kernel if anything goes wrong
 - use a custom kernel connection (for example to run code inside Docker), read more in the "Custom kernel connection (inside Docker)" section
 
-<!-- <img src="http://i.imgur.com/KiHQFO4.png?1" width=300> -->
-
 ## Dependencies
 
 For all systems, you'll need
@@ -90,8 +88,7 @@ Tested and works with:
 
 But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages) — [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 
-<img src="https://cloud.githubusercontent.com/assets/13285808/16894731/e4e30a2c-4b5f-11e6-8cd8-bd0a6e8a1209.png" width=400>
-<img src="https://cloud.githubusercontent.com/assets/13285808/16894730/e4e0a606-4b5f-11e6-9154-ee00d57a9f13.png" width=400>
+<img src="https://cloud.githubusercontent.com/assets/13285808/16931386/048f056e-4d41-11e6-8563-3baa8ed84371.png">
 
 Note that if you install a new kernel, you'll need to reload Atom (search in the Command Palette for "reload") for Hydrogen to find it. For performance reasons, Hydrogen only looks for available kernels when it first starts.
 
