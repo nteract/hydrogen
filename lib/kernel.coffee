@@ -8,6 +8,7 @@ zmq = jmp.zmq
 
 StatusView = require './status-view'
 WatchSidebar = require './watch-sidebar'
+InputView = require './input-view'
 
 module.exports =
 class Kernel
@@ -77,11 +78,13 @@ class Kernel
 
         @shellSocket = new jmp.Socket 'dealer', scheme, key
         @controlSocket = new jmp.Socket 'dealer', scheme, key
-        @ioSocket    = new jmp.Socket 'sub', scheme, key
+        @stdinSocket = new jmp.Socket 'dealer', scheme, key
+        @ioSocket = new jmp.Socket 'sub', scheme, key
 
         id = uuid.v4()
         @shellSocket.identity = 'dealer' + id
         @controlSocket.identity = 'control' + id
+        @stdinSocket.identity = 'dealer' + id
         @ioSocket.identity = 'sub' + id
 
         address = "#{ @config.transport }://#{ @config.ip }:"
@@ -89,18 +92,22 @@ class Kernel
         @controlSocket.connect(address + @config.control_port)
         @ioSocket.connect(address + @config.iopub_port)
         @ioSocket.subscribe('')
+        @stdinSocket.connect(address + @config.stdin_port)
 
         @shellSocket.on 'message', @onShellMessage.bind this
         @ioSocket.on 'message', @onIOMessage.bind this
+        @stdinSocket.on 'message', @onStdinMessage.bind this
 
         @shellSocket.on 'connect', -> console.log 'shellSocket connected'
         @controlSocket.on 'connect', -> console.log 'controlSocket connected'
         @ioSocket.on 'connect', -> console.log 'ioSocket connected'
+        @stdinSocket.on 'connect', -> console.log 'stdinSocket connected'
 
         try
             @shellSocket.monitor()
             @controlSocket.monitor()
             @ioSocket.monitor()
+            @stdinSocket.monitor()
         catch err
             console.error 'Kernel:', err
 
@@ -124,7 +131,7 @@ class Kernel
                 silent: false
                 store_history: true
                 user_expressions: {}
-                allow_stdin: false
+                allow_stdin: true
 
         message =
                 header: header
@@ -201,6 +208,26 @@ class Kernel
         @shellSocket.send new jmp.Message message
 
 
+    inputReply: (input) ->
+        requestId = 'input_reply_' + uuid.v4()
+
+        header =
+                msg_id: requestId
+                username: ''
+                session: '00000000-0000-0000-0000-000000000000'
+                msg_type: 'input_reply'
+                version: '5.0'
+
+        content =
+                value: input
+
+        message =
+                header: header
+                content: content
+
+        @stdinSocket.send new jmp.Message message
+
+
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
 
@@ -245,6 +272,22 @@ class Kernel
                     data: 'ok'
                     type: 'text'
                     stream: 'status'
+
+    onStdinMessage: (message) ->
+        console.log 'stdin message:', message
+
+        unless @_isValidMessage message
+            return
+
+        msg_type = message.header.msg_type
+
+        if msg_type is 'input_request'
+            prompt = message.content.prompt
+
+            inputView = new InputView prompt, (input) =>
+                @inputReply input
+
+            inputView.attach()
 
 
     onIOMessage: (message) ->
