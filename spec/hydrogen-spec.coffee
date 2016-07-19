@@ -7,10 +7,6 @@ path = require 'path'
 fs = require 'fs'
 
 describe 'Atom config', ->
-    it 'should set config value', ->
-        Config.setJson 'set', 'foo'
-        expect(JSON.parse atom.config.get 'Hydrogen.set').toEqual('foo')
-
     it 'should read config values', ->
         atom.config.set 'Hydrogen.read', JSON.stringify 'bar'
         expect(Config.getJson 'read').toEqual('bar')
@@ -136,40 +132,40 @@ describe 'Kernel manager', ->
             expect(specs).toEqual(kernelSpecs.kernelspecs)
 
     describe 'getAllKernelSpecs', ->
-        it 'should return an array with specs', ->
+        it 'should return an array with specs', (done) ->
             @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-            specs = @kernelManager.getAllKernelSpecs()
-
-            expect(specs.length).toEqual(2)
-            expect(specs[0]).toEqual(kernelSpecs.kernelspecs.ijavascript.spec)
-            expect(specs[1]).toEqual(kernelSpecs.kernelspecs.python2.spec)
+            @kernelManager.getAllKernelSpecs (specs) ->
+                expect(specs.length).toEqual(2)
+                expect(specs[0]).toEqual(kernelSpecs.kernelspecs.ijavascript.spec)
+                expect(specs[1]).toEqual(kernelSpecs.kernelspecs.python2.spec)
+                done
 
     describe 'getAllKernelSpecsFor', ->
-        it 'should return an array with specs for given language', ->
+        it 'should return an array with specs for given language', (done) ->
             @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-            allKernelSpecsForPython = @kernelManager.getAllKernelSpecsFor('python')
+            @kernelManager.getAllKernelSpecsFor 'python', (specs) ->
+                expect(specs.length).toEqual(1)
+                expect(specs[0]).toEqual(kernelSpecs.kernelspecs.python2.spec)
+                done
 
-            expect(allKernelSpecsForPython.length).toEqual(1)
-            expect(allKernelSpecsForPython[0]).toEqual(kernelSpecs.kernelspecs.python2.spec)
-
-        it 'should return an empty array', ->
+        it 'should return an empty array', (done) ->
             @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-            allKernelSpecsForJulia = @kernelManager.getAllKernelSpecsFor('julia')
-
-            expect(allKernelSpecsForJulia).toEqual([])
+            @kernelManager.getAllKernelSpecsFor 'julia', (specs) ->
+                expect(specs).toEqual([])
+                done
 
     describe 'getKernelSpecFor', ->
-        it 'should return spec for given language', ->
+        it 'should return spec for given language', (done) ->
             @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-            kernelSpecForPython = @kernelManager.getKernelSpecFor('python')
+            @kernelManager.getKernelSpecFor 'python', (kernelSpecForPython) ->
+                expect(kernelSpecForPython).toEqual(kernelSpecs.kernelspecs.python2.spec)
+                done
 
-            expect(kernelSpecForPython).toEqual(kernelSpecs.kernelspecs.python2.spec)
-
-        it 'should return undefined', ->
+        it 'should return undefined', (done) ->
             @kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-            kernelSpecForJulia = @kernelManager.getKernelSpecFor('julia')
-
-            expect(kernelSpecForJulia).toBeUndefined()
+            @kernelManager.getKernelSpecFor 'julia', (kernelSpecForJulia) ->
+                expect(kernelSpecForJulia).toBeUndefined()
+                done
 
     it 'should read lower case name from grammar', ->
         grammar = atom.grammars.getGrammars()[0]

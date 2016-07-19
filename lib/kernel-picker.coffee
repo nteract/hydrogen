@@ -8,7 +8,6 @@ class SignalListView extends SelectListView
         super
 
         @onConfirmed = null
-        @addClass('watch-language-picker')
         @list.addClass('mark-active')
 
 
@@ -38,13 +37,14 @@ class SignalListView extends SelectListView
         @panel ?= atom.workspace.addModalPanel(item: this)
         @focusFilterEditor()
 
-        @languageOptions = _.map @getKernelSpecs(), (kernelSpec) ->
-            return {
-                name: kernelSpec.display_name
-                kernelSpec: kernelSpec
-            }
+        @getKernelSpecs (kernelSpec) =>
+            @languageOptions = _.map kernelSpec, (kernelSpec) ->
+                return {
+                    name: kernelSpec.display_name
+                    kernelSpec: kernelSpec
+                }
 
-        @setItems(@languageOptions)
+            @setItems(@languageOptions)
 
     getEmptyMessage: ->
         'No running kernels found.'

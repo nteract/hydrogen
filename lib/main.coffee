@@ -101,21 +101,28 @@ module.exports = Hydrogen =
         unless kernel
             kernel = @kernelManager.getRunningKernelFor language
 
+        errorMessage = "No running kernel for language `#{language}` found"
+
         if command is 'interrupt-kernel'
+            unless kernel
+                atom.notifications.addError errorMessage
+                return
             kernel.interrupt()
 
         else if command is 'restart-kernel'
+            unless kernel
+                atom.notifications.addError errorMessage
+                return
+            kernelSpec = kernel.kernelSpec
             @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            @kernelManager.startKernelFor grammar, =>
+            @kernelManager.startKernel kernelSpec, grammar, =>
                 @setStatusBarElement()
 
         else if command is 'switch-kernel'
-            kernel = @kernelManager.getRunningKernelFor language
             if kernel
                 @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            @kernelManager.setKernelMapping kernelSpec, grammar
             @kernelManager.startKernel kernelSpec, grammar, =>
                 @setStatusBarElement()
 
@@ -321,24 +328,24 @@ module.exports = Hydrogen =
 
     showKernelPicker: ->
         unless @kernelPicker?
-            @kernelPicker = new KernelPicker =>
+            @kernelPicker = new KernelPicker (callback) =>
                 grammar = @editor.getGrammar()
                 language = @kernelManager.getLanguageFor grammar
-                kernelSpecs = @kernelManager.getAllKernelSpecsFor language
-                return kernelSpecs
+                @kernelManager.getAllKernelSpecsFor language, (kernelSpecs) ->
+                    callback kernelSpecs
             @kernelPicker.onConfirmed = ({kernelSpec}) =>
                 @handleKernelCommand
                     command: 'switch-kernel'
                     kernelSpec: kernelSpec
-
         @kernelPicker.toggle()
+
 
     showWatchKernelPicker: ->
         unless @watchKernelPicker?
-            @watchKernelPicker = new KernelPicker =>
+            @watchKernelPicker = new KernelPicker (callback) =>
                 kernels = @kernelManager.getAllRunningKernels()
                 kernelSpecs = _.map kernels, 'kernelSpec'
-                return kernelSpecs
+                callback kernelSpecs
             @watchKernelPicker.onConfirmed = (command) =>
                 kernelSpec = command.kernelSpec
                 kernels = _.filter @kernelManager.getAllRunningKernels(), (k) ->
