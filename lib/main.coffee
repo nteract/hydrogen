@@ -273,10 +273,13 @@ module.exports = Hydrogen =
 
 
     clearBubblesOnRow: (row) ->
-        buffer = @editor.getBuffer()
-        _.forEach buffer.findMarkers({endRow: row}), (marker) =>
-            if @markerBubbleMap[marker.id]?
-                @markerBubbleMap[marker.id].destroy()
+        console.log 'clearBubblesOnRow:', row
+        _.forEach @markerBubbleMap, (bubble) =>
+            marker = bubble.marker
+            range = marker.getBufferRange()
+            if range.start.row <= row <= range.end.row
+                console.log 'clearBubblesOnRow:', row, bubble
+                bubble.destroy()
                 delete @markerBubbleMap[marker.id]
 
 
