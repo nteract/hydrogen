@@ -20,22 +20,27 @@ module.exports = Hydrogen =
     inspector: null
 
     editor: null
+    kernel: null
     markerBubbleMap: null
 
     statusBarElement: null
     statusBarTile: null
 
+    watchSidebar: null
+    watchSidebarIsVisible: false
+
     activate: (state) ->
         @kernelManager = new KernelManager()
         @inspector = new Inspector @kernelManager
 
-        @editor = atom.workspace.getActiveTextEditor()
         @markerBubbleMap = {}
 
         @statusBarElement = document.createElement('div')
         @statusBarElement.classList.add('hydrogen')
         @statusBarElement.classList.add('status-container')
         @statusBarElement.onclick = @showKernelCommands.bind this
+
+        @onEditorChanged atom.workspace.getActiveTextEditor()
 
         @subscriptions = new CompositeDisposable
 
@@ -49,8 +54,14 @@ module.exports = Hydrogen =
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
             'hydrogen:select-kernel': => @showKernelPicker()
-            'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
-            'hydrogen:remove-watch': => @watchSidebar.removeWatch()
+            'hydrogen:add-watch': =>
+                unless @watchSidebarIsVisible
+                    @toggleWatchSidebar()
+                @watchSidebar?.addWatchFromEditor()
+            'hydrogen:remove-watch': =>
+                unless @watchSidebarIsVisible
+                    @toggleWatchSidebar()
+                @watchSidebar?.removeWatch()
             'hydrogen:update-kernels': => @kernelManager.updateKernelSpecs()
             'hydrogen:toggle-inspector': => @inspector.toggle()
             'hydrogen:interrupt-kernel': =>
@@ -63,8 +74,7 @@ module.exports = Hydrogen =
 
         @subscriptions.add atom.workspace.observeActivePaneItem (item) =>
             if item and item is atom.workspace.getActiveTextEditor()
-                @editor = item
-                @setStatusBarElement()
+                @onEditorChanged item
 
 
     deactivate: ->
@@ -81,6 +91,68 @@ module.exports = Hydrogen =
     provide: ->
         if atom.config.get('Hydrogen.autocomplete') is true
             return AutocompleteProvider @kernelManager
+
+
+    onEditorChanged: (@editor) ->
+        if @editor
+            grammar = @editor.getGrammar()
+            language = @kernelManager.getLanguageFor grammar
+            kernel = @kernelManager.getRunningKernelFor language
+
+        unless @kernel is kernel
+            @onKernelChanged kernel
+
+
+    onKernelChanged: (@kernel) ->
+        @setStatusBar()
+        @setWatchSidebar @kernel
+
+
+    setStatusBar: ->
+        unless @statusBarElement?
+            console.error 'setStatusBar: there is no status bar'
+            return
+
+        @clearStatusBar()
+
+        if @kernel?
+            @statusBarElement.appendChild @kernel.statusView.getElement()
+
+
+    clearStatusBar: ->
+        unless @statusBarElement?
+            console.error 'clearStatusBar: there is no status bar'
+            return
+
+        while @statusBarElement.hasChildNodes()
+            @statusBarElement.removeChild @statusBarElement.lastChild
+
+
+    setWatchSidebar: (kernel) ->
+        console.log 'setWatchSidebar:', kernel
+
+        sidebar = kernel?.watchSidebar
+        if @watchSidebar is sidebar
+            return
+
+        if @watchSidebar?.visible
+            @watchSidebar.hide()
+
+        @watchSidebar = sidebar
+
+        if @watchSidebarIsVisible
+            @watchSidebar?.show()
+
+
+    toggleWatchSidebar: ->
+        if @watchSidebarIsVisible
+            console.log 'toggleWatchSidebar: hiding sidebar'
+            @watchSidebarIsVisible = false
+            @watchSidebar?.hide()
+        else
+            console.log 'toggleWatchSidebar: showing sidebar'
+            @watchSidebarIsVisible = true
+            @watchSidebar?.show()
 
 
     showKernelCommands: ->
@@ -117,44 +189,30 @@ module.exports = Hydrogen =
             @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
             @kernelManager.startKernel kernelSpec, grammar, =>
-                @setStatusBarElement()
                 kernel = @kernelManager.getRunningKernelFor language
-                @setWatchSidebar kernel
+                @onKernelChanged kernel
 
         else if command is 'switch-kernel'
             if kernel
                 @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
             @kernelManager.startKernel kernelSpec, grammar, =>
-                @setStatusBarElement()
                 kernel = @kernelManager.getRunningKernelFor language
-                @setWatchSidebar kernel
-
-
-    getCurrentKernel: ->
-        grammar = @editor.getGrammar()
-        language = @kernelManager.getLanguageFor grammar
-        kernel = @kernelManager.getRunningKernelFor language
-
-        return {grammar, language, kernel}
+                @onKernelChanged kernel
 
 
     createResultBubble: (code, row) ->
-        {kernel, grammar} = @getCurrentKernel()
-
-        if kernel
-            @_createResultBubble kernel, code, row
+        if @kernel
+            @_createResultBubble @kernel, code, row
             return
 
-        @kernelManager.startKernelFor grammar, (kernel) =>
-            @setStatusBarElement()
+        @kernelManager.startKernelFor @editor.getGrammar(), (kernel) =>
+            @onKernelChanged kernel
             @_createResultBubble kernel, code, row
 
 
     _createResultBubble: (kernel, code, row) ->
-        unless @watchSidebar?
-            @setWatchSidebar kernel
-        else if @watchSidebar.element.contains document.activeElement
+        if @watchSidebar.element.contains document.activeElement
             @watchSidebar.run()
             return
 
@@ -215,10 +273,13 @@ module.exports = Hydrogen =
 
 
     clearBubblesOnRow: (row) ->
-        buffer = @editor.getBuffer()
-        _.forEach buffer.findMarkers({endRow: row}), (marker) =>
-            if @markerBubbleMap[marker.id]?
-                @markerBubbleMap[marker.id].destroy()
+        console.log 'clearBubblesOnRow:', row
+        _.forEach @markerBubbleMap, (bubble) =>
+            marker = bubble.marker
+            range = marker.getBufferRange()
+            if range.start.row <= row <= range.end.row
+                console.log 'clearBubblesOnRow:', row, bubble
+                bubble.destroy()
                 delete @markerBubbleMap[marker.id]
 
 
@@ -279,58 +340,6 @@ module.exports = Hydrogen =
                 endRow -= 1
         return endRow
 
-    removeStatusBarElement: ->
-        unless @statusBarElement?
-            console.error 'removeStatusBarElement: there is no status bar'
-            return
-
-        while @statusBarElement.hasChildNodes()
-            @statusBarElement.removeChild @statusBarElement.lastChild
-
-    setStatusBarElement: ->
-        unless @statusBarElement?
-            console.error 'setStatusBarElement: there is no status bar'
-            return
-
-        @removeStatusBarElement()
-
-        {kernel} = @getCurrentKernel()
-
-        if kernel?
-            @statusBarElement.appendChild kernel.statusView.getElement()
-
-    hideWatchSidebar: ->
-        unless @watchSidebar?
-            console.log 'hideWatchSidebar: there is no sidebar'
-            return
-
-        @watchSidebar.hide()
-
-    showWatchSidebar: ->
-        unless @watchSidebar?
-            console.log 'showWatchSidebar: there is no sidebar'
-            return
-
-        @watchSidebar.show()
-
-    toggleWatchSidebar: ->
-        if @watchSidebar?.visible
-            console.log 'toggleWatchSidebar: hiding sidebar'
-            @watchSidebar.hide()
-        else
-            console.log 'toggleWatchSidebar: showing sidebar'
-            @watchSidebar.show()
-
-    setWatchSidebar: (kernel) ->
-        sidebar = kernel.watchSidebar
-        console.log 'setting watch sidebar'
-        if @watchSidebar isnt sidebar and @watchSidebar?.visible
-            @watchSidebar.hide()
-            @watchSidebar = sidebar
-            @watchSidebar.show()
-        else
-            @watchSidebar = sidebar
-
     showKernelPicker: ->
         unless @kernelPicker?
             @kernelPicker = new KernelPicker (callback) =>
@@ -344,8 +353,10 @@ module.exports = Hydrogen =
                     kernelSpec: kernelSpec
         @kernelPicker.toggle()
 
-
     showWatchKernelPicker: ->
+        unless @watchSidebarIsVisible
+            @toggleWatchSidebar()
+
         unless @watchKernelPicker?
             @watchKernelPicker = new KernelPicker (callback) =>
                 kernels = @kernelManager.getAllRunningKernels()
@@ -358,7 +369,6 @@ module.exports = Hydrogen =
                 kernel = kernels[0]
                 if kernel
                     @setWatchSidebar kernel
-                    @watchSidebar.show()
         @watchKernelPicker.toggle()
 
     findCodeBlock: ->

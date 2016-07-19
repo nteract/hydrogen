@@ -29,12 +29,18 @@ class WatchSidebar
         @removeButton.onclick = => @removeWatch()
         @toggleButton = document.createElement('button')
         @toggleButton.classList.add('btn', 'icon', 'icon-remove-close')
-        @toggleButton.onclick = => @hide()
+        @toggleButton.onclick = ->
+            editor = atom.workspace.getActiveTextEditor()
+            editorView = atom.views.getView(editor)
+            atom.commands.dispatch(editorView, 'hydrogen:toggle-watches')
 
         @tooltips = new CompositeDisposable()
-        @tooltips.add atom.tooltips.add(@toggleButton, {title: 'Toggle Watches'})
-        @tooltips.add atom.tooltips.add(languageDisplay, {title: 'Change Watch Kernel'})
-        @tooltips.add atom.tooltips.add(@removeButton, {title: 'Remove Watch'})
+        @tooltips.add atom.tooltips.add @toggleButton,
+            title: 'Toggle Watches'
+        @tooltips.add atom.tooltips.add languageDisplay,
+            title: 'Change Watch Kernel'
+        @tooltips.add atom.tooltips.add @removeButton,
+            title: 'Remove Watch'
 
 
         @watchesContainer = document.createElement('div')
@@ -83,7 +89,8 @@ class WatchSidebar
         @createWatch().inputElement.element.focus()
 
     addWatchFromEditor: ->
-        unless watchText = atom.workspace.getActiveTextEditor().getSelectedText()
+        watchText = atom.workspace.getActiveTextEditor().getSelectedText()
+        unless watchText
             @addWatch()
         else
             @createWatch().setCode(watchText).run()
