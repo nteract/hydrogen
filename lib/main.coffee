@@ -64,7 +64,7 @@ module.exports = Hydrogen =
         @subscriptions.add atom.workspace.observeActivePaneItem (item) =>
             if item and item is atom.workspace.getActiveTextEditor()
                 @editor = item
-                @setStatusBarElement()
+                @setStatusBar()
 
 
     deactivate: ->
@@ -117,7 +117,7 @@ module.exports = Hydrogen =
             @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
             @kernelManager.startKernel kernelSpec, grammar, =>
-                @setStatusBarElement()
+                @setStatusBar()
                 kernel = @kernelManager.getRunningKernelFor language
                 @setWatchSidebar kernel
 
@@ -126,7 +126,7 @@ module.exports = Hydrogen =
                 @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
             @kernelManager.startKernel kernelSpec, grammar, =>
-                @setStatusBarElement()
+                @setStatusBar()
                 kernel = @kernelManager.getRunningKernelFor language
                 @setWatchSidebar kernel
 
@@ -147,7 +147,7 @@ module.exports = Hydrogen =
             return
 
         @kernelManager.startKernelFor grammar, (kernel) =>
-            @setStatusBarElement()
+            @setStatusBar()
             @_createResultBubble kernel, code, row
 
 
@@ -287,9 +287,9 @@ module.exports = Hydrogen =
         while @statusBarElement.hasChildNodes()
             @statusBarElement.removeChild @statusBarElement.lastChild
 
-    setStatusBarElement: ->
+    setStatusBar: ->
         unless @statusBarElement?
-            console.error 'setStatusBarElement: there is no status bar'
+            console.error 'setStatusBar: there is no status bar'
             return
 
         @removeStatusBarElement()
