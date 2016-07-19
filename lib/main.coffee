@@ -20,6 +20,7 @@ module.exports = Hydrogen =
     inspector: null
 
     editor: null
+    kernel: null
     markerBubbleMap: null
 
     statusBarElement: null
@@ -29,13 +30,14 @@ module.exports = Hydrogen =
         @kernelManager = new KernelManager()
         @inspector = new Inspector @kernelManager
 
-        @editor = atom.workspace.getActiveTextEditor()
         @markerBubbleMap = {}
 
         @statusBarElement = document.createElement('div')
         @statusBarElement.classList.add('hydrogen')
         @statusBarElement.classList.add('status-container')
         @statusBarElement.onclick = @showKernelCommands.bind this
+
+        @onEditorChanged atom.workspace.getActiveTextEditor()
 
         @subscriptions = new CompositeDisposable
 
@@ -63,8 +65,7 @@ module.exports = Hydrogen =
 
         @subscriptions.add atom.workspace.observeActivePaneItem (item) =>
             if item and item is atom.workspace.getActiveTextEditor()
-                @editor = item
-                @setStatusBar()
+                @onEditorChanged item
 
 
     deactivate: ->
@@ -81,6 +82,40 @@ module.exports = Hydrogen =
     provide: ->
         if atom.config.get('Hydrogen.autocomplete') is true
             return AutocompleteProvider @kernelManager
+
+
+    onEditorChanged: (@editor) ->
+        if @editor
+            grammar = @editor.getGrammar()
+            language = @kernelManager.getLanguageFor grammar
+            kernel = @kernelManager.getRunningKernelFor language
+
+        unless @kernel is kernel
+            @onKernelChanged kernel
+
+
+    onKernelChanged: (@kernel) ->
+        @setStatusBar()
+
+
+    setStatusBar: ->
+        unless @statusBarElement?
+            console.error 'setStatusBar: there is no status bar'
+            return
+
+        @clearStatusBar()
+
+        if @kernel?
+            @statusBarElement.appendChild @kernel.statusView.getElement()
+
+
+    clearStatusBar: ->
+        unless @statusBarElement?
+            console.error 'clearStatusBar: there is no status bar'
+            return
+
+        while @statusBarElement.hasChildNodes()
+            @statusBarElement.removeChild @statusBarElement.lastChild
 
 
     showKernelCommands: ->
@@ -117,8 +152,8 @@ module.exports = Hydrogen =
             @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
             @kernelManager.startKernel kernelSpec, grammar, =>
-                @setStatusBar()
                 kernel = @kernelManager.getRunningKernelFor language
+                @onKernelChanged kernel
                 @setWatchSidebar kernel
 
         else if command is 'switch-kernel'
@@ -126,28 +161,18 @@ module.exports = Hydrogen =
                 @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
             @kernelManager.startKernel kernelSpec, grammar, =>
-                @setStatusBar()
                 kernel = @kernelManager.getRunningKernelFor language
+                @onKernelChanged kernel
                 @setWatchSidebar kernel
 
 
-    getCurrentKernel: ->
-        grammar = @editor.getGrammar()
-        language = @kernelManager.getLanguageFor grammar
-        kernel = @kernelManager.getRunningKernelFor language
-
-        return {grammar, language, kernel}
-
-
     createResultBubble: (code, row) ->
-        {kernel, grammar} = @getCurrentKernel()
-
-        if kernel
-            @_createResultBubble kernel, code, row
+        if @kernel
+            @_createResultBubble @kernel, code, row
             return
 
-        @kernelManager.startKernelFor grammar, (kernel) =>
-            @setStatusBar()
+        @kernelManager.startKernelFor @editor.getGrammar(), (kernel) =>
+            @onKernelChanged kernel
             @_createResultBubble kernel, code, row
 
 
@@ -278,26 +303,6 @@ module.exports = Hydrogen =
             for i in [startRow .. endRow - 1] when @blank(endRow)
                 endRow -= 1
         return endRow
-
-    removeStatusBarElement: ->
-        unless @statusBarElement?
-            console.error 'removeStatusBarElement: there is no status bar'
-            return
-
-        while @statusBarElement.hasChildNodes()
-            @statusBarElement.removeChild @statusBarElement.lastChild
-
-    setStatusBar: ->
-        unless @statusBarElement?
-            console.error 'setStatusBar: there is no status bar'
-            return
-
-        @removeStatusBarElement()
-
-        {kernel} = @getCurrentKernel()
-
-        if kernel?
-            @statusBarElement.appendChild kernel.statusView.getElement()
 
     hideWatchSidebar: ->
         unless @watchSidebar?
