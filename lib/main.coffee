@@ -26,6 +26,9 @@ module.exports = Hydrogen =
     statusBarElement: null
     statusBarTile: null
 
+    watchSidebar: null
+    watchSidebarIsVisible: false
+
     activate: (state) ->
         @kernelManager = new KernelManager()
         @inspector = new Inspector @kernelManager
@@ -51,8 +54,14 @@ module.exports = Hydrogen =
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
             'hydrogen:select-kernel': => @showKernelPicker()
-            'hydrogen:add-watch': => @watchSidebar.addWatchFromEditor()
-            'hydrogen:remove-watch': => @watchSidebar.removeWatch()
+            'hydrogen:add-watch': =>
+                unless @watchSidebarIsVisible
+                    @toggleWatchSidebar()
+                @watchSidebar?.addWatchFromEditor()
+            'hydrogen:remove-watch': =>
+                unless @watchSidebarIsVisible
+                    @toggleWatchSidebar()
+                @watchSidebar?.removeWatch()
             'hydrogen:update-kernels': => @kernelManager.updateKernelSpecs()
             'hydrogen:toggle-inspector': => @inspector.toggle()
             'hydrogen:interrupt-kernel': =>
@@ -96,6 +105,7 @@ module.exports = Hydrogen =
 
     onKernelChanged: (@kernel) ->
         @setStatusBar()
+        @setWatchSidebar @kernel
 
 
     setStatusBar: ->
@@ -116,6 +126,33 @@ module.exports = Hydrogen =
 
         while @statusBarElement.hasChildNodes()
             @statusBarElement.removeChild @statusBarElement.lastChild
+
+
+    setWatchSidebar: (kernel) ->
+        console.log 'setWatchSidebar:', kernel
+
+        sidebar = kernel?.watchSidebar
+        if @watchSidebar is sidebar
+            return
+
+        if @watchSidebar?.visible
+            @watchSidebar.hide()
+
+        @watchSidebar = sidebar
+
+        if @watchSidebarIsVisible
+            @watchSidebar?.show()
+
+
+    toggleWatchSidebar: ->
+        if @watchSidebarIsVisible
+            console.log 'toggleWatchSidebar: hiding sidebar'
+            @watchSidebarIsVisible = false
+            @watchSidebar?.hide()
+        else
+            console.log 'toggleWatchSidebar: showing sidebar'
+            @watchSidebarIsVisible = true
+            @watchSidebar?.show()
 
 
     showKernelCommands: ->
@@ -154,7 +191,6 @@ module.exports = Hydrogen =
             @kernelManager.startKernel kernelSpec, grammar, =>
                 kernel = @kernelManager.getRunningKernelFor language
                 @onKernelChanged kernel
-                @setWatchSidebar kernel
 
         else if command is 'switch-kernel'
             if kernel
@@ -163,7 +199,6 @@ module.exports = Hydrogen =
             @kernelManager.startKernel kernelSpec, grammar, =>
                 kernel = @kernelManager.getRunningKernelFor language
                 @onKernelChanged kernel
-                @setWatchSidebar kernel
 
 
     createResultBubble: (code, row) ->
@@ -177,9 +212,7 @@ module.exports = Hydrogen =
 
 
     _createResultBubble: (kernel, code, row) ->
-        unless @watchSidebar?
-            @setWatchSidebar kernel
-        else if @watchSidebar.element.contains document.activeElement
+        if @watchSidebar.element.contains document.activeElement
             @watchSidebar.run()
             return
 
@@ -304,38 +337,6 @@ module.exports = Hydrogen =
                 endRow -= 1
         return endRow
 
-    hideWatchSidebar: ->
-        unless @watchSidebar?
-            console.log 'hideWatchSidebar: there is no sidebar'
-            return
-
-        @watchSidebar.hide()
-
-    showWatchSidebar: ->
-        unless @watchSidebar?
-            console.log 'showWatchSidebar: there is no sidebar'
-            return
-
-        @watchSidebar.show()
-
-    toggleWatchSidebar: ->
-        if @watchSidebar?.visible
-            console.log 'toggleWatchSidebar: hiding sidebar'
-            @watchSidebar.hide()
-        else
-            console.log 'toggleWatchSidebar: showing sidebar'
-            @watchSidebar.show()
-
-    setWatchSidebar: (kernel) ->
-        sidebar = kernel.watchSidebar
-        console.log 'setting watch sidebar'
-        if @watchSidebar isnt sidebar and @watchSidebar?.visible
-            @watchSidebar.hide()
-            @watchSidebar = sidebar
-            @watchSidebar.show()
-        else
-            @watchSidebar = sidebar
-
     showKernelPicker: ->
         unless @kernelPicker?
             @kernelPicker = new KernelPicker (callback) =>
@@ -349,8 +350,10 @@ module.exports = Hydrogen =
                     kernelSpec: kernelSpec
         @kernelPicker.toggle()
 
-
     showWatchKernelPicker: ->
+        unless @watchSidebarIsVisible
+            @toggleWatchSidebar()
+
         unless @watchKernelPicker?
             @watchKernelPicker = new KernelPicker (callback) =>
                 kernels = @kernelManager.getAllRunningKernels()
@@ -363,7 +366,6 @@ module.exports = Hydrogen =
                 kernel = kernels[0]
                 if kernel
                     @setWatchSidebar kernel
-                    @watchSidebar.show()
         @watchKernelPicker.toggle()
 
     findCodeBlock: ->
