@@ -73,7 +73,7 @@ If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm i
 
 ### Troubleshooting
 
-We have a [troubleshooting guide](https://github.com/nteract/hydrogen/wiki/Troubleshooting) in the wiki! It's pretty sparse at the moment, so please share how the resolution to any rough spots that you find.
+We have a [troubleshooting guide](TROUBLESHOOTING.md) in the wiki! It's pretty sparse at the moment, so please share how the resolution to any rough spots that you find.
 
 ### Kernels
 
