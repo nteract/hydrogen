@@ -38,13 +38,13 @@ Each operating system has their own instruction set. Please read on down to save
 
 - [`pkg-config`](https://www.freedesktop.org/wiki/Software/pkg-config/): `brew install pkg-config`
 - [ZeroMQ](http://zeromq.org/intro:get-the-software): `brew install zeromq`
-- [Jupyter notebook](http://jupyter.org): needs to be installed and on your `$PATH`. `pip install jupyter`
+- [Jupyter notebook](http://jupyter.org) (needs to be installed and on your `$PATH`): `pip install jupyter`
 
 #### Windows
 
 - You'll need a compiler! [Visual Studio 2013 Community Edition](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx) is required to build zmq.node.
 - Python (tread on your own or install [Anaconda](https://www.continuum.io/downloads))
-- [Jupyter notebook](http://jupyter.org): if you installed Anaconda, you're already done
+- [Jupyter notebook](http://jupyter.org) (if you installed Anaconda, you're already done)
 
 After these are installed, you'll likely need to restart your machine (especially after Visual Studio).
 
@@ -70,10 +70,6 @@ Assuming you followed the dependencies steps above, you can now `apm install hyd
 
 If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install hydrogen` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
 
-
-### Troubleshooting
-
-We have a [troubleshooting guide](https://github.com/nteract/hydrogen/wiki/Troubleshooting) in the wiki! It's pretty sparse at the moment, so please share how the resolution to any rough spots that you find.
 
 ### Kernels
 
@@ -123,6 +119,12 @@ Below is an example for IPython 2 and 3:
   }
 }
 ```
+
+## Troubleshooting
+
+We have a [troubleshooting guide](TROUBLESHOOTING.md)! It's pretty sparse at the
+moment, so please share with us the resolution to any rough spots that you find.
+
 
 ## Usage
 
