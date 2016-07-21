@@ -84,9 +84,10 @@ Tested and works with:
 - [iTorch](https://github.com/facebook/iTorch)
 - [IJavascript](https://github.com/n-riesco/ijavascript)
 - [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
-- [IRkernel](https://github.com/IRkernel/IRkernel) (install the "Development" version from `master` — necessary changes haven't gotten released as binaries yet)
+- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+`
+- [IElixir](https://github.com/pprzetacznik/IElixir)
 
-But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages) — [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
+But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages). If you are using hydrogen with another kernel please add it to this list or [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/16931386/048f056e-4d41-11e6-8563-3baa8ed84371.png">
 
@@ -170,7 +171,7 @@ Receive completions from the running kernel.
 
 ### Code Introspection
 
-You can use the "Hydrogen: Inspect" command from the Command Palette to get metadata from the kernel about the object under the cursor.
+You can use the "Hydrogen: Toggle Inspector" command from the Command Palette to get metadata from the kernel about the object under the cursor.
 
 <img width="770" src="https://cloud.githubusercontent.com/assets/13285808/14108719/d72762bc-f5be-11e5-8188-32725e3d2726.png">
 
@@ -178,11 +179,11 @@ You can use the "Hydrogen: Inspect" command from the Command Palette to get meta
 
 Sometimes things go wrong. Maybe you've written an infinite loop, maybe the kernel has crashed, or maybe you just want to clear the kernel's namespace. Use the command palette to open "Hydrogen: Show Kernel Commands" and select "Interrupt" to interrupt (think `Ctrl-C` in a REPL) the kernel or "Restart" to kill the kernel and start a new one, clearing the namespace.
 
-You can also access these commands by clicking on the kernel status in the status bar. It looks like this:
+You can also access these commands by clicking on the kernel status in the status bar or via the command palette. It looks like this:
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/16894732/e4e5b4de-4b5f-11e6-8b8e-facf17a7c6c4.png" width=300>
 
-Additionally, if you have two or more kernels for a particular language (grammar), you can select which kernel to use with the "Switch to <kernel>" option in the Kernel Commands menu. This change is automatically saved into the Hydrogen configuration's ```grammarToKernel``` map. For example, if Hydrogen is using the kernel for Python 2 by default, you could switch to Python 3. Then next time you open a `.py` file, Hydrogen will remember your selection and use Python 3.
+Additionally, if you have two or more kernels for a particular language (grammar), you can select which kernel to use with the "Switch to <kernel>" option in the Kernel Commands menu.
 
 ## How it works
 
