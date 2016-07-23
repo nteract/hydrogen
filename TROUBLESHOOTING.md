@@ -80,6 +80,10 @@ Again, there are a number of possible causes and solutions:
   - solved by upgrading the `jupyter` version (see [this
     comment](https://github.com/nteract/hydrogen/issues/88#issuecomment-136761769) );
 
+- If Hydrogen doesn't output any results (see issue
+  [#326](https://github.com/nteract/hydrogen/issues/326)), check that you haven't disabled 
+  `Use Shadow DOM` under `Settings > Editor`. This option should be enabled.
+
 - If the spinner in the result bubble never stops (see issue
   [#53](https://github.com/nteract/hydrogen/issues/53)): This is issue hasn't
   been seen recently. Please, post in issue
