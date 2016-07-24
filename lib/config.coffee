@@ -23,6 +23,25 @@ module.exports = Config =
             bubbles. Example: `error|warning`'
             type: 'string'
             default: '(?!)'
+        gateways:
+            title: 'List of kernel gateways to use'
+            description: 'Hydrogen can connect to remote notebook servers and
+            kernel gateways. Each gateway needs at minimum a name and a value
+            for options.baseUrl. The options are passed directly to the
+            `jupyter-js-services` npm package, which includes documentation for
+            additional fields.
+            Example value:
+            ```
+            [{
+                "name": "Remote notebook",
+                "options": {
+                        "baseUrl": "http://mysite.com:8888"
+                }
+            }]
+            ```
+            '
+            type: 'string'
+            default: '[]'
         kernelspec:
             title: 'Kernel Specs'
             description: 'This field is populated on every launch or by invoking

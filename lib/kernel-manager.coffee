@@ -77,6 +77,13 @@ class KernelManager
                 )
                 finishKernelStartup kernel
 
+    attachKernel: (grammar, kernel) ->
+        # Attaches an already constructed Kernel instance to a grammar
+        # (designed to be used for remote kernels)
+        # No startup code is run in this case
+        language = @getLanguageFor grammar
+        @_runningKernels[language] = kernel
+
 
     getAllRunningKernels: ->
         return _.clone @_runningKernels

@@ -5,6 +5,7 @@ _ = require 'lodash'
 ResultView = require './result-view'
 SignalListView = require './signal-list-view'
 KernelPicker = require './kernel-picker'
+WSKernelPicker = require './ws-kernel-picker'
 CellManager = require './cell-manager'
 
 Config = require './config'
@@ -54,6 +55,7 @@ module.exports = Hydrogen =
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
             'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
             'hydrogen:select-kernel': => @showKernelPicker()
+            'hydrogen:connect-to-remote-kernel': => @showWSKernelPicker()
             'hydrogen:add-watch': =>
                 unless @watchSidebarIsVisible
                     @toggleWatchSidebar()
@@ -370,6 +372,21 @@ module.exports = Hydrogen =
                 if kernel
                     @setWatchSidebar kernel
         @watchKernelPicker.toggle()
+
+    showWSKernelPicker: ->
+        unless @wsKernelPicker?
+            @wsKernelPicker = new WSKernelPicker (kernel) =>
+                grammar = @editor.getGrammar()
+                language = @kernelManager.getLanguageFor grammar
+                oldKernel = @kernelManager.getRunningKernelFor language
+                if oldKernel?
+                    @kernelManager.destroyRunningKernel oldKernel
+
+                @clearResultBubbles()
+                @kernelManager.attachKernel grammar, kernel
+                @onKernelChanged kernel
+
+        @wsKernelPicker.toggle()
 
     findCodeBlock: ->
         buffer = @editor.getBuffer()
