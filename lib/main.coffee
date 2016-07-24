@@ -187,6 +187,11 @@ module.exports = Hydrogen =
             unless kernel
                 atom.notifications.addError errorMessage
                 return
+
+            if kernel.restart?
+                kernel.restart()
+                return
+
             kernelSpec = kernel.kernelSpec
             @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()

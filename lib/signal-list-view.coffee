@@ -1,6 +1,8 @@
 {SelectListView} = require 'atom-space-pen-views'
 _ = require 'lodash'
 
+WSKernel = require './ws-kernel'
+
 # View to display a list of grammars to apply to the current editor.
 module.exports =
 class SignalListView extends SelectListView
@@ -58,18 +60,21 @@ class SignalListView extends SelectListView
                 kernel: kernel
             }
 
-        # add commands to switch to other kernels
-        @kernelManager.getAllKernelSpecsFor language, (kernelSpecs) =>
-            switchCommands = kernelSpecs.map (spec) ->
-                return {
-                    name: 'Switch to ' + spec.display_name
-                    value: 'switch-kernel'
-                    grammar: grammar
-                    language: language
-                    kernelSpec: spec
-                }
+        if kernel instanceof WSKernel
+            @setItems basicCommands
+        else
+            # add commands to switch to other kernels
+            @kernelManager.getAllKernelSpecsFor language, (kernelSpecs) =>
+                switchCommands = kernelSpecs.map (spec) ->
+                    return {
+                        name: 'Switch to ' + spec.display_name
+                        value: 'switch-kernel'
+                        grammar: grammar
+                        language: language
+                        kernelSpec: spec
+                    }
 
-            @setItems _.union basicCommands, switchCommands
+                @setItems _.union basicCommands, switchCommands
 
 
     confirmed: (item) ->
