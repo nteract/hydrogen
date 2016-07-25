@@ -128,12 +128,9 @@ moment, so please share with us the resolution to any rough spots that you find.
 
 ## Usage
 
-### Running code
+Hydrogen provides a selection of commands for running code. Press ⌘-⇧-P to open the command palette and type "hydrogen" and they will come up.
 
-Hydrogen adds a command "Hydrogen: Run" to the command palette when you're in any text editor. Press ⌘-⇧-P to open the command palette and type "hydrogen" — it'll come up.
-
-The "Hydrogen: Run" command is bound to the keyboard shortcut ⌘-⌥-↩ by default.
-
+### "Hydrogen: Run"
 There are two ways to tell Hydrogen which code in your file to run.
 
 1. **Selected code:** If you have code selected when you hit Run, Hydrogen will run exactly that code.
@@ -149,12 +146,26 @@ It's easiest to see these interactions visually:
 
 <img src="http://g.recordit.co/4ViVmKtKAr.gif">
 
-If your code starts getting cluttered up with results, run "Hydrogen: Clear Results" to remove them all at once. You can also run this command with ⌘-⌥-⌫.
+**"Hydrogen: Run And Move Down"** will run the the code as described above and move the cursor to the next executable line.
+
+If your code starts getting cluttered up with results, run **"Hydrogen: Clear Results"** to remove them all at once. You can also run this command with ⌘-⌥-⌫.
+
+### "Hydrogen: Run Cell"
+A "code cell" is a block of lines to be executed at once. You can define them using inline comments. Hydrogen supports a
+multitude of ways to define cells. Pick the one you like best.
+The following is an example for `python` but it will work in any language, just replace `#` with the comment symbol for your desired language:
+
+<img width=280 src="https://cloud.githubusercontent.com/assets/13285808/17094174/e8ec17b8-524d-11e6-9140-60b43e073619.png">
+
+When you place the cursor inside a cell and hit **"Run Cell"**, Hydrogen will execute this cell. The command **"Hydrogen: Run Cell And Move Down"** will move the cursor to the next cell after execution.
+
+### "Hydrogen: Run All" and "Hydrogen: Run All Above"
+These commands will run all code inside the editor or all code above the cursor.
 
 
 ### Watch Expressions
 
-After you've run some code with Hydrogen, you can use the "Hydrogen: Toggle Watches" command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code.
+After you've run some code with Hydrogen, you can use the **"Hydrogen: Toggle Watches"** command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code.
 
 <img width=770 src="https://cloud.githubusercontent.com/assets/13285808/14125700/e5cb587a-f60c-11e5-9c28-5aef83088da2.gif">
 
@@ -163,7 +174,7 @@ After you've run some code with Hydrogen, you can use the "Hydrogen: Toggle Watc
 
 You can re-run the watch expressions by using the normal run shortcut (⌘-⌥-↩ by default) inside a watch expression's edit field.
 
-If you have multiple kernels running, you can switch between their watch expressions with the "Hydrogen: Select Watch Kernel" command (or just click on the "Kernel: <language>" text).
+If you have multiple kernels running, you can switch between their watch expressions with the **"Hydrogen: Select Watch Kernel"** command (or just click on the "Kernel: <language>" text).
 
 ### Completion
 
@@ -173,13 +184,13 @@ Receive completions from the running kernel.
 
 ### Code Introspection
 
-You can use the "Hydrogen: Toggle Inspector" command from the Command Palette to get metadata from the kernel about the object under the cursor.
+You can use the **"Hydrogen: Toggle Inspector"** command from the Command Palette to get metadata from the kernel about the object under the cursor.
 
 <img width="770" src="https://cloud.githubusercontent.com/assets/13285808/14108719/d72762bc-f5be-11e5-8188-32725e3d2726.png">
 
 ### Managing kernels
 
-Sometimes things go wrong. Maybe you've written an infinite loop, maybe the kernel has crashed, or maybe you just want to clear the kernel's namespace. Use the command palette to open "Hydrogen: Show Kernel Commands" and select "Interrupt" to interrupt (think `Ctrl-C` in a REPL) the kernel or "Restart" to kill the kernel and start a new one, clearing the namespace.
+Sometimes things go wrong. Maybe you've written an infinite loop, maybe the kernel has crashed, or maybe you just want to clear the kernel's namespace. Use the command palette to **interrupt** (think `Ctrl-C` in a REPL) or **restart** the kernel.
 
 You can also access these commands by clicking on the kernel status in the status bar or via the command palette. It looks like this:
 
