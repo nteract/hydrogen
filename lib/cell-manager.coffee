@@ -62,6 +62,6 @@ module.exports = CellManager =
             escapeStringRegexp commentStartString.trimRight()
 
         regexString =
-            escapedCommentStartString + '(%%| %%| <codecell>| In\[[0-9 ]+\]:)'
+            escapedCommentStartString + '(%%| %%| <codecell>| In\[[0-9 ]*\]:?)'
 
         return regexString
