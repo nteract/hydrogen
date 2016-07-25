@@ -113,15 +113,16 @@ class KernelManager
         unless language?
             return null
 
-        @getAllKernelSpecsFor language, (kernelSpecs) ->
+        @getAllKernelSpecsFor language, (kernelSpecs) =>
             if kernelSpecs.length <= 1
                 callback kernelSpecs[0]
             else
                 unless @kernelPicker?
-                    @kernelPicker = new KernelPicker (onUpdated) ->
+                    @kernelPicker = new KernelPicker this, (onUpdated) ->
                         onUpdated kernelSpecs
                     @kernelPicker.onConfirmed = ({kernelSpec}) ->
                         callback kernelSpec
+
                 @kernelPicker.toggle()
 
 
