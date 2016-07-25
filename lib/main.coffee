@@ -311,9 +311,22 @@ module.exports = Hydrogen =
             @createResultBubble code, row
 
     runAll: ->
-        code = @editor.getText()
-        row = @escapeBlankRows 0, @editor.getLastBufferRow()
-        @createResultBubble code, row
+        if @kernel
+            @_runAll @kernel
+            return
+
+        @kernelManager.startKernelFor @editor.getGrammar(), (kernel) =>
+            @onKernelChanged kernel
+            @_runAll kernel
+
+
+    _runAll: (kernel) ->
+        breakpoints = CellManager.getBreakpoints()
+        for i in [1...breakpoints.length]
+            start = breakpoints[i - 1]
+            row = @escapeBlankRows start, breakpoints[i]
+            code = @getRows start, row
+            @_createResultBubble kernel, code, row
 
 
     runAllAbove: ->
@@ -380,8 +393,7 @@ module.exports = Hydrogen =
             endRow = selectedRange.end.row
             if selectedRange.end.column is 0
                 endRow = endRow - 1
-            while @blank(endRow) and endRow > selectedRange.start.row
-                endRow = endRow - 1
+            endRow = @escapeBlankRows selectedRange.start.row, endRow
             return [selectedText, endRow]
 
         cursor = @editor.getLastCursor()
