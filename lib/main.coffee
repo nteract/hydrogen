@@ -54,7 +54,6 @@ module.exports = Hydrogen =
             'hydrogen:run-cell': => @runCell()
             'hydrogen:run-cell-and-move-down': => @runCell(true)
             'hydrogen:toggle-watches': => @toggleWatchSidebar()
-            'hydrogen:select-watch-kernel': => @showWatchKernelPicker()
             'hydrogen:select-kernel': => @showKernelPicker()
             'hydrogen:connect-to-remote-kernel': => @showWSKernelPicker()
             'hydrogen:add-watch': =>
@@ -358,25 +357,6 @@ module.exports = Hydrogen =
                     command: 'switch-kernel'
                     kernelSpec: kernelSpec
         @kernelPicker.toggle()
-
-
-    showWatchKernelPicker: ->
-        unless @watchSidebarIsVisible
-            @toggleWatchSidebar()
-
-        unless @watchKernelPicker?
-            @watchKernelPicker = new KernelPicker (callback) =>
-                kernels = @kernelManager.getAllRunningKernels()
-                kernelSpecs = _.map kernels, 'kernelSpec'
-                callback kernelSpecs
-            @watchKernelPicker.onConfirmed = (command) =>
-                kernelSpec = command.kernelSpec
-                kernels = _.filter @kernelManager.getAllRunningKernels(), (k) ->
-                    k.kernelSpec is kernelSpec
-                kernel = kernels[0]
-                if kernel
-                    @setWatchSidebar kernel
-        @watchKernelPicker.toggle()
 
 
     showWSKernelPicker: ->
