@@ -12,18 +12,21 @@ module.exports = CellManager =
             return [start, end]
 
         regex = new RegExp regexString
-        {row, column} = editor.getLastCursor().getBufferPosition()
+        cursor = editor.getLastCursor().getBufferPosition()
 
-        if row > 0
-            range = [start, [row - 1, 9999999]]
-            buffer.backwardsScanInRange regex, range, ({range}) ->
+        while cursor.row < end.row and @isComment editor, cursor
+            cursor.row += 1
+            cursor.column = 0
+
+        if cursor.row > 0
+            buffer.backwardsScanInRange regex, [start, cursor], ({range}) ->
                 start = range.start
 
-        range = [[row, 0], end]
-        buffer.scanInRange regex, range, ({range}) ->
+        buffer.scanInRange regex, [cursor, end], ({range}) ->
             end = range.start
 
-        console.log 'CellManager: Cell [start, end]:', [start, end], 'row:', row
+        console.log 'CellManager: Cell [start, end]:', [start, end],
+            'cursor:', cursor
 
         return [start, end]
 
@@ -63,3 +66,9 @@ module.exports = CellManager =
             escapedCommentStartString + '(%%| %%| <codecell>| In\[[0-9 ]*\]:?)'
 
         return regexString
+
+
+    isComment: (editor, position) ->
+        scope = editor.scopeDescriptorForBufferPosition position
+        scopeString = scope.getScopeChain()
+        return _.includes scopeString, 'comment.line'
