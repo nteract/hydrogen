@@ -44,6 +44,7 @@ class WSKernelPicker
     toggle: ->
         @_path = atom.workspace.getActiveTextEditor().getPath() + '-' + uuid.v4()
         gatewayListing = new CustomListView('No gateways available', @onGateway.bind this)
+        @previouslyFocusedElement = gatewayListing.previouslyFocusedElement
         gatewayListing.setLoading 'Loading gateways...'
         items = Config.getJson('gateways', [])
         if not _.isEmpty items
@@ -55,6 +56,7 @@ class WSKernelPicker
     onGateway: (spec) ->
         console.log('Picked a gateway')
         sessionListing = new CustomListView('No sessions available', @onSession.bind this)
+        sessionListing.previouslyFocusedElement = @previouslyFocusedElement
         sessionListing.setLoading 'Loading sessions...'
 
         services.listRunningSessions(spec.options)
@@ -87,6 +89,7 @@ class WSKernelPicker
     onSession: (spec) ->
         unless spec.model?
             kernelListing = new CustomListView('No kernel specs available', @startSession.bind this)
+            kernelListing.previouslyFocusedElement = @previouslyFocusedElement
             kernelListing.setLoading 'Loading kernel specs...'
 
             services.getKernelSpecs(spec.options)
