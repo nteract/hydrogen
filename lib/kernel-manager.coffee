@@ -5,7 +5,7 @@ path = require 'path'
 
 Config = require './config'
 ConfigManager = require './config-manager'
-Kernel = require './kernel'
+ZMQKernel = require './zmq-kernel'
 KernelPicker = require './kernel-picker'
 
 module.exports =
@@ -63,7 +63,7 @@ class KernelManager
             data = fs.readFileSync connectionFile, 'utf8'
             config = JSON.parse data
             console.log 'KernelManager: Using connection file: ', connectionFile
-            kernel = new Kernel(
+            kernel = new ZMQKernel(
                 kernelSpec, grammar, config, connectionFile, true
             )
             finishKernelStartup kernel
@@ -72,10 +72,17 @@ class KernelManager
             unless e.code is 'ENOENT'
                 throw e
             ConfigManager.writeConfigFile (filepath, config) ->
-                kernel = new Kernel(
+                kernel = new ZMQKernel(
                     kernelSpec, grammar, config, filepath, onlyConnect = false
                 )
                 finishKernelStartup kernel
+
+    attachKernel: (grammar, kernel) ->
+        # Attaches an already constructed Kernel instance to a grammar
+        # (designed to be used for remote kernels)
+        # No startup code is run in this case
+        language = @getLanguageFor grammar
+        @_runningKernels[language] = kernel
 
 
     getAllRunningKernels: ->
