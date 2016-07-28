@@ -1,10 +1,10 @@
 _ = require 'lodash'
 child_process = require 'child_process'
+{launchSpec} = require 'spawnteract'
 fs = require 'fs'
 path = require 'path'
 
 Config = require './config'
-ConfigManager = require './config-manager'
 ZMQKernel = require './zmq-kernel'
 KernelPicker = require './kernel-picker'
 
@@ -45,9 +45,6 @@ class KernelManager
 
         kernelSpec.language = language
 
-        rootDirectory = atom.project.rootDirectories[0].path
-        connectionFile = path.join rootDirectory, 'hydrogen', 'connection.json'
-
         finishKernelStartup = (kernel) =>
             @_runningKernels[language] = kernel
 
@@ -60,22 +57,24 @@ class KernelManager
             onStarted?(kernel)
 
         try
+            rootDirectory = atom.project.rootDirectories[0].path
+            connectionFile = path.join rootDirectory, 'hydrogen', 'connection.json'
             data = fs.readFileSync connectionFile, 'utf8'
             config = JSON.parse data
             console.log 'KernelManager: Using connection file: ', connectionFile
-            kernel = new ZMQKernel(
-                kernelSpec, grammar, config, connectionFile, true
-            )
+
+            kernel = new ZMQKernel(kernelSpec, grammar, config, connectionFile)
             finishKernelStartup kernel
 
         catch e
             unless e.code is 'ENOENT'
                 throw e
-            ConfigManager.writeConfigFile (filepath, config) ->
+            launchSpec(kernelSpec).then ({config, connectionFile, spawn}) ->
                 kernel = new ZMQKernel(
-                    kernelSpec, grammar, config, filepath, onlyConnect = false
+                    kernelSpec, grammar, config, connectionFile, spawn
                 )
                 finishKernelStartup kernel
+
 
     attachKernel: (grammar, kernel) ->
         # Attaches an already constructed Kernel instance to a grammar

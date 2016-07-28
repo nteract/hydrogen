@@ -2,6 +2,7 @@ child_process = require 'child_process'
 path = require 'path'
 
 _ = require 'lodash'
+fs = require 'fs'
 jmp = require 'jmp'
 uuid = require 'uuid'
 zmq = jmp.zmq
@@ -11,7 +12,7 @@ InputView = require './input-view'
 
 module.exports =
 class ZMQKernel extends Kernel
-    constructor: (kernelSpec, @grammar, @config, @configPath, @onlyConnect = false) ->
+    constructor: (kernelSpec, @grammar, @config, @connectionFile, @kernelProcess = null) ->
         super kernelSpec
 
         @executionCallbacks = {}
@@ -21,22 +22,7 @@ class ZMQKernel extends Kernel
         )
 
         @_connect()
-        if @onlyConnect
-            atom.notifications.addInfo 'Using custom kernel connection:',
-                detail: @configPath
-        else
-            commandString = _.head(@kernelSpec.argv)
-            args = _.tail(@kernelSpec.argv)
-            args = _.map args, (arg) =>
-                if arg is '{connection_file}'
-                    return @configPath
-                else
-                    return arg
-
-            console.log 'Kernel: Spawning:', commandString, args
-            @kernelProcess = child_process.spawn commandString, args,
-                cwd: projectPath
-
+        if @kernelProcess?
             getKernelNotificationsRegExp = ->
                 try
                     pattern = atom.config.get 'Hydrogen.kernelNotifications'
@@ -64,6 +50,9 @@ class ZMQKernel extends Kernel
                 if regexp?.test data
                     atom.notifications.addError @kernelSpec.display_name,
                         detail: data, dismissable: true
+        else
+            atom.notifications.addInfo 'Using custom kernel connection:',
+                detail: @connectionFile
 
     _connect: ->
         scheme = @config.signature_scheme.slice 'hmac-'.length
@@ -105,9 +94,15 @@ class ZMQKernel extends Kernel
             console.error 'Kernel:', err
 
     interrupt: ->
-        console.log 'sending SIGINT'
-        unless @onlyConnect
-            @kernelProcess.kill('SIGINT')
+        if @kernelProcess?
+            console.log 'sending SIGINT'
+            @kernelProcess?.kill('SIGINT')
+        else
+            detail = 'Can not send interrupt request to custom kernel at ' +
+                @connectionFile
+            atom.notifications.addWarning 'Custom kernel connection:',
+                detail: detail
+
 
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
@@ -373,11 +368,11 @@ class ZMQKernel extends Kernel
         @shellSocket.close()
         @ioSocket.close()
 
-        if @onlyConnect
+        if @kernelProcess?
+            @kernelProcess.kill 'SIGKILL'
+            fs.unlink @connectionFile
+        else
             detail = 'Shutdown request sent to custom kernel connection in ' +
-                @configPath
+                @connectionFile
             atom.notifications.addInfo 'Custom kernel connection:',
                 detail: detail
-
-        unless @onlyConnect
-            @kernelProcess.kill 'SIGKILL'
