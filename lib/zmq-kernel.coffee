@@ -61,7 +61,7 @@ class ZMQKernel extends Kernel
         @shellSocket = new jmp.Socket 'dealer', scheme, key
         @controlSocket = new jmp.Socket 'dealer', scheme, key
         @stdinSocket = new jmp.Socket 'dealer', scheme, key
-        @ioSocket    = new jmp.Socket 'sub', scheme, key
+        @ioSocket = new jmp.Socket 'sub', scheme, key
 
         id = uuid.v4()
         @shellSocket.identity = 'dealer' + id
@@ -107,23 +107,14 @@ class ZMQKernel extends Kernel
     # onResults is a callback that may be called multiple times
     # as results come in from the kernel
     _execute: (code, requestId, onResults) ->
-        header =
-                msg_id: requestId,
-                username: '',
-                session: '00000000-0000-0000-0000-000000000000',
-                msg_type: 'execute_request',
-                version: '5.0'
+        message = @_createMessage 'execute_request', requestId
 
-        content =
-                code: code
-                silent: false
-                store_history: true
-                user_expressions: {}
-                allow_stdin: true
-
-        message =
-                header: header
-                content: content
+        message.content =
+            code: code
+            silent: false
+            store_history: true
+            user_expressions: {}
+            allow_stdin: true
 
         @executionCallbacks[requestId] = onResults
 
@@ -146,24 +137,13 @@ class ZMQKernel extends Kernel
 
         requestId = 'complete_' + uuid.v4()
 
-        column = code.length
+        message = @_createMessage 'complete_request', requestId
 
-        header =
-                msg_id: requestId
-                username: ''
-                session: '00000000-0000-0000-0000-000000000000'
-                msg_type: 'complete_request'
-                version: '5.0'
-
-        content =
-                code: code
-                text: code
-                line: code
-                cursor_pos: column
-
-        message =
-                header: header
-                content: content
+        message.content =
+            code: code
+            text: code
+            line: code
+            cursor_pos: code.length
 
         @executionCallbacks[requestId] = onResults
 
@@ -175,21 +155,12 @@ class ZMQKernel extends Kernel
 
         requestId = 'inspect_' + uuid.v4()
 
-        header =
-                msg_id: requestId
-                username: ''
-                session: '00000000-0000-0000-0000-000000000000'
-                msg_type: 'inspect_request'
-                version: '5.0'
+        message = @_createMessage 'inspect_request', requestId
 
-        content =
-                code: code
-                cursor_pos: cursor_pos
-                detail_level: 0
-
-        message =
-                header: header
-                content: content
+        message.content =
+            code: code
+            cursor_pos: cursor_pos
+            detail_level: 0
 
         @executionCallbacks[requestId] = onResults
 
@@ -198,19 +169,10 @@ class ZMQKernel extends Kernel
     inputReply: (input) ->
         requestId = 'input_reply_' + uuid.v4()
 
-        header =
-                msg_id: requestId
-                username: ''
-                session: '00000000-0000-0000-0000-000000000000'
-                msg_type: 'input_reply'
-                version: '5.0'
+        message = @_createMessage 'input_reply', requestId
 
-        content =
-                value: input
-
-        message =
-                header: header
-                content: content
+        message.content =
+            value: input
 
         @stdinSocket.send new jmp.Message message
 
@@ -347,21 +309,9 @@ class ZMQKernel extends Kernel
         super
         console.log 'sending shutdown'
 
-        requestId = uuid.v4()
-
-        header =
-                msg_id: requestId,
-                username: '',
-                session: 0,
-                msg_type: 'shutdown_request',
-                version: '5.0'
-
-        content =
-                restart: false
-
+        message = @_createMessage 'shutdown_request'
         message =
-                header: header
-                content: content
+            restart: false
 
         @shellSocket.send new jmp.Message message
 
@@ -376,3 +326,23 @@ class ZMQKernel extends Kernel
                 @connectionFile
             atom.notifications.addInfo 'Custom kernel connection:',
                 detail: detail
+
+
+    _getUsername: ->
+        return process.env.LOGNAME or process.env.USER or process.env.LNAME or process.env.USERNAME
+
+
+    _createMessage: (msg_type, msg_id = uuid.v4()) ->
+        message =
+            header:
+                username: @_getUsername()
+                session: '00000000-0000-0000-0000-000000000000'
+                msg_type: msg_type
+                msg_id: msg_id
+                date: new Date()
+                version: '5.0'
+            metadata: {}
+            parent_header: {}
+            content: {}
+
+        return message
