@@ -120,7 +120,7 @@ module.exports = Hydrogen =
         @clearStatusBar()
 
         if @kernel?
-            @statusBarElement.appendChild @kernel.statusView.getElement()
+            @statusBarElement.appendChild @kernel.statusView.element
 
 
     clearStatusBar: ->
@@ -244,7 +244,7 @@ module.exports = Hydrogen =
 
         view = new ResultView(marker)
         view.spin(true)
-        element = view.getElement()
+        element = view.element
 
         lineHeight = @editor.getLineHeightInPixels()
         view.spinner.setAttribute('style',

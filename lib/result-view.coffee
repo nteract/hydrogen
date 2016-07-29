@@ -220,8 +220,6 @@ class ResultView
             @marker.destroy()
         @element.innerHTML = ''
 
-    getElement: ->
-        @element
 
 transformime = require 'transformime'
 MarkdownTransform = require 'transformime-marked'

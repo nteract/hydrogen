@@ -16,7 +16,3 @@ class StatusView
     destroy: ->
         @element.innerHTML = ''
         @element.remove()
-
-
-    getElement: ->
-        @element
