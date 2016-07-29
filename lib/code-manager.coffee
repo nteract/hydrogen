@@ -58,14 +58,7 @@ class CodeManager
 
 
     getRow: (row) ->
-        buffer = @editor.getBuffer()
-        return buffer.getTextInRange
-            start:
-                row: row
-                column: 0
-            end:
-                row: row
-                column: 9999999
+        return @editor.lineTextForBufferRow row
 
 
     getRows: (startRow, endRow) ->
