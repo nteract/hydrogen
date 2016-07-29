@@ -1,20 +1,24 @@
 escapeStringRegexp = require 'escape-string-regexp'
 
-module.exports = CellManager =
+module.exports =
+class CellManager
+    constructor: ->
+        @editor = atom.workspace.getActiveTextEditor()
+
+
     getCurrentCell: ->
-        editor = atom.workspace.getActiveTextEditor()
-        buffer = editor.getBuffer()
+        buffer = @editor.getBuffer()
         start = buffer.getFirstPosition()
         end = buffer.getEndPosition()
-        regexString = @getRegexString editor
+        regexString = @getRegexString @editor
 
         unless regexString?
             return [start, end]
 
         regex = new RegExp regexString
-        cursor = editor.getLastCursor().getBufferPosition()
+        cursor = @editor.getLastCursor().getBufferPosition()
 
-        while cursor.row < end.row and @isComment editor, cursor
+        while cursor.row < end.row and @isComment @editor, cursor
             cursor.row += 1
             cursor.column = 0
 
@@ -32,11 +36,10 @@ module.exports = CellManager =
 
 
     getBreakpoints: ->
-        editor = atom.workspace.getActiveTextEditor()
-        buffer = editor.getBuffer()
+        buffer = @editor.getBuffer()
         breakpoints = [buffer.getFirstPosition()]
 
-        regexString = @getRegexString editor
+        regexString = @getRegexString @editor
         if regexString?
             regex = new RegExp regexString, 'g'
             buffer.scan regex, ({range}) ->
@@ -49,11 +52,11 @@ module.exports = CellManager =
         return breakpoints
 
 
-    getRegexString: (editor) ->
-        scope = editor.getRootScopeDescriptor()
+    getRegexString: ->
+        scope = @editor.getRootScopeDescriptor()
 
         {commentStartString, commentEndString} =
-            editor.languageMode.commentStartAndEndStringsForScope(scope)
+            @editor.languageMode.commentStartAndEndStringsForScope(scope)
 
         unless commentStartString
             console.log 'CellManager: No comment string defined in root scope'
@@ -68,7 +71,7 @@ module.exports = CellManager =
         return regexString
 
 
-    isComment: (editor, position) ->
-        scope = editor.scopeDescriptorForBufferPosition position
+    isComment: (position) ->
+        scope = @editor.scopeDescriptorForBufferPosition position
         scopeString = scope.getScopeChain()
         return _.includes scopeString, 'comment.line'
