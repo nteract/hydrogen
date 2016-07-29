@@ -1,7 +1,7 @@
 escapeStringRegexp = require 'escape-string-regexp'
 
 module.exports =
-class CellManager
+class CodeManager
     constructor: ->
         @editor = atom.workspace.getActiveTextEditor()
 

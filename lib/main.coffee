@@ -6,7 +6,7 @@ ResultView = require './result-view'
 SignalListView = require './signal-list-view'
 KernelPicker = require './kernel-picker'
 WSKernelPicker = require './ws-kernel-picker'
-CellManager = require './cell-manager'
+CodeManager = require './code-manager'
 
 Config = require './config'
 KernelManager = require './kernel-manager'
@@ -33,7 +33,7 @@ module.exports = Hydrogen =
     activate: (state) ->
         @kernelManager = new KernelManager()
         @inspector = new Inspector @kernelManager
-        @cellManager = new CellManager()
+        @codeManager = new CodeManager()
 
         @markerBubbleMap = {}
 
@@ -101,7 +101,7 @@ module.exports = Hydrogen =
             grammar = @editor.getGrammar()
             language = @kernelManager.getLanguageFor grammar
             kernel = @kernelManager.getRunningKernelFor language
-            @cellManager.editor = @editor
+            @codeManager.editor = @editor
 
         unless @kernel is kernel
             @onKernelChanged kernel
@@ -330,7 +330,7 @@ module.exports = Hydrogen =
 
 
     _runAll: (kernel) ->
-        breakpoints = @cellManager.getBreakpoints()
+        breakpoints = @codeManager.getBreakpoints()
         buffer = @editor.getBuffer()
         for i in [1...breakpoints.length]
             start = breakpoints[i - 1]
@@ -349,7 +349,7 @@ module.exports = Hydrogen =
             @createResultBubble code, row
 
     runCell: (moveDown = false) ->
-        [start, end] = @cellManager.getCurrentCell()
+        [start, end] = @codeManager.getCurrentCell()
         buffer = @editor.getBuffer()
         code = buffer.getTextInRange [start, end]
         endRow = @escapeBlankRows start.row, end.row
