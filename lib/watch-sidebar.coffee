@@ -11,8 +11,8 @@ class WatchSidebar
         @element = document.createElement('div')
         @element.classList.add('hydrogen', 'watch-sidebar')
 
-        @toolbar = document.createElement('div')
-        @toolbar.classList.add('toolbar', 'block')
+        toolbar = document.createElement('div')
+        toolbar.classList.add('toolbar', 'block')
 
         languageDisplay = document.createElement('button')
         languageDisplay.classList.add('btn', 'icon', 'icon-sync')
@@ -22,24 +22,24 @@ class WatchSidebar
             editorView = atom.views.getView(editor)
             atom.commands.dispatch(editorView, 'hydrogen:select-watch-kernel')
 
-        @commands = document.createElement('div')
-        @commands.classList.add('btn-group')
-        @removeButton = document.createElement('button')
-        @removeButton.classList.add('btn', 'icon', 'icon-trashcan')
-        @removeButton.onclick = => @removeWatch()
-        @toggleButton = document.createElement('button')
-        @toggleButton.classList.add('btn', 'icon', 'icon-remove-close')
-        @toggleButton.onclick = ->
+        commands = document.createElement('div')
+        commands.classList.add('btn-group')
+        removeButton = document.createElement('button')
+        removeButton.classList.add('btn', 'icon', 'icon-trashcan')
+        removeButton.onclick = => @removeWatch()
+        toggleButton = document.createElement('button')
+        toggleButton.classList.add('btn', 'icon', 'icon-remove-close')
+        toggleButton.onclick = ->
             editor = atom.workspace.getActiveTextEditor()
             editorView = atom.views.getView(editor)
             atom.commands.dispatch(editorView, 'hydrogen:toggle-watches')
 
-        @tooltips = new CompositeDisposable()
-        @tooltips.add atom.tooltips.add @toggleButton,
+        tooltips = new CompositeDisposable()
+        tooltips.add atom.tooltips.add toggleButton,
             title: 'Toggle Watches'
-        @tooltips.add atom.tooltips.add languageDisplay,
+        tooltips.add atom.tooltips.add languageDisplay,
             title: 'Change Watch Kernel'
-        @tooltips.add atom.tooltips.add @removeButton,
+        tooltips.add atom.tooltips.add removeButton,
             title: 'Remove Watch'
 
 
@@ -47,25 +47,25 @@ class WatchSidebar
         _.forEach @watchViews, (watch) =>
             @watchesContainer.appendChild(watch.element)
 
-        @addButton = document.createElement('button')
-        @addButton.classList.add('add-watch', 'btn', 'btn-primary',
+        addButton = document.createElement('button')
+        addButton.classList.add('add-watch', 'btn', 'btn-primary',
                                  'icon', 'icon-plus', 'inline-block')
-        @addButton.innerText = 'Add watch'
-        @addButton.onclick = => @addWatch()
+        addButton.innerText = 'Add watch'
+        addButton.onclick = => @addWatch()
 
-        @resizeHandle = document.createElement('div')
-        @resizeHandle.classList.add('watch-resize-handle')
-        $(@resizeHandle).on 'mousedown', @resizeStarted
+        resizeHandle = document.createElement('div')
+        resizeHandle.classList.add('watch-resize-handle')
+        $(resizeHandle).on 'mousedown', @resizeStarted
 
-        @toolbar.appendChild(languageDisplay)
-        @toolbar.appendChild(@commands)
-        @commands.appendChild(@removeButton)
-        @commands.appendChild(@toggleButton)
+        toolbar.appendChild(languageDisplay)
+        toolbar.appendChild(commands)
+        commands.appendChild(removeButton)
+        commands.appendChild(toggleButton)
 
-        @element.appendChild(@toolbar)
+        @element.appendChild(toolbar)
         @element.appendChild(@watchesContainer)
-        @element.appendChild(@addButton)
-        @element.appendChild(@resizeHandle)
+        @element.appendChild(addButton)
+        @element.appendChild(resizeHandle)
 
         @kernel.addWatchCallback =>
             @run()
