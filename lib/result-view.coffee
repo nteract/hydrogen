@@ -7,68 +7,68 @@ class ResultView
         @element = document.createElement('div')
         @element.classList.add('hydrogen', 'output-bubble', 'empty')
 
-        @outputContainer = document.createElement('div')
-        @outputContainer.classList.add('bubble-output-container')
-        @outputContainer.onmousewheel = (e) -> e.stopPropagation()
-        @element.appendChild(@outputContainer)
+        outputContainer = document.createElement('div')
+        outputContainer.classList.add('bubble-output-container')
+        outputContainer.onmousewheel = (e) -> e.stopPropagation()
+        @element.appendChild(outputContainer)
 
         @resultContainer = document.createElement('div')
         @resultContainer.classList.add('bubble-result-container')
-        @outputContainer.appendChild(@resultContainer)
+        outputContainer.appendChild(@resultContainer)
 
         @errorContainer = document.createElement('div')
         @errorContainer.classList.add('bubble-error-container')
-        @outputContainer.appendChild(@errorContainer)
+        outputContainer.appendChild(@errorContainer)
 
         @statusContainer = document.createElement('div')
         @statusContainer.classList.add('bubble-status-container')
         @spinner = @buildSpinner()
         @statusContainer.appendChild(@spinner)
-        @outputContainer.appendChild(@statusContainer)
+        outputContainer.appendChild(@statusContainer)
 
-        @richCloseButton = document.createElement('div')
-        @richCloseButton.classList.add('rich-close-button', 'icon', 'icon-x')
-        @richCloseButton.onclick = => @destroy()
-        @element.appendChild(@richCloseButton)
+        richCloseButton = document.createElement('div')
+        richCloseButton.classList.add('rich-close-button', 'icon', 'icon-x')
+        richCloseButton.onclick = => @destroy()
+        @element.appendChild(richCloseButton)
 
-        @actionPanel = document.createElement('div')
-        @actionPanel.classList.add('bubble-action-panel')
-        @element.appendChild(@actionPanel)
+        actionPanel = document.createElement('div')
+        actionPanel.classList.add('bubble-action-panel')
+        @element.appendChild(actionPanel)
 
-        @closeButton = document.createElement('div')
-        @closeButton.classList.add 'action-button',
+        closeButton = document.createElement('div')
+        closeButton.classList.add 'action-button',
             'close-button', 'icon', 'icon-x'
-        @closeButton.onclick = => @destroy()
-        @actionPanel.appendChild(@closeButton)
+        closeButton.onclick = => @destroy()
+        actionPanel.appendChild(closeButton)
 
 
         padding = document.createElement('div')
         padding.classList.add('padding')
-        @actionPanel.appendChild(padding)
+        actionPanel.appendChild(padding)
 
-        @copyButton = document.createElement('div')
-        @copyButton.classList.add 'action-button',
+        copyButton = document.createElement('div')
+        copyButton.classList.add 'action-button',
             'copy-button', 'icon', 'icon-clippy'
-        @copyButton.onclick = =>
+        copyButton.onclick = =>
             atom.clipboard.write(@getAllText())
             atom.notifications.addSuccess('Copied to clipboard')
-        @actionPanel.appendChild(@copyButton)
+        actionPanel.appendChild(copyButton)
 
-        @openButton = document.createElement('div')
-        @openButton.classList.add 'action-button',
+        openButton = document.createElement('div')
+        openButton.classList.add 'action-button',
             'open-button', 'icon', 'icon-file-symlink-file'
-        @openButton.onclick = =>
+        openButton.onclick = =>
             bubbleText = @getAllText()
             atom.workspace.open().then (editor) ->
                 editor.insertText(bubbleText)
-        @actionPanel.appendChild(@openButton)
+        actionPanel.appendChild(openButton)
 
         @setMultiline false
 
         @tooltips = new CompositeDisposable()
-        @tooltips.add atom.tooltips.add @copyButton,
+        @tooltips.add atom.tooltips.add copyButton,
             title: 'Copy to clipboard'
-        @tooltips.add atom.tooltips.add @openButton,
+        @tooltips.add atom.tooltips.add openButton,
             title: 'Open in new editor'
 
         @_hasResult = false
@@ -220,8 +220,6 @@ class ResultView
             @marker.destroy()
         @element.innerHTML = ''
 
-    getElement: ->
-        @element
 
 transformime = require 'transformime'
 MarkdownTransform = require 'transformime-marked'

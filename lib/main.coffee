@@ -6,7 +6,7 @@ ResultView = require './result-view'
 SignalListView = require './signal-list-view'
 KernelPicker = require './kernel-picker'
 WSKernelPicker = require './ws-kernel-picker'
-CellManager = require './cell-manager'
+CodeManager = require './code-manager'
 
 Config = require './config'
 KernelManager = require './kernel-manager'
@@ -33,6 +33,7 @@ module.exports = Hydrogen =
     activate: (state) ->
         @kernelManager = new KernelManager()
         @inspector = new Inspector @kernelManager
+        @codeManager = new CodeManager()
 
         @markerBubbleMap = {}
 
@@ -100,6 +101,7 @@ module.exports = Hydrogen =
             grammar = @editor.getGrammar()
             language = @kernelManager.getLanguageFor grammar
             kernel = @kernelManager.getRunningKernelFor language
+            @codeManager.editor = @editor
 
         unless @kernel is kernel
             @onKernelChanged kernel
@@ -118,7 +120,7 @@ module.exports = Hydrogen =
         @clearStatusBar()
 
         if @kernel?
-            @statusBarElement.appendChild @kernel.statusView.getElement()
+            @statusBarElement.appendChild @kernel.statusView.element
 
 
     clearStatusBar: ->
@@ -242,7 +244,7 @@ module.exports = Hydrogen =
 
         view = new ResultView(marker)
         view.spin(true)
-        element = view.getElement()
+        element = view.element
 
         lineHeight = @editor.getLineHeightInPixels()
         view.spinner.setAttribute('style',
@@ -290,32 +292,17 @@ module.exports = Hydrogen =
                 delete @markerBubbleMap[marker.id]
 
 
-    moveDown: (row) ->
-        lastRow = @editor.getLastBufferRow()
-
-        if row >= lastRow
-            @editor.moveToBottom()
-            @editor.insertNewline()
-            return
-
-        while row < lastRow
-            row++
-            break if not @blank(row)
-
-        @editor.setCursorBufferPosition
-            row: row
-            column: 0
-
     run: (moveDown = false) ->
-        codeBlock = @findCodeBlock()
+        codeBlock = @codeManager.findCodeBlock()
         unless codeBlock?
             return
 
         [code, row] = codeBlock
         if code? and row?
             if moveDown is true
-                @moveDown row
+                @codeManager.moveDown row
             @createResultBubble code, row
+
 
     runAll: ->
         if @kernel
@@ -328,40 +315,36 @@ module.exports = Hydrogen =
 
 
     _runAll: (kernel) ->
-        breakpoints = CellManager.getBreakpoints()
+        breakpoints = @codeManager.getBreakpoints()
         buffer = @editor.getBuffer()
         for i in [1...breakpoints.length]
             start = breakpoints[i - 1]
             end = breakpoints[i]
             code = buffer.getTextInRange [start, end]
-            endRow = @escapeBlankRows start.row, end.row
+            endRow = @codeManager.escapeBlankRows start.row, end.row
             @_createResultBubble kernel, code, endRow
 
 
     runAllAbove: ->
         cursor = @editor.getLastCursor()
-        row = @escapeBlankRows 0, cursor.getBufferRow()
-        code = @getRows(0, row)
+        row = @codeManager.escapeBlankRows 0, cursor.getBufferRow()
+        code = @codeManager.getRows(0, row)
 
         if code? and row?
             @createResultBubble code, row
 
+
     runCell: (moveDown = false) ->
-        [start, end] = CellManager.getCurrentCell()
+        [start, end] = @codeManager.getCurrentCell()
         buffer = @editor.getBuffer()
         code = buffer.getTextInRange [start, end]
-        endRow = @escapeBlankRows start.row, end.row
+        endRow = @codeManager.escapeBlankRows start.row, end.row
 
         if code?
             if moveDown is true
-                @moveDown endRow
+                @codeManager.moveDown endRow
             @createResultBubble code, endRow
 
-    escapeBlankRows: (startRow, endRow) ->
-        if endRow > startRow
-            for i in [startRow .. endRow - 1] when @blank(endRow)
-                endRow -= 1
-        return endRow
 
     showKernelPicker: ->
         unless @kernelPicker?
@@ -375,6 +358,7 @@ module.exports = Hydrogen =
                     command: 'switch-kernel'
                     kernelSpec: kernelSpec
         @kernelPicker.toggle()
+
 
     showWatchKernelPicker: ->
         unless @watchSidebarIsVisible
@@ -394,6 +378,7 @@ module.exports = Hydrogen =
                     @setWatchSidebar kernel
         @watchKernelPicker.toggle()
 
+
     showWSKernelPicker: ->
         unless @wsKernelPicker?
             @wsKernelPicker = new WSKernelPicker (kernel) =>
@@ -402,97 +387,7 @@ module.exports = Hydrogen =
                 oldKernel = @kernelManager.getRunningKernelFor language
                 if oldKernel?
                     @kernelManager.destroyRunningKernel oldKernel
-
                 @clearResultBubbles()
                 @kernelManager.attachKernel grammar, kernel
                 @onKernelChanged kernel
-
         @wsKernelPicker.toggle()
-
-    findCodeBlock: ->
-        buffer = @editor.getBuffer()
-        selectedText = @editor.getSelectedText()
-
-        if selectedText
-            selectedRange = @editor.getSelectedBufferRange()
-            endRow = selectedRange.end.row
-            if selectedRange.end.column is 0
-                endRow = endRow - 1
-            endRow = @escapeBlankRows selectedRange.start.row, endRow
-            return [selectedText, endRow]
-
-        cursor = @editor.getLastCursor()
-
-        row = cursor.getBufferRow()
-        console.log 'findCodeBlock:', row
-
-        indentLevel = cursor.getIndentLevel()
-
-        foldable = @editor.isFoldableAtBufferRow(row)
-        foldRange = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
-        if not foldRange? or not foldRange[0]? or not foldRange[1]?
-            foldable = false
-
-        if foldable
-            return @getFoldContents(row)
-        else if @blank(row)
-            return @findPrecedingBlock(row, indentLevel)
-        else if @getRow(row).trim() is 'end'
-            return @findPrecedingBlock(row, indentLevel)
-        else
-            return [@getRow(row), row]
-
-    findPrecedingBlock: (row, indentLevel) ->
-        buffer = @editor.getBuffer()
-        previousRow = row - 1
-        while previousRow >= 0
-            previousIndentLevel = @editor.indentationForBufferRow previousRow
-            sameIndent = previousIndentLevel <= indentLevel
-            blank = @blank(previousRow)
-            isEnd = @getRow(previousRow).trim() is 'end'
-
-            if @blank(row)
-                row = previousRow
-            if sameIndent and not blank and not isEnd
-                return [@getRows(previousRow, row), row]
-            previousRow--
-        return null
-
-    blank: (row) ->
-        return @editor.getBuffer().isRowBlank(row) or
-               @editor.languageMode.isLineCommentedAtBufferRow(row)
-
-    getRow: (row) ->
-        buffer = @editor.getBuffer()
-        return buffer.getTextInRange
-            start:
-                row: row
-                column: 0
-            end:
-                row: row
-                column: 9999999
-
-    getRows: (startRow, endRow) ->
-        buffer = @editor.getBuffer()
-        return buffer.getTextInRange
-            start:
-                row: startRow
-                column: 0
-            end:
-                row: endRow
-                column: 9999999
-
-    getFoldRange: (editor, row) ->
-        range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
-        if @getRow(range[1] + 1).trim() is 'end'
-            range[1] = range[1] + 1
-        console.log 'getFoldRange:', range
-        return range
-
-    getFoldContents: (row) ->
-        buffer = @editor.getBuffer()
-        range = @getFoldRange(@editor, row)
-        return [
-                @getRows(range[0], range[1]),
-                range[1]
-            ]

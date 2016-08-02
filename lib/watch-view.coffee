@@ -56,9 +56,9 @@ class WatchView
         @counter = document.createElement('div')
         @counter.classList.add('counter')
 
-        @nextButton = document.createElement('button')
-        @nextButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-right', 'next-btn')
-        @nextButton.onclick = =>
+        nextButton = document.createElement('button')
+        nextButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-right', 'next-btn')
+        nextButton.onclick = =>
             if @currentHistory.pos isnt @currentHistory.length - 1 and @currentHistory.pos?
                 @currentHistory.pos += 1
                 @counter.innerText = "#{@currentHistory.pos+1} / #{@currentHistory.length}"
@@ -66,9 +66,9 @@ class WatchView
                 @clearResults()
                 @resultView.addResult @currentHistory[@currentHistory.pos]
 
-        @prevButton = document.createElement('button')
-        @prevButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-left')
-        @prevButton.onclick = =>
+        prevButton = document.createElement('button')
+        prevButton.classList.add('btn', 'btn-xs', 'icon', 'icon-chevron-left')
+        prevButton.onclick = =>
             if @currentHistory.pos isnt 0 and @currentHistory.pos?
                 @currentHistory.pos -= 1
                 @counter.innerText = "#{@currentHistory.pos+1} / #{@currentHistory.length}"
@@ -76,9 +76,9 @@ class WatchView
                 @clearResults()
                 @resultView.addResult @currentHistory[@currentHistory.pos]
 
-        @historySwitch.appendChild(@prevButton)
+        @historySwitch.appendChild(prevButton)
         @historySwitch.appendChild(@counter)
-        @historySwitch.appendChild(@nextButton)
+        @historySwitch.appendChild(nextButton)
         @historySwitch.appendChild(@scrollbar)
         @element.appendChild @historySwitch
         this
