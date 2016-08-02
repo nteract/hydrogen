@@ -47,54 +47,58 @@ class ZMQKernel extends Kernel
 
         @executionCallbacks = {}
 
-        projectPath = path.dirname(
-            atom.workspace.getActiveTextEditor().getPath()
-        )
-
         @_connect()
+
         if @onlyConnect
             atom.notifications.addInfo 'Using custom kernel connection:',
                 detail: @configPath
         else
-            commandString = _.head(@kernelSpec.argv)
-            args = _.tail(@kernelSpec.argv)
-            args = _.map args, (arg) =>
-                if arg is '{connection_file}'
-                    return @configPath
-                else
-                    return arg
+            @_launch()
 
-            console.log 'Kernel: Spawning:', commandString, args
-            @kernelProcess = child_process.spawn commandString, args,
-                cwd: projectPath
+    _launch: ->
+        projectPath = path.dirname(
+            atom.workspace.getActiveTextEditor().getPath()
+        )
 
-            getKernelNotificationsRegExp = ->
-                try
-                    pattern = atom.config.get 'Hydrogen.kernelNotifications'
-                    flags = 'im'
-                    return new RegExp pattern, flags
-                catch err
-                    return null
+        commandString = _.head(@kernelSpec.argv)
+        args = _.tail(@kernelSpec.argv)
+        args = _.map args, (arg) =>
+            if arg is '{connection_file}'
+                return @configPath
+            else
+                return arg
 
-            @kernelProcess.stdout.on 'data', (data) =>
-                data = data.toString()
+        console.log 'Kernel: Spawning:', commandString, args
+        @kernelProcess = child_process.spawn commandString, args,
+            cwd: projectPath
 
-                console.log 'Kernel: stdout:', data
+        getKernelNotificationsRegExp = ->
+            try
+                pattern = atom.config.get 'Hydrogen.kernelNotifications'
+                flags = 'im'
+                return new RegExp pattern, flags
+            catch err
+                return null
 
-                regexp = getKernelNotificationsRegExp()
-                if regexp?.test data
-                    atom.notifications.addInfo @kernelSpec.display_name,
-                        detail: data, dismissable: true
+        @kernelProcess.stdout.on 'data', (data) =>
+            data = data.toString()
 
-            @kernelProcess.stderr.on 'data', (data) =>
-                data = data.toString()
+            console.log 'Kernel: stdout:', data
 
-                console.log 'Kernel: stderr:', data
+            regexp = getKernelNotificationsRegExp()
+            if regexp?.test data
+                atom.notifications.addInfo @kernelSpec.display_name,
+                    detail: data, dismissable: true
 
-                regexp = getKernelNotificationsRegExp()
-                if regexp?.test data
-                    atom.notifications.addError @kernelSpec.display_name,
-                        detail: data, dismissable: true
+        @kernelProcess.stderr.on 'data', (data) =>
+            data = data.toString()
+
+            console.log 'Kernel: stderr:', data
+
+            regexp = getKernelNotificationsRegExp()
+            if regexp?.test data
+                atom.notifications.addError @kernelSpec.display_name,
+                    detail: data, dismissable: true
 
     _connect: ->
         scheme = @config.signature_scheme.slice 'hmac-'.length
