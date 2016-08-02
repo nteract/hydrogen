@@ -4,28 +4,29 @@ module.exports = CellManager =
     getCurrentCell: ->
         editor = atom.workspace.getActiveTextEditor()
         buffer = editor.getBuffer()
-        start = 0
-        end = editor.getLastBufferRow()
+        start = buffer.getFirstPosition()
+        end = buffer.getEndPosition()
         regexString = @getRegexString editor
 
         unless regexString?
             return [start, end]
 
         regex = new RegExp regexString
-        {row, column} = editor.getLastCursor().getBufferPosition()
+        cursor = editor.getLastCursor().getBufferPosition()
 
-        if row > 0
-            range = [[0, 0], [row - 1, 100]]
-            buffer.backwardsScanInRange regex, range, ({range}) ->
-                start = range.start.row
-        else
-            start = 0
+        while cursor.row < end.row and @isComment editor, cursor
+            cursor.row += 1
+            cursor.column = 0
 
-        range = [[row, 0], [end, 100]]
-        buffer.scanInRange regex, range, ({range}) ->
-            end = range.start.row
+        if cursor.row > 0
+            buffer.backwardsScanInRange regex, [start, cursor], ({range}) ->
+                start = range.start
 
-        console.log 'CellManager: Cell [start, end]:', [start, end], 'row:', row
+        buffer.scanInRange regex, [cursor, end], ({range}) ->
+            end = range.start
+
+        console.log 'CellManager: Cell [start, end]:', [start, end],
+            'cursor:', cursor
 
         return [start, end]
 
@@ -33,15 +34,15 @@ module.exports = CellManager =
     getBreakpoints: ->
         editor = atom.workspace.getActiveTextEditor()
         buffer = editor.getBuffer()
-        breakpoints = [0]
+        breakpoints = [buffer.getFirstPosition()]
 
         regexString = @getRegexString editor
         if regexString?
             regex = new RegExp regexString, 'g'
             buffer.scan regex, ({range}) ->
-                breakpoints.push range.start.row
+                breakpoints.push range.start
 
-        breakpoints.push editor.getLastBufferRow()
+        breakpoints.push buffer.getEndPosition()
 
         console.log 'CellManager: Breakpoints:', breakpoints
 
@@ -65,3 +66,9 @@ module.exports = CellManager =
             escapedCommentStartString + '(%%| %%| <codecell>| In\[[0-9 ]*\]:?)'
 
         return regexString
+
+
+    isComment: (editor, position) ->
+        scope = editor.scopeDescriptorForBufferPosition position
+        scopeString = scope.getScopeChain()
+        return _.includes scopeString, 'comment.line'

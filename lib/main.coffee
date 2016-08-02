@@ -329,11 +329,13 @@ module.exports = Hydrogen =
 
     _runAll: (kernel) ->
         breakpoints = CellManager.getBreakpoints()
+        buffer = @editor.getBuffer()
         for i in [1...breakpoints.length]
             start = breakpoints[i - 1]
-            row = @escapeBlankRows start, breakpoints[i]
-            code = @getRows start, row
-            @_createResultBubble kernel, code, row
+            end = breakpoints[i]
+            code = buffer.getTextInRange [start, end]
+            endRow = @escapeBlankRows start.row, end.row
+            @_createResultBubble kernel, code, endRow
 
 
     runAllAbove: ->
@@ -345,9 +347,10 @@ module.exports = Hydrogen =
             @createResultBubble code, row
 
     runCell: (moveDown = false) ->
-        [startRow, endRow] = CellManager.getCurrentCell()
-        endRow = @escapeBlankRows startRow, endRow
-        code = @getRows(startRow, endRow)
+        [start, end] = CellManager.getCurrentCell()
+        buffer = @editor.getBuffer()
+        code = buffer.getTextInRange [start, end]
+        endRow = @escapeBlankRows start.row, end.row
 
         if code?
             if moveDown is true
