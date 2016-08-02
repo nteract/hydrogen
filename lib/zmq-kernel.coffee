@@ -42,7 +42,7 @@ class ZMQKernel extends Kernel
             fs.writeFile filepath, configString, ->
                 onCreated filepath, config
 
-    constructor: (kernelSpec, @grammar, @config, @configPath, @onlyConnect = false) ->
+    constructor: (kernelSpec, @grammar, @connection, @configPath, @onlyConnect = false) ->
         super kernelSpec
 
         @executionCallbacks = {}
@@ -101,8 +101,8 @@ class ZMQKernel extends Kernel
                     detail: data, dismissable: true
 
     _connect: ->
-        scheme = @config.signature_scheme.slice 'hmac-'.length
-        key = @config.key
+        scheme = @connection.signature_scheme.slice 'hmac-'.length
+        key = @connection.key
 
         @shellSocket = new jmp.Socket 'dealer', scheme, key
         @controlSocket = new jmp.Socket 'dealer', scheme, key
@@ -115,12 +115,12 @@ class ZMQKernel extends Kernel
         @stdinSocket.identity = 'dealer' + id
         @ioSocket.identity = 'sub' + id
 
-        address = "#{ @config.transport }://#{ @config.ip }:"
-        @shellSocket.connect(address + @config.shell_port)
-        @controlSocket.connect(address + @config.control_port)
-        @ioSocket.connect(address + @config.iopub_port)
+        address = "#{ @connection.transport }://#{ @connection.ip }:"
+        @shellSocket.connect(address + @connection.shell_port)
+        @controlSocket.connect(address + @connection.control_port)
+        @ioSocket.connect(address + @connection.iopub_port)
         @ioSocket.subscribe('')
-        @stdinSocket.connect(address + @config.stdin_port)
+        @stdinSocket.connect(address + @connection.stdin_port)
 
         @shellSocket.on 'message', @onShellMessage.bind this
         @ioSocket.on 'message', @onIOMessage.bind this
