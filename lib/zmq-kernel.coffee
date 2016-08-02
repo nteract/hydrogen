@@ -42,7 +42,7 @@ class ZMQKernel extends Kernel
             fs.writeFile filepath, configString, ->
                 onCreated filepath, config
 
-    constructor: (kernelSpec, @grammar, @connection, @configPath, @onlyConnect = false) ->
+    constructor: (kernelSpec, @grammar, @connection, @connectionFile, @onlyConnect = false) ->
         super kernelSpec
 
         @executionCallbacks = {}
@@ -50,8 +50,8 @@ class ZMQKernel extends Kernel
         @_connect()
 
         if @onlyConnect
-            atom.notifications.addInfo 'Using custom kernel connection:',
-                detail: @configPath
+            atom.notifications.addInfo 'Using existing kernel:',
+                detail: @kernelSpec.display_name
         else
             @_launch()
 
@@ -64,7 +64,7 @@ class ZMQKernel extends Kernel
         args = _.tail(@kernelSpec.argv)
         args = _.map args, (arg) =>
             if arg is '{connection_file}'
-                return @configPath
+                return @connectionFile
             else
                 return arg
 
@@ -408,11 +408,6 @@ class ZMQKernel extends Kernel
         @shellSocket.close()
         @ioSocket.close()
 
-        if @onlyConnect
-            detail = 'Shutdown request sent to custom kernel connection in ' +
-                @configPath
-            atom.notifications.addInfo 'Custom kernel connection:',
-                detail: detail
-
         unless @onlyConnect
             @kernelProcess.kill 'SIGKILL'
+            fs.unlink @connectionFile
