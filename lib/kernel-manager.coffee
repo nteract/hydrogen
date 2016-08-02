@@ -118,7 +118,7 @@ class KernelManager
         unless language?
             return null
 
-        @getAllKernelSpecsFor language, (kernelSpecs) ->
+        @getAllKernelSpecsFor language, (kernelSpecs) =>
             if kernelSpecs.length <= 1
                 callback kernelSpecs[0]
             else
