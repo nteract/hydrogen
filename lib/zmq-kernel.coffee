@@ -1,4 +1,5 @@
 child_process = require 'child_process'
+fs = require 'fs'
 path = require 'path'
 
 _ = require 'lodash'
@@ -9,8 +10,38 @@ zmq = jmp.zmq
 Kernel = require './kernel'
 InputView = require './input-view'
 
+portfinder = require './find-port'
+
+fileStoragePath = path.join __dirname, '..', 'kernel-configs'
+try
+    fs.mkdirSync fileStoragePath
+catch e
+    if e.code isnt 'EEXIST'
+        throw e
+
 module.exports =
 class ZMQKernel extends Kernel
+    @createConnectionFile: (onCreated) ->
+        filename = 'kernel-' + uuid.v4() + '.json'
+        filepath = path.join fileStoragePath, filename
+
+        portfinder.findMany 5, (ports) ->
+            config =
+                version: 5
+                key: uuid.v4()
+                signature_scheme: 'hmac-sha256'
+                transport: 'tcp'
+                ip: '127.0.0.1'
+                hb_port: ports[0]
+                control_port: ports[1]
+                shell_port: ports[2]
+                stdin_port: ports[3]
+                iopub_port: ports[4]
+
+            configString = JSON.stringify config
+            fs.writeFile filepath, configString, ->
+                onCreated filepath, config
+
     constructor: (kernelSpec, @grammar, @config, @configPath, @onlyConnect = false) ->
         super kernelSpec
 
