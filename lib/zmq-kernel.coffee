@@ -310,7 +310,7 @@ class ZMQKernel extends Kernel
         console.log 'sending shutdown'
 
         message = @_createMessage 'shutdown_request'
-        message =
+        message.content =
             restart: false
 
         @shellSocket.send new jmp.Message message
