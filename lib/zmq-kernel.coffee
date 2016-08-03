@@ -17,12 +17,11 @@ class ZMQKernel extends Kernel
 
         @executionCallbacks = {}
 
-        projectPath = path.dirname(
-            atom.workspace.getActiveTextEditor().getPath()
-        )
-
         @_connect()
+
         if @kernelProcess?
+            console.log 'ZMQKernel: @kernelProcess:', @kernelProcess
+
             getKernelNotificationsRegExp = ->
                 try
                     pattern = atom.config.get 'Hydrogen.kernelNotifications'
@@ -34,7 +33,7 @@ class ZMQKernel extends Kernel
             @kernelProcess.stdout.on 'data', (data) =>
                 data = data.toString()
 
-                console.log 'Kernel: stdout:', data
+                console.log 'ZMQKernel: stdout:', data
 
                 regexp = getKernelNotificationsRegExp()
                 if regexp?.test data
@@ -44,15 +43,16 @@ class ZMQKernel extends Kernel
             @kernelProcess.stderr.on 'data', (data) =>
                 data = data.toString()
 
-                console.log 'Kernel: stderr:', data
+                console.log 'ZMQKernel: stderr:', data
 
                 regexp = getKernelNotificationsRegExp()
                 if regexp?.test data
                     atom.notifications.addError @kernelSpec.display_name,
                         detail: data, dismissable: true
         else
-            atom.notifications.addInfo 'Using custom kernel connection:',
-                detail: @connectionFile
+            console.log 'ZMQKernel: connectionFile:', connectionFile
+            atom.notifications.addInfo 'Using an existing kernel connection'
+
 
     _connect: ->
         scheme = @connection.signature_scheme.slice 'hmac-'.length
@@ -93,15 +93,24 @@ class ZMQKernel extends Kernel
         catch err
             console.error 'Kernel:', err
 
+
     interrupt: ->
         if @kernelProcess?
-            console.log 'sending SIGINT'
-            @kernelProcess?.kill('SIGINT')
+            console.log 'ZMQKernel: sending SIGINT'
+            @kernelProcess.kill 'SIGINT'
         else
-            detail = 'Can not send interrupt request to custom kernel at ' +
-                @connectionFile
-            atom.notifications.addWarning 'Custom kernel connection:',
-                detail: detail
+            console.log 'ZMQKernel: cannot interrupt an existing kernel'
+            atom.notifications.addWarning 'Cannot interrupt this kernel'
+
+
+    shutdown: (restart) ->
+        requestId = 'shutdown_' + uuid.v4()
+        message = @_createMessage 'shutdown_request', requestId
+
+        message.content =
+            restart: not not restart
+
+        @shellSocket.send new jmp.Message message
 
 
     # onResults is a callback that may be called multiple times
@@ -120,17 +129,20 @@ class ZMQKernel extends Kernel
 
         @shellSocket.send new jmp.Message message
 
+
     execute: (code, onResults) ->
         console.log 'Kernel.execute:', code
 
         requestId = 'execute_' + uuid.v4()
         @_execute(code, requestId, onResults)
 
+
     executeWatch: (code, onResults) ->
         console.log 'Kernel.executeWatch:', code
 
         requestId = 'watch_' + uuid.v4()
         @_execute(code, requestId, onResults)
+
 
     complete: (code, onResults) ->
         console.log 'Kernel.complete:', code
@@ -176,6 +188,7 @@ class ZMQKernel extends Kernel
 
         @stdinSocket.send new jmp.Message message
 
+
     onShellMessage: (message) ->
         console.log 'shell message:', message
 
@@ -216,6 +229,7 @@ class ZMQKernel extends Kernel
                     data: 'ok'
                     type: 'text'
                     stream: 'status'
+
 
     onStdinMessage: (message) ->
         console.log 'stdin message:', message
@@ -306,30 +320,27 @@ class ZMQKernel extends Kernel
 
 
     destroy: ->
-        super
-        console.log 'sending shutdown'
-
-        message = @_createMessage 'shutdown_request'
-        message.content =
-            restart: false
-
-        @shellSocket.send new jmp.Message message
-
-        @shellSocket.close()
-        @ioSocket.close()
+        console.log 'ZMQKernel: destroy:', this
 
         if @kernelProcess?
-            @kernelProcess.kill 'SIGKILL'
+            @interrupt()
             fs.unlink @connectionFile
         else
-            detail = 'Shutdown request sent to custom kernel connection in ' +
-                @connectionFile
-            atom.notifications.addInfo 'Custom kernel connection:',
-                detail: detail
+            @shutdown()
+
+        @shellSocket.close()
+        @controlSocket.close()
+        @ioSocket.close()
+        @stdinSocket.close()
+
+        super
 
 
     _getUsername: ->
-        return process.env.LOGNAME or process.env.USER or process.env.LNAME or process.env.USERNAME
+        return process.env.LOGNAME or
+            process.env.USER or
+            process.env.LNAME or
+            process.env.USERNAME
 
 
     _createMessage: (msg_type, msg_id = uuid.v4()) ->

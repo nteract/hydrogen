@@ -14,27 +14,37 @@ class Kernel
     constructor: (@kernelSpec) ->
         @watchCallbacks = []
 
-        @watchSidebar = new WatchSidebar(this)
-        @statusView = new StatusView(@kernelSpec.display_name)
+        @watchSidebar = new WatchSidebar this
+        @statusView = new StatusView @kernelSpec.display_name
 
 
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
 
+
     interrupt: ->
         throw new Error 'Kernel: interrupt method not implemented'
 
+
+    shutdown: (restart) ->
+        throw new Error 'Kernel: shutdown method not implemented'
+
+
     execute: (code, onResults) ->
-        throw new Error 'Kernel: interrupt method not implemented'
+        throw new Error 'Kernel: execute method not implemented'
+
 
     executeWatch: (code, onResults) ->
         throw new Error 'Kernel: executeWatch method not implemented'
 
+
     complete: (code, onResults) ->
         throw new Error 'Kernel: complete method not implemented'
 
+
     inspect: (code, cursor_pos, onResults) ->
         throw new Error 'Kernel: inspect method not implemented'
+
 
     _parseIOMessage: (message) ->
         result = @_parseDisplayIOMessage message
@@ -180,6 +190,7 @@ class Kernel
             result.data['text/plain'] = result.data['text/plain'].trim()
 
         return result
+
 
     destroy: ->
         console.log 'Kernel: Destroying base kernel'
