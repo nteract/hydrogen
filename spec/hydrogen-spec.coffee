@@ -144,5 +144,5 @@ describe 'Kernel manager', ->
         waitsForPromise -> new Promise (resolve, reject) ->
             kernelManager.getKernelSpecsFromJupyter (err, specs) ->
                 unless err
-                    expect(specs).toEqual(jasmine.any(Object))
+                    expect(specs instanceof Object).toEqual(true)
                 resolve()
