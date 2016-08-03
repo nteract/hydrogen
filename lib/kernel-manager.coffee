@@ -30,10 +30,9 @@ class KernelManager
 
             unless kernelSpec?
                 message = "No kernel for language `#{language}` found"
-                options =
-                    detail: 'Check that the language for this file is set in Atom
-                             and that you have a Jupyter kernel installed for it.'
-                atom.notifications.addError message, options
+                detail = 'Check that the language for this file is set in Atom
+                         and that you have a Jupyter kernel installed for it.'
+                atom.notifications.addError message, detail: detail
                 return
 
             console.log 'startKernelFor:', language
@@ -58,7 +57,8 @@ class KernelManager
 
         try
             rootDirectory = atom.project.rootDirectories[0].path
-            connectionFile = path.join rootDirectory, 'hydrogen', 'connection.json'
+            connectionFile = path.join rootDirectory, 'hydrogen',
+                'connection.json'
             data = fs.readFileSync connectionFile, 'utf8'
             config = JSON.parse data
             console.log 'KernelManager: Using connection file: ', connectionFile
@@ -119,7 +119,7 @@ class KernelManager
         unless language?
             return null
 
-        @getAllKernelSpecsFor language, (kernelSpecs) ->
+        @getAllKernelSpecsFor language, (kernelSpecs) =>
             if kernelSpecs.length <= 1
                 callback kernelSpecs[0]
             else
