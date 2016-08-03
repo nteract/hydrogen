@@ -25,9 +25,23 @@ class KernelManager
 
 
     startKernelFor: (grammar, onStarted) ->
+        try
+            rootDirectory = atom.project.rootDirectories[0].path or
+                path.dirname atom.workspace.getActiveTextEditor().getPath()
+            connectionFile = path.join(
+                rootDirectory, 'hydrogen', 'connection.json'
+            )
+            connectionString = fs.readFileSync connectionFile, 'utf8'
+            connection = JSON.parse connectionString
+            @startExistingKernel grammar, connection, connectionFile, onStarted
+            return
+
+        catch e
+            unless e.code is 'ENOENT'
+                throw e
+
         language = @getLanguageFor grammar
         @getKernelSpecFor language, (kernelSpec) =>
-
             unless kernelSpec?
                 message = "No kernel for language `#{language}` found"
                 detail = 'Check that the language for this file is set in Atom
@@ -35,45 +49,49 @@ class KernelManager
                 atom.notifications.addError message, detail: detail
                 return
 
-            console.log 'startKernelFor:', language
             @startKernel kernelSpec, grammar, onStarted
+
+
+    startExistingKernel: (grammar, connection, connectionFile, onStarted) ->
+        language = @getLanguageFor grammar
+
+        console.log 'KernelManager: startExistingKernel: Assuming', language
+
+        kernelSpec =
+            display_name: 'Existing Kernel'
+            language: language
+            argv: []
+            env: {}
+
+        kernel = new ZMQKernel kernelSpec, grammar, connection, connectionFile
+        @_runningKernels[language] = kernel
+        @_executeStartupCode kernel
+        onStarted?(kernel)
 
 
     startKernel: (kernelSpec, grammar, onStarted) ->
         language = @getLanguageFor grammar
 
-        kernelSpec.language = language
+        console.log 'KernelManager: startKernelFor:', language
 
-        finishKernelStartup = (kernel) =>
+        launchSpec(kernelSpec).then ({config, connectionFile, spawn}) =>
+            kernel = new ZMQKernel(
+                kernelSpec, grammar,
+                config, connectionFile,
+                spawn
+            )
             @_runningKernels[language] = kernel
-
-            startupCode = Config.getJson('startupCode')[kernelSpec.display_name]
-            if startupCode?
-                console.log 'executing startup code'
-                startupCode = startupCode + ' \n'
-                kernel.execute startupCode
-
+            @_executeStartupCode kernel
             onStarted?(kernel)
 
-        try
-            rootDirectory = atom.project.rootDirectories[0].path
-            connectionFile = path.join rootDirectory, 'hydrogen',
-                'connection.json'
-            data = fs.readFileSync connectionFile, 'utf8'
-            config = JSON.parse data
-            console.log 'KernelManager: Using connection file: ', connectionFile
 
-            kernel = new ZMQKernel(kernelSpec, grammar, config, connectionFile)
-            finishKernelStartup kernel
-
-        catch e
-            unless e.code is 'ENOENT'
-                throw e
-            launchSpec(kernelSpec).then ({config, connectionFile, spawn}) ->
-                kernel = new ZMQKernel(
-                    kernelSpec, grammar, config, connectionFile, spawn
-                )
-                finishKernelStartup kernel
+    _executeStartupCode: (kernel) ->
+        displayName = kernel.kernelSpec.display_name
+        startupCode = Config.getJson('startupCode')[displayName]
+        if startupCode?
+            console.log 'KernelManager: Executing startup code:', startupCode
+            startupCode = startupCode + ' \n'
+            kernel.execute startupCode
 
 
     attachKernel: (grammar, kernel) ->
