@@ -1,4 +1,5 @@
 child_process = require 'child_process'
+fs = require 'fs'
 path = require 'path'
 
 _ = require 'lodash'
@@ -9,65 +10,99 @@ zmq = jmp.zmq
 Kernel = require './kernel'
 InputView = require './input-view'
 
+portfinder = require './find-port'
+
+fileStoragePath = path.join __dirname, '..', 'kernel-configs'
+try
+    fs.mkdirSync fileStoragePath
+catch e
+    if e.code isnt 'EEXIST'
+        throw e
+
 module.exports =
 class ZMQKernel extends Kernel
-    constructor: (kernelSpec, @grammar, @config, @configPath, @onlyConnect = false) ->
+    @createConnectionFile: (onCreated) ->
+        filename = 'kernel-' + uuid.v4() + '.json'
+        filepath = path.join fileStoragePath, filename
+
+        portfinder.findMany 5, (ports) ->
+            config =
+                version: 5
+                key: uuid.v4()
+                signature_scheme: 'hmac-sha256'
+                transport: 'tcp'
+                ip: '127.0.0.1'
+                hb_port: ports[0]
+                control_port: ports[1]
+                shell_port: ports[2]
+                stdin_port: ports[3]
+                iopub_port: ports[4]
+
+            configString = JSON.stringify config
+            fs.writeFile filepath, configString, ->
+                onCreated filepath, config
+
+    constructor: (kernelSpec, @grammar, @connection, @connectionFile, @onlyConnect = false) ->
         super kernelSpec
 
         @executionCallbacks = {}
 
+        @_connect()
+
+        if @onlyConnect
+            atom.notifications.addInfo 'Using existing kernel:',
+                detail: @kernelSpec.display_name
+        else
+            @_launch()
+
+    _launch: ->
         projectPath = path.dirname(
             atom.workspace.getActiveTextEditor().getPath()
         )
 
-        @_connect()
-        if @onlyConnect
-            atom.notifications.addInfo 'Using custom kernel connection:',
-                detail: @configPath
-        else
-            commandString = _.head(@kernelSpec.argv)
-            args = _.tail(@kernelSpec.argv)
-            args = _.map args, (arg) =>
-                if arg is '{connection_file}'
-                    return @configPath
-                else
-                    return arg
+        commandString = _.head(@kernelSpec.argv)
+        args = _.tail(@kernelSpec.argv)
+        args = _.map args, (arg) =>
+            if arg is '{connection_file}'
+                return @connectionFile
+            else
+                return arg
 
-            console.log 'Kernel: Spawning:', commandString, args
-            @kernelProcess = child_process.spawn commandString, args,
-                cwd: projectPath
+        console.log 'Kernel: Spawning:', commandString, args
+        @kernelProcess = child_process.spawn commandString, args,
+            cwd: projectPath
 
-            getKernelNotificationsRegExp = ->
-                try
-                    pattern = atom.config.get 'Hydrogen.kernelNotifications'
-                    flags = 'im'
-                    return new RegExp pattern, flags
-                catch err
-                    return null
+        getKernelNotificationsRegExp = ->
+            try
+                pattern = atom.config.get 'Hydrogen.kernelNotifications'
+                flags = 'im'
+                return new RegExp pattern, flags
+            catch err
+                return null
 
-            @kernelProcess.stdout.on 'data', (data) =>
-                data = data.toString()
+        @kernelProcess.stdout.on 'data', (data) =>
+            data = data.toString()
 
-                console.log 'Kernel: stdout:', data
+            console.log 'Kernel: stdout:', data
 
-                regexp = getKernelNotificationsRegExp()
-                if regexp?.test data
-                    atom.notifications.addInfo @kernelSpec.display_name,
-                        detail: data, dismissable: true
+            regexp = getKernelNotificationsRegExp()
+            if regexp?.test data
+                atom.notifications.addInfo @kernelSpec.display_name,
+                    detail: data, dismissable: true
 
-            @kernelProcess.stderr.on 'data', (data) =>
-                data = data.toString()
+        @kernelProcess.stderr.on 'data', (data) =>
+            data = data.toString()
 
-                console.log 'Kernel: stderr:', data
+            console.log 'Kernel: stderr:', data
 
-                regexp = getKernelNotificationsRegExp()
-                if regexp?.test data
-                    atom.notifications.addError @kernelSpec.display_name,
-                        detail: data, dismissable: true
+            regexp = getKernelNotificationsRegExp()
+            if regexp?.test data
+                atom.notifications.addError @kernelSpec.display_name,
+                    detail: data, dismissable: true
 
     _connect: ->
-        scheme = @config.signature_scheme.slice 'hmac-'.length
-        key = @config.key
+        scheme = @connection.signature_scheme.slice 'hmac-'.length
+        key = @connection.key
 
         @shellSocket = new jmp.Socket 'dealer', scheme, key
         @controlSocket = new jmp.Socket 'dealer', scheme, key
@@ -80,12 +115,12 @@ class ZMQKernel extends Kernel
         @stdinSocket.identity = 'dealer' + id
         @ioSocket.identity = 'sub' + id
 
-        address = "#{ @config.transport }://#{ @config.ip }:"
-        @shellSocket.connect(address + @config.shell_port)
-        @controlSocket.connect(address + @config.control_port)
-        @ioSocket.connect(address + @config.iopub_port)
+        address = "#{ @connection.transport }://#{ @connection.ip }:"
+        @shellSocket.connect(address + @connection.shell_port)
+        @controlSocket.connect(address + @connection.control_port)
+        @ioSocket.connect(address + @connection.iopub_port)
         @ioSocket.subscribe('')
-        @stdinSocket.connect(address + @config.stdin_port)
+        @stdinSocket.connect(address + @connection.stdin_port)
 
         @shellSocket.on 'message', @onShellMessage.bind this
         @ioSocket.on 'message', @onIOMessage.bind this
@@ -373,11 +408,6 @@ class ZMQKernel extends Kernel
         @shellSocket.close()
         @ioSocket.close()
 
-        if @onlyConnect
-            detail = 'Shutdown request sent to custom kernel connection in ' +
-                @configPath
-            atom.notifications.addInfo 'Custom kernel connection:',
-                detail: detail
-
         unless @onlyConnect
             @kernelProcess.kill 'SIGKILL'
+            fs.unlink @connectionFile

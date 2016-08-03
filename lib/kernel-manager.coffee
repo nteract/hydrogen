@@ -4,7 +4,6 @@ fs = require 'fs'
 path = require 'path'
 
 Config = require './config'
-ConfigManager = require './config-manager'
 ZMQKernel = require './zmq-kernel'
 KernelPicker = require './kernel-picker'
 
@@ -30,10 +29,9 @@ class KernelManager
 
             unless kernelSpec?
                 message = "No kernel for language `#{language}` found"
-                options =
-                    detail: 'Check that the language for this file is set in Atom
-                             and that you have a Jupyter kernel installed for it.'
-                atom.notifications.addError message, options
+                detail = 'Check that the language for this file is set in Atom
+                         and that you have a Jupyter kernel installed for it.'
+                atom.notifications.addError message, detail: detail
                 return
 
             console.log 'startKernelFor:', language
@@ -71,7 +69,7 @@ class KernelManager
         catch e
             unless e.code is 'ENOENT'
                 throw e
-            ConfigManager.writeConfigFile (filepath, config) ->
+            ZMQKernel.createConnectionFile (filepath, config) ->
                 kernel = new ZMQKernel(
                     kernelSpec, grammar, config, filepath, onlyConnect = false
                 )
@@ -120,7 +118,7 @@ class KernelManager
         unless language?
             return null
 
-        @getAllKernelSpecsFor language, (kernelSpecs) ->
+        @getAllKernelSpecsFor language, (kernelSpecs) =>
             if kernelSpecs.length <= 1
                 callback kernelSpecs[0]
             else
