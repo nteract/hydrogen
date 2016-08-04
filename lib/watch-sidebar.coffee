@@ -14,13 +14,9 @@ class WatchSidebar
         toolbar = document.createElement('div')
         toolbar.classList.add('toolbar', 'block')
 
-        languageDisplay = document.createElement('button')
-        languageDisplay.classList.add('btn', 'icon', 'icon-sync')
-        languageDisplay.innerText = "Watch: #{@kernel.kernelSpec.display_name}"
-        languageDisplay.onclick = ->
-            editor = atom.workspace.getActiveTextEditor()
-            editorView = atom.views.getView(editor)
-            atom.commands.dispatch(editorView, 'hydrogen:select-watch-kernel')
+        languageDisplay = document.createElement('div')
+        languageDisplay.classList.add('language', 'icon', 'icon-eye')
+        languageDisplay.innerText = @kernel.kernelSpec.display_name
 
         commands = document.createElement('div')
         commands.classList.add('btn-group')
@@ -36,12 +32,9 @@ class WatchSidebar
 
         tooltips = new CompositeDisposable()
         tooltips.add atom.tooltips.add toggleButton,
-            title: 'Toggle Watches'
-        tooltips.add atom.tooltips.add languageDisplay,
-            title: 'Change Watch Kernel'
+            title: 'Toggle Watch Sidebar'
         tooltips.add atom.tooltips.add removeButton,
             title: 'Remove Watch'
-
 
         @watchesContainer = document.createElement('div')
         _.forEach @watchViews, (watch) =>
