@@ -103,6 +103,15 @@ class ZMQKernel extends Kernel
             atom.notifications.addWarning 'Cannot interrupt this kernel'
 
 
+    _kill: ->
+        if @kernelProcess?
+            console.log 'ZMQKernel: sending SIGKILL'
+            @kernelProcess.kill 'SIGKILL'
+        else
+            console.log 'ZMQKernel: cannot kill an existing kernel'
+            atom.notifications.addWarning 'Cannot kill this kernel'
+
+
     shutdown: (restart = false) ->
         requestId = 'shutdown_' + uuid.v4()
         message = @_createMessage 'shutdown_request', requestId
@@ -322,11 +331,11 @@ class ZMQKernel extends Kernel
     destroy: ->
         console.log 'ZMQKernel: destroy:', this
 
+        @shutdown()
+
         if @kernelProcess?
-            @interrupt()
+            @_kill()
             fs.unlink @connectionFile
-        else
-            @shutdown()
 
         @shellSocket.close()
         @controlSocket.close()
