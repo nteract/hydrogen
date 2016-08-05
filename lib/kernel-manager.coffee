@@ -16,7 +16,8 @@ class KernelManager
 
 
     destroy: ->
-        _.forEach @_runningKernels, (kernel) => @destroyRunningKernel kernel
+        _.forEach @_runningKernels, (kernel) -> kernel.destroy()
+        @_runningKernels = {}
 
 
     setRunningKernelFor: (grammar, kernel) ->
@@ -27,9 +28,11 @@ class KernelManager
         @_runningKernels[language] = kernel
 
 
-    destroyRunningKernel: (kernel) ->
-        delete @_runningKernels[kernel.kernelSpec.language]
-        kernel.destroy()
+    destroyRunningKernelFor: (grammar) ->
+        language = @getLanguageFor grammar
+        kernel = @_runningKernels[language]
+        delete @_runningKernels[language]
+        kernel?.destroy()
 
 
     startKernelFor: (grammar, onStarted) ->
