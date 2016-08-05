@@ -50,7 +50,7 @@ class ZMQKernel extends Kernel
                     atom.notifications.addError @kernelSpec.display_name,
                         detail: data, dismissable: true
         else
-            console.log 'ZMQKernel: connectionFile:', connectionFile
+            console.log 'ZMQKernel: connectionFile:', @connectionFile
             atom.notifications.addInfo 'Using an existing kernel connection'
 
 
