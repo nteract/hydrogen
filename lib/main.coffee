@@ -187,14 +187,7 @@ module.exports = Hydrogen =
 
         else if command is 'restart-kernel'
             @clearResultBubbles()
-
-            if kernel.restart?
-                kernel.restart()
-                return
-
-            kernelSpec = kernel.kernelSpec
-            @kernelManager.destroyRunningKernelFor grammar
-            @kernelManager.startKernel kernelSpec, grammar, (kernel) =>
+            @kernelManager.restartRunningKernelFor grammar, (kernel) =>
                 @onKernelChanged kernel
 
         else if command is 'switch-kernel'

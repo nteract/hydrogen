@@ -5,6 +5,7 @@ fs = require 'fs'
 path = require 'path'
 
 Config = require './config'
+WSKernel = require './ws-kernel'
 ZMQKernel = require './zmq-kernel'
 KernelPicker = require './kernel-picker'
 
@@ -33,6 +34,24 @@ class KernelManager
         kernel = @_runningKernels[language]
         delete @_runningKernels[language]
         kernel?.destroy()
+
+
+    restartRunningKernelFor: (grammar, onRestarted) ->
+        language = @getLanguageFor grammar
+        kernel = @_runningKernels[language]
+
+        if kernel instanceof WSKernel
+            kernel.restart().then -> onRestarted?(kernel)
+            return
+
+        if kernel instanceof ZMQKernel and kernel.kernelProcess
+            kernelSpec = kernel.kernelSpec
+            @destroyRunningKernelFor grammar
+            @startKernel kernelSpec, grammar, (kernel) -> onRestarted?(kernel)
+            return
+
+        console.log 'KernelManager: restartRunningKernelFor: ignored', kernel
+        onRestarted?(kernel)
 
 
     startKernelFor: (grammar, onStarted) ->
