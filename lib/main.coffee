@@ -190,13 +190,14 @@ module.exports = Hydrogen =
                 atom.notifications.addError errorMessage
                 return
 
+            @clearResultBubbles()
+
             if kernel.restart?
                 kernel.restart()
                 return
 
             kernelSpec = kernel.kernelSpec
             @kernelManager.destroyRunningKernel kernel
-            @clearResultBubbles()
             @kernelManager.startKernel kernelSpec, grammar, =>
                 kernel = @kernelManager.getRunningKernelFor language
                 @onKernelChanged kernel
