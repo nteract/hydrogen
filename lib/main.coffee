@@ -389,6 +389,6 @@ module.exports = Hydrogen =
                 if oldKernel?
                     @kernelManager.destroyRunningKernel oldKernel
                 @clearResultBubbles()
-                @kernelManager.attachKernel grammar, kernel
+                @kernelManager.setRunningKernel grammar, kernel
                 @onKernelChanged kernel
         @wsKernelPicker.toggle()

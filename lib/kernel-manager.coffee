@@ -19,6 +19,14 @@ class KernelManager
         _.forEach @_runningKernels, (kernel) => @destroyRunningKernel kernel
 
 
+    setRunningKernelFor: (grammar, kernel) ->
+        language = @getLanguageFor grammar
+
+        kernel.kernelSpec.language = language
+
+        @_runningKernels[language] = kernel
+
+
     destroyRunningKernel: (kernel) ->
         delete @_runningKernels[kernel.kernelSpec.language]
         kernel.destroy()
@@ -64,8 +72,11 @@ class KernelManager
             env: {}
 
         kernel = new ZMQKernel kernelSpec, grammar, connection, connectionFile
-        @_runningKernels[language] = kernel
+
+        @setRunningKernelFor grammar, kernel
+
         @_executeStartupCode kernel
+
         onStarted?(kernel)
 
 
@@ -80,8 +91,10 @@ class KernelManager
                 config, connectionFile,
                 spawn
             )
-            @_runningKernels[language] = kernel
+            @setRunningKernelFor grammar, kernel
+
             @_executeStartupCode kernel
+
             onStarted?(kernel)
 
 
@@ -92,14 +105,6 @@ class KernelManager
             console.log 'KernelManager: Executing startup code:', startupCode
             startupCode = startupCode + ' \n'
             kernel.execute startupCode
-
-
-    attachKernel: (grammar, kernel) ->
-        # Attaches an already constructed Kernel instance to a grammar
-        # (designed to be used for remote kernels)
-        # No startup code is run in this case
-        language = @getLanguageFor grammar
-        @_runningKernels[language] = kernel
 
 
     getAllRunningKernels: ->
