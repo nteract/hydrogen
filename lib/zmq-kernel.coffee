@@ -103,12 +103,12 @@ class ZMQKernel extends Kernel
             atom.notifications.addWarning 'Cannot interrupt this kernel'
 
 
-    shutdown: (restart) ->
+    shutdown: (restart = false) ->
         requestId = 'shutdown_' + uuid.v4()
         message = @_createMessage 'shutdown_request', requestId
 
         message.content =
-            restart: not not restart
+            restart: restart
 
         @shellSocket.send new jmp.Message message
 
