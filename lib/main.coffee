@@ -176,36 +176,23 @@ module.exports = Hydrogen =
         unless kernel
             kernel = @kernelManager.getRunningKernelFor language
 
-        errorMessage = "No running kernel for language `#{language}` found"
+        unless kernel
+            message = "No running kernel for language `#{language}` found"
+            atom.notifications.addError message
+            return
 
         if command is 'interrupt-kernel'
-            unless kernel
-                atom.notifications.addError errorMessage
-                return
             kernel.interrupt()
 
         else if command is 'restart-kernel'
-            unless kernel
-                atom.notifications.addError errorMessage
-                return
-
-            if kernel.restart?
-                kernel.restart()
-                return
-
-            kernelSpec = kernel.kernelSpec
-            @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            @kernelManager.startKernel kernelSpec, grammar, =>
-                kernel = @kernelManager.getRunningKernelFor language
+            @kernelManager.restartRunningKernelFor grammar, (kernel) =>
                 @onKernelChanged kernel
 
         else if command is 'switch-kernel'
-            if kernel
-                @kernelManager.destroyRunningKernel kernel
             @clearResultBubbles()
-            @kernelManager.startKernel kernelSpec, grammar, =>
-                kernel = @kernelManager.getRunningKernelFor language
+            @kernelManager.destroyRunningKernelFor grammar
+            @kernelManager.startKernel kernelSpec, grammar, (kernel) =>
                 @onKernelChanged kernel
 
 
@@ -362,12 +349,12 @@ module.exports = Hydrogen =
     showWSKernelPicker: ->
         unless @wsKernelPicker?
             @wsKernelPicker = new WSKernelPicker (kernel) =>
-                grammar = @editor.getGrammar()
-                language = @kernelManager.getLanguageFor grammar
-                oldKernel = @kernelManager.getRunningKernelFor language
-                if oldKernel?
-                    @kernelManager.destroyRunningKernel oldKernel
                 @clearResultBubbles()
-                @kernelManager.attachKernel grammar, kernel
+
+                grammar = @editor.getGrammar()
+                @kernelManager.destroyRunningKernelFor grammar
+
+                @kernelManager.setRunningKernel grammar, kernel
                 @onKernelChanged kernel
+
         @wsKernelPicker.toggle()

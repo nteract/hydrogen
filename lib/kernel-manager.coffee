@@ -5,6 +5,7 @@ fs = require 'fs'
 path = require 'path'
 
 Config = require './config'
+WSKernel = require './ws-kernel'
 ZMQKernel = require './zmq-kernel'
 KernelPicker = require './kernel-picker'
 
@@ -16,12 +17,42 @@ class KernelManager
 
 
     destroy: ->
-        _.forEach @_runningKernels, (kernel) => @destroyRunningKernel kernel
+        _.forEach @_runningKernels, (kernel) -> kernel.destroy()
+        @_runningKernels = {}
 
 
-    destroyRunningKernel: (kernel) ->
-        delete @_runningKernels[kernel.kernelSpec.language]
-        kernel.destroy()
+    setRunningKernelFor: (grammar, kernel) ->
+        language = @getLanguageFor grammar
+
+        kernel.kernelSpec.language = language
+
+        @_runningKernels[language] = kernel
+
+
+    destroyRunningKernelFor: (grammar) ->
+        language = @getLanguageFor grammar
+        kernel = @_runningKernels[language]
+        delete @_runningKernels[language]
+        kernel?.destroy()
+
+
+    restartRunningKernelFor: (grammar, onRestarted) ->
+        language = @getLanguageFor grammar
+        kernel = @_runningKernels[language]
+
+        if kernel instanceof WSKernel
+            kernel.restart().then -> onRestarted?(kernel)
+            return
+
+        if kernel instanceof ZMQKernel and kernel.kernelProcess
+            kernelSpec = kernel.kernelSpec
+            @destroyRunningKernelFor grammar
+            @startKernel kernelSpec, grammar, (kernel) -> onRestarted?(kernel)
+            return
+
+        console.log 'KernelManager: restartRunningKernelFor: ignored', kernel
+        atom.notifications.addWarning 'Cannot restart this kernel'
+        onRestarted?(kernel)
 
 
     startKernelFor: (grammar, onStarted) ->
@@ -64,8 +95,11 @@ class KernelManager
             env: {}
 
         kernel = new ZMQKernel kernelSpec, grammar, connection, connectionFile
-        @_runningKernels[language] = kernel
+
+        @setRunningKernelFor grammar, kernel
+
         @_executeStartupCode kernel
+
         onStarted?(kernel)
 
 
@@ -80,8 +114,10 @@ class KernelManager
                 config, connectionFile,
                 spawn
             )
-            @_runningKernels[language] = kernel
+            @setRunningKernelFor grammar, kernel
+
             @_executeStartupCode kernel
+
             onStarted?(kernel)
 
 
@@ -92,14 +128,6 @@ class KernelManager
             console.log 'KernelManager: Executing startup code:', startupCode
             startupCode = startupCode + ' \n'
             kernel.execute startupCode
-
-
-    attachKernel: (grammar, kernel) ->
-        # Attaches an already constructed Kernel instance to a grammar
-        # (designed to be used for remote kernels)
-        # No startup code is run in this case
-        language = @getLanguageFor grammar
-        @_runningKernels[language] = kernel
 
 
     getAllRunningKernels: ->
