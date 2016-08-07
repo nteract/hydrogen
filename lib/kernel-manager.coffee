@@ -51,6 +51,7 @@ class KernelManager
             return
 
         console.log 'KernelManager: restartRunningKernelFor: ignored', kernel
+        atom.notifications.addWarning 'Cannot restart this kernel'
         onRestarted?(kernel)
 
 
