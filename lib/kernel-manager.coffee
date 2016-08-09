@@ -108,17 +108,23 @@ class KernelManager
 
         console.log 'KernelManager: startKernelFor:', language
 
-        launchSpec(kernelSpec).then ({config, connectionFile, spawn}) =>
-            kernel = new ZMQKernel(
-                kernelSpec, grammar,
-                config, connectionFile,
-                spawn
-            )
-            @setRunningKernelFor grammar, kernel
+        projectPath = path.dirname(
+            atom.workspace.getActiveTextEditor().getPath()
+        )
+        spawnOptions =
+            cwd: projectPath
+        launchSpec(kernelSpec, spawnOptions).
+            then ({config, connectionFile, spawn}) =>
+                kernel = new ZMQKernel(
+                    kernelSpec, grammar,
+                    config, connectionFile,
+                    spawn
+                )
+                @setRunningKernelFor grammar, kernel
 
-            @_executeStartupCode kernel
+                @_executeStartupCode kernel
 
-            onStarted?(kernel)
+                onStarted?(kernel)
 
 
     _executeStartupCode: (kernel) ->
