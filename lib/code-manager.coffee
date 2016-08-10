@@ -1,4 +1,5 @@
 escapeStringRegexp = require 'escape-string-regexp'
+_ = require 'lodash'
 
 module.exports =
 class CodeManager
