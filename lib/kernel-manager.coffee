@@ -113,7 +113,6 @@ class KernelManager
         )
         spawnOptions =
             cwd: projectPath
-            env: process.env
         launchSpec(kernelSpec, spawnOptions).
             then ({config, connectionFile, spawn}) =>
                 kernel = new ZMQKernel(
