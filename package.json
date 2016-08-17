@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "0.12.3",
+  "version": "0.12.4",
   "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
   "author": "Will Whitney <me@willwhitney.com>",
   "keywords": [
