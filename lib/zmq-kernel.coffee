@@ -12,8 +12,8 @@ InputView = require './input-view'
 
 module.exports =
 class ZMQKernel extends Kernel
-    constructor: (kernelSpec, @grammar, @connection, @connectionFile, @kernelProcess) ->
-        super kernelSpec
+    constructor: (kernelSpec, grammar, @connection, @connectionFile, @kernelProcess) ->
+        super kernelSpec, grammar
 
         @executionCallbacks = {}
 

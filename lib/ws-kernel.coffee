@@ -9,8 +9,8 @@ Kernel = require './kernel'
 
 module.exports =
 class WSKernel extends Kernel
-    constructor: (kernelSpec, @session) ->
-        super kernelSpec
+    constructor: (kernelSpec, grammar, @session) ->
+        super kernelSpec, grammar
 
         @session.statusChanged.connect => @_onStatusChange()
         @_onStatusChange() # Set initial status correctly

@@ -11,7 +11,7 @@ WatchSidebar = require './watch-sidebar'
 
 module.exports =
 class Kernel
-    constructor: (@kernelSpec) ->
+    constructor: (@kernelSpec, @grammar) ->
         @watchCallbacks = []
 
         @watchSidebar = new WatchSidebar this

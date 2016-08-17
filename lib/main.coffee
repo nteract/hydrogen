@@ -351,10 +351,10 @@ module.exports = Hydrogen =
             @wsKernelPicker = new WSKernelPicker (kernel) =>
                 @clearResultBubbles()
 
-                grammar = @editor.getGrammar()
+                grammar = kernel.grammar
                 @kernelManager.destroyRunningKernelFor grammar
 
                 @kernelManager.setRunningKernelFor grammar, kernel
                 @onKernelChanged kernel
 
-        @wsKernelPicker.toggle()
+        @wsKernelPicker.toggle @editor.getGrammar()
