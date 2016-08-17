@@ -31,7 +31,7 @@ class Kernel
         throw new Error 'Kernel: interrupt method not implemented'
 
 
-    shutdown: (restart) ->
+    shutdown: ->
         throw new Error 'Kernel: shutdown method not implemented'
 
 
