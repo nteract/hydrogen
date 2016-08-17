@@ -12,8 +12,8 @@ InputView = require './input-view'
 
 module.exports =
 class ZMQKernel extends Kernel
-    constructor: (kernelSpec, @grammar, @connection, @connectionFile, @kernelProcess) ->
-        super kernelSpec
+    constructor: (kernelSpec, grammar, @connection, @connectionFile, @kernelProcess) ->
+        super kernelSpec, grammar
 
         @executionCallbacks = {}
 
@@ -271,8 +271,7 @@ class ZMQKernel extends Kernel
 
             msg_id = message.parent_header?.msg_id
             if status is 'idle' and msg_id?.startsWith 'execute'
-                @watchCallbacks.forEach (watchCallback) ->
-                    watchCallback()
+                @_callWatchCallbacks()
 
         msg_id = message.parent_header.msg_id
         if msg_id?

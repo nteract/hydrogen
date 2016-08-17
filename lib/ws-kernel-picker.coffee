@@ -41,7 +41,8 @@ class WSKernelPicker
     constructor: (onChosen) ->
         @_onChosen = onChosen
 
-    toggle: ->
+    toggle: (grammar) ->
+        @_grammar = grammar
         @_path = atom.workspace.getActiveTextEditor().getPath() + '-' + uuid.v4()
         gatewayListing = new CustomListView('No gateways available', @onGateway.bind this)
         @previouslyFocusedElement = gatewayListing.previouslyFocusedElement
@@ -115,5 +116,5 @@ class WSKernelPicker
 
     onSessionChosen: (session) ->
         session.kernel.getKernelSpec().then (kernelSpec) =>
-            kernel = new WSKernel(kernelSpec, session)
+            kernel = new WSKernel(kernelSpec, @_grammar, session)
             @_onChosen(kernel)

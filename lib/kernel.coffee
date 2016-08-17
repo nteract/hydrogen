@@ -11,7 +11,7 @@ WatchSidebar = require './watch-sidebar'
 
 module.exports =
 class Kernel
-    constructor: (@kernelSpec) ->
+    constructor: (@kernelSpec, @grammar) ->
         @watchCallbacks = []
 
         @watchSidebar = new WatchSidebar this
@@ -20,6 +20,11 @@ class Kernel
 
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
+
+
+    _callWatchCallbacks: ->
+        @watchCallbacks.forEach (watchCallback) ->
+            watchCallback()
 
 
     interrupt: ->
