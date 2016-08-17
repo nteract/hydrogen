@@ -354,7 +354,7 @@ module.exports = Hydrogen =
                 grammar = @editor.getGrammar()
                 @kernelManager.destroyRunningKernelFor grammar
 
-                @kernelManager.setRunningKernel grammar, kernel
+                @kernelManager.setRunningKernelFor grammar, kernel
                 @onKernelChanged kernel
 
         @wsKernelPicker.toggle()
