@@ -43,7 +43,7 @@
     "jupyter-js-services": "^0.16.3",
     "lodash": "^4.14.0",
     "requirejs": "^2.2.0",
-    "spawnteract": "^2.1.0",
+    "spawnteract": "^2.1.1",
     "transformime": "^3.1.0",
     "transformime-marked": "0.0.1",
     "uuid": "^2.0.1",
