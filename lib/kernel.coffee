@@ -22,6 +22,11 @@ class Kernel
         @watchCallbacks.push(watchCallback)
 
 
+    _callWatchCallbacks: ->
+        @watchCallbacks.forEach (watchCallback) ->
+            watchCallback()
+
+
     interrupt: ->
         throw new Error 'Kernel: interrupt method not implemented'
 

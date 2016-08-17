@@ -24,25 +24,22 @@ class WSKernel extends Kernel
     _onStatusChange: ->
         @statusView.setStatus @session.status
 
-    _onIOPub: (message, onResults) ->
-        msg_type = message.header.msg_type
-
-        # TODO(nikita): implement support for watches
-
-        if onResults?
-            console.log 'WSKernel: _onIOPub:', message
-            result = @_parseIOMessage(message)
-            if result?
-                onResults result
-
-
-    execute: (code, onResults) ->
+    _execute: (code, onResults, callWatches) ->
         future = @session.kernel.execute(
             code: code
         )
 
         future.onIOPub = (message) =>
-            @_onIOPub(message, onResults)
+            if callWatches and
+            message.header.msg_type is 'status' and
+            message.content.execution_state is 'idle'
+                @_callWatchCallbacks()
+
+            if onResults?
+                console.log 'WSKernel: _execute:', message
+                result = @_parseIOMessage(message)
+                if result?
+                    onResults result
 
         future.onReply = (message) ->
             if message.content.status is 'error'
@@ -53,9 +50,11 @@ class WSKernel extends Kernel
                 stream: 'status'
             onResults?(result)
 
+    execute: (code, onResults) ->
+        @_execute code, onResults, true
+
     executeWatch: (code, onResults) ->
-        # TODO(nikita): implement watches
-        console.log 'WARNING: Watches are not supported by remote kernels'
+        @_execute code, onResults, false
 
     complete: (code, onResults) ->
         @session.kernel.complete

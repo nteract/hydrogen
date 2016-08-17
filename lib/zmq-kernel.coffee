@@ -271,8 +271,7 @@ class ZMQKernel extends Kernel
 
             msg_id = message.parent_header?.msg_id
             if status is 'idle' and msg_id?.startsWith 'execute'
-                @watchCallbacks.forEach (watchCallback) ->
-                    watchCallback()
+                @_callWatchCallbacks()
 
         msg_id = message.parent_header.msg_id
         if msg_id?
