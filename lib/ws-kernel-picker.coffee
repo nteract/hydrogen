@@ -42,17 +42,20 @@ class WSKernelPicker
         @_onChosen = onChosen
 
     toggle: (grammar) ->
+        gateways = Config.getJson('gateways', [])
+        if _.isEmpty gateways
+            atom.notifications.addError 'No remote kernel gateways available',
+                description: 'Use the Hydrogen package settings to specify the list
+                of remote servers. Hydrogen can use remote kernels on either a
+                Jupyter Kernel Gateway or Jupyter notebook server.'
+            return
+
         @_grammar = grammar
         @_path = atom.workspace.getActiveTextEditor().getPath() + '-' + uuid.v4()
         gatewayListing = new CustomListView('No gateways available', @onGateway.bind this)
         @previouslyFocusedElement = gatewayListing.previouslyFocusedElement
-        gatewayListing.setLoading 'Loading gateways...'
-        items = Config.getJson('gateways', [])
-        if not _.isEmpty items
-            gatewayListing.setItems items
-            gatewayListing.setError 'Select a gateway' # TODO(nikita): maybe don't misuse error
-        else
-            gatewayListing.setError 'Use the package settings to specify gateway information'
+        gatewayListing.setItems gateways
+        gatewayListing.setError 'Select a gateway' # TODO(nikita): maybe don't misuse error
 
     onGateway: (spec) ->
         console.log('Picked a gateway')
