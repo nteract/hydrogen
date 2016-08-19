@@ -6,6 +6,7 @@ uuid = require 'uuid'
 services = require('./jupyter-js-services-shim')
 
 Kernel = require './kernel'
+InputView = require './input-view'
 
 module.exports =
 class WSKernel extends Kernel
@@ -49,6 +50,20 @@ class WSKernel extends Kernel
                 type: 'text'
                 stream: 'status'
             onResults?(result)
+
+        future.onStdin = (message) =>
+            unless message.header.msg_type is 'input_request'
+                return
+
+            prompt = message.content.prompt
+
+            inputView = new InputView prompt, (input) =>
+                @session.kernel.sendInputReply(
+                    value: input
+                )
+
+            inputView.attach()
+
 
     execute: (code, onResults) ->
         @_execute code, onResults, true
