@@ -75,9 +75,9 @@ class KernelManager
         @getKernelSpecFor language, (kernelSpec) =>
             unless kernelSpec?
                 message = "No kernel for language `#{language}` found"
-                detail = 'Check that the language for this file is set in Atom
+                description = 'Check that the language for this file is set in Atom
                          and that you have a Jupyter kernel installed for it.'
-                atom.notifications.addError message, detail: detail
+                atom.notifications.addError message, description: description
                 return
 
             @startKernel kernelSpec, grammar, onStarted
@@ -217,7 +217,7 @@ class KernelManager
             if _.isEmpty @_kernelSpecs
                 message = 'No kernel specs found'
                 options =
-                    detail: 'Use kernelSpec option in Hydrogen or update
+                    description: 'Use kernelSpec option in Hydrogen or update
                     IPython/Jupyter to a version that supports: `jupyter
                     kernelspec list --json` or `ipython kernelspec list --json`'
                     dismissable: true

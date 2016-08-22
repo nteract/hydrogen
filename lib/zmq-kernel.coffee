@@ -38,7 +38,7 @@ class ZMQKernel extends Kernel
                 regexp = getKernelNotificationsRegExp()
                 if regexp?.test data
                     atom.notifications.addInfo @kernelSpec.display_name,
-                        detail: data, dismissable: true
+                        description: data, dismissable: true
 
             @kernelProcess.stderr.on 'data', (data) =>
                 data = data.toString()
@@ -48,7 +48,7 @@ class ZMQKernel extends Kernel
                 regexp = getKernelNotificationsRegExp()
                 if regexp?.test data
                     atom.notifications.addError @kernelSpec.display_name,
-                        detail: data, dismissable: true
+                        description: data, dismissable: true
         else
             console.log 'ZMQKernel: connectionFile:', @connectionFile
             atom.notifications.addInfo 'Using an existing kernel connection'
