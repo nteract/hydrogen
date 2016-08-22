@@ -70,6 +70,8 @@ module.exports = Hydrogen =
                 @handleKernelCommand command: 'interrupt-kernel'
             'hydrogen:restart-kernel': =>
                 @handleKernelCommand command: 'restart-kernel'
+            'hydrogen:shutdown-kernel': =>
+                @handleKernelCommand command: 'shutdown-kernel'
             'hydrogen:copy-path-to-connection-file': =>
                 @copyPathToConnectionFile()
 
@@ -190,6 +192,13 @@ module.exports = Hydrogen =
             @clearResultBubbles()
             @kernelManager.restartRunningKernelFor grammar, (kernel) =>
                 @onKernelChanged kernel
+
+        else if command is 'shutdown-kernel'
+            @clearResultBubbles()
+            # Note that destroy alone does not shut down a WSKernel
+            kernel.shutdown()
+            @kernelManager.destroyRunningKernelFor grammar
+            @onKernelChanged()
 
         else if command is 'switch-kernel'
             @clearResultBubbles()

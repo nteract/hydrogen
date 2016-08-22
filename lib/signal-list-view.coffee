@@ -20,6 +20,11 @@ class SignalListView extends SelectListView
                 value: 'restart-kernel'
                 language: null
             },
+            {
+                name: 'Shut Down'
+                value: 'shutdown-kernel'
+                language: null
+            },
         ]
 
         @onConfirmed = null

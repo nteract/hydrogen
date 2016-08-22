@@ -19,8 +19,11 @@ class WSKernel extends Kernel
     interrupt: ->
         @session.kernel.interrupt()
 
+    shutdown: ->
+        return @session.kernel.shutdown()
+
     restart: ->
-        @session.kernel.restart()
+        return @session.kernel.restart()
 
     _onStatusChange: ->
         @statusView.setStatus @session.status
