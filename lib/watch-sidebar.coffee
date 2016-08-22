@@ -18,46 +18,45 @@ class WatchSidebar
         languageDisplay.classList.add('language', 'icon', 'icon-eye')
         languageDisplay.innerText = @kernel.kernelSpec.display_name
 
-        commands = document.createElement('div')
-        commands.classList.add('btn-group')
-        removeButton = document.createElement('button')
-        removeButton.classList.add('btn', 'icon', 'icon-trashcan')
-        removeButton.onclick = => @removeWatch()
         toggleButton = document.createElement('button')
         toggleButton.classList.add('btn', 'icon', 'icon-remove-close')
         toggleButton.onclick = ->
             editor = atom.workspace.getActiveTextEditor()
             editorView = atom.views.getView(editor)
             atom.commands.dispatch(editorView, 'hydrogen:toggle-watches')
-
         tooltips = new CompositeDisposable()
         tooltips.add atom.tooltips.add toggleButton,
             title: 'Toggle Watch Sidebar'
-        tooltips.add atom.tooltips.add removeButton,
-            title: 'Remove Watch'
 
         @watchesContainer = document.createElement('div')
         _.forEach @watchViews, (watch) =>
             @watchesContainer.appendChild(watch.element)
 
+        buttonGroup = document.createElement('div')
+        buttonGroup.classList.add('btn-group')
+
         addButton = document.createElement('button')
-        addButton.classList.add('add-watch', 'btn', 'btn-primary',
-                                 'icon', 'icon-plus', 'inline-block')
+        addButton.classList.add('btn', 'btn-primary', 'icon', 'icon-plus')
         addButton.innerText = 'Add watch'
         addButton.onclick = => @addWatch()
+
+        removeButton = document.createElement('button')
+        removeButton.classList.add('btn', 'btn-error', 'icon', 'icon-trashcan')
+        removeButton.innerText = 'Remove watch'
+        removeButton.onclick = => @removeWatch()
 
         resizeHandle = document.createElement('div')
         resizeHandle.classList.add('watch-resize-handle')
         $(resizeHandle).on 'mousedown', @resizeStarted
 
         toolbar.appendChild(languageDisplay)
-        toolbar.appendChild(commands)
-        commands.appendChild(removeButton)
-        commands.appendChild(toggleButton)
+        toolbar.appendChild(toggleButton)
+        buttonGroup.appendChild(addButton)
+        buttonGroup.appendChild(removeButton)
 
         @element.appendChild(toolbar)
         @element.appendChild(@watchesContainer)
-        @element.appendChild(addButton)
+        @element.appendChild(buttonGroup)
         @element.appendChild(resizeHandle)
 
         @kernel.addWatchCallback =>
