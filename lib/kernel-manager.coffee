@@ -69,7 +69,7 @@ class KernelManager
 
         catch e
             unless e.code is 'ENOENT'
-                throw e
+                console.log 'KernelManager: Cannot start existing kernel:\n', e
 
         language = @getLanguageFor grammar
         @getKernelSpecFor language, (kernelSpec) =>
