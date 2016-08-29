@@ -27,6 +27,14 @@ class SignalListView extends SelectListView
             },
         ]
 
+        @wsKernelCommands = [
+            {
+                name: 'Disconnect from'
+                value: 'disconnect-kernel'
+                language: null
+            }
+        ]
+
         @onConfirmed = null
         @addClass('kernel-signal-selector')
         @list.addClass('mark-active')
@@ -66,7 +74,17 @@ class SignalListView extends SelectListView
             }
 
         if kernel instanceof WSKernel
-            @setItems basicCommands
+            wsKernelCommands = @wsKernelCommands.map (command) ->
+                name =
+                    command.name + ' ' + kernel.kernelSpec.display_name + ' kernel'
+                return {
+                    name: name
+                    value: command.value
+                    grammar: grammar
+                    language: language
+                    kernel: kernel
+                }
+            @setItems _.union basicCommands, wsKernelCommands
         else
             # add commands to switch to other kernels
             @kernelManager.getAllKernelSpecsFor language, (kernelSpecs) =>
