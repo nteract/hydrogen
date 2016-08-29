@@ -373,7 +373,11 @@ module.exports = Hydrogen =
                 @kernelManager.setRunningKernelFor grammar, kernel
                 @onKernelChanged kernel
 
-        @wsKernelPicker.toggle @editor.getGrammar()
+        grammar = @editor.getGrammar()
+        language = @kernelManager.getLanguageFor grammar
+
+        @wsKernelPicker.toggle grammar, (kernelSpec) =>
+            @kernelManager.kernelSpecProvidesLanguage(kernelSpec, language)
 
 
     copyPathToConnectionFile: ->
