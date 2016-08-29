@@ -1,5 +1,6 @@
 {SelectListView} = require 'atom-space-pen-views'
 _ = require 'lodash'
+tildify = require 'tildify'
 
 Config = require './config'
 services = require './jupyter-js-services-shim'
@@ -79,7 +80,7 @@ class WSKernelPicker
                         return true
                 items = sessionModels.map (model) ->
                     if model.notebook?.path?
-                        name = model.notebook.path
+                        name = tildify model.notebook.path
                     else
                         name = "Session #{model.id}"
                     return {
