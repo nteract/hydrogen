@@ -202,6 +202,28 @@ Additionally, if you have two or more kernels for a particular language (grammar
 
 Hydrogen implements the [messaging protocol](http://jupyter-client.readthedocs.io/en/latest/messaging.html) for [Jupyter](https://jupyter.org/). Jupyter (formerly IPython) uses ZeroMQ to connect a client (like Hydrogen) to a running kernel (like IJulia or iTorch). The client sends code to be executed to the kernel, which runs it and sends back results.
 
+## Remote kernels via kernel gateways
+
+In addition to managing local kernels and connecting to them over ZeroMQ, Hydrogen is also able to connect to Jupyter Kernel Gateways and Jupyter Notebook servers. This is most useful for running code remotely (e.g. in the cloud).
+
+To connect to a gateway server, you must first add the connection information to the Hydrogen `gateways` setting. An example settings entry might be:
+
+```json
+[{
+    "name": "Remote notebook",
+    "options": {
+            "baseUrl": "http://example.com:8888"
+    }
+}]
+```
+
+Each entry in the gateways list needs at minimum a `name` (for displaying in the UI), and a value for `options.baseUrl`. The `options` are passed directly to the `jupyter-js-services` npm package, which includes documentation for additional fields.
+
+After gateways have been configured, you can use the **"Hydrogen: Connect to Remote Kernel"** command. You will be prompted to select a gateway, and then given the choice to either create a new session or connect to an existing one.
+
+Unlike with local kernels, when Hydrogen does not kill remote kernels when it disconnects from them. This allows sharing remote kernels between Hydrogen and the Notebook UI, as well as using them for long-running processes. To clean up unused kernels, you must explicitly call the **"Hydrogen: Shutdown Kernel"** command while connected to a kernel.
+
+**Note:** Unlike a notebook server, the jupyter kernel gateway by default disables listing already-running kernels. This means that once disconnected from a kernel, you will not be able to reconnect to it. You can set `c.KernelGatewayApp.list_kernels = True` in your kernel gateway configuration to change this behavior.
 
 ## Custom kernel connection (inside Docker)
 
