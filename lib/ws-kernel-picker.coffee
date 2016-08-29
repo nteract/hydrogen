@@ -41,7 +41,7 @@ class WSKernelPicker
     constructor: (onChosen) ->
         @_onChosen = onChosen
 
-    toggle: (grammar) ->
+    toggle: (@_grammar, @_kernelSpecFilter) ->
         gateways = Config.getJson('gateways', [])
         if _.isEmpty gateways
             atom.notifications.addError 'No remote kernel gateways available',
@@ -50,72 +50,84 @@ class WSKernelPicker
                 Jupyter Kernel Gateway or Jupyter notebook server.'
             return
 
-        @_grammar = grammar
         @_path = atom.workspace.getActiveTextEditor().getPath() + '-' + uuid.v4()
         gatewayListing = new CustomListView('No gateways available', @onGateway.bind this)
         @previouslyFocusedElement = gatewayListing.previouslyFocusedElement
         gatewayListing.setItems gateways
         gatewayListing.setError 'Select a gateway' # TODO(nikita): maybe don't misuse error
 
-    onGateway: (spec) ->
-        console.log('Picked a gateway')
-        sessionListing = new CustomListView('No sessions available', @onSession.bind this)
-        sessionListing.previouslyFocusedElement = @previouslyFocusedElement
-        sessionListing.setLoading 'Loading sessions...'
+    onGateway: (gatewayInfo) ->
+        services.getKernelSpecs(gatewayInfo.options)
+        .then (specModels) =>
+            kernelSpecs = _.filter specModels.kernelspecs, (specModel) =>
+                @_kernelSpecFilter specModel.spec
 
-        services.listRunningSessions(spec.options)
-        .then (sessionModels) ->
-            items = sessionModels.map (model) ->
-                if model.notebook?.path?
-                    name = model.notebook.path
-                else
-                    name = "Session #{model.id}"
-                return {
-                    name: name
-                    model: model
-                    options: spec.options
-                }
-            items.unshift
-                name: '[new session]'
-                model: null
-                options: spec.options
-            sessionListing.setItems(items)
+            kernelNames = _.map kernelSpecs, (specModel) ->
+                specModel.name
 
-        , (err) =>
-            # Gateways offer the option of never listing sessions, for security
-            # reasons.
-            # Assume this is the case and proceed to creating a new session.
-            @onSession
-                name: '[new session]'
-                model: null
-                options: spec.options
+            sessionListing = new CustomListView('No sessions available', @onSession.bind this)
+            sessionListing.previouslyFocusedElement = @previouslyFocusedElement
+            sessionListing.setLoading 'Loading sessions...'
 
-    onSession: (spec) ->
-        unless spec.model?
+            services.listRunningSessions(gatewayInfo.options)
+            .then (sessionModels) ->
+                sessionModels = sessionModels.filter (model) ->
+                    name = model.kernel?.name
+                    if name?
+                        return name in kernelNames
+                    else
+                        return true
+                items = sessionModels.map (model) ->
+                    if model.notebook?.path?
+                        name = model.notebook.path
+                    else
+                        name = "Session #{model.id}"
+                    return {
+                        name: name
+                        model: model
+                        options: gatewayInfo.options
+                    }
+                items.unshift
+                    name: '[new session]'
+                    model: null
+                    options: gatewayInfo.options
+                    kernelSpecs: kernelSpecs
+                sessionListing.setItems(items)
+
+            , (err) =>
+                # Gateways offer the option of never listing sessions, for security
+                # reasons.
+                # Assume this is the case and proceed to creating a new session.
+                @onSession
+                    name: '[new session]'
+                    model: null
+                    options: gatewayInfo.options
+                    kernelSpecs: kernelSpecs
+        , (err) ->
+            atom.notifications.addError 'Connection to gateway failed'
+
+
+    onSession: (sessionInfo) ->
+        unless sessionInfo.model?
             kernelListing = new CustomListView('No kernel specs available', @startSession.bind this)
             kernelListing.previouslyFocusedElement = @previouslyFocusedElement
-            kernelListing.setLoading 'Loading kernel specs...'
 
-            services.getKernelSpecs(spec.options)
-            .then (specmodels) =>
-                items = _.map specmodels.kernelspecs, (specmodel) =>
-                    options = Object.assign({}, spec.options)
-                    options.kernelName = specmodel.name
-                    options.path = @_path
-                    return {
-                        name: specmodel.spec.display_name
-                        options: options
-                    }
-                kernelListing.setItems items
-                unless spec.name?
-                    kernelListing.setError 'This gateway does not support listing sessions'
-            , (err) ->
-                kernelListing.setError 'Connection to gateway failed'
+            items = _.map sessionInfo.kernelSpecs, (specModel) =>
+                options = Object.assign({}, sessionInfo.options)
+                options.kernelName = specModel.name
+                options.path = @_path
+                return {
+                    name: specModel.spec.display_name
+                    options: options
+                }
+            kernelListing.setItems items
+            unless sessionInfo.name?
+                kernelListing.setError 'This gateway does not support listing sessions'
         else
-            services.connectToSession(spec.model.id, spec.options).then(@onSessionChosen.bind this)
+            services.connectToSession(sessionInfo.model.id, sessionInfo.options).then(@onSessionChosen.bind this)
 
-    startSession: (spec) ->
-        services.startNewSession(spec.options).then(@onSessionChosen.bind this)
+    startSession: (sessionInfo) ->
+        services.startNewSession(sessionInfo.options).then(@onSessionChosen.bind this)
 
     onSessionChosen: (session) ->
         session.kernel.getKernelSpec().then (kernelSpec) =>
