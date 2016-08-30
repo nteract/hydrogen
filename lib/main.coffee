@@ -206,6 +206,9 @@ module.exports = Hydrogen =
             @kernelManager.startKernel kernelSpec, grammar, (kernel) =>
                 @onKernelChanged kernel
 
+        else if command is 'rename-kernel'
+            kernel.promptRename?()
+
         else if command is 'disconnect-kernel'
             @clearResultBubbles()
             @kernelManager.destroyRunningKernelFor grammar
