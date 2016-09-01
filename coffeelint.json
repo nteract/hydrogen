@@ -62,5 +62,9 @@
   },
   "arrow_spacing": {
     "level": "error"
+  },
+    "missing_fat_arrows": {
+    "level": "error",
+    "is_strict": false
   }
 }

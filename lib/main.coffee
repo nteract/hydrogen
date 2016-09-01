@@ -1,3 +1,4 @@
+# coffeelint: disable = missing_fat_arrows
 {CompositeDisposable} = require 'atom'
 
 _ = require 'lodash'
