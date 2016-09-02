@@ -7,6 +7,7 @@ services = require('./jupyter-js-services-shim')
 
 Kernel = require './kernel'
 InputView = require './input-view'
+RenameView = require './rename-view'
 
 module.exports =
 class WSKernel extends Kernel
@@ -91,6 +92,12 @@ class WSKernel extends Kernel
                 data: message.content.data
                 found: message.content.found
             )
+
+    promptRename: ->
+        view = new RenameView 'Name your current session', @session.path, (input) =>
+            @session.rename(input)
+
+        view.attach()
 
     destroy: ->
         console.log 'WSKernel: destroying jupyter-js-services Session'

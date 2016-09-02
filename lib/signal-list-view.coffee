@@ -29,6 +29,11 @@ class SignalListView extends SelectListView
 
         @wsKernelCommands = [
             {
+                name: 'Rename'
+                value: 'rename-kernel'
+                language: null
+            },
+            {
                 name: 'Disconnect from'
                 value: 'disconnect-kernel'
                 language: null
