@@ -70,7 +70,9 @@ class ResultView
             bubbleText = @getAllText()
             editor = atom.workspace.getActiveTextEditor()
             editor.insertNewlineBelow()
-            editor.insertText('/* result: \n' + bubbleText + '\n*/')
+            editor.insertText('result: \n' + bubbleText + '\n',
+              select: true)
+            editor.toggleLineCommentsInSelection()
         actionPanel.appendChild(insertButton)
 
         @setMultiline false
