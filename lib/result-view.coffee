@@ -63,6 +63,16 @@ class ResultView
                 editor.insertText(bubbleText)
         actionPanel.appendChild(openButton)
 
+        insertButton = document.createElement('div')
+        insertButton.classList.add 'action-button',
+            'insert-button', 'icon', 'icon-triangle-down'
+        insertButton.onclick = =>
+            bubbleText = @getAllText()
+            editor = atom.workspace.getActiveTextEditor()
+            editor.insertNewlineBelow()
+            editor.insertText('/* result: \n' + bubbleText + '\n*/')
+        actionPanel.appendChild(insertButton)
+
         @setMultiline false
 
         @tooltips = new CompositeDisposable()
@@ -70,6 +80,8 @@ class ResultView
             title: 'Copy to clipboard'
         @tooltips.add atom.tooltips.add openButton,
             title: 'Open in new editor'
+        @tooltips.add atom.tooltips.add insertButton,
+            title: 'Insert below'
 
         @_hasResult = false
 
