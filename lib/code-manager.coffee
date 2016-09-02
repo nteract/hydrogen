@@ -139,8 +139,7 @@ class CodeManager
     getRegexString: ->
         scope = @editor.getRootScopeDescriptor()
 
-        {commentStartString, commentEndString} =
-            @editor.languageMode.commentStartAndEndStringsForScope(scope)
+        {commentStartString, commentEndString} = @getCommentStrings(scope)
 
         unless commentStartString
             console.log 'CellManager: No comment string defined in root scope'
@@ -153,6 +152,13 @@ class CodeManager
             escapedCommentStartString + '(%%| %%| <codecell>| In\[[0-9 ]*\]:?)'
 
         return regexString
+
+
+    getCommentStrings: (scope) ->
+        if parseFloat(atom.getVersion()) <= 1.1
+            return @editor.languageMode.commentStartAndEndStringsForScope(scope)
+        else
+            return @editor.getCommentStrings(scope)
 
 
     isComment: (position) ->
