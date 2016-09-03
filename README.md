@@ -95,7 +95,10 @@ Unfortunately, the versions of IPython provided in Debian's and Ubuntu's
 repositories are rather old and Hydrogen is unable to detect the kernel specs
 installed in your machine. To workaround this issue, Hydrogen provides the
 setting `KernelSpec`, where the user can declare the kernel specs manually.
-Below is an example for IPython 2 and 3:
+Find the `KernelSpec` setting in the Atom GUI by going to the Settings pane,
+click Packages, search for Hydrogen, and click the Hydrogen Settings button.
+
+Below is an example `KernelSpec` for IPython 2 and 3:
 
 ```json
 {
