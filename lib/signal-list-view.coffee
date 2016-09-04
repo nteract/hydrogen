@@ -10,38 +10,25 @@ class SignalListView extends SelectListView
         super
 
         @basicCommands = [
-            {
-                name: 'Interrupt'
-                value: 'interrupt-kernel'
-                language: null
-            },
-            {
-                name: 'Restart'
-                value: 'restart-kernel'
-                language: null
-            },
-            {
-                name: 'Shut Down'
-                value: 'shutdown-kernel'
-                language: null
-            },
+            name: 'Interrupt'
+            value: 'interrupt-kernel'
+        ,
+            name: 'Restart'
+            value: 'restart-kernel'
+        ,
+            name: 'Shut Down'
+            value: 'shutdown-kernel'
         ]
 
         @wsKernelCommands = [
-            {
-                name: 'Rename'
-                value: 'rename-kernel'
-                language: null
-            },
-            {
-                name: 'Disconnect from'
-                value: 'disconnect-kernel'
-                language: null
-            }
+            name: 'Rename session for'
+            value: 'rename-kernel'
+        ,
+            name: 'Disconnect from'
+            value: 'disconnect-kernel'
         ]
 
         @onConfirmed = null
-        @addClass('kernel-signal-selector')
         @list.addClass('mark-active')
         @setItems([])
 
@@ -67,24 +54,20 @@ class SignalListView extends SelectListView
             return @setItems []
 
         # add basic commands for the current grammar language
-        basicCommands = @basicCommands.map (command) ->
-            name =
-                command.name + ' ' + kernel.kernelSpec.display_name + ' kernel'
+        basicCommands = @basicCommands.map (command) =>
             return {
-                name: name
-                value: command.value
+                name: @_getCommandName command.name, kernel.kernelSpec
+                command: command.value
                 grammar: grammar
                 language: language
                 kernel: kernel
             }
 
         if kernel instanceof WSKernel
-            wsKernelCommands = @wsKernelCommands.map (command) ->
-                name =
-                    command.name + ' ' + kernel.kernelSpec.display_name + ' kernel'
+            wsKernelCommands = @wsKernelCommands.map (command) =>
                 return {
-                    name: name
-                    value: command.value
+                    name: @_getCommandName command.name, kernel.kernelSpec
+                    command: command.value
                     grammar: grammar
                     language: language
                     kernel: kernel
@@ -94,21 +77,25 @@ class SignalListView extends SelectListView
             # add commands to switch to other kernels
             @kernelManager.getAllKernelSpecsFor language, (kernelSpecs) =>
                 _.pull kernelSpecs, kernel.kernelSpec
-                switchCommands = kernelSpecs.map (spec) ->
+
+                switchCommands = kernelSpecs.map (kernelSpec) =>
                     return {
-                        name: 'Switch to ' + spec.display_name
-                        value: 'switch-kernel'
+                        name: @_getCommandName 'Switch to', kernelSpec
+                        command: 'switch-kernel'
                         grammar: grammar
                         language: language
-                        kernelSpec: spec
+                        kernelSpec: kernelSpec
                     }
 
                 @setItems _.union basicCommands, switchCommands
 
 
+    _getCommandName: (name, kernelSpec) ->
+        return name + ' ' + kernelSpec.display_name + ' kernel'
+
+
     confirmed: (item) ->
         console.log 'Selected command:', item
-        item.command = item.value
         @onConfirmed?(item)
         @cancel()
 
