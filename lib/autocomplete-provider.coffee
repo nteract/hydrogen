@@ -1,3 +1,4 @@
+_ = require 'lodash'
 iconHTML = "<img src='#{__dirname}/../static/logo.svg' style='width: 100%;'>"
 
 regexes =
@@ -55,7 +56,7 @@ module.exports = (kernelManager) ->
                 kernel.complete prefix, ({matches, cursor_start, cursor_end}) ->
                     replacementPrefix = prefix.slice cursor_start, cursor_end
 
-                    matches = matches.map (match) ->
+                    matches = _.map matches, (match) ->
                         text: match
                         replacementPrefix: replacementPrefix
                         iconHTML: iconHTML
