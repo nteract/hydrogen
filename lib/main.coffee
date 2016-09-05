@@ -100,6 +100,12 @@ module.exports = Hydrogen =
             return AutocompleteProvider @kernelManager
 
 
+    provideHydrogen: ->
+        provider =
+            connectionFile: @getPathToConnectionFile.bind(this)
+        return provider
+
+
     onEditorChanged: (@editor) ->
         if @editor
             grammar = @editor.getGrammar()
@@ -385,6 +391,14 @@ module.exports = Hydrogen =
 
 
     copyPathToConnectionFile: ->
+        atom.clipboard.write @getPathToConnectionFile()
+        message = 'Path to connection file copied to clipboard.'
+        description = "Use `jupyter console --existing #{connectionFile}` to
+            connect to the running kernel."
+        atom.notifications.addSuccess message, description: description
+
+
+    getPathToConnectionFile: ->
         grammar = @editor.getGrammar()
         language = @kernelManager.getLanguageFor grammar
 
@@ -399,8 +413,4 @@ module.exports = Hydrogen =
                 #{@kernel.kernelSpec.display_name} kernel found"
             return
 
-        atom.clipboard.write connectionFile
-        message = 'Path to connection file copied to clipboard.'
-        description = "Use `jupyter console --existing #{connectionFile}` to
-            connect to the running kernel."
-        atom.notifications.addSuccess message, description: description
+        return connectionFile
