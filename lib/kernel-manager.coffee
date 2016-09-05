@@ -57,7 +57,7 @@ class KernelManager
 
     startKernelFor: (grammar, onStarted) ->
         try
-            rootDirectory = atom.project.rootDirectories[0].path or
+            rootDirectory = atom.project.rootDirectories[0]?.path or
                 path.dirname atom.workspace.getActiveTextEditor().getPath()
             connectionFile = path.join(
                 rootDirectory, 'hydrogen', 'connection.json'
@@ -69,7 +69,7 @@ class KernelManager
 
         catch e
             unless e.code is 'ENOENT'
-                console.log 'KernelManager: Cannot start existing kernel:\n', e
+                console.error 'KernelManager: Cannot start existing kernel:\n', e
 
         language = @getLanguageFor grammar
         @getKernelSpecFor language, (kernelSpec) =>
