@@ -73,8 +73,6 @@ module.exports = Hydrogen =
                 @handleKernelCommand command: 'restart-kernel'
             'hydrogen:shutdown-kernel': =>
                 @handleKernelCommand command: 'shutdown-kernel'
-            'hydrogen:copy-path-to-connection-file': =>
-                @copyPathToConnectionFile()
 
         @subscriptions.add atom.commands.add 'atom-workspace',
             'hydrogen:clear-results': => @clearResultBubbles()
@@ -388,14 +386,6 @@ module.exports = Hydrogen =
 
         @wsKernelPicker.toggle grammar, (kernelSpec) =>
             @kernelManager.kernelSpecProvidesLanguage(kernelSpec, language)
-
-
-    copyPathToConnectionFile: ->
-        atom.clipboard.write @getPathToConnectionFile()
-        message = 'Path to connection file copied to clipboard.'
-        description = "Use `jupyter console --existing #{connectionFile}` to
-            connect to the running kernel."
-        atom.notifications.addSuccess message, description: description
 
 
     getPathToConnectionFile: ->
