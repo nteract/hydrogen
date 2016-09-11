@@ -223,14 +223,47 @@ module.exports = Hydrogen =
             @_createResultBubble kernel, code, row
 
 
+    mostRecentResult:
+      row: -1
+      texts: []
+
+
+    mostRecentResultProvider: ->
+      obj = @mostRecentResult
+      ->
+        return obj
+    mostRecentResultProvider3: ->
+      return () ->
+        return "whee"
+
+
+    resetMostRecentResult: ->
+      @mostRecentResult.row = -1
+      @mostRecentResult.texts = []
+
+
+    appendMostRecentResult: (row, text) ->
+      obj = @mostRecentResult
+      if (obj.row != row)
+        @resetMostRecentResult()
+        obj = @mostRecentResult
+        obj.row = row
+      obj.texts.push(text)
+
+
     _createResultBubble: (kernel, code, row) ->
         if @watchSidebar.element.contains document.activeElement
             @watchSidebar.run()
             return
 
         @clearBubblesOnRow row
+        @resetMostRecentResult()
         view = @insertResultBubble row
+        appender = (result) ->
+          @appendMostRecentResult(row, result)
+        appenderBound = appender.bind(@)
         kernel.execute code, (result) ->
+            appenderBound(result)
             view.spin false
             view.addResult result
 
