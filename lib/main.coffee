@@ -244,10 +244,10 @@ module.exports = Hydrogen =
 
 
     resetMostRecentResult: ->
-      @mostRecentResult.row = -1
-      @mostRecentResult.texts = []
       if (@mostRecentResult.resolveFn)
         @mostRecentResolver()
+      @mostRecentResult.row = -1
+      @mostRecentResult.texts = []
       most = @mostRecentResult
       @mostRecentResult.promise = new Promise((resolve, reject) ->
         most.resolveFn = resolve
@@ -255,11 +255,9 @@ module.exports = Hydrogen =
 
 
     appendMostRecentResult: (row, text) ->
+      console.log("ROWWW", row, text)
       obj = @mostRecentResult
-      if (obj.row != row)
-        @resetMostRecentResult()
-        obj = @mostRecentResult
-        obj.row = row
+      obj.row = row
       obj.texts.push(text)
       if (text.stream=='error' || text.stream=='status')
         @mostRecentResolver()
