@@ -226,20 +226,32 @@ module.exports = Hydrogen =
     mostRecentResult:
       row: -1
       texts: []
+      promise: null
+      rejectFn: null
+      resolveFn: null
 
 
     mostRecentResultProvider: ->
-      obj = @mostRecentResult
+      obj = @
       ->
-        return obj
-    mostRecentResultProvider3: ->
-      return () ->
-        return "whee"
+        return obj.mostRecentResult.promise
+
+    mostRecentResolver: ->
+      @mostRecentResult.resolveFn(
+        row: @mostRecentResult.row
+        texts: @mostRecentResult.texts
+      )
 
 
     resetMostRecentResult: ->
       @mostRecentResult.row = -1
       @mostRecentResult.texts = []
+      if (@mostRecentResult.resolveFn)
+        @mostRecentResolver()
+      most = @mostRecentResult
+      @mostRecentResult.promise = new Promise((resolve, reject) ->
+        most.resolveFn = resolve
+        most.rejectFn = reject)
 
 
     appendMostRecentResult: (row, text) ->
@@ -249,6 +261,8 @@ module.exports = Hydrogen =
         obj = @mostRecentResult
         obj.row = row
       obj.texts.push(text)
+      if (text.stream=='error' || text.stream=='status')
+        @mostRecentResolver()
 
 
     _createResultBubble: (kernel, code, row) ->
