@@ -224,7 +224,7 @@ Each entry in the gateways list needs at minimum a `name` (for displaying in the
 
 After gateways have been configured, you can use the **"Hydrogen: Connect to Remote Kernel"** command. You will be prompted to select a gateway, and then given the choice to either create a new session or connect to an existing one.
 
-Unlike with local kernels, when Hydrogen does not kill remote kernels when it disconnects from them. This allows sharing remote kernels between Hydrogen and the Notebook UI, as well as using them for long-running processes. To clean up unused kernels, you must explicitly call the **"Hydrogen: Shutdown Kernel"** command while connected to a kernel.
+Unlike with local kernels, Hydrogen does not kill remote kernels when it disconnects from them. This allows sharing remote kernels between Hydrogen and the Notebook UI, as well as using them for long-running processes. To clean up unused kernels, you must explicitly call the **"Hydrogen: Shutdown Kernel"** command while connected to a kernel.
 
 **Note:** Unlike a notebook server, the jupyter kernel gateway by default disables listing already-running kernels. This means that once disconnected from a kernel, you will not be able to reconnect to it. You can set `c.KernelGatewayApp.list_kernels = True` in your kernel gateway configuration to change this behavior.
 
