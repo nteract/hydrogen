@@ -5,9 +5,12 @@ _ = require 'lodash'
 jmp = require 'jmp'
 uuid = require 'uuid'
 zmq = jmp.zmq
+{Emitter} = require 'event-kit'
 
 StatusView = require './status-view'
 WatchSidebar = require './watch-sidebar'
+
+HydrogenKernel = require './plugin-api/hydrogen-kernel'
 
 module.exports =
 class Kernel
@@ -17,6 +20,15 @@ class Kernel
         @watchSidebar = new WatchSidebar this
         @statusView = new StatusView @kernelSpec.display_name
 
+        @emitter = new Emitter()
+
+        @pluginWrapper = null
+
+    getPluginWrapper: ->
+        unless @pluginWrapper?
+            @pluginWrapper = HydrogenKernel(this)
+
+        return @pluginWrapper
 
     addWatchCallback: (watchCallback) ->
         @watchCallbacks.push(watchCallback)
@@ -199,3 +211,7 @@ class Kernel
 
     destroy: ->
         console.log 'Kernel: Destroying base kernel'
+        if @pluginWrapper
+            @pluginWrapper.destroyed = true
+        @emitter.emit 'did-destroy'
+        @emitter.dispose()
