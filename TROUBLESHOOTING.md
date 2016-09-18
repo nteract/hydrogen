@@ -13,6 +13,26 @@ There are a number of possible causes and solutions:
   [here](https://github.com/nodejs/node-gyp#installation) for installation
   instructions.
 
+- Atom uses incorrect version of Visual Studio (on Windows). Installing hydrogen
+  on windows works best with Visual Studio 2013, but Atom may see a different
+  version. You can check this by running `apm --version`, if it looks like this:
+  
+  ```
+  apm  1.12.5
+  npm  3.10.5
+  node 4.4.5
+  python 2.7.12
+  git 2.8.1.windows.1
+  visual studio 2015
+  ```
+  
+  then it means Atom is seeing visual studio 2015, not 2013.
+  These commands should help:
+  ```
+  apm config set msvs_version 2013 -g
+  set GYP_MSVS_VERSION=2013
+  ```
+
 - Atom is unable to use your installation of Python 2 (see issues
   [#301](https://github.com/nteract/hydrogen/issues/301) and 
   [#358](https://github.com/nteract/hydrogen/issues/358)). To confirm this is
