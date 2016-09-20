@@ -39,7 +39,6 @@
     "atom-message-panel": "^1.2.4",
     "atom-space-pen-views": "^2.0.5",
     "escape-string-regexp": "^1.0.5",
-    "event-kit": "^2.1.0",
     "jmp": "0.4.x",
     "jupyter-js-services": "^0.18.1",
     "lodash": "^4.14.0",

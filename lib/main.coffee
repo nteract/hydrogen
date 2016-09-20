@@ -1,6 +1,5 @@
 # coffeelint: disable = missing_fat_arrows
-{CompositeDisposable} = require 'atom'
-{Emitter} = require 'event-kit'
+{CompositeDisposable, Emitter} = require 'atom'
 
 _ = require 'lodash'
 

@@ -1,3 +1,5 @@
+{Emitter} = require 'atom'
+
 child_process = require 'child_process'
 path = require 'path'
 
@@ -5,11 +7,9 @@ _ = require 'lodash'
 jmp = require 'jmp'
 uuid = require 'uuid'
 zmq = jmp.zmq
-{Emitter} = require 'event-kit'
 
 StatusView = require './status-view'
 WatchSidebar = require './watch-sidebar'
-
 HydrogenKernel = require './plugin-api/hydrogen-kernel'
 
 module.exports =
