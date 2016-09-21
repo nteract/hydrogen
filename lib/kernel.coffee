@@ -26,7 +26,7 @@ class Kernel
 
     getPluginWrapper: ->
         unless @pluginWrapper?
-            @pluginWrapper = HydrogenKernel(this)
+            @pluginWrapper = new HydrogenKernel(this)
 
         return @pluginWrapper
 
