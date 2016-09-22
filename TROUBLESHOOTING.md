@@ -81,6 +81,8 @@ Hydrogen settings. See
 [this section](https://github.com/nteract/hydrogen#debian-8-and-ubuntu-1604-lts)
 in the [README](README.md) for more details.
 
+Atom won't pick up kernels inside a virualenv unless Atom is launched as `atom .` within the virtualenv. The alternative is to [create a kernel specifically for a virtualenv](http://www.alfredo.motta.name/create-isolated-jupyter-ipython-kernels-with-pyenv-and-virtualenv/).
+
 
 ### Hydrogen doesn't show my results.
 
