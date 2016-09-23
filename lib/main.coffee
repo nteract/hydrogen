@@ -33,8 +33,8 @@ module.exports = Hydrogen =
 
     activate: (state) ->
         @kernelManager = new KernelManager()
-        @inspector = new Inspector @kernelManager
         @codeManager = new CodeManager()
+        @inspector = new Inspector @kernelManager, @codeManager
 
         @markerBubbleMap = {}
 
@@ -322,11 +322,10 @@ module.exports = Hydrogen =
 
     _runAll: (kernel) ->
         breakpoints = @codeManager.getBreakpoints()
-        buffer = @editor.getBuffer()
         for i in [1...breakpoints.length]
             start = breakpoints[i - 1]
             end = breakpoints[i]
-            code = buffer.getTextInRange [start, end]
+            code = @codeManager.getTextInRange start, end
             endRow = @codeManager.escapeBlankRows start.row, end.row
             @_createResultBubble kernel, code, endRow
 
@@ -342,8 +341,7 @@ module.exports = Hydrogen =
 
     runCell: (moveDown = false) ->
         [start, end] = @codeManager.getCurrentCell()
-        buffer = @editor.getBuffer()
-        code = buffer.getTextInRange [start, end]
+        code = @codeManager.getTextInRange start, end
         endRow = @codeManager.escapeBlankRows start.row, end.row
 
         if code?
