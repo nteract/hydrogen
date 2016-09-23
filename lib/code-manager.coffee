@@ -60,6 +60,11 @@ class CodeManager
         return @normalizeString @editor.lineTextForBufferRow row
 
 
+    getTextInRange: (start, end) ->
+        code = @editor.getBuffer().getTextInRange [start, end]
+        return @normalizeString code
+
+
     getRows: (startRow, endRow) ->
         buffer = @editor.getBuffer()
         code = buffer.getTextInRange
