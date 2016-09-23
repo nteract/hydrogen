@@ -9,7 +9,7 @@ class CodeManager
 
     findCodeBlock: ->
         buffer = @editor.getBuffer()
-        selectedText = @editor.getSelectedText()
+        selectedText = @getSelectedText()
 
         if selectedText
             selectedRange = @editor.getSelectedBufferRange()
@@ -59,18 +59,27 @@ class CodeManager
 
 
     getRow: (row) ->
-        return @editor.lineTextForBufferRow row
+        return @normalizeString @editor.lineTextForBufferRow row
 
 
     getRows: (startRow, endRow) ->
         buffer = @editor.getBuffer()
-        return buffer.getTextInRange
+        code = buffer.getTextInRange
             start:
                 row: startRow
                 column: 0
             end:
                 row: endRow
                 column: 9999999
+        return @normalizeString code
+
+
+    getSelectedText: ->
+        return @normalizeString @editor.getSelectedText()
+
+
+    normalizeString: (code) ->
+        return code.replace /\r\n|\r/g, '\n'
 
 
     getFoldRange: (editor, row) ->
