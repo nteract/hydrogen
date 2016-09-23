@@ -1,17 +1,7 @@
-Config = require '../lib/config'
 KernelManager = require '../lib/kernel-manager'
 
 path = require 'path'
 fs = require 'fs'
-
-describe 'Atom config', ->
-    it 'should read config values', ->
-        atom.config.set 'Hydrogen.read', JSON.stringify 'bar'
-        expect(Config.getJson 'read').toEqual('bar')
-
-    it 'should return {} for broken config', ->
-        atom.config.set 'Hydrogen.broken', 'foo'
-        expect(Config.getJson 'broken').toEqual({})
 
 describe 'Kernel manager', ->
     firstKernelSpecString = '''{
