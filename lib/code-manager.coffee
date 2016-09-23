@@ -61,13 +61,12 @@ class CodeManager
 
 
     getTextInRange: (start, end) ->
-        code = @editor.getBuffer().getTextInRange [start, end]
+        code = @editor.getTextInBufferRange [start, end]
         return @normalizeString code
 
 
     getRows: (startRow, endRow) ->
-        buffer = @editor.getBuffer()
-        code = buffer.getTextInRange
+        code = @editor.getTextInBufferRange
             start:
                 row: startRow
                 column: 0
@@ -85,8 +84,8 @@ class CodeManager
         return code.replace /\r\n|\r/g, '\n'
 
 
-    getFoldRange: (editor, row) ->
-        range = editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
+    getFoldRange: (row) ->
+        range = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
         if @getRow(range[1] + 1).trim() is 'end'
             range[1] = range[1] + 1
         console.log 'getFoldRange:', range
@@ -94,12 +93,8 @@ class CodeManager
 
 
     getFoldContents: (row) ->
-        buffer = @editor.getBuffer()
-        range = @getFoldRange(@editor, row)
-        return [
-                @getRows(range[0], range[1]),
-                range[1]
-            ]
+        range = @getFoldRange row
+        return [@getRows(range[0], range[1]), range[1]]
 
 
     getCodeToInspect: ->
