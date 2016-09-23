@@ -33,8 +33,8 @@ module.exports = Hydrogen =
 
     activate: (state) ->
         @kernelManager = new KernelManager()
-        @inspector = new Inspector @kernelManager
         @codeManager = new CodeManager()
+        @inspector = new Inspector @kernelManager, @codeManager
 
         @markerBubbleMap = {}
 

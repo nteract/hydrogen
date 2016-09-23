@@ -3,7 +3,7 @@ transformime = require 'transformime'
 
 module.exports =
 class Inspector
-    constructor: (@kernelManager) ->
+    constructor: (@kernelManager, @codeManager) ->
         @_lastInspectionResult = ''
 
     toggle: ->
@@ -20,7 +20,7 @@ class Inspector
             title: 'Hydrogen Inspector'
             closeMethod: 'destroy'
 
-        [code, cursor_pos] = @getCodeToInspect editor
+        [code, cursor_pos] = @codeManager.getCodeToInspect()
         if cursor_pos is 0
             return
 
@@ -28,23 +28,6 @@ class Inspector
             # TODO: handle case when inspect request returns an error
             @showInspectionResult result
 
-    getCodeToInspect: (editor) ->
-        selectedText = editor.getSelectedText()
-        if selectedText
-            code = selectedText
-            cursor_pos = code.length
-        else
-            cursor = editor.getLastCursor()
-            row = cursor.getBufferRow()
-            code = editor.lineTextForBufferRow row
-            cursor_pos = cursor.getBufferColumn()
-
-            # TODO: use kernel.complete to find a selection
-            identifier_end = code.slice(cursor_pos).search /\W/
-            if identifier_end isnt -1
-                cursor_pos += identifier_end
-
-        return [code, cursor_pos]
 
     showInspectionResult: (result) ->
         console.log 'Inspector: Result:', result

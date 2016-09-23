@@ -8,7 +8,6 @@ class CodeManager
 
 
     findCodeBlock: ->
-        buffer = @editor.getBuffer()
         selectedText = @getSelectedText()
 
         if selectedText
@@ -42,7 +41,6 @@ class CodeManager
 
 
     findPrecedingBlock: (row, indentLevel) ->
-        buffer = @editor.getBuffer()
         previousRow = row - 1
         while previousRow >= 0
             previousIndentLevel = @editor.indentationForBufferRow previousRow
@@ -97,6 +95,25 @@ class CodeManager
                 @getRows(range[0], range[1]),
                 range[1]
             ]
+
+
+    getCodeToInspect: ->
+        selectedText = @getSelectedText()
+        if selectedText
+            code = selectedText
+            cursor_pos = code.length
+        else
+            cursor = @editor.getLastCursor()
+            row = cursor.getBufferRow()
+            code = @getRow row
+            cursor_pos = cursor.getBufferColumn()
+
+            # TODO: use kernel.complete to find a selection
+            identifier_end = code.slice(cursor_pos).search /\W/
+            if identifier_end isnt -1
+                cursor_pos += identifier_end
+
+        return [code, cursor_pos]
 
 
     getCurrentCell: ->
