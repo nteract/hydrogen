@@ -2,6 +2,7 @@ KernelManager = require '../lib/kernel-manager'
 
 path = require 'path'
 fs = require 'fs'
+_ = require 'lodash'
 
 describe 'Kernel manager', ->
     firstKernelSpecString = '''{
@@ -48,11 +49,64 @@ describe 'Kernel manager', ->
     kernelSpecs.kernelspecs.python2 = secondKernelSpec.kernelspecs.python2
     kernelSpecsString = JSON.stringify kernelSpecs
 
+    mockGrammar =
+        name: 'grammarLanguage'
+
+    mockKernel =
+        kernelSpec:
+            language: 'kernelLanguage'
+        destroy: ->
+
     kernelManager = null
 
     beforeEach ->
         kernelManager = new KernelManager()
         atom.config.set 'Hydrogen.kernelspec', ''
+
+    describe 'constructor', ->
+        it 'should initialize @_runningKernels', ->
+            expect(kernelManager._runningKernels).toEqual({})
+        it 'should call @getKernelSpecsFromSettings', ->
+            spyOn(kernelManager, 'getKernelSpecsFromSettings')
+            kernelManager.constructor()
+            expect(kernelManager.getKernelSpecsFromSettings).toHaveBeenCalled()
+
+    describe 'destroy', ->
+        it 'should destroy all running kernels', ->
+            mockKernels =
+                kernel1: _.clone mockKernel
+                kernel2: _.clone mockKernel
+            spyOn(mockKernels.kernel1, 'destroy')
+            spyOn(mockKernels.kernel2, 'destroy')
+            kernelManager._runningKernels = mockKernels
+            kernelManager.destroy()
+            expect(mockKernels.kernel1.destroy).toHaveBeenCalled()
+            expect(mockKernels.kernel2.destroy).toHaveBeenCalled()
+            expect(kernelManager._runningKernels).toEqual({})
+
+    describe 'setRunningKernelFor', ->
+        it 'should set the running kernel for a grammar', ->
+            kernelManager.setRunningKernelFor mockGrammar, mockKernel
+            expect(kernelManager._runningKernels.grammarlanguage)
+                .not.toBeUndefined()
+            expect(kernelManager._runningKernels.grammarlanguage
+                .kernelSpec.language).toEqual('grammarlanguage')
+
+    describe 'destroyRunningKernelFor', ->
+        it 'should destroy a running kernel for a grammar', ->
+            mockKernels =
+                grammarlanguage: _.clone mockKernel
+                kernel2: _.clone mockKernel
+
+            spyOn(mockKernels.grammarlanguage, 'destroy')
+            spyOn(mockKernels.kernel2, 'destroy')
+            kernelManager._runningKernels = _.clone mockKernels
+            kernelManager.destroyRunningKernelFor mockGrammar
+
+            expect(mockKernels.grammarlanguage.destroy).toHaveBeenCalled()
+            expect(mockKernels.kernel2.destroy).not.toHaveBeenCalled()
+            expect(kernelManager._runningKernels.kernel2).not.toBeUndefined()
+            expect(kernelManager._runningKernels.grammarlanguage).toBeUndefined()
 
     describe 'getKernelSpecsFromSettings', ->
         it 'should parse kernelspecs from settings', ->
@@ -127,8 +181,8 @@ describe 'Kernel manager', ->
                     resolve()
 
     it 'should read lower case name from grammar', ->
-        grammar = atom.grammars.getGrammars()[0]
-        expect(kernelManager.getLanguageFor grammar).toEqual('null grammar')
+        expect(kernelManager.getLanguageFor mockGrammar)
+            .toEqual('grammarlanguage')
 
     it 'should update kernelspecs', ->
         waitsForPromise -> new Promise (resolve, reject) ->
