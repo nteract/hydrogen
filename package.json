@@ -66,6 +66,7 @@
     }
   },
   "devDependencies": {
-    "coffeelint": "^1.15.7"
+    "coffeelint": "^1.15.7",
+    "coffeescope2": "^0.4.2"
   }
 }
