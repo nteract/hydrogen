@@ -66,5 +66,38 @@
     "missing_fat_arrows": {
     "level": "error",
     "is_strict": false
+  },
+    "check_scope": {
+    "module": "coffeescope2",
+    "level": "warn",
+    "environments": ["es5", "es6", "browser", "node", "jasmine"],
+    "globals": {
+      "atom": true,
+      "afterEach": true,
+      "beforeEach": true,
+      "describe": true,
+      "fdescribe": true,
+      "xdescribe": true,
+      "expect": true,
+      "it": true,
+      "fit": true,
+      "xit": true,
+      "jasmine": true,
+      "runs": true,
+      "spyOn": true,
+      "waitsFor": true,
+      "waitsForPromise": true,
+      "indexedDB": true
+    },
+    "overwrite": false,
+    "shadow": false,
+    "shadow_builtins": false,
+    "shadow_exceptions": ["err", "next"],
+    "undefined": true,
+    "hoist_local": true,
+    "hoist_parent": true,
+    "unused_variables": false,
+    "unused_arguments": false,
+    "unused_classes": true
   }
 }
