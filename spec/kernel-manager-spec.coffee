@@ -5,58 +5,6 @@ fs = require 'fs'
 _ = require 'lodash'
 
 describe 'Kernel manager', ->
-    firstKernelSpecString = '''{
-        "kernelspecs": {
-            "ijavascript": {
-                "spec": {
-                    "display_name": "IJavascript",
-                    "env": {},
-                    "argv": [
-                        "node",
-                        "/home/user/node_modules/ijavascript/lib/kernel.js",
-                        "--protocol=5.0",
-                        "{connection_file}"
-                    ],
-                        "language": "javascript"
-                },
-                "resource_dir": "/home/user/node_modules/ijavascript/images"
-            }
-        }
-    }'''
-    secondKernelSpecString = '''{
-        "kernelspecs": {
-            "python2": {
-                "spec": {
-                    "language": "python",
-                    "display_name": "Python 2",
-                    "env": {},
-                    "argv": [
-                        "/usr/local/opt/python/bin/python2.7",
-                        "-m",
-                        "ipykernel",
-                        "-f",
-                        "{connection_file}"
-                    ]
-                }
-            }
-        }
-    }'''
-
-    firstKernelSpec = JSON.parse firstKernelSpecString
-    secondKernelSpec = JSON.parse secondKernelSpecString
-
-    kernelSpecs = JSON.parse firstKernelSpecString
-    kernelSpecs.kernelspecs.python2 = secondKernelSpec.kernelspecs.python2
-    kernelSpecsString = JSON.stringify kernelSpecs
-
-    mockGrammar =
-        name: 'grammarLanguage'
-
-    mockKernel =
-        kernelSpec:
-            language: 'kernelLanguage'
-        destroy: ->
-
     kernelManager = null
 
     beforeEach ->
@@ -71,122 +19,196 @@ describe 'Kernel manager', ->
             kernelManager.constructor()
             expect(kernelManager.getKernelSpecsFromSettings).toHaveBeenCalled()
 
-    describe 'destroy', ->
-        it 'should destroy all running kernels', ->
-            mockKernels =
-                kernel1: _.clone mockKernel
-                kernel2: _.clone mockKernel
-            spyOn(mockKernels.kernel1, 'destroy')
-            spyOn(mockKernels.kernel2, 'destroy')
-            kernelManager._runningKernels = mockKernels
-            kernelManager.destroy()
-            expect(mockKernels.kernel1.destroy).toHaveBeenCalled()
-            expect(mockKernels.kernel2.destroy).toHaveBeenCalled()
-            expect(kernelManager._runningKernels).toEqual({})
+    describe 'handle running kernels', ->
+        mockGrammar =
+            name: 'Kernel1'
 
-    describe 'setRunningKernelFor', ->
-        it 'should set the running kernel for a grammar', ->
-            kernelManager.setRunningKernelFor mockGrammar, mockKernel
-            expect(kernelManager._runningKernels.grammarlanguage)
-                .not.toBeUndefined()
-            expect(kernelManager._runningKernels.grammarlanguage
-                .kernelSpec.language).toEqual('grammarlanguage')
+        mockKernel =
+            kernelSpec:
+                language: 'kernel1'
+            destroy: ->
 
-    describe 'destroyRunningKernelFor', ->
-        it 'should destroy a running kernel for a grammar', ->
-            mockKernels =
-                grammarlanguage: _.clone mockKernel
-                kernel2: _.clone mockKernel
+        mockKernel2 =
+            kernelSpec:
+                language: 'kernel2'
+            destroy: ->
 
-            spyOn(mockKernels.grammarlanguage, 'destroy')
-            spyOn(mockKernels.kernel2, 'destroy')
-            kernelManager._runningKernels = _.clone mockKernels
-            kernelManager.destroyRunningKernelFor mockGrammar
+        mockKernels =
+            kernel1: mockKernel
+            kernel2: mockKernel2
 
-            expect(mockKernels.grammarlanguage.destroy).toHaveBeenCalled()
-            expect(mockKernels.kernel2.destroy).not.toHaveBeenCalled()
-            expect(kernelManager._runningKernels.kernel2).not.toBeUndefined()
-            expect(kernelManager._runningKernels.grammarlanguage).toBeUndefined()
+        describe 'destroy', ->
+            it 'should destroy all running kernels', ->
+                spyOn(mockKernels.kernel1, 'destroy')
+                spyOn(mockKernels.kernel2, 'destroy')
+                kernelManager._runningKernels = mockKernels
+                kernelManager.destroy()
+                expect(mockKernels.kernel1.destroy).toHaveBeenCalled()
+                expect(mockKernels.kernel2.destroy).toHaveBeenCalled()
+                expect(kernelManager._runningKernels).toEqual({})
 
-    describe 'getKernelSpecsFromSettings', ->
-        it 'should parse kernelspecs from settings', ->
-            atom.config.set 'Hydrogen.kernelspec', firstKernelSpecString
+        describe 'setRunningKernelFor', ->
+            it 'should set the running kernel for a grammar', ->
+                grammar =
+                    name: 'grammarLanguage'
 
-            parsed = kernelManager.getKernelSpecsFromSettings()
+                kernel =
+                    kernelSpec:
+                        language: 'kernelLanguage'
+                    destroy: ->
+                kernelManager.setRunningKernelFor grammar, kernel
+                expect(kernelManager._runningKernels.grammarlanguage)
+                    .not.toBeUndefined()
+                expect(kernelManager._runningKernels.grammarlanguage
+                    .kernelSpec.language).toEqual('grammarlanguage')
 
-            expect(parsed).toEqual(firstKernelSpec.kernelspecs)
+        describe 'destroyRunningKernelFor', ->
+            it 'should destroy a running kernel for a grammar', ->
+                spyOn(mockKernels.kernel1, 'destroy')
+                spyOn(mockKernels.kernel2, 'destroy')
+                kernelManager._runningKernels = _.clone mockKernels
+                kernelManager.destroyRunningKernelFor mockGrammar
 
-        it 'should return {} if no kernelspec is set', ->
-            expect(kernelManager.getKernelSpecsFromSettings()).toEqual({})
+                expect(mockKernels.kernel1.destroy).toHaveBeenCalled()
+                expect(mockKernels.kernel2.destroy).not.toHaveBeenCalled()
+                expect(kernelManager._runningKernels.kernel2).not.toBeUndefined()
+                expect(kernelManager._runningKernels.kernel1).toBeUndefined()
 
-        it 'should return {} if invalid kernelspec is set', ->
-            atom.config.set 'Hydrogen.kernelspec', 'invalid'
-            expect(kernelManager.getKernelSpecsFromSettings()).toEqual({})
+        describe 'getAllRunningKernels', ->
+            it 'should get all running kernels', ->
+                kernelManager._runningKernels = mockKernels
+                expect(kernelManager.getAllRunningKernels()).toEqual(mockKernels)
 
-    describe 'mergeKernelSpecs', ->
-        it 'should merge kernelspecs', ->
-            kernelManager._kernelSpecs = firstKernelSpec.kernelspecs
-            kernelManager.mergeKernelSpecs secondKernelSpec.kernelspecs
+        describe 'getRunningKernelFor', ->
+            it 'should get the running kernel for a language', ->
+                kernelManager._runningKernels = mockKernels
+                expect(kernelManager.getRunningKernelFor('kernel1'))
+                    .toEqual(mockKernel)
 
-            specs = kernelManager._kernelSpecs
-            expect(specs).toEqual(kernelSpecs.kernelspecs)
+        describe 'getLanguageFor', ->
+            it 'should read lower case name from grammar', ->
+                expect(kernelManager.getLanguageFor mockGrammar)
+                    .toEqual('kernel1')
 
-    describe 'getAllKernelSpecs', ->
-        it 'should return an array with specs', ->
+    describe 'handle kernelspecs', ->
+        firstKernelSpecString = '''{
+            "kernelspecs": {
+                "ijavascript": {
+                    "spec": {
+                        "display_name": "IJavascript",
+                        "env": {},
+                        "argv": [
+                            "node",
+                            "/home/user/node_modules/ijavascript/lib/kernel.js",
+                            "--protocol=5.0",
+                            "{connection_file}"
+                        ],
+                            "language": "javascript"
+                    },
+                    "resource_dir": "/home/user/node_modules/ijavascript/images"
+                }
+            }
+        }'''
+        secondKernelSpecString = '''{
+            "kernelspecs": {
+                "python2": {
+                    "spec": {
+                        "language": "python",
+                        "display_name": "Python 2",
+                        "env": {},
+                        "argv": [
+                            "/usr/local/opt/python/bin/python2.7",
+                            "-m",
+                            "ipykernel",
+                            "-f",
+                            "{connection_file}"
+                        ]
+                    }
+                }
+            }
+        }'''
+
+        firstKernelSpec = JSON.parse firstKernelSpecString
+        secondKernelSpec = JSON.parse secondKernelSpecString
+
+        kernelSpecs = JSON.parse firstKernelSpecString
+        kernelSpecs.kernelspecs.python2 = secondKernelSpec.kernelspecs.python2
+        kernelSpecsString = JSON.stringify kernelSpecs
+        describe 'getKernelSpecsFromSettings', ->
+            it 'should parse kernelspecs from settings', ->
+                atom.config.set 'Hydrogen.kernelspec', firstKernelSpecString
+
+                parsed = kernelManager.getKernelSpecsFromSettings()
+
+                expect(parsed).toEqual(firstKernelSpec.kernelspecs)
+
+            it 'should return {} if no kernelspec is set', ->
+                expect(kernelManager.getKernelSpecsFromSettings()).toEqual({})
+
+            it 'should return {} if invalid kernelspec is set', ->
+                atom.config.set 'Hydrogen.kernelspec', 'invalid'
+                expect(kernelManager.getKernelSpecsFromSettings()).toEqual({})
+
+        describe 'mergeKernelSpecs', ->
+            it 'should merge kernelspecs', ->
+                kernelManager._kernelSpecs = firstKernelSpec.kernelspecs
+                kernelManager.mergeKernelSpecs secondKernelSpec.kernelspecs
+
+                specs = kernelManager._kernelSpecs
+                expect(specs).toEqual(kernelSpecs.kernelspecs)
+
+        describe 'getAllKernelSpecs', ->
+            it 'should return an array with specs', ->
+                waitsForPromise -> new Promise (resolve, reject) ->
+                    kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+                    kernelManager.getAllKernelSpecs (specs) ->
+                        expect(specs.length).toEqual(2)
+                        expect(specs[0]).toEqual(
+                            kernelSpecs.kernelspecs.ijavascript.spec
+                        )
+                        expect(specs[1]).toEqual(
+                            kernelSpecs.kernelspecs.python2.spec
+                        )
+                        resolve()
+
+        describe 'getAllKernelSpecsFor', ->
+            it 'should return an array with specs for given language', ->
+                waitsForPromise -> new Promise (resolve, reject) ->
+                    kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+                    kernelManager.getAllKernelSpecsFor 'python', (specs) ->
+                        expect(specs.length).toEqual(1)
+                        expect(specs[0]).toEqual(
+                            kernelSpecs.kernelspecs.python2.spec
+                        )
+                        resolve()
+
+            it 'should return an empty array', ->
+                waitsForPromise -> new Promise (resolve, reject) ->
+                    kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+                    kernelManager.getAllKernelSpecsFor 'julia', (specs) ->
+                        expect(specs).toEqual([])
+                        resolve()
+
+        describe 'getKernelSpecFor', ->
+            it 'should return spec for given language', ->
+                waitsForPromise -> new Promise (resolve, reject) ->
+                    kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+                    kernelManager.getKernelSpecFor 'python', (kernelSpec) ->
+                        expect(kernelSpec).toEqual(
+                            kernelSpecs.kernelspecs.python2.spec
+                        )
+                        resolve()
+
+            it 'should return undefined', ->
+                waitsForPromise -> new Promise (resolve, reject) ->
+                    kernelManager._kernelSpecs = kernelSpecs.kernelspecs
+                    kernelManager.getKernelSpecFor 'julia', (kernelSpecForJulia) ->
+                        expect(kernelSpecForJulia).toBeUndefined()
+                        resolve()
+
+        it 'should update kernelspecs', ->
             waitsForPromise -> new Promise (resolve, reject) ->
-                kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-                kernelManager.getAllKernelSpecs (specs) ->
-                    expect(specs.length).toEqual(2)
-                    expect(specs[0]).toEqual(
-                        kernelSpecs.kernelspecs.ijavascript.spec
-                    )
-                    expect(specs[1]).toEqual(
-                        kernelSpecs.kernelspecs.python2.spec
-                    )
+                kernelManager.getKernelSpecsFromJupyter (err, specs) ->
+                    unless err
+                        expect(specs instanceof Object).toEqual(true)
                     resolve()
-
-    describe 'getAllKernelSpecsFor', ->
-        it 'should return an array with specs for given language', ->
-            waitsForPromise -> new Promise (resolve, reject) ->
-                kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-                kernelManager.getAllKernelSpecsFor 'python', (specs) ->
-                    expect(specs.length).toEqual(1)
-                    expect(specs[0]).toEqual(
-                        kernelSpecs.kernelspecs.python2.spec
-                    )
-                    resolve()
-
-        it 'should return an empty array', ->
-            waitsForPromise -> new Promise (resolve, reject) ->
-                kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-                kernelManager.getAllKernelSpecsFor 'julia', (specs) ->
-                    expect(specs).toEqual([])
-                    resolve()
-
-    describe 'getKernelSpecFor', ->
-        it 'should return spec for given language', ->
-            waitsForPromise -> new Promise (resolve, reject) ->
-                kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-                kernelManager.getKernelSpecFor 'python', (kernelSpec) ->
-                    expect(kernelSpec).toEqual(
-                        kernelSpecs.kernelspecs.python2.spec
-                    )
-                    resolve()
-
-        it 'should return undefined', ->
-            waitsForPromise -> new Promise (resolve, reject) ->
-                kernelManager._kernelSpecs = kernelSpecs.kernelspecs
-                kernelManager.getKernelSpecFor 'julia', (kernelSpecForJulia) ->
-                    expect(kernelSpecForJulia).toBeUndefined()
-                    resolve()
-
-    it 'should read lower case name from grammar', ->
-        expect(kernelManager.getLanguageFor mockGrammar)
-            .toEqual('grammarlanguage')
-
-    it 'should update kernelspecs', ->
-        waitsForPromise -> new Promise (resolve, reject) ->
-            kernelManager.getKernelSpecsFromJupyter (err, specs) ->
-                unless err
-                    expect(specs instanceof Object).toEqual(true)
-                resolve()
