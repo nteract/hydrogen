@@ -21,18 +21,24 @@ describe 'Kernel manager', ->
 
     describe 'handle running kernels', ->
         mockGrammar =
-            name: 'grammarLanguage'
+            name: 'Kernel1'
 
         mockKernel =
             kernelSpec:
-                language: 'kernelLanguage'
+                language: 'kernel1'
             destroy: ->
+
+        mockKernel2 =
+            kernelSpec:
+                language: 'kernel2'
+            destroy: ->
+
+        mockKernels =
+            kernel1: mockKernel
+            kernel2: mockKernel2
 
         describe 'destroy', ->
             it 'should destroy all running kernels', ->
-                mockKernels =
-                    kernel1: _.clone mockKernel
-                    kernel2: _.clone mockKernel
                 spyOn(mockKernels.kernel1, 'destroy')
                 spyOn(mockKernels.kernel2, 'destroy')
                 kernelManager._runningKernels = mockKernels
@@ -43,7 +49,14 @@ describe 'Kernel manager', ->
 
         describe 'setRunningKernelFor', ->
             it 'should set the running kernel for a grammar', ->
-                kernelManager.setRunningKernelFor mockGrammar, mockKernel
+                grammar =
+                    name: 'grammarLanguage'
+
+                kernel =
+                    kernelSpec:
+                        language: 'kernelLanguage'
+                    destroy: ->
+                kernelManager.setRunningKernelFor grammar, kernel
                 expect(kernelManager._runningKernels.grammarlanguage)
                     .not.toBeUndefined()
                 expect(kernelManager._runningKernels.grammarlanguage
@@ -51,24 +64,31 @@ describe 'Kernel manager', ->
 
         describe 'destroyRunningKernelFor', ->
             it 'should destroy a running kernel for a grammar', ->
-                mockKernels =
-                    grammarlanguage: _.clone mockKernel
-                    kernel2: _.clone mockKernel
-
-                spyOn(mockKernels.grammarlanguage, 'destroy')
+                spyOn(mockKernels.kernel1, 'destroy')
                 spyOn(mockKernels.kernel2, 'destroy')
                 kernelManager._runningKernels = _.clone mockKernels
                 kernelManager.destroyRunningKernelFor mockGrammar
 
-                expect(mockKernels.grammarlanguage.destroy).toHaveBeenCalled()
+                expect(mockKernels.kernel1.destroy).toHaveBeenCalled()
                 expect(mockKernels.kernel2.destroy).not.toHaveBeenCalled()
                 expect(kernelManager._runningKernels.kernel2).not.toBeUndefined()
-                expect(kernelManager._runningKernels.grammarlanguage).toBeUndefined()
+                expect(kernelManager._runningKernels.kernel1).toBeUndefined()
 
+        describe 'getAllRunningKernels', ->
+            it 'should get all running kernels', ->
+                kernelManager._runningKernels = mockKernels
+                expect(kernelManager.getAllRunningKernels()).toEqual(mockKernels)
 
-        it 'should read lower case name from grammar', ->
-            expect(kernelManager.getLanguageFor mockGrammar)
-                .toEqual('grammarlanguage')
+        describe 'getRunningKernelFor', ->
+            it 'should get the running kernel for a language', ->
+                kernelManager._runningKernels = mockKernels
+                expect(kernelManager.getRunningKernelFor('kernel1'))
+                    .toEqual(mockKernel)
+
+        describe 'getLanguageFor', ->
+            it 'should read lower case name from grammar', ->
+                expect(kernelManager.getLanguageFor mockGrammar)
+                    .toEqual('kernel1')
 
     describe 'handle kernelspecs', ->
         firstKernelSpecString = '''{
