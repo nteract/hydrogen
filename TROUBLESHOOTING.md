@@ -2,37 +2,43 @@
 
 **For Windows (Tested with Windows 10)**
 If you have a `node-gyp` error, before you read through the troubleshooting
-section below, I suggest you repeat my steps here as some of the information
+section below, I suggest you repeat my latest steps here as many of the information
 in the following troubleshooting section may be out of date.
 
-- Install Git
-- Install Python 2 (or Anaconda 2) and make it your default python. I tried doing
-  this in virtual environment, but it didn't end up well. Personally, I don't
-  recommend having Python 3 as default and trying to `apm config set python` later
-  to Python 2 as it messed with my `apm -v`, causing python not detected any
-  more.
-- Later if you want to run Python 3 in virtual environment, you can do:
-  ***for Python installer user:***
-  `virtualenv -p <path/to/your/python3> <envname>`
-  ***for Anaconda user:***
-  `conda create -n <envname> python=3.5 anaconda`
-- Install [ZeroMQ](http://zeromq.org/distro:microsoft-windows)
-- Install Jupyter notebook `pip install jupyter` (If you are Anaconda user, ignore
-  this step as you've got everything covered)
-- Install your compiler to build zmq.node.
-  **Option 1**: Install [Visual C++ Build Tools](http://landinghub.visualstudio.com/visual-cpp-build-tools)
-  using the **Default** install option.
-  **Option 2**: Install [Visual Studio 2015 Community Edition](https://www.visualstudio.com/vs/community/)
-  using the **Cutomised** install option to **include Visuall C++** components.
-  Or, if Visual Studio is already installed, choose File | New | Project | C++
-  and you will be prompted to install the necessary components.
-- If somehow you failed installing your compiler before, and your visual studio
+- Install Git (Bash) and restore all settings (.gitconfig)
+- [Optional] Install Git Credential Winstore (for remembering git username and password)
+- [Optional] Install Cmder and restore all settings (cmder_exinit.sh in C:\Program Files\Git\etc\profile.d\, and user-profile.sh in D:\Cmder\config) (for nice customisable terminal)
+- Install Anaconda 3
+- Run -> conda update conda
+- Run -> conda update Anaconda
+- Install packages -> `pip install -r requirements.txt`
+- Install Anaconda 2 in virtual environment -> `conda create -n python2 python=2.7 anaconda`
+  **for Python installer user:**
+  `virtualenv -p <path/to/your/python2> <envname>` (you'll need to install Jupyter via ``pip install jupyter` if you choose this option)
+- Install packages in virtual environment python2 -> `source activate python2` -> `pip install -r requirements.txt` -> `source deactivate`
+- Install Node.js and restore .npmrc (latest 6.7.0 is fine!)
+- Install Visuall C++ compiler -> `npm install --global --production windows-build-tools` (including C++ components and Python 2)
+  ***If somehow you failed installing your compiler before, and your visual studio
   version can't be recognised by `apm -v`, use
   [Visual Studio Uninstaller](https://github.com/Microsoft/VisualStudioUninstaller/releases)
   here to cleanup/scorch, and cleanup remaining items and registry for fresh start
   (this process can take hours, but worth it) as traditional uninstallation
-  may not solve the issue due to remaining registry and package cache there.
-- Install Atom (Duh!)
+  may not solve the issue due to remaining registry and package cache there.***
+- Update node-gyp -> `npm install -g node-gyp`
+- Install ZeroMQ -> `npm -g install zmq`
+- Make sure npm's version is matched between local and global (if you have local npm installed. Unmatched npm version will give you `MSBuild error failed with exit code: 1`) -> `npm -g install npm@latest`
+- [Optional] Install IJavacript Kernel -> `npm -g install ijavascript`
+- [Optional] Register IJavascript globally -> `ijs --ijs-install=global` -> `ijs`
+- [Optional] Install JP-Babel Kernel globally-> `npm install -g jp-babel`
+- [Optional] Register JP-Babel -> `jp-babel --jp-install=global` -> `jp-babel`
+- Install Atom (Run installer as adminstrator) and restore .atom/.apmrc
+- Set python 2 for `npm` -> `npm config edit` and add in:
+  ```
+  python=D:\Anaconda3\envs\python2\python.exe (or whatever your python2 is)
+  msvs_version=2015
+  GYP_MSVS_VERSION=2015
+  ```
+- Set Python 2 for `apm` -> `apm config edit` and add in the same parameters
 - At this stage, all of the dependencies we need should all be installed.
   Run `apm -v` to check if they are all recognised. You should see something
   like this:
@@ -42,24 +48,15 @@ in the following troubleshooting section may be out of date.
   node 4.4.5
   python 2.7.12
   git 2.10.0.windows.1
-  visual studio 2015
+  visual studio 2015 (VS 2015 is fine!)
   ```
-  Don't panic if you see visual studio 2015, 2015 is fine! So there is no need
-  to change the version in `apm config`. If you do want to change for some
-  reason, use the command (but you don't need to...):
-  ```
-  apm config set msvs_version 2013
-  apm config set GYP_MSVS_VERSION=2013
-  ```
-- Assuming you followed exactly the steps above, you can now `apm install hydrogen`
-  or search for "hydrogen" in the Install pane of the Atom settings. ENJOY!
-  
-Here concludes my 3-day journey of hydrogen installation. Reset my coding environment
-for so many times that I even lost counts. Hope the instructions above save you
-some time. Hydrogen is amazing, let's keep up the good work!
+- [Optional if you have backup for Atom] Assuming you followed exactly the steps above, you can now `apm install hydrogen`
+  or search for "hydrogen" in the Install pane of the Atom settings.
+- If you have everything backed up in atom, just install sync-settings in Atom, and restore all settings via your Personal Access Token and Gist ID (restart Atom several times until no error pops up, installed theme requires at least restarts twice)
+- Change the grammar settings in Hydrogen to cope with jp-babel kernel -> `{ "babel": "babel es6 javascript" }` (otherwise hydrogen won't be able to recognise babel files)
+- Now you have a perfectly functioning Hydrogen with Python 2, Python 3, IJavascript and Babel kernel, running at their full potential. ENJOY!
 
-
-** If the above procedures still give you `node-gyp` error, please continue **
+** For previous troubleshooting section, please continue reading **
 There are a number of possible causes and solutions:
 
 - Atom is installed in a path that contains spaces (see issues
