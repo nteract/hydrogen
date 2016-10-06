@@ -7,56 +7,59 @@ in the following troubleshooting section may be out of date.
 
 - Install Git (Bash) and restore all settings (.gitconfig)
 - [Optional] Install Git Credential Winstore (for remembering git username and password)
-- [Optional] Install Cmder and restore all settings (cmder_exinit.sh in C:\Program Files\Git\etc\profile.d\, and user-profile.sh in D:\Cmder\config) (for nice customisable terminal)
+- [Optional] Install Cmder and restore all settings (cmder_exinit.sh in C:\Program Files\Git\etc\profile.d\, and user-profile.sh in D:\Cmder\config) (for a nice customisable terminal)
 - Install Anaconda 3
-- Run -> conda update conda
-- Run -> conda update Anaconda
+- Run -> `conda update conda`
+- Run -> `conda update Anaconda`
 - Install packages -> `pip install -r requirements.txt`
 - Install Anaconda 2 in virtual environment -> `conda create -n python2 python=2.7 anaconda`
-  **for Python installer user:**
-  `virtualenv -p <path/to/your/python2> <envname>` (you'll need to install Jupyter via ``pip install jupyter` if you choose this option)
+- [Optional] ***for Python installer user:***
+  `virtualenv -p <path/to/your/python2> <envname>` (you'll need to install Jupyter via `pip install jupyter` if you choose this option)
 - Install packages in virtual environment python2 -> `source activate python2` -> `pip install -r requirements.txt` -> `source deactivate`
 - Install Node.js and restore .npmrc (latest 6.7.0 is fine!)
 - Install Visuall C++ compiler -> `npm install --global --production windows-build-tools` (including C++ components and Python 2)
-  ***If somehow you failed installing your compiler before, and your visual studio
+- ***If somehow you failed installing your compiler before, and your visual studio
   version can't be recognised by `apm -v`, use
   [Visual Studio Uninstaller](https://github.com/Microsoft/VisualStudioUninstaller/releases)
   here to cleanup/scorch, and cleanup remaining items and registry for fresh start
   (this process can take hours, but worth it) as traditional uninstallation
   may not solve the issue due to remaining registry and package cache there.***
 - Update node-gyp -> `npm install -g node-gyp`
-- Install ZeroMQ -> `npm -g install zmq`
+- Install ZeroMQ.node -> `npm -g install zmq`
 - Make sure npm's version is matched between local and global (if you have local npm installed. Unmatched npm version will give you `MSBuild error failed with exit code: 1`) -> `npm -g install npm@latest`
 - [Optional] Install IJavacript Kernel -> `npm -g install ijavascript`
 - [Optional] Register IJavascript globally -> `ijs --ijs-install=global` -> `ijs`
 - [Optional] Install JP-Babel Kernel globally-> `npm install -g jp-babel`
 - [Optional] Register JP-Babel -> `jp-babel --jp-install=global` -> `jp-babel`
 - Install Atom (Run installer as adminstrator) and restore .atom/.apmrc
-- Set python 2 for `npm` -> `npm config edit` and add in:
-  ```
-  python=D:\Anaconda3\envs\python2\python.exe (or whatever your python2 is)
-  msvs_version=2015
-  GYP_MSVS_VERSION=2015
-  ```
-- Set Python 2 for `apm` -> `apm config edit` and add in the same parameters
+- Set python 2 for npm -> `npm config edit` and add in:
+```
+python=D:\Anaconda3\envs\python2\python.exe (or whatever your python2 is)
+msvs_version=2015
+GYP_MSVS_VERSION=2015
+```
+- Set Python 2 for apm -> `apm config edit` and add in the same parameters above
+
+
 - At this stage, all of the dependencies we need should all be installed.
   Run `apm -v` to check if they are all recognised. You should see something
   like this:
-  ```
-  apm  1.12.5
-  npm  3.10.5
-  node 4.4.5
-  python 2.7.12
-  git 2.10.0.windows.1
-  visual studio 2015 (VS 2015 is fine!)
-  ```
+```
+apm  1.12.5
+npm  3.10.5
+node 4.4.5
+python 2.7.12
+git 2.10.0.windows.1
+visual studio 2015 (VS 2015 is fine!)
+```
 - [Optional if you have backup for Atom] Assuming you followed exactly the steps above, you can now `apm install hydrogen`
   or search for "hydrogen" in the Install pane of the Atom settings.
 - If you have everything backed up in atom, just install sync-settings in Atom, and restore all settings via your Personal Access Token and Gist ID (restart Atom several times until no error pops up, installed theme requires at least restarts twice)
-- Change the grammar settings in Hydrogen to cope with jp-babel kernel -> `{ "babel": "babel es6 javascript" }` (otherwise hydrogen won't be able to recognise babel files)
+- Change the grammar settings in Hydrogen to cope with jp-babel kernel -> `{ "babel": "babel es6 javascript", "python": "python django" }` (otherwise hydrogen won't be able to recognise babel files and python django files)
 - Now you have a perfectly functioning Hydrogen with Python 2, Python 3, IJavascript and Babel kernel, running at their full potential. ENJOY!
 
-** For previous troubleshooting section, please continue reading **
+***For previous troubleshooting section, please continue reading***
+
 There are a number of possible causes and solutions:
 
 - Atom is installed in a path that contains spaces (see issues
