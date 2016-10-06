@@ -13,7 +13,7 @@ in the following troubleshooting section may be out of date.
 - Run -> `conda update Anaconda`
 - Install packages -> `pip install -r requirements.txt`
 - Install Anaconda 2 in virtual environment -> `conda create -n python2 python=2.7 anaconda`
-- [Optional] ***for Python installer user:***
+- [Optional] ***For Python installer user:***
   `virtualenv -p <path/to/your/python2> <envname>` (you'll need to install Jupyter via `pip install jupyter` if you choose this option)
 - Install packages in virtual environment python2 -> `source activate python2` -> `pip install -r requirements.txt` -> `source deactivate`
 - Install Node.js and restore .npmrc (latest 6.7.0 is fine!)
@@ -58,6 +58,8 @@ visual studio 2015 (VS 2015 is fine!)
 - Change the grammar settings in Hydrogen to cope with jp-babel kernel -> `{ "babel": "babel es6 javascript", "python": "python django" }` (otherwise hydrogen won't be able to recognise babel files and python django files)
 - Now you have a perfectly functioning Hydrogen with Python 2, Python 3, IJavascript and Babel kernel, running at their full potential. ENJOY!
 
+
+***
 ***For previous troubleshooting section, please continue reading***
 
 There are a number of possible causes and solutions:
