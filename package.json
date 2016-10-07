@@ -63,6 +63,11 @@
       "versions": {
         "2.0.0": "provide"
       }
+    },
+    "hydrogen.provider": {
+      "versions": {
+        "0.0.1": "provideHydrogen"
+      }
     }
   },
   "devDependencies": {
