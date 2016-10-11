@@ -1,5 +1,5 @@
 # coffeelint: disable = missing_fat_arrows
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, Emitter} = require 'atom'
 
 _ = require 'lodash'
 
@@ -13,6 +13,8 @@ Config = require './config'
 KernelManager = require './kernel-manager'
 Inspector = require './inspector'
 AutocompleteProvider = require './autocomplete-provider'
+
+HydrogenProvider = require './plugin-api/hydrogen-provider'
 
 module.exports = Hydrogen =
     config: Config.schema
@@ -32,6 +34,7 @@ module.exports = Hydrogen =
     watchSidebarIsVisible: false
 
     activate: (state) ->
+        @emitter = new Emitter()
         @kernelManager = new KernelManager()
         @codeManager = new CodeManager()
         @inspector = new Inspector @kernelManager, @codeManager
@@ -83,11 +86,19 @@ module.exports = Hydrogen =
             if item and item is atom.workspace.getActiveTextEditor()
                 @onEditorChanged item
 
+        @hydrogenProvider = null
+
 
     deactivate: ->
         @subscriptions.dispose()
         @kernelManager.destroy()
         @statusBarTile.destroy()
+
+    provideHydrogen: ->
+        unless @hydrogenProvider?
+            @hydrogenProvider = new HydrogenProvider(this)
+
+        return @hydrogenProvider
 
 
     consumeStatusBar: (statusBar) ->
@@ -114,6 +125,7 @@ module.exports = Hydrogen =
     onKernelChanged: (@kernel) ->
         @setStatusBar()
         @setWatchSidebar @kernel
+        @emitter.emit 'did-change-kernel', @kernel
 
 
     setStatusBar: ->
