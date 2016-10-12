@@ -126,9 +126,9 @@ class CodeManager
             return [start, end]
 
         regex = new RegExp regexString
-        cursor = @editor.getLastCursor().getBufferPosition()
+        cursor = @editor.getCursorBufferPosition()
 
-        while cursor.row < end.row and @isComment @editor, cursor
+        while cursor.row < end.row and @isComment cursor
             cursor.row += 1
             cursor.column = 0
 
