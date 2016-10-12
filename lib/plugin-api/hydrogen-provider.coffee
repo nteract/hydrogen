@@ -5,7 +5,10 @@ class HydrogenProvider
 
     onDidChangeKernel: (callback) ->
         @_hydrogen.emitter.on 'did-change-kernel', (kernel) ->
-            return kernel.getPluginWrapper()
+            if kernel?
+                callback kernel.getPluginWrapper()
+            else
+                callback null
 
     getActiveKernel: ->
         unless @_hydrogen.kernel
