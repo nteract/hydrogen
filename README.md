@@ -26,43 +26,37 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 For all systems, you'll need
 
 - [Atom](https://atom.io/) `1.6.0+`
-- [ZeroMQ](http://zeromq.org/intro:get-the-software)
-- [Jupyter notebook](http://jupyter.org): `pip install jupyter`
+- [Jupyter notebook](http://jupyter.org): If you have Python and pip setup, install the notebook directly with `pip install jupyter`
 - Python 2 for builds (you can still run Python 3 code)
 
-Each operating system has their own instruction set. Please read on down to save yourself time.
-
-#### OS X
-
-##### homebrew on OS X
-
-- [`pkg-config`](https://www.freedesktop.org/wiki/Software/pkg-config/): `brew install pkg-config`
-- [ZeroMQ](http://zeromq.org/intro:get-the-software): `brew install zeromq`
-- [Jupyter notebook](http://jupyter.org) (needs to be installed and on your `$PATH`): `pip install jupyter`
-
-#### Windows
-
-- You'll need a compiler! [Visual Studio 2013 Community Edition](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx) is required to build zmq.node.
-- Python (tread on your own or install [Anaconda](https://www.continuum.io/downloads))
-- [Jupyter notebook](http://jupyter.org) (if you installed Anaconda, you're already done)
-
-After these are installed, you'll likely need to restart your machine (especially after Visual Studio).
+You likely have them installed already installed. You can check your installation with `apm install --check`.
 
 #### Linux
 
-For **Debian/Ubuntu** based variants, you'll need `libzmq3-dev` (preferred) or alternatively `libzmq-dev`.
+- `python` (`v2.7` recommended, `v3.x.x` is not supported)
+- `make`
+- A proper C/C++ compiler toolchain, like [GCC](https://gcc.gnu.org/)
 
-For **RedHat/CentOS/Fedora/openSUSE** based variants, you'll need `zeromq` and `zeromq-devel`.
+Use your distribution's package manager to install.
 
-For **Arch** Linux based variants, you'll need `zeromq` or `zeromq3` (which has to be built from the <abbr title="Arch User Repository">AUR</abbr>).
+#### macOS
 
-For **Gentoo** Linux based variants, you'll need `net-libs/zeromq`.
+- `python` (`v2.7` recommended, `v3.x.x` is not supported): already installed on Mac OS X
+- `Xcode Command Line Tools`: Can be installed with `xcode-select --install`
 
-If you have Python and pip setup, install the notebook directly, via running (as root):
+#### Windows
 
-```
-pip install jupyter
-```
+- **Option 1:** Install all the required tools and configurations using Microsoft's [windows-build-tools](https://github.com/felixrieseberg/windows-build-tools) by running `npm install -g windows-build-tools` from an elevated PowerShell (run as Administrator).
+- **Option 2:** Install dependencies and configuration manually
+   * Visual C++ Build Environment:
+     * **Option 1:** Install [Visual C++ Build Tools](http://go.microsoft.com/fwlink/?LinkId=691126) using the *Default Install* option.
+     * **Option 2:** Install [Visual Studio 2015](https://www.visualstudio.com/products/visual-studio-community-vs) (or modify an existing installation) and select *Common Tools for Visual C++* during setup.  
+
+    > :bulb: [Windows Vista / 7 only] requires [.NET Framework 4.5.1](http://www.microsoft.com/en-us/download/details.aspx?id=40773)
+
+  * Install [Python 2.7](https://www.python.org/downloads/) or [Miniconda 2.7](http://conda.pydata.org/miniconda.html) (`v3.x.x` is not supported)
+
+- Finally run `apm config set msvs_version 2015` and `apm config set python python2.7` to complete the setup.
 
 ## Installation
 
@@ -87,7 +81,7 @@ But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/I
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/16931386/048f056e-4d41-11e6-8563-3baa8ed84371.png">
 
-Note that if you install a new kernel, you'll need to reload Atom (search in the Command Palette for "reload") for Hydrogen to find it. For performance reasons, Hydrogen only looks for available kernels when it first starts.
+Note that if you install a new kernel, you'll need to run **Hydrogen: Update Kernels** for Hydrogen to find it. For performance reasons, Hydrogen only looks for available kernels when it first starts.
 
 #### Debian 8 and Ubuntu 16.04 LTS
 
