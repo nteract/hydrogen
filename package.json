@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
   "author": "Will Whitney <me@willwhitney.com>",
   "keywords": [
@@ -64,10 +64,10 @@
         "2.0.0": "provide"
       }
     },
-    "hydrogen.provider" : {
-        "versions": {
-            "0.0.2": "provideHydrogen"
-        }
+    "hydrogen.provider": {
+      "versions": {
+        "0.0.2": "provideHydrogen"
+      }
     }
   },
   "devDependencies": {
