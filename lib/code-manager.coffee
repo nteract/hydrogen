@@ -81,12 +81,13 @@ class CodeManager
 
 
     normalizeString: (code) ->
-        return code.replace /\r\n|\r/g, '\n'
+        if code?
+            return code.replace /\r\n|\r/g, '\n'
 
 
     getFoldRange: (row) ->
         range = @editor.languageMode.rowRangeForCodeFoldAtBufferRow(row)
-        if @getRow(range[1] + 1).trim() is 'end'
+        if @getRow(range[1] + 1)?.trim() is 'end'
             range[1] = range[1] + 1
         console.log 'getFoldRange:', range
         return range
