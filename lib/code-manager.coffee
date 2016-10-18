@@ -209,12 +209,14 @@ class CodeManager
     moveDown: (row) ->
         lastRow = @editor.getLastBufferRow()
 
+        if row >= lastRow
+            @editor.moveToBottom()
+            @editor.insertNewline()
+            return
+
         while row < lastRow
             row++
             break if not @isBlank(row)
-
-        unless row < lastRow
-            return
 
         @editor.setCursorBufferPosition
             row: row
