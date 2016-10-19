@@ -1,4 +1,11 @@
 sudo: false
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.9
+    - g++-4.9
 notifications:
   email:
     on_success: never
@@ -6,25 +13,13 @@ notifications:
 
 script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
 
-os:
-  - osx
-
 env:
   global:
-    - APM_TEST_PACKAGES=""
-
+    - CXX=g++-4.9
+    - CC=gcc-4.9
   matrix:
-    - ATOM_CHANNEL=stable
+    - ATOM_CHANNEL=beta
 
 before_install:
-  - brew update
-  - brew outdated pkg-config || brew upgrade pkg-config
-  - brew install zeromq
-  - wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  - conda info -a
-  - conda install jupyter
+  - python -m pip install ipykernel --user
+  - python -m ipykernel install --user
