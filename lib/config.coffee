@@ -7,7 +7,7 @@ module.exports = Config =
             return JSON.parse value
         catch error
             message = "Your Hydrogen config is broken: #{key}"
-            atom.notifications.addError message, description: error
+            atom.notifications.addError message, detail: error
         return _default
 
     schema:
