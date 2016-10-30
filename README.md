@@ -45,18 +45,36 @@ Use your distribution's package manager to install.
 - `Xcode Command Line Tools`: Can be installed with `xcode-select --install`
 
 #### Windows
+> :bulb: [Windows Vista / 7 only] requires [.NET Framework 4.5.1](http://www.microsoft.com/en-us/download/details.aspx?id=40773)
 
-- **Option 1:** Install all the required tools and configurations using Microsoft's [windows-build-tools](https://github.com/felixrieseberg/windows-build-tools) by running `npm install -g windows-build-tools` from an elevated PowerShell (run as Administrator).
+- **Option 1:** Install all the required tools with a bundeled installer
+  1. Install the Visual C++ Build Environment from an elevated PowerShell (run as Administrator):
+    * **Option 1:** Install [Windows Build Tools for Atom](https://github.com/lgeiger/windows-build-tools) by running:
+    ```powershell
+    apm install windows-build-tools --verbose
+    ```
+    * **Option 2:** Install Microsoft's [Windows Build Tools](https://github.com/felixrieseberg/windows-build-tools) by running:
+    ```powershell
+    npm install -g windows-build-tools
+    ```
+
+  2. To complete the setup run:
+  ```powershell
+  apm config set msvs_version 2015
+  apm config set python $env:USERPROFILE\.windows-build-tools\python27\python.exe
+  ```
 - **Option 2:** Install dependencies and configuration manually
-   * Visual C++ Build Environment:
+   1. Visual C++ Build Environment:
      * **Option 1:** Install [Visual C++ Build Tools](http://go.microsoft.com/fwlink/?LinkId=691126) using the *Default Install* option.
      * **Option 2:** Install [Visual Studio 2015](https://www.visualstudio.com/products/visual-studio-community-vs) (or modify an existing installation) and select *Common Tools for Visual C++* during setup.  
 
-    > :bulb: [Windows Vista / 7 only] requires [.NET Framework 4.5.1](http://www.microsoft.com/en-us/download/details.aspx?id=40773)
+  2. Install [Python 2.7](https://www.python.org/downloads/) or [Miniconda 2.7](http://conda.pydata.org/miniconda.html) (`v3.x.x` is not supported)
 
-  * Install [Python 2.7](https://www.python.org/downloads/) or [Miniconda 2.7](http://conda.pydata.org/miniconda.html) (`v3.x.x` is not supported)
-
-- Finally run `apm config set msvs_version 2015` and `apm config set python python2.7` to complete the setup.
+  3. To complete the setup run:
+  ```powershell
+  apm config set msvs_version 2015
+  apm config set python python2.7
+  ```
 
 ## Installation
 
@@ -279,7 +297,7 @@ Please see below for information to do after your container has started running.
 
 ### Running using docker-compose
 
-If you try to use `docker-compose` with the Dockerfile as above you might not be able to connect to hydrokernel. This is because the ports have been not forwarded and cannot be accessed from outside of the new docker-compose sub-network. You need to forward these ports manually in the `docker-compose.yml` file. 
+If you try to use `docker-compose` with the Dockerfile as above you might not be able to connect to hydrokernel. This is because the ports have been not forwarded and cannot be accessed from outside of the new docker-compose sub-network. You need to forward these ports manually in the `docker-compose.yml` file.
 
 To ensure the ports used by hydrokernel are the same each time it loads you must specify them on the command line. Do not try and use/modify connection.json as it is overwritten on startup.
 ```
@@ -307,7 +325,7 @@ Key points:
 * Ensure `docker-compose.yml` is in the same directory as your `Dockerfile`. If you have put your Dockerfile in a subfolder then modify the `build` entry for the hydrokernel service in the `docker-compose.yml` file to point to the Dockerfile.
 
 * Ensure that the ports that are forwarded are exactly the same on the host machine as the container i.e. port 45323 should be forwarded to 45253. Reason being, Hydrogen will attempt to connect using the ports in the connection.json file which will be described as the container sees them, not the host.
- 
+
 * You could also run the command in the Dockerfile as a `CMD` entry but this way it's crystal clear what ports we're forwarding, there are quite a few so switching between files to get them is a headache!
 
 You can then use `docker-compose up` in the same directory as docker-compose.yml to start it up.
