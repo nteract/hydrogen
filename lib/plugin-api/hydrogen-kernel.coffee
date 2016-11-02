@@ -20,7 +20,7 @@ class HydrogenKernel
         @_assertNotDestroyed()
         connectionFile = @_kernel.connectionFile
         unless connectionFile?
-            # Standardize on returning null if there is no connection file
-            # (e.g. for WSKernel)
+            atom.notifications.addError "No connection file for
+                #{@_kernel.kernelSpec.display_name} kernel found"
             return null
         return connectionFile
