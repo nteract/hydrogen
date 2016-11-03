@@ -15,6 +15,5 @@ class HydrogenProvider
             grammar = @_hydrogen.editor.getGrammar()
             language = @_hydrogen.kernelManager.getLanguageFor grammar
             throw new Error "No running kernel for language `#{language}` found"
-            return null
 
         return @_hydrogen.kernel.getPluginWrapper()
