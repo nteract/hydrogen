@@ -11,7 +11,9 @@ class HydrogenProvider
                 callback null
 
     getActiveKernel: ->
-        unless @_hydrogen.kernel
-            return null
+        unless @_hydrogen.kernel?
+            grammar = @_hydrogen.editor.getGrammar()
+            language = @_hydrogen.kernelManager.getLanguageFor grammar
+            throw new Error "No running kernel for language `#{language}` found"
 
         return @_hydrogen.kernel.getPluginWrapper()
