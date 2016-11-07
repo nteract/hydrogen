@@ -41,7 +41,7 @@
     "atom-message-panel": "^1.2.4",
     "atom-space-pen-views": "^2.0.5",
     "escape-string-regexp": "^1.0.5",
-    "jmp": "^0.7.0",
+    "jmp": "^0.7.2",
     "jupyter-js-services": "^0.18.1",
     "lodash": "^4.14.0",
     "requirejs": "^2.2.0",
