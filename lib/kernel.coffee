@@ -75,6 +75,9 @@ class Kernel
         unless result?
             result = @_parseStreamIOMessage message
 
+        unless result?
+            result = @_parseExecuteInputIOMessage message
+
         return result
 
 
@@ -208,6 +211,14 @@ class Kernel
 
         return result
 
+    _parseExecuteInputIOMessage: (message) ->
+        if message.header.msg_type is 'execute_input'
+            result =
+                data: message.content.execution_count
+                type: 'number'
+                stream: 'execution_count'
+
+        return result
 
     destroy: ->
         console.log 'Kernel: Destroying base kernel'

@@ -66,17 +66,29 @@ class ResultView
         @setMultiline false
 
         @tooltips = new CompositeDisposable()
-        @tooltips.add atom.tooltips.add copyButton,
-            title: 'Copy to clipboard'
+        @addCopyTooltip copyButton
         @tooltips.add atom.tooltips.add openButton,
             title: 'Open in new editor'
 
         @_hasResult = false
+        @_executionCount = null
 
         return this
 
+    addCopyTooltip: (element) ->
+        @tooltips.add atom.tooltips.add element,
+            title: =>
+                if @_executionCount is null
+                    return 'Copy to clipboard'
+                else
+                    return "Copy to clipboard (Out[#{@_executionCount}])"
+
     addResult: (result) ->
         console.log 'ResultView: Add result', result
+
+        if result.stream is 'execution_count'
+            @_executionCount = result.data
+            return
 
         @element.classList.remove('empty')
 
@@ -113,8 +125,7 @@ class ResultView
                 text.indexOf('\n') is -1
                     @setMultiline false
 
-                    @tooltips.add atom.tooltips.add container,
-                        title: 'Copy to clipboard'
+                    @addCopyTooltip container
 
                     container.onclick = =>
                         atom.clipboard.write @getAllText()
