@@ -213,6 +213,13 @@ You can also access these commands by clicking on the kernel status in the statu
 
 Additionally, if you have two or more kernels for a particular language (grammar), you can select which kernel to use with the "Switch to <kernel>" option in the Kernel Commands menu.
 
+## Plugins for Hydrogen
+
+Hydrogen has support for plugins. Feel free to add your own to the list:
+- [Hydrogen Launcher](https://github.com/lgeiger/hydrogen-launcher)
+
+If you are interested in building a plugin take a look at our [plugin API documentation](PLUGIN_API.md).
+
 ## How it works
 
 Hydrogen implements the [messaging protocol](http://jupyter-client.readthedocs.io/en/latest/messaging.html) for [Jupyter](https://jupyter.org/). Jupyter (formerly IPython) uses ZeroMQ to connect a client (like Hydrogen) to a running kernel (like IJulia or iTorch). The client sends code to be executed to the kernel, which runs it and sends back results.
