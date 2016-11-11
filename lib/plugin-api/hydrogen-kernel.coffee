@@ -1,5 +1,8 @@
-# The HydrogenKernel class wraps hydrogen's internal representation of kernels
-# and exposes a small set of methods that should be usable by plugins.
+###
+* The `HydrogenKernel` class wraps Hydrogen's internal representation of kernels
+* and exposes a small set of methods that should be usable by plugins.
+* @class HydrogenKernel
+###
 
 module.exports =
 class HydrogenKernel
@@ -12,10 +15,18 @@ class HydrogenKernel
         if @destroyed
             throw new Error 'HydrogenKernel: operation not allowed because the kernel has been destroyed'
 
+    ###
+    * Calls your callback when the kernel has been destroyed.
+    * @param {Function} Callback
+    ###
     onDidDestroy: (callback) ->
         @_assertNotDestroyed()
         return @_kernel.emitter.on 'did-destroy', callback
 
+    ###
+    * Get the [connection file](http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Connecting%20with%20the%20Qt%20Console.html) of the kernel.
+    * @return {String} Path to connection file.
+    ###
     getConnectionFile: ->
         @_assertNotDestroyed()
         connectionFile = @_kernel.connectionFile
