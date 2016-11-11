@@ -30,7 +30,8 @@
     ]
   },
   "scripts": {
-    "install": "npm rebuild --build-from-source"
+    "install": "npm rebuild --build-from-source",
+    "build:docs": "markdox lib/plugin-api/hydrogen-provider.coffee lib/plugin-api/hydrogen-kernel.coffee -o PLUGIN_API.md"
   },
   "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
@@ -74,6 +75,7 @@
   },
   "devDependencies": {
     "coffeelint": "^1.15.7",
-    "coffeescope2": "^0.4.2"
+    "coffeescope2": "^0.4.2",
+    "markdox": "^0.1.10"
   }
 }
