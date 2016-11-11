@@ -69,7 +69,7 @@
     },
     "hydrogen.provider": {
       "versions": {
-        "0.0.3": "provideHydrogen"
+        "1.0.0": "provideHydrogen"
       }
     }
   },

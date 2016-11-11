@@ -4,10 +4,11 @@
 
 ## HydrogenProvider
 
-Version: 0.0.3 
+Version: 1.0.0
 
 The Plugin API allows you to make Hydrogen awesome.
-You will be able to interact with this class in your Hydrogen Plugin.
+You will be able to interact with this class in your Hydrogen Plugin using
+Atom's [Service API](http://blog.atom.io/2015/03/25/new-services-API.html).
 
 Take a look at our [Example Plugin](https://github.com/lgeiger/hydrogen-example-plugin)
 and the [Atom Flight Manual](http://flight-manual.atom.io/hacking-atom/) for
@@ -44,7 +45,7 @@ Calls your callback when the kernel has been destroyed.
 
 ### Params:
 
-* **Function** *Callback* 
+* **Function** *Callback*
 
 ## getConnectionFile()
 
@@ -55,4 +56,3 @@ Get the [connection file](http://jupyter-notebook.readthedocs.io/en/latest/examp
 * **String** Path to connection file.
 
 <!-- End lib/plugin-api/hydrogen-kernel.coffee -->
-

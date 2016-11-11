@@ -1,5 +1,5 @@
 ###*
-* @version 0.0.3
+* @version 1.0.0
 *
 *
 * The Plugin API allows you to make Hydrogen awesome.
