@@ -163,7 +163,7 @@ It's easiest to see these interactions visually:
 
 **"Hydrogen: Run And Move Down"** will run the the code as described above and move the cursor to the next executable line.
 
-If your code starts getting cluttered up with results, run **"Hydrogen: Clear Results"** to remove them all at once. You can also run this command with ⌘-⌥-⌫.
+If your code starts getting cluttered up with results, run **"Hydrogen: Clear Results"** to remove them all at once.
 
 ### "Hydrogen: Run Cell"
 A "code cell" is a block of lines to be executed at once. You can define them using inline comments. Hydrogen supports a
@@ -187,7 +187,7 @@ After you've run some code with Hydrogen, you can use the **"Hydrogen: Toggle Wa
 **IMPORTANT:** Be careful what you put in your watch expressions. If you write code that mutates state in a watch expression, that code will get run after every execute command and likely result in some _extremely confusing_ bugs.
 
 
-You can re-run the watch expressions by using the normal run shortcut (⌘-⌥-↩ by default) inside a watch expression's edit field.
+You can re-run the watch expressions by using the normal run shortcut (⌘-↩ by default) inside a watch expression's edit field.
 
 If you have multiple kernels running, you can switch between their watch expressions with the **"Hydrogen: Select Watch Kernel"** command (or just click on the "Kernel: <language>" text).
 
