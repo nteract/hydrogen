@@ -3,9 +3,11 @@ parser: babel-eslint
 env:
   browser: true
   node: true
+  jasmine: true
 
 globals:
   atom: true
+  waitsForPromise: true
 
 settings:
   import/core-modules: [ atom ]
