@@ -31,6 +31,8 @@
   },
   "scripts": {
     "postinstall": "npm rebuild zeromq --build-from-source",
+    "lint": "eslint .",
+    "fix": "eslint . --fix",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.coffee lib/plugin-api/hydrogen-kernel.coffee -o PLUGIN_API.md"
   },
   "repository": "https://github.com/nteract/hydrogen",
@@ -76,6 +78,9 @@
   "devDependencies": {
     "coffeelint": "^1.15.7",
     "coffeescope2": "^0.4.2",
+    "eslint": "^3.10.0",
+    "eslint-config-airbnb-base": "^10.0.1",
+    "eslint-plugin-import": "^2.2.0",
     "markdox": "^0.1.10"
   }
 }
