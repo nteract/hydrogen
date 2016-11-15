@@ -3,7 +3,7 @@
 import CodeManager from '../lib/code-manager';
 
 describe('CodeManager', () => {
-  let CM = null;
+  let CM;
   beforeEach(() => {
     CM = new CodeManager();
     CM.editor = atom.workspace.buildTextEditor();
