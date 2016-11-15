@@ -258,7 +258,7 @@
             display: inline-block;
             padding: @component-icon-padding - 1px;
         }
-        .btn-group {
+        .btn {
             float: right;
         }
     }
@@ -334,9 +334,12 @@
         cursor: ew-resize;
     }
 
-    .add-watch {
-        width: 100%;
+    .btn-group {
         margin-top: 10px;
+        display: block;
+        .btn {
+            width: 50%;
+        }
     }
 
     .output-bubble.empty {
