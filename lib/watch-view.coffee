@@ -28,7 +28,7 @@ class WatchView
 
     clearHistory: (@currentHistory=[]) -> this
     addToHistory: (result) ->
-        return if result.data is 'ok'
+        return if result.stream is 'status' or result.stream is 'execution_count'
         @currentHistory.push(result)
         @currentHistory.pos = @currentHistory.length - 1
         @counter.innerText = "#{@currentHistory.length} / #{@currentHistory.length}"

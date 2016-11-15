@@ -293,7 +293,7 @@
             .scrollbar {
                 overflow-x: scroll;
                 overflow-y: hidden;
-                margin-top: -@component-icon-size - @component-icon-padding + 1px;
+                margin-top: -@component-icon-size - @component-icon-padding - 1px;
                 margin-left: @component-icon-size + @component-icon-padding + 2px;
                 margin-right: @component-icon-size + @component-icon-padding + 2px;
                 .hidden {
@@ -310,7 +310,7 @@
                 display: block;
             }
             ::-webkit-scrollbar {
-                height: @component-icon-size + @component-icon-padding - 2px;
+                height: @component-icon-size + @component-icon-padding;
                 -webkit-appearance: none;
             }
             ::-webkit-scrollbar-thumb {
