@@ -236,14 +236,59 @@ module.exports = Hydrogen =
             @_createResultBubble kernel, code, row
 
 
+    mostRecentResult:
+      row: -1
+      texts: []
+      promise: null
+      rejectFn: null
+      resolveFn: null
+
+
+    mostRecentResultProvider: ->
+      obj = @
+      ->
+        return obj.mostRecentResult.promise
+
+    mostRecentResolver: ->
+      @mostRecentResult.resolveFn(
+        row: @mostRecentResult.row
+        texts: @mostRecentResult.texts
+      )
+
+
+    resetMostRecentResult: ->
+      if (@mostRecentResult.resolveFn)
+        @mostRecentResolver()
+      @mostRecentResult.row = -1
+      @mostRecentResult.texts = []
+      most = @mostRecentResult
+      @mostRecentResult.promise = new Promise((resolve, reject) ->
+        most.resolveFn = resolve
+        most.rejectFn = reject)
+
+
+    appendMostRecentResult: (row, text) ->
+      console.log("ROWWW", row, text)
+      obj = @mostRecentResult
+      obj.row = row
+      obj.texts.push(text)
+      if (text.stream=='error' || text.stream=='status')
+        @mostRecentResolver()
+
+
     _createResultBubble: (kernel, code, row) ->
         if @watchSidebar.element.contains document.activeElement
             @watchSidebar.run()
             return
 
         @clearBubblesOnRow row
+        @resetMostRecentResult()
         view = @insertResultBubble row
+        appender = (result) ->
+          @appendMostRecentResult(row, result)
+        appenderBound = appender.bind(@)
         kernel.execute code, (result) ->
+            appenderBound(result)
             view.spin false
             view.addResult result
 
