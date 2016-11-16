@@ -7,8 +7,7 @@ This package lets you run your code directly in Atom using any [Jupyter](https:/
 
 Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous feedback and the design of [Light Table](http://lighttable.com/). Running code inline and in real time is a more natural way to develop. By bringing the interactive style of Light Table to the rock-solid usability of Atom, Hydrogen makes it easy to write code the way you want to.
 
-<img src="https://cloud.githubusercontent.com/assets/13285808/14598778/1cff1b32-0554-11e6-8181-504307ca6b56.gif" width=600>
-
+![hero](https://cloud.githubusercontent.com/assets/13285808/20360886/7e03e524-ac03-11e6-9176-37677f226619.gif)
 
 ## Features
 
@@ -159,7 +158,7 @@ There are two ways to tell Hydrogen which code in your file to run.
 
 It's easiest to see these interactions visually:
 
-<img src="http://g.recordit.co/4ViVmKtKAr.gif">
+![execute](https://cloud.githubusercontent.com/assets/13285808/20360915/a16efcba-ac03-11e6-9d5c-3489b3c3c85f.gif)
 
 **"Hydrogen: Run And Move Down"** will run the the code as described above and move the cursor to the next executable line.
 
@@ -182,7 +181,7 @@ These commands will run all code inside the editor or all code above the cursor.
 
 After you've run some code with Hydrogen, you can use the **"Hydrogen: Toggle Watches"** command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code.
 
-<img width=770 src="https://cloud.githubusercontent.com/assets/13285808/14125700/e5cb587a-f60c-11e5-9c28-5aef83088da2.gif">
+![watch](https://cloud.githubusercontent.com/assets/13285808/20361086/4434ab3e-ac04-11e6-8298-1fb925de4e78.gif)
 
 **IMPORTANT:** Be careful what you put in your watch expressions. If you write code that mutates state in a watch expression, that code will get run after every execute command and likely result in some _extremely confusing_ bugs.
 
