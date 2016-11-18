@@ -30,7 +30,7 @@
     ]
   },
   "scripts": {
-    "install": "npm rebuild --build-from-source",
+    "postinstall": "npm rebuild zeromq --build-from-source",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.coffee lib/plugin-api/hydrogen-kernel.coffee -o PLUGIN_API.md"
   },
   "repository": "https://github.com/nteract/hydrogen",
