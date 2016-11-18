@@ -93,6 +93,7 @@ Tested and works with:
 - [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
 - [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+`
 - [IElixir](https://github.com/pprzetacznik/IElixir)
+- [jupyter-scala](https://github.com/alexarchambault/jupyter-scala)
 
 But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages). If you are using hydrogen with another kernel please add it to this list or [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 
