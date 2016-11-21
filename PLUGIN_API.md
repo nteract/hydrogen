@@ -1,10 +1,10 @@
 
 
-<!-- Start lib/plugin-api/hydrogen-provider.coffee -->
+<!-- Start lib/plugin-api/hydrogen-provider.js -->
 
 ## HydrogenProvider
 
-Version: 1.0.0
+Version: 1.0.0 
 
 The Plugin API allows you to make Hydrogen awesome.
 You will be able to interact with this class in your Hydrogen Plugin using
@@ -30,9 +30,9 @@ Get the `HydrogenKernel` of the currently active text editor.
 
 * **Class** `HydrogenKernel`
 
-<!-- End lib/plugin-api/hydrogen-provider.coffee -->
+<!-- End lib/plugin-api/hydrogen-provider.js -->
 
-<!-- Start lib/plugin-api/hydrogen-kernel.coffee -->
+<!-- Start lib/plugin-api/hydrogen-kernel.js -->
 
 ## HydrogenKernel
 
@@ -45,7 +45,7 @@ Calls your callback when the kernel has been destroyed.
 
 ### Params:
 
-* **Function** *Callback*
+* **Function** *Callback* 
 
 ## getConnectionFile()
 
@@ -55,4 +55,5 @@ Get the [connection file](http://jupyter-notebook.readthedocs.io/en/latest/examp
 
 * **String** Path to connection file.
 
-<!-- End lib/plugin-api/hydrogen-kernel.coffee -->
+<!-- End lib/plugin-api/hydrogen-kernel.js -->
+
