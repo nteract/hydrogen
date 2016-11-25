@@ -28,7 +28,7 @@ For all systems, you'll need
 - [Jupyter notebook](http://jupyter.org): If you have Python and pip setup, install the notebook directly with `pip install jupyter`
 - Python 2 for builds (you can still run Python 3 code)
 
-You likely have them installed already installed. You can check your installation with `apm install --check`.
+You likely have them already installed. You can check your installation with `apm install --check`.
 
 #### Linux
 
@@ -46,7 +46,7 @@ Use your distribution's package manager to install.
 #### Windows
 > :bulb: [Windows Vista / 7 only] requires [.NET Framework 4.5.1](http://www.microsoft.com/en-us/download/details.aspx?id=40773)
 
-- **Option 1:** Install all the required tools with a bundeled installer
+- **Option 1:** Install all the required tools with a bundled installer
   1. Install the Visual C++ Build Environment from an elevated PowerShell (run as Administrator):
     * **Option 1:** Install [Windows Build Tools for Atom](https://github.com/lgeiger/windows-build-tools) by running:
     ```powershell
@@ -95,7 +95,7 @@ Tested and works with:
 - [IElixir](https://github.com/pprzetacznik/IElixir)
 - [jupyter-scala](https://github.com/alexarchambault/jupyter-scala)
 
-But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages). If you are using hydrogen with another kernel please add it to this list or [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
+But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages). If you are using Hydrogen with another kernel please add it to this list or [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/16931386/048f056e-4d41-11e6-8563-3baa8ed84371.png">
 
@@ -367,7 +367,7 @@ markdown.version
 
 * Select the contents and run them with Hydrogen ("`cmd-shift-P`" and "`Hydrogen: run`").
 
-* You will see the inline execution and output that just ran from your kernel, even if you don't have the Python package `mardown` installed locally, because it's running inside your container.
+* You will see the inline execution and output that just ran from your kernel, even if you don't have the Python package `markdown` installed locally, because it's running inside your container.
 
 ```
 import markdown [✓]
