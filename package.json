@@ -51,7 +51,6 @@
     "spawnteract": "^2.1.1",
     "tildify": "^1.2.0",
     "transformime": "^3.2.0",
-    "transformime-marked": "0.0.1",
     "uuid": "^3.0.1",
     "ws": "^1.1.1",
     "xmlhttprequest": "^1.8.0"
