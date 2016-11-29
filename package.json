@@ -30,7 +30,6 @@
     ]
   },
   "scripts": {
-    "postinstall": "npm rebuild zeromq --build-from-source",
     "lint": "eslint .",
     "fix": "eslint . --fix",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md"
