@@ -376,7 +376,7 @@ jupyter kernelgateway --ip=0.0.0.0 --port=8888
 - In the section "List of kernel gateways to use" add settings for the container your created
 - Use a `name` that you can remind when running Hydrogen
 - In the `baseUrl` section use the host or IP that you use to access your Docker containers:
-  - If you are using Docker Toolbox in Windows or Mac (or Docker for Windows, Docker for Mac), as it will be running in a virtual machine, the IP (host) would probably be like: `192.168.99.100`
+  - If you are using Docker Toolbox in Windows or Mac (or Docker for Windows, Docker for Mac), as it will be running in a virtual machine, the IP (host) would probably be like: `192.168.99.100`, you can read about it and check the `docker-machine ip default` command [in the official Docker docs](https://docs.docker.com/machine/get-started/#/run-containers-and-experiment-with-machine-commands)
   - If you are using Docker in a Linux machine and you are running Atom in that same machine you can just use `localhost` as the host of your `baseUrl`
 - For example, a possible configuration for Docker Toolbox in Windows or Mac could be:
 
