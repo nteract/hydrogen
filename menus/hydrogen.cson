@@ -24,6 +24,9 @@
         }, {
           'label': 'Run All Above'
           'command': 'hydrogen:run-all-above'
+        }, {
+          'label': 'Connect to Remote Kernel'
+          'command': 'hydrogen:connect-to-remote-kernel'
         }
       ]
     ]
