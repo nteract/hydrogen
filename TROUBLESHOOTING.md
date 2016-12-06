@@ -1,75 +1,14 @@
-### Hydrogen installation fails reporting an error running `node-gyp`
+### Installation fails on Linux 32-bit
 
-There are a number of possible causes and solutions:
+At the moment we don't ship prebuilts for 32-bit Linux. Hence you'll need some additional toolling to build from source:
 
-- Missing Visual Studio in Windows. `node-gyp` requires a compiler. See
-  [here](https://github.com/nteract/hydrogen#windows) for installation
-  instructions.
+- `python` (`v2.7` recommended, `v3.x.x` is not supported for building Hydrogen)
+- `make`
+- A proper C/C++ compiler toolchain, like [GCC](https://gcc.gnu.org/)
 
-- Atom uses incorrect version of Visual Studio (on Windows). Installing Hydrogen
-  on Windows only works with Visual Studio 2015, but Atom may see a different
-  version. You can check this by running `apm --version`, if it looks like this:
+Use your distribution's package manager to install.
 
-  ```
-  apm  1.12.5
-  npm  3.10.5
-  node 4.4.5
-  python 2.7.12
-  git 2.8.1.windows.1
-  visual studio 2013
-  ```
-
-  then it means Atom is seeing Visual Studio 2013, not 2015.
-  These commands should help:
-  ```
-  apm config set msvs_version 2015 -g
-  set GYP_MSVS_VERSION=2015
-  ```
-  Or if you are using git bash
-  ```
-  apm config set msvs_version 2015 -g
-  export GYP_MSVS_VERSION=2015
-  ```
-
-- Atom is unable to use your installation of Python 2 (see issues
-  [#301](https://github.com/nteract/hydrogen/issues/301) and
-  [#358](https://github.com/nteract/hydrogen/issues/358)). To confirm this is
-  the cause, please, run `apm --version`. Here's an example for the case when
-  Atom cannot find any installation of Python, the output could look like this:
-
-  ```
-  apm  1.9.2
-  npm  2.13.3
-  node 0.10.40
-  python
-  git 2.8.1.windows.1
-  visual studio 2015
-  ```
-
-  And here, when Atom finds the installation of Python 3 instead of Python 2:
-
-  ```
-  apm 1.9.2
-  npm 2.13.3
-  node 0.10.40
-  python 3.5.1
-  git
-  visual studio 2015
-  ```
-
-  To fix this problem, you need to locate the executable for Python 2. Running
-  the following script prints out the path for this executable:
-
-  ```python
-  import sys
-  print sys.executable
-  ```
-
-  Let's say this script prints out `c:\Anaconda2\python.exe`. You can configure
-  Atom to use this executable by running
-  `apm config set python c:\Anaconda2\python.exe`. Then, Hydrogen can be
-  installed by running `apm install hydrogen`.
-
+If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install hydrogen` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
 
 ### No kernel for language X found, but I have a kernel for that language.
 

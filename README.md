@@ -20,67 +20,16 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 - interrupt or restart the kernel if anything goes wrong
 - use a custom kernel connection (for example to run code inside Docker), read more in the "Custom kernel connection (inside Docker)" section
 
-## Dependencies
+## Installation
 
 For all systems, you'll need
 
 - [Atom](https://atom.io/) `1.6.0+`
-- [Jupyter notebook](http://jupyter.org): If you have Python and pip setup, install the notebook directly with `pip install jupyter`
-- Python 2 for builds (you can still run Python 3 code)
+- [Jupyter](http://jupyter.org): If you have Python and conda or pip setup, install the notebook directly with `conda install jupyter` or `pip install jupyter`.
 
-You likely have them already installed. You can check your installation with `apm install --check`.
+You can now run `apm install hydrogen` or search for *Hydrogen* in the Install pane of the Atom settings.
 
-#### Linux
-
-- `python` (`v2.7` recommended, `v3.x.x` is not supported)
-- `make`
-- A proper C/C++ compiler toolchain, like [GCC](https://gcc.gnu.org/)
-
-Use your distribution's package manager to install.
-
-#### macOS
-
-- `python` (`v2.7` recommended, `v3.x.x` is not supported): already installed on Mac OS X
-- `Xcode Command Line Tools`: Can be installed with `xcode-select --install`
-
-#### Windows
-> :bulb: [Windows Vista / 7 only] requires [.NET Framework 4.5.1](http://www.microsoft.com/en-us/download/details.aspx?id=40773)
-
-- **Option 1:** Install all the required tools with a bundled installer
-  1. Install the Visual C++ Build Environment from an elevated PowerShell (run as Administrator):
-    * **Option 1:** Install [Windows Build Tools for Atom](https://github.com/lgeiger/windows-build-tools) by running:
-    ```powershell
-    apm install windows-build-tools --verbose
-    ```
-    * **Option 2:** Install Microsoft's [Windows Build Tools](https://github.com/felixrieseberg/windows-build-tools) by running:
-    ```powershell
-    npm install -g windows-build-tools
-    ```
-
-  2. To complete the setup run:
-  ```powershell
-  apm config set msvs_version 2015
-  apm config set python $env:USERPROFILE\.windows-build-tools\python27\python.exe
-  ```
-- **Option 2:** Install dependencies and configuration manually
-   1. Visual C++ Build Environment:
-     * **Option 1:** Install [Visual C++ Build Tools](http://go.microsoft.com/fwlink/?LinkId=691126) using the *Default Install* option.
-     * **Option 2:** Install [Visual Studio 2015](https://www.visualstudio.com/products/visual-studio-community-vs) (or modify an existing installation) and select *Common Tools for Visual C++* during setup.  
-
-  2. Install [Python 2.7](https://www.python.org/downloads/) or [Miniconda 2.7](http://conda.pydata.org/miniconda.html) (`v3.x.x` is not supported)
-
-  3. To complete the setup run:
-  ```powershell
-  apm config set msvs_version 2015
-  apm config set python python2.7
-  ```
-
-## Installation
-
-Assuming you followed the dependencies steps above, you can now `apm install hydrogen` (recommended) or search for "hydrogen" in the Install pane of the Atom settings.
-
-If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install hydrogen` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
-
+If you are using Linux 32-bit follow the installation instructions [here](TROUBLESHOOTING.md).
 
 ### Kernels
 
