@@ -5,439 +5,288 @@
 @import "ui-variables";
 @import "syntax-variables";
 
-.hydrogen.output-bubble {
-    @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
-    @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
-    @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
-    @button-text-color: lighten(@syntax-text-color, 20%);
-    @error-base-color: average(@syntax-text-color, red);
-    color: lighten(@syntax-text-color, 10%);
+@light-background: fadein(lighten(@syntax-background-color, 40%), 100%);
+@dark-background: fadein(lighten(@syntax-background-color, 10%), 100%);
+@background: contrast(@syntax-text-color, @dark-background, @light-background, 20%);
+@button-text-color: lighten(@syntax-text-color, 20%);
+@error-base-color: average(@syntax-text-color, red);
+@light-text-color: lighten(@syntax-text-color, 10%);
 
-    padding-left: 2px;
-    padding-right: 2px;
-    border-radius: 3px;
-    white-space: pre;
-    display: inline-block;
-
-    &.rich {
-        border: none;
-
-        .bubble-output-container{
-            max-height: 500px;
-            border-radius: 3px 0 3px 3px;
-        }
-
-        &.svg {
-            background-color: white;
-        }
-
-        .rich-close-button {
-            &::before {
-                color: @button-text-color;
-                background-color: @bubble-background;
-                display: block;
-                cursor: pointer;
-                border-radius: 0 3px 3px 0;
-                width: 1.5em;
-                height: 1.5em;
-                line-height: 1.5em;
-                text-align: center;
-                box-shadow: 0 0 3px 0px rgba(0,0,0,0.3);
-            }
-        }
-    }
-
-    &:not(.multiline) {
-        float: left;
-        display: inline-flex;
-        padding: 0;
-        width: 100%;
-        .bubble-output-container {
-            padding: 0 2px 0 2px;
-            overflow: hidden;
-            pre {
-                font-size: inherit;
-                line-height: inherit;
-                cursor: pointer;
-            }
-        }
-    }
-
-    &.multiline {
-        padding-right: 0px;
-        display: flex;
-        margin: 0px !important;
-    }
-
-    &.multiline:not(.rich) {
-        .bubble-action-panel {
-            display: inline-flex;
-        }
-
-        .bubble-output-container {
-            border-radius: 3px 0 0 3px;
-            padding: 3px;
-            padding-right: 7px;
-            overflow: overlay;
-        }
-
-        .rich-close-button::before {
-            display: none;
-        }
-    }
-
-    &.markdown .bubble-output-container{
-        max-height: 500px;
-    }
-
-    &.latex .bubble-output-container{
-        padding: 3px;
-    }
-
-    .rich-close-button::before {
-        display: none;
-    }
-
-    .bubble-output-container {
-        color: lighten(@syntax-text-color, 10%);
-        background-color: @bubble-background;
-        box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
-        // in order to be above the shadow of action-panel
-        z-index: 0;
-        border-radius: 3px;
-
-        display: inline-block;
-        max-height: 250px;
-        max-width: 95%;
-        overflow: auto;
-    }
-
-    .bubble-result-container {
-        width: fit-content !important;
-        height: fit-content !important;
-        max-width: unset !important;
-        max-height: unset !important;
-        overflow: hidden !important;
-        white-space: normal;
-        pre {
-            font-size: @font-size;
-            font-family: inherit;
-
-            color: lighten(@syntax-text-color, 10%);
-            background-color: @bubble-background;
-
-            margin: 0;
-            padding: 0;
-        }
-
-        img, svg {
-            background-color: white;
-        }
-
-        video, img, svg {
-            display: block;
-            max-height: 500px !important;
-            max-width: 100% !important;
-            width: unset !important;
-            height: unset !important;
-        }
-
-        td, th {
-            border: 1px solid darken(@bubble-background, 10%);
-            padding: 0.35em 0.7em;
-            font-size: @font-size;
-        }
-
-        .MathJax_SVG_Display {
-            margin: 0;
-        }
-
-        .MathJax_SVG {
-            .noError {
-                padding: 0;
-                border: none;
-                color: @error-base-color
-            }
-            svg {
-                background-color: unset;
-                margin: 0 !important;
-                display: inline;
-            }
-        }
-    }
-
-    .bubble-error-container {
-        &.plain-error {
-            pre {
-                color: @error-base-color;
-            }
-        }
-
-        pre {
-            font-size: @font-size;
-            font-family: inherit;
-
-            color: lighten(@syntax-text-color, 10%);
-            background-color: @bubble-background;
-
-            margin: 0;
-            padding: 0;
-        }
-    }
-
-    .bubble-status-container::before {
-        margin: 0px;
-        font-size: 80%;
-        width: 80%;
-    }
-
-    .bubble-action-panel {
-        display: none;
-        flex-direction: column;
-        width: 30px;
-        box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
-        border-radius: 0 3px 3px 0;
-
-        .action-button {
-            @separator-color: fade(darken(@bubble-background, 20%), 20%);
-            flex: none;
-
-            border-top: 1px solid @separator-color;
-
-            &:nth-child(1) {
-                border-top: none;
-                border-bottom: 1px solid @separator-color;
-            }
-
-            &::before {
-                width: 100%;
-                height: 30px;
-                text-align: center;
-                color: @button-text-color;
-                cursor: pointer;
-                text-align: center;
-                margin: 0;
-                line-height: 30px;
-            }
-
-        }
-
-        .padding {
-            flex: 1;
-        }
-    }
-
-    .close-button {
-        &::after {
-            color: @button-text-color;
-            background-color: @bubble-background;
-            display: none;
-            position: absolute;
-            top: -12px;
-            right: -12px;
-            cursor: pointer;
-            border-radius: 50%;
-            padding: 1px;
-            width: 1.5em;
-            height: 1.5em;
-            text-align: center;
-            box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
-        }
-    }
-
+// ---------- Result View: Globals ----------
+.hydrogen.result-view .output-container.plain-error {
+    color: @error-base-color;
 }
 
+.hydrogen.result-view pre {
+    color: inherit;
+    font-family: inherit;
+    line-height: inherit;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.hydrogen.result-view.multiline pre {
+    font-size: @font-size;
+}
+
+.hydrogen.result-view img,
+.hydrogen.result-view svg {
+    display: block;
+    background-color: white;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.hydrogen.result-view video {
+    display: block;
+}
+
+.hydrogen.result-view td,
+.hydrogen.result-view th {
+    border: 1px solid @base-border-color;
+    padding: 0.35em 0.7em;
+    font-size: @font-size;
+}
+
+.hydrogen.result-view .MathJax_SVG_Display {
+    margin: 0;
+}
+
+.hydrogen.result-view .MathJax_SVG .noError {
+    padding: 0;
+    border: none;
+    color: @error-base-color
+}
+
+.hydrogen.result-view .MathJax_SVG svg {
+    background-color: unset;
+    margin: 0 !important;
+    display: inline;
+}
+
+// ---------- Result View: Inline Output ----------
+.hydrogen.result-view:not(.multiline) {
+    float: left;
+    display: inline-flex;
+}
+
+.hydrogen.result-view:not(.multiline) .output-container {
+    cursor: pointer;
+}
+
+.hydrogen.result-view:not(.multiline) .output-container,
+.hydrogen.result-view .status-container {
+    color: @light-text-color;
+    background-color: @background;
+    border-radius: @component-border-radius;
+    padding: 0 2px 0 2px;
+    box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+.hydrogen.result-view:not(.multiline) pre {
+    font-size: inherit;
+}
+
+.hydrogen.result-view .status-container::before {
+    margin: 0px;
+    font-size: 80%;
+    width: 80%;
+}
+
+.hydrogen.result-view:not(.multiline) .action-panel {
+    display: none;
+}
+
+// ---------- Result View: Multiline Output ----------
+.hydrogen.result-view.multiline {
+    margin: 0px !important;
+    width: calc(~'100% - 15px');
+    position: relative;
+    padding-top: @font-size * 0.5;
+    padding-bottom: @font-size * 0.5;
+}
+
+.hydrogen.result-view.multiline .output-container{
+    color: @syntax-text-color;
+    padding: 14px;
+    border: solid 1px @base-border-color;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+// ---------- Result View: Multiline Action Panel ----------
+.hydrogen.result-view.multiline .action-panel {
+    right: 0;
+    display: inline-flex;
+    position: absolute;
+    padding-left: 0.5em;
+    border: solid 1px @base-border-color;
+}
+
+.hydrogen.result-view.multiline .action-button {
+    line-height: 2em;
+    font-size: 1em;
+    padding: 0 0.5em;
+    cursor: pointer;
+}
+
+.hydrogen.result-view.multiline .action-button::before {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.hydrogen.result-view.multiline .action-button:hover {
+    color: @button-text-color;
+}
+
+// ---------- Result View: Watch Sidebar ----------
+.hydrogen.watch-sidebar .watch-view .result-view.multiline {
+    width: 100%;
+    padding: 0;
+}
+
+.hydrogen.watch-sidebar .watch-view .result-view.multiline .action-panel {
+    display: none;
+}
+
+.hydrogen.watch-sidebar .watch-view .result-view.multiline .output-container {
+    padding: 0;
+}
+
+.hydrogen.watch-sidebar .watch-view .result-view.multiline video,
+.hydrogen.watch-sidebar .watch-view .result-view.multiline img,
+.hydrogen.watch-sidebar .watch-view .result-view.multiline svg {
+    height: 100%;
+    width: 100%;
+    max-height: 350px !important;
+}
+
+.hydrogen.watch-sidebar .watch-view .result-view.multiline pre {
+    padding: 7px;
+}
+
+// ---------- Watch Sidebar ----------
 .hydrogen.watch-sidebar {
     width: 300px;
     min-width: 200px;
     overflow-y: overlay;
     padding: 10px;
+}
 
-    .toolbar {
-        .language {
-            display: inline-block;
-            padding: @component-icon-padding - 1px;
-        }
-        .btn {
-            float: right;
-        }
-    }
+.hydrogen.watch-sidebar .toolbar .language {
+    display: inline-block;
+    padding: @component-icon-padding - 1px;
+}
 
-    .watch-view {
-        width: 100%;
-        .watch-input {
-            margin-top: 10px;
-            padding: 3px;
-            border-radius: 3px;
-            background-color: @syntax-background-color;
-            font-size: @font-size;
-            min-height: 3em;
-            border: 1px solid @base-border-color;
-        }
+.hydrogen.watch-sidebar .toolbar .btn {
+    float: right;
+}
 
-        .history-switch {
-            padding: 3px 0 3px 0;
-            position: relative;
+.hydrogen.watch-sidebar .watch-view {
+    width: 100%;
+}
 
-            .counter {
-                position: absolute;
-                pointer-events: none;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-            }
-            .next-btn {
-                float: right;
-            }
+.hydrogen.watch-sidebar .watch-view .watch-input {
+    margin-top: 10px;
+    padding: 3px;
+    border-radius: 3px;
+    background-color: @syntax-background-color;
+    font-size: @font-size;
+    min-height: 3em;
+    border: 1px solid @base-border-color;
+}
 
-            .scrollbar {
-                overflow-x: scroll;
-                overflow-y: hidden;
-                margin-top: -@component-icon-size - @component-icon-padding - 1px;
-                margin-left: @component-icon-size + @component-icon-padding + 2px;
-                margin-right: @component-icon-size + @component-icon-padding + 2px;
-                .hidden {
-                    height: 1px;
-                    width: 1000px;
-                    visibility: hidden;
-                    display: block !important;
-                }
-            }
-            .hide {
-                display: none;
-            }
-            .show {
-                display: block;
-            }
-            ::-webkit-scrollbar {
-                height: @component-icon-size + @component-icon-padding;
-                -webkit-appearance: none;
-            }
-            ::-webkit-scrollbar-thumb {
-                border-radius: @component-border-radius;
-                border: 1px solid @button-border-color;
-                background: @button-background-color;
-            }
-            ::-webkit-scrollbar-thumb:hover {
-                background: @button-background-color-hover;
-            }
-        }
+.hydrogen.watch-sidebar .watch-view .history-switch {
+    padding: 3px 0 3px 0;
+    position: relative;
 
-    }
-
-    .watch-resize-handle {
+    .counter {
         position: absolute;
-        top: 0px;
-        bottom: 0px;
-        left: -5px;
-        width: 10px;
-        cursor: ew-resize;
+        pointer-events: none;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 
-    .btn-group {
-        margin-top: 10px;
-        display: block;
-        .btn {
-            width: 50%;
+    .next-btn {
+        float: right;
+    }
+
+    .scrollbar {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        margin-top: -@component-icon-size - @component-icon-padding - 1px;
+        margin-left: @component-icon-size + @component-icon-padding + 2px;
+        margin-right: @component-icon-size + @component-icon-padding + 2px;
+
+        .hidden {
+            height: 1px;
+            width: 1000px;
+            visibility: hidden;
+            display: block !important;
         }
     }
 
-    .output-bubble.empty {
+    .hide {
         display: none;
     }
 
-    .output-bubble {
-        @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
-        @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
-        @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
-        position: static;
-        display: flex;
-        float: none;
-        border-radius: 3px;
-        margin: 0px;
-        font-size: @font-size * 5/6;
-        box-shadow: none;
-        padding-left: 0px;
-        padding-right: 0px;
-        border: 1px solid @base-border-color;
+    .show {
+        display: block;
+    }
 
+    ::-webkit-scrollbar {
+        height: @component-icon-size + @component-icon-padding;
+        -webkit-appearance: none;
+    }
 
-        &.rich .rich-close-button {
-            display: none;
-        }
+    ::-webkit-scrollbar-thumb {
+        border-radius: @component-border-radius;
+        border: 1px solid @button-border-color;
+        background: @button-background-color;
+    }
 
-        &:not(.rich) {
-            .bubble-action-panel {
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-                width: 30px;
-                background-color: darken(@bubble-background, 10%);
-            }
-
-            .bubble-output-container {
-                border-radius: 3px 0 0 3px;
-            }
-        }
-
-        .bubble-output-container {
-            display: inline-block;
-            width: 100%;
-            max-width: 100%;
-            max-height: 350px;
-            white-space: pre-wrap;
-        }
-
-
-        .bubble-result-container {
-            max-width: inherit;
-            max-height: inherit;
-
-            position: relative;
-            pre {
-                padding: 3px;
-                font-size: inherit;
-                display: block;
-            }
-
-            video, img, svg {
-                height: 100%;
-                width: 100%;
-                max-height: 350px !important;
-            }
-        }
-
-        .bubble-error-container {
-            pre {
-                font-size: inherit;
-            }
-        }
+    ::-webkit-scrollbar-thumb:hover {
+        background: @button-background-color-hover;
     }
 }
 
+.hydrogen.watch-sidebar .watch-resize-handle {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: -5px;
+    width: 10px;
+    cursor: ew-resize;
+}
+
+.hydrogen.watch-sidebar .btn-group {
+    margin-top: 10px;
+    display: block;
+}
+
+.hydrogen.watch-sidebar .btn-group .btn {
+    width: 50%;
+}
+
+// ---------- Status Bar ----------
 .hydrogen.status-container {
     display: inline-block;
     cursor: pointer;
     vertical-align: top;
-
-    .status:hover {
-        text-decoration: underline;
-    }
 }
 
-.hidden {
-    display: none;
+.hydrogen.status-container .status:hover {
+    text-decoration: underline;
 }
 
-.hydrogen.input-view {
-    .label {
-        padding-bottom: @component-padding;
-    }
-}
-
+// --------- Spinner -----------
 .hydrogen {
     .spinner {
-        display:inline-block;
+        display: block;
         text-align: center;
         line-height: 100%;
         position: relative;
@@ -445,7 +294,7 @@
     }
 
     .spinner > div {
-        background-color: @text-color;
+        background-color: @light-text-color;
         height: 100%;
         width: 2px;
         display: inline-block;
@@ -495,18 +344,25 @@
     }
 }
 
-.plain-message.inspect-message {
-    white-space: pre-wrap;
-    font-size: @font-size;
-    span[style] {
-        color: @text-color-info !important;
+// ---------- Globals ----------
+.hidden {
+    display: none;
+}
+
+.hydrogen.input-view {
+    .label {
+        padding-bottom: @component-padding;
     }
 }
 
-.heading-summary.inspect-message {
-    span[style] {
-        color: @text-color-info !important;
-    }
+.plain-message.inspect-message {
+    white-space: pre-wrap;
+    font-size: @font-size;
+}
+
+.plain-message.inspect-message span[style],
+.heading-summary.inspect-message span[style] {
+    color: @text-color-info !important;
 }
 
 atom-text-editor,
