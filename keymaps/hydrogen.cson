@@ -9,7 +9,7 @@
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
 
 # ---------- Editor --------------
-'atom-text-editor':
+'atom-text-editor:not([mini])':
     'shift-enter': 'hydrogen:run-and-move-down'
     'shift-alt-enter': 'hydrogen:run-cell-and-move-down'
     'alt-i': 'hydrogen:toggle-inspector'
@@ -17,9 +17,6 @@
 # Override shift-enter and cmd-enter
 '.platform-darwin atom-text-editor:not([mini])':
     'shift-enter': 'hydrogen:run-and-move-down'
-    'cmd-enter': 'hydrogen:run'
-
-'.platform-darwin atom-text-editor':
     'cmd-alt-enter': 'hydrogen:run-cell'
     'cmd-enter': 'hydrogen:run'
     'cmd-ctrl-enter': 'hydrogen:run-all'
@@ -28,8 +25,6 @@
 '.platform-win32 atom-text-editor:not([mini]), .platform-linux atom-text-editor:not([mini])':
     'ctrl-enter': 'hydrogen:run'
     'ctrl-backspace': 'hydrogen:clear-results'
-
-'.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
     'ctrl-alt-enter': 'hydrogen:run-cell'
     'ctrl-enter': 'hydrogen:run'
     'ctrl-shift-alt-enter': 'hydrogen:run-all'
