@@ -75,8 +75,8 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.1.0",
-    "eslint": "^3.10.0",
-    "eslint-config-airbnb-base": "^10.0.1",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb-base": "^11.0.0",
     "eslint-plugin-import": "^2.2.0",
     "markdox": "^0.1.10"
   }
