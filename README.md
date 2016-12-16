@@ -177,44 +177,55 @@ Hydrogen implements the [messaging protocol](http://jupyter-client.readthedocs.i
 
 ## Remote kernels via kernel gateways
 
-In addition to managing local kernels and connecting to them over ZeroMQ, Hydrogen is also able to connect to Jupyter Kernel Gateways and Jupyter Notebook servers. This is most useful for running code remotely (e.g. in the cloud).
+In addition to managing local kernels and connecting to them over ZeroMQ, Hydrogen is also able to connect to Jupyter Notebook (or Jupyter Kernel Gateway) servers. This is most useful for running code remotely (e.g. in the cloud).
 
-To connect to a gateway server, you must first add the connection information to the Hydrogen `gateways` setting. An example settings entry might be:
+To connect to a server, you must first add the connection information to the Hydrogen `gateways` setting. An example settings entry might be:
 
 ```json
 [{
     "name": "Remote notebook",
     "options": {
-            "baseUrl": "http://example.com:8888"
+            "baseUrl": "http://example.com:8888",
+            "token": "my_secret_token"
     }
 }]
 ```
 
-Each entry in the gateways list needs at minimum a `name` (for displaying in the UI), and a value for `options.baseUrl`. The `options` are passed directly to the [`@jupyterlab/services`](https://github.com/jupyterlab/services) npm package, which includes documentation for additional fields.
+Each entry in the gateways list needs at minimum a `name` (for displaying in the UI), and a value for `options.baseUrl`. The `options.token` should only be present if your server requires token authentication, in which case it should contain the specific token issued by your server. (Token authentication is enabled by default for Jupyter Notebook 4.3 or later). The `options` are passed directly to the [`@jupyterlab/services`](https://github.com/jupyterlab/services) npm package, which includes documentation for additional fields.
 
 After gateways have been configured, you can use the **"Hydrogen: Connect to Remote Kernel"** command. You will be prompted to select a gateway, and then given the choice to either create a new session or connect to an existing one.
 
 Unlike with local kernels, Hydrogen does not kill remote kernels when it disconnects from them. This allows sharing remote kernels between Hydrogen and the Notebook UI, as well as using them for long-running processes. To clean up unused kernels, you must explicitly call the **"Hydrogen: Shutdown Kernel"** command while connected to a kernel.
 
-**Note:** Unlike a notebook server, the jupyter kernel gateway by default disables listing already-running kernels. This means that once disconnected from a kernel, you will not be able to reconnect to it. You can set `c.KernelGatewayApp.list_kernels = True` in your kernel gateway configuration to change this behavior.
+### Example with notebook server
 
-### Example remote kernel gateway
+To set up a server on the remote machine, you could
 
-To create a remote kernel gateway you could
-
-- Install Jupyter Kernel Gateway:
+- Install Jupyter Notebook:
 
 ```bash
-pip install jupyter_kernel_gateway
+pip install jupyter
 ```
 
-- Run the kernel gateway with parameters specifying the IP address and port to listen to, e.g.:
+- Check to see if you have the notebook configuration file, `jupyter_notebook_config.py`. (By default, it is located in `~/jupyter`). If you don't already have one, create one by running the command:
 
 ```bash
-jupyter kernelgateway --ip=0.0.0.0 --port=8888
+jupyter notebook --generate-config
 ```
 
-**Note**: "`0.0.0.0`" means "listen to all IPs, including public IPs".
+- Edit `jupyter_notebook_config.py` and find the line that says `#c.NotebookApp.token = ''`. Change it to say `c.NotebookApp.token = 'my_secret_token'`, substituting your choice of token string. (If you skip this step, the token will change every time the notebook server restarts).
+
+- To run a server that listens on localhost, use the command:
+
+```bash
+jupyter notebook --port=8888
+```
+
+- To run a public server, consult the [official instructions](http://jupyter-notebook.readthedocs.io/en/latest/public_server.html) for setting up certificates. Skip the steps for setting up a password: hydrogen only supports token-based authentication. Also note that hydrogen does not support self-signed certificates -- we recommend that you use Let's Encrypt or consider alternatives such as listening on localhost followed by SSH port forwarding.
+
+### Example with kernel gateway server
+
+As of December 2016, we recommend that you use a notebook server (version 4.3 or greater) instead of the Jupyter Kernel Gateway. We expect this to change in the future, and will update this README when that occurs.
 
 ## Docker execution via kernel gateways
 
