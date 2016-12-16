@@ -183,11 +183,11 @@ To connect to a server, you must first add the connection information to the Hyd
 
 ```json
 [{
-    "name": "Remote notebook",
-    "options": {
-            "baseUrl": "http://example.com:8888",
-            "token": "my_secret_token"
-    }
+  "name": "Remote notebook",
+  "options": {
+    "baseUrl": "http://example.com:8888",
+    "token": "my_secret_token"
+  }
 }]
 ```
 
