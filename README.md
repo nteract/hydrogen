@@ -183,11 +183,11 @@ To connect to a server, you must first add the connection information to the Hyd
 
 ```json
 [{
-    "name": "Remote notebook",
-    "options": {
-            "baseUrl": "http://example.com:8888",
-            "token": "my_secret_token"
-    }
+  "name": "Remote notebook",
+  "options": {
+    "baseUrl": "http://example.com:8888",
+    "token": "my_secret_token"
+  }
 }]
 ```
 
@@ -207,7 +207,7 @@ To set up a server on the remote machine, you could
 pip install jupyter
 ```
 
-- Check to see if you have the notebook configuration file, `jupyter_notebook_config.py`. (By default, it is located in `~/jupyter`). If you don't already have one, create one by running the command:
+- Check to see if you have the notebook configuration file, `jupyter_notebook_config.py`. By default, it is located in `~/.jupyter`. If you don't already have one, create one by running the command:
 
 ```bash
 jupyter notebook --generate-config
