@@ -1,11 +1,4 @@
 sudo: false
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.9
-    - g++-4.9
 notifications:
   email:
     on_success: never
@@ -14,9 +7,6 @@ notifications:
 script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
 
 env:
-  global:
-    - CXX=g++-4.9
-    - CC=gcc-4.9
   matrix:
     - ATOM_CHANNEL=beta
 
