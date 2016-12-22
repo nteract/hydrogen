@@ -21,10 +21,10 @@
     'cmd-enter': 'hydrogen:run'
     'cmd-ctrl-enter': 'hydrogen:run-all'
 
-# Override ctrl-enter and ctrl-backspace
+# Override ctrl-enter
 '.platform-win32 atom-text-editor:not([mini]), .platform-linux atom-text-editor:not([mini])':
     'ctrl-enter': 'hydrogen:run'
-    'ctrl-backspace': 'hydrogen:clear-results'
+    'ctrl-shift-backspace': 'hydrogen:clear-results'
     'ctrl-alt-enter': 'hydrogen:run-cell'
     'ctrl-enter': 'hydrogen:run'
     'ctrl-shift-alt-enter': 'hydrogen:run-all'
@@ -34,4 +34,4 @@
     'cmd-alt-backspace': 'hydrogen:clear-results'
 
 '.platform-win32 atom-workspace, .platform-linux atom-workspace':
-    'ctrl-backspace': 'hydrogen:clear-results'
+    'ctrl-shift-backspace': 'hydrogen:clear-results'
