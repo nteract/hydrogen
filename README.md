@@ -311,7 +311,7 @@ docker-compose ps
 
 #### Connect Atom
 
-Now you need to connect Atom to your setup. Follow the section [**Connect Atom**](#connect-atom) below.
+Now you need to connect Atom to your setup. Follow the section [**Connect Atom**](#connect-atom-1) below.
 
 ### Example Docker kernel gateway
 
