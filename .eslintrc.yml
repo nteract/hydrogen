@@ -13,7 +13,7 @@ settings:
   import/core-modules: [ atom ]
 
 rules:
-  no-console: [0]
+  no-console: [2, { allow: ["warn", "error"] }]
   no-param-reassign: [0]
   no-underscore-dangle: [0]
   no-useless-escape: [0]
