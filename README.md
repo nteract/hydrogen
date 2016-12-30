@@ -511,9 +511,9 @@ exit
 
 ## Custom kernel connection
 
-**Hydrogen** also supports using a custom kernel connection file for each project. It could be used to connect to "remote" environments as Docker, a remote computer, etc. But the method described above using [**kernel gateways**](remote-kernels-via-kernel-gateways) is less error prone and simpler to apply in more cases.
+**Hydrogen** also supports using a custom kernel connection file for each project. It could be used to connect to "remote" environments as Docker, a remote computer, etc. But the method described above using [**kernel gateways**](#remote-kernels-via-kernel-gateways) is less error prone and simpler to apply in more cases.
 
-The recommended way of connecting to remote kernels is now using [**kernel gateways** as described above](remote-kernels-via-kernel-gateways). But if you still need to use a custom kernel connection file you can [read the **Custom kernel connection** guide here](https://github.com/nteract/hydrogen/blob/master/KERNEL_CONNECTION.md).
+The recommended way of connecting to remote kernels is now using [**kernel gateways** as described above](#remote-kernels-via-kernel-gateways). But if you still need to use a custom kernel connection file you can [read the **Custom kernel connection** guide here](https://github.com/nteract/hydrogen/blob/master/KERNEL_CONNECTION.md).
 
 
 ## Why "Hydrogen"?
