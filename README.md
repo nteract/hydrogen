@@ -233,7 +233,7 @@ As of December 2016, we recommend that you use a notebook server (version 4.3 or
 
 You can use the same technique to create a kernel gateway in a Docker container. That would allow you to develop from Atom but with all the dependencies, autocompletion, environment, etc. of a Docker container.
 
-**Note**: due to the way that the kernel gateway creates sub-processes for each kernel, you have to use it in a special way, you can't run the `jupyter kernelgateway` directly in your `Dockerfile` `CMD` section. You need to call it with an init manager such as [tini](https://github.com/krallin/tini) or run it from an interactive console.
+**Note**: due to the way that the kernel gateway creates sub-processes for each kernel, you have to use it in a special way, you can't run the `jupyter kernelgateway` directly in your `Dockerfile` `CMD` section. You need to call it with an init manager such as [**tini**](https://github.com/krallin/tini) or run it from an interactive console.
 
 If all you need is a Docker Python environment to execute your code, you can read the section [**Example Jupyter Docker Stack kernel gateway**](#example-jupyter-docker-stack-kernel-gateway) (this method uses **tini** under the hood).
 
@@ -475,7 +475,7 @@ markdown.version ['2.6.6']
 
 - To terminate a running kernel gateway you can "kill" it as any Linux process with `ctrl-c`
 
-- If you followed the section [**Example Jupyter Docker Stack kernel gateway**](#example-jupyter-docker-stack-kernel-gateway), it will just work.
+- If you followed the [**Example Jupyter Docker Stack kernel gateway**](#example-jupyter-docker-stack-kernel-gateway) section, it will just work.
 
 But, if you are using the general instructions (for a custom Docker image), because of the way Jupyter Kernel Gateway creates sub-processes and due to the fact that you are running in a Docker container, the actual kernel process will still be running.
 
@@ -511,9 +511,9 @@ exit
 
 ## Custom kernel connection
 
-**Hydrogen** also supports using a custom kernel connection file for each project. It could be used to connect to "remote" environments as Docker, a remote computer, etc. But the method described above using **kernel gateways** is less error prone and simpler to apply in more cases.
+**Hydrogen** also supports using a custom kernel connection file for each project. It could be used to connect to "remote" environments as Docker, a remote computer, etc. But the method described above using [**kernel gateways**](remote-kernels-via-kernel-gateways) is less error prone and simpler to apply in more cases.
 
-The recommended way of connecting to remote kernels is now using **kernel gateways** as described above. But if you still need to use a custom kernel connection file you can [read the **Custom kernel connection** guide here](https://github.com/nteract/hydrogen/blob/master/KERNEL_CONNECTION.md).
+The recommended way of connecting to remote kernels is now using [**kernel gateways** as described above](remote-kernels-via-kernel-gateways). But if you still need to use a custom kernel connection file you can [read the **Custom kernel connection** guide here](https://github.com/nteract/hydrogen/blob/master/KERNEL_CONNECTION.md).
 
 
 ## Why "Hydrogen"?
