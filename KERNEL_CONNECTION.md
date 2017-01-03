@@ -1,6 +1,6 @@
 # Custom kernel connection example (inside Docker)
 
-**Note**: Hydrogen now supports using kernel gateways ([see the instructions in the main page](https://github.com/nteract/hydrogen/blob/master/README.md)). Using that option might be simpler and will allow you to use the functionality in Windows or Mac very easily.
+**Note**: Hydrogen now supports using kernel gateways ([see the instructions in the main page](https://github.com/nteract/hydrogen/blob/master/README.md)). Using that option might be simpler in most of the use cases. For example, it will allow you to use the functionality from a Docker virtual machine in Windows or Mac as easily as if it was Linux.
 
 You can use a custom kernel connection file to connect to a previously created kernel.
 
