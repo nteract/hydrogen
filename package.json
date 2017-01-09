@@ -30,8 +30,8 @@
     ]
   },
   "scripts": {
-    "lint": "eslint .",
-    "fix": "eslint . --fix",
+    "lint": "node_modules/.bin/eslint .",
+    "fix": "node_modules/.bin/eslint . --fix",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md"
   },
   "repository": "https://github.com/nteract/hydrogen",
@@ -75,7 +75,7 @@
     }
   },
   "devDependencies": {
-    "babel-eslint": "^7.1.0",
+    "babel-eslint": "^7.1.1",
     "eslint": "^3.12.2",
     "eslint-config-airbnb-base": "^11.0.0",
     "eslint-plugin-import": "^2.2.0",
