@@ -1,0 +1,14 @@
+javascript:
+  code: 'a=1'
+  
+python:
+  kernel: 'Python 3'
+  code: '''
+  qwe=123
+  '''
+  files: [
+    './py.py'
+    './py2.py'
+  ]
+    
+  
