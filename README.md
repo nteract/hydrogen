@@ -1,5 +1,7 @@
 # Hydrogen
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/nteract/hydrogen.svg)](https://greenkeeper.io/)
+
 [![slack in](http://slack.nteract.in/badge.svg)](http://slack.nteract.in)
 [![Build Status](https://travis-ci.org/nteract/hydrogen.svg?branch=master)](https://travis-ci.org/nteract/hydrogen)
 
