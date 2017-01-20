@@ -13,7 +13,9 @@ Questions? Feel free to ping us on https://slack.nteract.in -->
 
 **Versions:**
 
-Which OS and which version of Atom and Hydrogen are you running?
+Which OS and which version of Hydrogen and Atom are you running?
+
+You can get this information from copy and pasting the output of `atom --version`  from the command line.
 
 **Logs:**
 
