@@ -3,14 +3,14 @@
 ## Debugging Guide
 
 Sometimes unexpected things happen.
-In this case please open a [Issue](https://github.com/nteract/hydrogen/issues) and be sure to include the Atom version and the output or a screenshot of the debug logs.
+In this case please open an [Issue](https://github.com/nteract/hydrogen/issues) and be sure to include the version of Hydrogen and Atom you are running. You can get this information from copy and pasting the output of `atom --version`  from the command line.
 
-Therefor Hydrogen provides helpful tools for debugging. To access the debug logs follow these steps:
+Please also include the output or a screenshot of the debug logs. To access the debug logs follow these steps:
 
 1. Open atom in dev mode (`View --> Developer --> Open in Dev Mode` or from the commandline via `atom --dev`):
 ![dev-mode](https://cloud.githubusercontent.com/assets/13285808/22128693/30a564b6-dea2-11e6-88d3-f431a5e95aae.png)
 
-2. Open the developer tools (`View --> Developer --> Toggle Developer Tools`):
+2. Open the developer tools (`View --> Developer --> Toggle Developer Tools` or via `shift-ctrl-i`/`cmd-alt-i`):
 ![open-dev-tools](https://cloud.githubusercontent.com/assets/13285808/22128694/30b959d0-dea2-11e6-8b44-9c969a0b8b31.png)
 
 3. Select the console tab to see the debug logs:
