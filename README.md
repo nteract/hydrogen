@@ -1,8 +1,7 @@
 # Hydrogen
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/nteract/hydrogen.svg)](https://greenkeeper.io/)
-
 [![slack in](http://slack.nteract.in/badge.svg)](http://slack.nteract.in)
+[![Greenkeeper badge](https://badges.greenkeeper.io/nteract/hydrogen.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/nteract/hydrogen.svg?branch=master)](https://travis-ci.org/nteract/hydrogen)
 
 This package lets you run your code directly in Atom using any [Jupyter](https://jupyter.org/) kernels you have installed.
