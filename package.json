@@ -40,7 +40,7 @@
     "atom": ">=1.6.0 <2.0.0"
   },
   "dependencies": {
-    "@jupyterlab/services": "^0.36.0",
+    "@jupyterlab/services": "^0.38.0",
     "atom-message-panel": "^1.2.4",
     "atom-space-pen-views": "^2.0.5",
     "escape-string-regexp": "^1.0.5",
