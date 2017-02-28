@@ -58,24 +58,6 @@ describe('Kernel manager', () => {
       }),
     );
 
-    describe('setRunningKernelFor', () =>
-      it('should set the running kernel for a grammar', () => {
-        const grammar = { name: 'grammarLanguage' };
-
-        const kernel = {
-          kernelSpec: {
-            language: 'kernelLanguage',
-          },
-          destroy() {},
-        };
-        kernelManager.setRunningKernelFor(grammar, kernel);
-        expect(kernelManager._runningKernels.grammarlanguage)
-          .not.toBeUndefined();
-        expect(kernelManager._runningKernels.grammarlanguage
-          .kernelSpec.language).toEqual('grammarlanguage');
-      }),
-    );
-
     describe('destroyRunningKernelFor', () =>
       it('should destroy a running kernel for a grammar', () => {
         spyOn(mockKernels.kernel1, 'destroy');
@@ -87,13 +69,6 @@ describe('Kernel manager', () => {
         expect(mockKernels.kernel2.destroy).not.toHaveBeenCalled();
         expect(kernelManager._runningKernels.kernel2).not.toBeUndefined();
         expect(kernelManager._runningKernels.kernel1).toBeUndefined();
-      }),
-    );
-
-    describe('getAllRunningKernels', () =>
-      it('should get all running kernels', () => {
-        kernelManager._runningKernels = mockKernels;
-        expect(kernelManager.getAllRunningKernels()).toEqual(mockKernels);
       }),
     );
 
