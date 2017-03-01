@@ -3,18 +3,18 @@
 ## Debugging Guide
 
 Sometimes unexpected things happen.
-In this case please open an [Issue](https://github.com/nteract/hydrogen/issues) and be sure to include the version of Hydrogen and Atom you are running. You can get this information from copy and pasting the output of `atom --version`  from the command line.
+In this case, please, open an [Issue](https://github.com/nteract/hydrogen/issues) and make sure to include the version of Hydrogen and Atom you are running. You can get this information by running `atom --version` from the command line.
 
-Please also include the output or a screenshot of the debug logs. To access the debug logs follow these steps:
+Please, also include the output or a screenshot of the debug messages. To access the debug messages follow these steps:
 
-1. Open atom in dev mode (`View --> Developer --> Open in Dev Mode` or from the commandline via `atom --dev`):
-![dev-mode](https://cloud.githubusercontent.com/assets/13285808/22128693/30a564b6-dea2-11e6-88d3-f431a5e95aae.png)
+1. Open the Settings tab by pressing (`ctrl-,`), select the Hydrogen package (`Packages --> Hydrogen`), and tick `Enable Debug Messages`:
+![hydrogen-settings](https://cloud.githubusercontent.com/assets/6199391/23463294/df273cf2-fe88-11e6-95e3-0be765973035.png)
 
 2. Open the developer tools (`View --> Developer --> Toggle Developer Tools` or via `shift-ctrl-i`/`cmd-alt-i`):
-![open-dev-tools](https://cloud.githubusercontent.com/assets/13285808/22128694/30b959d0-dea2-11e6-8b44-9c969a0b8b31.png)
+![open-dev-tools](https://cloud.githubusercontent.com/assets/6199391/23463624/27db48fc-fe8a-11e6-8f68-f0159bc26362.png)
 
-3. Select the console tab to see the debug logs:
-![dev-tools](https://cloud.githubusercontent.com/assets/13285808/22128692/30a4ae2c-dea2-11e6-99e7-7d7376d7ee76.png)
+3. Select the Console tab to see the debug logs and run the code causing the issue:
+![dev-tools](https://cloud.githubusercontent.com/assets/6199391/23463305/e4750a9a-fe88-11e6-906e-d19ab90ac309.png)
 
 ## Common Issues
 
