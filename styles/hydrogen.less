@@ -478,16 +478,16 @@
     }
 }
 
-.plain-message.inspect-message {
-    white-space: pre-wrap;
-    font-size: @font-size;
-    span[style] {
-        color: @text-color-info !important;
-    }
-}
+.hydrogen-panel .panel-body {
+  overflow-y: auto;
+  max-height: 200px;
 
-.heading-summary.inspect-message {
-    span[style] {
-        color: @text-color-info !important;
-    }
+  span[style] {
+      color: @text-color-info !important;
+  }
+  pre {
+    font-size: @font-size;
+    font-family: inherit;
+    background: inherit;
+  }
 }

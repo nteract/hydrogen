@@ -41,9 +41,9 @@
   },
   "dependencies": {
     "@jupyterlab/services": "^0.40.0",
-    "atom-message-panel": "^1.2.4",
     "atom-space-pen-views": "^2.0.5",
     "escape-string-regexp": "^1.0.5",
+    "interact.js": "^1.2.8",
     "jmp": "^0.7.5",
     "lodash": "^4.14.0",
     "mobx": "^3.1.0",
