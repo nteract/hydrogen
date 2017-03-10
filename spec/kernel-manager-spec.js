@@ -18,8 +18,8 @@ describe('Kernel manager', () => {
     });
 
     it('should call @getKernelSpecsFromSettings', () => {
-      spyOn(kernelManager, 'getKernelSpecsFromSettings');
-      kernelManager.constructor();
+      spyOn(KernelManager.prototype, 'getKernelSpecsFromSettings');
+      kernelManager = new KernelManager();
       expect(kernelManager.getKernelSpecsFromSettings).toHaveBeenCalled();
     });
   });
