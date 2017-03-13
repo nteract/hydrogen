@@ -1,20 +1,11 @@
 'use babel';
 
-import KernelManager from '../lib/kernel-manager';
+import kernelManager from '../lib/kernel-manager';
 
 describe('Kernel manager', () => {
-  let kernelManager = null;
-
-  beforeEach(() => {
-    kernelManager = new KernelManager();
-    atom.config.set('Hydrogen.kernelspec', '');
-  });
-
   describe('constructor', () => {
-    it('should call @getKernelSpecsFromSettings', () => {
-      spyOn(KernelManager.prototype, 'getKernelSpecsFromSettings');
-      kernelManager = new KernelManager();
-      expect(kernelManager.getKernelSpecsFromSettings).toHaveBeenCalled();
+    it('should call initialize _kernelSpecs', () => {
+      expect(kernelManager._kernelSpecs).toEqual({});
     });
   });
 
