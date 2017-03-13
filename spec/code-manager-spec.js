@@ -5,7 +5,7 @@ import store from '../lib/store';
 
 describe('CodeManager', () => {
   beforeEach(() => {
-    store.editor = atom.workspace.buildTextEditor();
+    store.updateEditor(atom.workspace.buildTextEditor());
   });
 
   describe('Convert line endings', () => {
