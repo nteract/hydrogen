@@ -478,9 +478,9 @@
     }
 }
 
-.hydrogen-panel .panel-body {
+.hydrogen-panel-body {
   overflow-y: auto;
-  max-height: 200px;
+  max-height: calc(~'100% - 2px' - @font-size + 2 * @component-padding);
 
   span[style] {
       color: @text-color-info !important;
