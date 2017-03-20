@@ -4,7 +4,9 @@ notifications:
     on_success: never
     on_failure: change
 
-script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
+script:
+  - curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh
+  - npm run flow
 
 env:
   matrix:
