@@ -31,6 +31,7 @@
   },
   "scripts": {
     "lint": "eslint .",
+    "flow": "flow",
     "fix": "eslint . --fix",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md"
   },
@@ -81,9 +82,11 @@
     "babel-eslint": "^7.1.0",
     "eslint": "^3.16.1",
     "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-flowtype": "^2.30.3",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.1",
+    "flow-bin": "^0.42.0",
     "markdox": "^0.1.10"
   }
 }

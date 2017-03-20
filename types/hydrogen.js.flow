@@ -1,0 +1,12 @@
+export type Kernelspec = {
+  env: Object,
+  argv: Array<string>,
+  display_name: string,
+  language: string,
+}
+
+// Be more specific
+export type Message = {
+  header: Object,
+  content: Object,
+}
