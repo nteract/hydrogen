@@ -37,7 +37,8 @@ describe('Store', () => {
     const kernel = { language: 'null grammar', foo: 'bar' };
     store.newKernel(kernel);
     expect(store.runningKernels.size).toBe(1);
-    expect(store.runningKernels.get('null grammar')).toBe(kernel);
+    expect(store.runningKernels.get('null grammar').language).toBe('null grammar');
+    expect(store.runningKernels.get('null grammar').foo).toBe('bar');
   });
 
   it('should delete kernel', () => {
