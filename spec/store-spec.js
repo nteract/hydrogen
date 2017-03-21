@@ -1,7 +1,7 @@
 'use babel';
 
 import { CompositeDisposable } from 'atom';
-import { isObservableMap, isObservable } from 'mobx';
+import { isObservableMap, isObservable, isComputed } from 'mobx';
 import store from './../lib/store';
 
 describe('Store initialize', () => {
@@ -9,9 +9,9 @@ describe('Store initialize', () => {
     expect(store.subscriptions instanceof CompositeDisposable).toBeTruthy();
     expect(isObservableMap(store.runningKernels)).toBeTruthy();
     expect(isObservable(store, 'editor')).toBeTruthy();
-    expect(store.grammar).toBe(store.editor.getGrammar());
-    expect(store.kernel).toBeUndefined();
-    expect(store.language).toBe('null grammar');
+    expect(isObservable(store, 'grammar')).toBeTruthy();
+    expect(isComputed(store, 'kernel')).toBeTruthy();
+    expect(isComputed(store, 'language')).toBeTruthy();
   });
 });
 
