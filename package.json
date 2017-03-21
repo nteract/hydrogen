@@ -80,6 +80,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.1.0",
+    "enzyme": "^2.7.1",
     "eslint": "^3.16.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-flowtype": "^2.30.3",
@@ -87,6 +88,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.1",
     "flow-bin": "^0.42.0",
-    "markdox": "^0.1.10"
+    "markdox": "^0.1.10",
+    "react-addons-test-utils": "^15.4.2"
   }
 }
