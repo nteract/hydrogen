@@ -9,9 +9,9 @@ describe('Store initialize', () => {
     expect(store.subscriptions instanceof CompositeDisposable).toBeTruthy();
     expect(isObservableMap(store.runningKernels)).toBeTruthy();
     expect(isObservable(store, 'editor')).toBeTruthy();
-    expect(store.grammar).toBeUndefined();
+    expect(store.grammar).toBe(store.editor.getGrammar());
     expect(store.kernel).toBeUndefined();
-    expect(store.language).toBeNull();
+    expect(store.language).toBe('null grammar');
   });
 });
 
@@ -51,10 +51,14 @@ describe('Store', () => {
   });
 
   it('should update editor', () => {
+    spyOn(store, 'setGrammar').andCallThrough();
     expect(store.editor).toBeNull();
     const editor = atom.workspace.buildTextEditor();
     store.updateEditor(editor);
     expect(store.editor).toBe(editor);
+    expect(store.setGrammar).toHaveBeenCalledWith(editor);
+    expect(store.grammar).toBe(editor.getGrammar());
+    expect(store.language).toBe('null grammar');
   });
 
   it('should dispose kernels and subscriptions', () => {
