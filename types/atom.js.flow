@@ -690,6 +690,8 @@ type MarkerOptions = {|
 |};
 
 declare class atom$TextEditor extends atom$Model {
+  width: number,
+
   id: number,
   firstVisibleScreenRow: number,
   rowsPerPage: number,
