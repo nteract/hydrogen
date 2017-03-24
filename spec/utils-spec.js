@@ -3,7 +3,7 @@
 import ReactDOM from 'react-dom';
 import { CompositeDisposable } from 'atom';
 
-import { reactFactory, grammarToLanguage } from './../lib/utils';
+import { reactFactory, grammarToLanguage, isMultilanguageGrammar } from './../lib/utils';
 
 describe('grammarToLanguage', () => {
   expect(grammarToLanguage({ name: 'Kernel Name' })).toEqual('kernel name');
@@ -28,4 +28,10 @@ describe('reactFactory', () => {
   compDisposable.dispose();
   expect(ReactDOM.unmountComponentAtNode).toHaveBeenCalledWith('domElement');
   expect(teardown).toHaveBeenCalled();
+});
+
+describe('isMultilanguageGrammar', () => {
+  expect(isMultilanguageGrammar(atom.workspace.buildTextEditor().getGrammar())).toBe(false);
+  expect(isMultilanguageGrammar({ scopeName: 'source.gfm' })).toBe(true);
+  expect(isMultilanguageGrammar({ scopeName: 'source.asciidoc' })).toBe(true);
 });
