@@ -706,6 +706,7 @@ declare class atom$TextEditor extends atom$Model {
   onDidSave(callback: (event: {path: string}) => mixed): IDisposable,
   getBuffer(): atom$TextBuffer,
   observeGrammar(callback: (grammar: atom$Grammar) => mixed): IDisposable,
+  onDidChangeGrammar(callback: (grammar: atom$Grammar) => mixed): IDisposable,
   onWillInsertText(callback: (event: {cancel: () => void, text: string}) => void):
       IDisposable,
   // Note that the range property of the event is undocumented.
