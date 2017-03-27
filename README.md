@@ -167,6 +167,14 @@ You can also access these commands by clicking on the kernel status in the statu
 
 Additionally, if you have two or more kernels for a particular language (grammar), you can select which kernel to use with the "Switch to <kernel>" option in the Kernel Commands menu.
 
+### Multiple kernels inside one rich document
+
+If you are working in a markup file that supports highlighted code blocks, we can handle multiple kernels per file. This way you can write your documentation, readme or paper together with your code while retaining the interactivity of Hydrogen.
+
+<img src="https://cloud.githubusercontent.com/assets/13285808/24365090/0af6a91c-1315-11e7-92c6-849031bf9f6a.gif" height=350>
+
+We support [markdown](https://github.com/burodepeper/language-markdown), [gfm](https://github.com/atom/language-gfm), [asciidoc](https://github.com/asciidoctor/atom-language-asciidoc), [reStructuredText](https://github.com/Lukasa/language-restructuredtext) and [knitr](https://github.com/christophergandrud/language-knitr/).
+
 ## Plugins for Hydrogen
 
 Hydrogen has support for plugins. Feel free to add your own to the list:
