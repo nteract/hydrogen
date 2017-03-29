@@ -8,9 +8,13 @@ import StatusBar from '../../lib/components/status-bar';
 
 describe('Status Bar', () => {
   it('should render status bar and call onClick if clicked', () => {
-    const mockStore = { kernel: { displayName: 'Foo Kernel', executionState: 'idle' } };
+    const mockStore = {
+      kernel: { displayName: 'Foo Kernel', executionState: 'idle' }
+    };
     const onClick = jasmine.createSpy('onClick');
-    const component = shallow(<StatusBar store={mockStore} onClick={onClick} />);
+    const component = shallow(
+      <StatusBar store={mockStore} onClick={onClick} />
+    );
     component.find('a').simulate('click');
     expect(component.type()).not.toBeNull();
     expect(component.text()).toBe('Foo Kernel | idle');
@@ -19,14 +23,20 @@ describe('Status Bar', () => {
 
   it('should return empty if kernel is undefined', () => {
     const mockStore = { kernel: undefined };
-    const component = shallow(<StatusBar store={mockStore} onClick={() => {}} />);
+    const component = shallow(
+      <StatusBar store={mockStore} onClick={() => {}} />
+    );
     expect(component.type()).toBeNull();
     expect(component.text()).toBe('');
   });
 
   it('should update status correctly', () => {
     spyOn(StatusBar.prototype, 'render').andCallThrough();
-    const kernel = { language: 'null grammar', displayName: 'Null Kernel', executionState: 'starting' };
+    const kernel = {
+      language: 'null grammar',
+      displayName: 'Null Kernel',
+      executionState: 'starting'
+    };
     const component = shallow(<StatusBar store={store} onClick={() => {}} />);
     // empty
     expect(StatusBar.prototype.render.calls.length).toEqual(1);

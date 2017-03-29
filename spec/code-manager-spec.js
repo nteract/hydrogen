@@ -34,12 +34,12 @@ describe('CodeManager', () => {
       const range = {
         start: {
           row: 1,
-          column: 0,
+          column: 0
         },
         end: {
           row: 10,
-          column: 9999999,
-        },
+          column: 9999999
+        }
       };
       expect(store.editor.getTextInBufferRange).toHaveBeenCalledWith(range);
     });
@@ -47,11 +47,10 @@ describe('CodeManager', () => {
     it('getTextInRange', () => {
       spyOn(store.editor, 'getTextInBufferRange');
       CM.getTextInRange([1, 2], [3, 4]);
-      expect(store.editor.getTextInBufferRange)
-        .toHaveBeenCalledWith([
-          [1, 2],
-          [3, 4],
-        ]);
+      expect(store.editor.getTextInBufferRange).toHaveBeenCalledWith([
+        [1, 2],
+        [3, 4]
+      ]);
     });
 
     it('getSelectedText', () => {
