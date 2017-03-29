@@ -33,7 +33,7 @@
     "lint": "eslint .",
     "flow": "flow",
     "fix": "eslint . --fix",
-    "prettier": "prettier --single-quote --write 'lib/**/*.js' 'spec/**/*.js'",
+    "prettier": "prettier --write 'lib/**/*.js' 'spec/**/*.js'",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md",
     "precommit": "lint-staged"
   },
@@ -44,7 +44,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier --single-quote --write",
+      "prettier --write",
       "git add"
     ]
   },
