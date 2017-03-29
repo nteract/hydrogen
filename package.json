@@ -33,12 +33,19 @@
     "lint": "eslint .",
     "flow": "flow",
     "fix": "eslint . --fix",
-    "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md"
+    "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md",
+    "precommit": "lint-staged"
   },
   "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
     "atom": ">=1.6.0 <2.0.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "@jupyterlab/services": "^0.40.0",
@@ -85,6 +92,8 @@
     "eslint-config-prettier": "^1.5.0",
     "eslint-plugin-prettier": "^2.0.1",
     "flow-bin": "^0.42.0",
+    "husky": "^0.13.3",
+    "lint-staged": "^3.4.0",
     "markdox": "^0.1.10",
     "prettier": "^0.22.0",
     "react-addons-test-utils": "^15.4.2"
