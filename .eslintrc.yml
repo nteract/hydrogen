@@ -23,4 +23,3 @@ settings:
 rules:
   prettier/prettier:
     - error
-    - singleQuote: true

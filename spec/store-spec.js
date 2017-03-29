@@ -1,21 +1,21 @@
-'use babel';
+"use babel";
 
-import { CompositeDisposable } from 'atom';
-import { isObservableMap, isObservable, isComputed } from 'mobx';
-import store from './../lib/store';
+import { CompositeDisposable } from "atom";
+import { isObservableMap, isObservable, isComputed } from "mobx";
+import store from "./../lib/store";
 
-describe('Store initialize', () => {
-  it('should correctly initialize store', () => {
+describe("Store initialize", () => {
+  it("should correctly initialize store", () => {
     expect(store.subscriptions instanceof CompositeDisposable).toBeTruthy();
     expect(isObservableMap(store.runningKernels)).toBeTruthy();
-    expect(isObservable(store, 'editor')).toBeTruthy();
-    expect(isObservable(store, 'grammar')).toBeTruthy();
-    expect(isComputed(store, 'kernel')).toBeTruthy();
-    expect(isComputed(store, 'language')).toBeTruthy();
+    expect(isObservable(store, "editor")).toBeTruthy();
+    expect(isObservable(store, "grammar")).toBeTruthy();
+    expect(isComputed(store, "kernel")).toBeTruthy();
+    expect(isComputed(store, "language")).toBeTruthy();
   });
 });
 
-describe('Store', () => {
+describe("Store", () => {
   beforeEach(() => {
     store.subscriptions = new CompositeDisposable();
     store.runningKernels = new Map();
@@ -23,52 +23,52 @@ describe('Store', () => {
     store.grammar = null;
   });
 
-  it('should set grammar and determine language and current kernel', () => {
+  it("should set grammar and determine language and current kernel", () => {
     const editor = atom.workspace.buildTextEditor();
-    store.runningKernels.set('null grammar', 'current kernel');
-    store.runningKernels.set('mock grammar', 'not current kernel');
+    store.runningKernels.set("null grammar", "current kernel");
+    store.runningKernels.set("mock grammar", "not current kernel");
     store.setGrammar(editor);
     expect(store.grammar).toBe(editor.getGrammar());
-    expect(store.language).toBe('null grammar');
-    expect(store.kernel).toBe('current kernel');
+    expect(store.language).toBe("null grammar");
+    expect(store.kernel).toBe("current kernel");
   });
 
-  it('should add new kernel', () => {
-    const kernel = { language: 'null grammar', foo: 'bar' };
+  it("should add new kernel", () => {
+    const kernel = { language: "null grammar", foo: "bar" };
     store.newKernel(kernel);
     expect(store.runningKernels.size).toBe(1);
-    expect(store.runningKernels.get('null grammar').language).toBe(
-      'null grammar'
+    expect(store.runningKernels.get("null grammar").language).toBe(
+      "null grammar"
     );
-    expect(store.runningKernels.get('null grammar').foo).toBe('bar');
+    expect(store.runningKernels.get("null grammar").foo).toBe("bar");
   });
 
-  it('should delete kernel', () => {
-    store.runningKernels.set('lang1', 'foo');
-    store.runningKernels.set('lang2', 'bar');
+  it("should delete kernel", () => {
+    store.runningKernels.set("lang1", "foo");
+    store.runningKernels.set("lang2", "bar");
     expect(store.runningKernels.size).toBe(2);
-    store.deleteKernel('lang1');
+    store.deleteKernel("lang1");
     expect(store.runningKernels.size).toBe(1);
-    expect(store.runningKernels.get('lang2')).toBe('bar');
+    expect(store.runningKernels.get("lang2")).toBe("bar");
   });
 
-  it('should update editor', () => {
-    spyOn(store, 'setGrammar').andCallThrough();
+  it("should update editor", () => {
+    spyOn(store, "setGrammar").andCallThrough();
     expect(store.editor).toBeNull();
     const editor = atom.workspace.buildTextEditor();
     store.updateEditor(editor);
     expect(store.editor).toBe(editor);
     expect(store.setGrammar).toHaveBeenCalledWith(editor);
     expect(store.grammar).toBe(editor.getGrammar());
-    expect(store.language).toBe('null grammar');
+    expect(store.language).toBe("null grammar");
   });
 
-  it('should dispose kernels and subscriptions', () => {
-    spyOn(store.subscriptions, 'dispose');
-    const kernel1 = jasmine.createSpyObj('kernel1', ['destroy']);
-    const kernel2 = jasmine.createSpyObj('kernel2', ['destroy']);
-    store.runningKernels.set('lang1', kernel1);
-    store.runningKernels.set('lang2', kernel2);
+  it("should dispose kernels and subscriptions", () => {
+    spyOn(store.subscriptions, "dispose");
+    const kernel1 = jasmine.createSpyObj("kernel1", ["destroy"]);
+    const kernel2 = jasmine.createSpyObj("kernel2", ["destroy"]);
+    store.runningKernels.set("lang1", kernel1);
+    store.runningKernels.set("lang2", kernel2);
     store.dispose();
     expect(store.runningKernels.size).toBe(0);
     expect(kernel1.destroy).toHaveBeenCalled();
