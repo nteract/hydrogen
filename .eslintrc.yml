@@ -1,9 +1,10 @@
 plugins:
+  - prettier
   - flowtype
 
 extends:
-  - airbnb
-  - plugin:flowtype/recommended
+  - prettier
+  - prettier/flowtype
 
 parser: babel-eslint
 
@@ -20,12 +21,6 @@ settings:
   import/core-modules: [ atom ]
 
 rules:
-  no-console: [2, { allow: ["warn", "error"] }]
-  no-param-reassign: [0]
-  no-underscore-dangle: [0]
-  no-useless-escape: [0]
-  prefer-rest-params: [0]
-  class-methods-use-this: [0]
-  react/jsx-filename-extension: [0]
-  jsx-a11y/no-static-element-interactions: [0]
-  react/no-danger: [0]
+  prettier/prettier:
+    - error
+    - singleQuote: true
