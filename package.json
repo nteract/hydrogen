@@ -33,6 +33,7 @@
     "lint": "eslint .",
     "flow": "flow",
     "fix": "eslint . --fix",
+    "prettier": "prettier --single-quote --write 'lib/**/*.js' 'spec/**/*.js'",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md",
     "precommit": "lint-staged"
   },
@@ -90,6 +91,7 @@
     "enzyme": "^2.7.1",
     "eslint": "^3.16.1",
     "eslint-config-prettier": "^1.5.0",
+    "eslint-plugin-flowtype": "^2.30.4",
     "eslint-plugin-prettier": "^2.0.1",
     "flow-bin": "^0.42.0",
     "husky": "^0.13.3",
