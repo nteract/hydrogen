@@ -6,7 +6,8 @@ import { CompositeDisposable } from "atom";
 import {
   reactFactory,
   grammarToLanguage,
-  isMultilanguageGrammar
+  isMultilanguageGrammar,
+  getEmbeddedScope
 } from "./../lib/utils";
 
 describe("grammarToLanguage", () => {
@@ -40,4 +41,24 @@ describe("isMultilanguageGrammar", () => {
   ).toBe(false);
   expect(isMultilanguageGrammar({ scopeName: "source.gfm" })).toBe(true);
   expect(isMultilanguageGrammar({ scopeName: "source.asciidoc" })).toBe(true);
+});
+
+describe("getEmbeddedScope", () => {
+  const editor = {
+    scopeDescriptorForBufferPosition: () => {
+      return {
+        getScopesArray: () => [
+          "text.md",
+          "fenced.code.md",
+          "source.embedded.python"
+        ]
+      };
+    }
+  };
+  spyOn(editor, "scopeDescriptorForBufferPosition").andCallThrough();
+  const scope = getEmbeddedScope(editor, "position");
+  expect(scope).toEqual("source.embedded.python");
+  expect(editor.scopeDescriptorForBufferPosition).toHaveBeenCalledWith(
+    "position"
+  );
 });
