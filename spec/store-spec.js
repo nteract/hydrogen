@@ -23,14 +23,74 @@ describe("Store", () => {
     store.grammar = null;
   });
 
-  it("should set grammar and determine language and current kernel", () => {
-    const editor = atom.workspace.buildTextEditor();
-    store.runningKernels.set("null grammar", "current kernel");
-    store.runningKernels.set("mock grammar", "not current kernel");
-    store.setGrammar(editor);
-    expect(store.grammar).toBe(editor.getGrammar());
-    expect(store.language).toBe("null grammar");
-    expect(store.kernel).toBe("current kernel");
+  describe("setGrammar", () => {
+    it("should set grammar and determine language and current kernel", () => {
+      const editor = atom.workspace.buildTextEditor();
+      store.runningKernels.set("null grammar", "current kernel");
+      store.runningKernels.set("mock grammar", "not current kernel");
+      store.setGrammar(editor);
+      expect(store.grammar).toBe(editor.getGrammar());
+      expect(store.language).toBe("null grammar");
+      expect(store.kernel).toBe("current kernel");
+    });
+
+    it("should set grammar to null if editor is undefined", () => {
+      store.setGrammar(null);
+      expect(store.grammar).toBeNull();
+      store.setGrammar(undefined);
+      expect(store.grammar).toBeNull();
+    });
+
+    it("should set non multi language grammar", () => {
+      const grammar = { scopeName: "source.python", name: "Python" };
+      const editor = { getGrammar: () => grammar };
+
+      store.setGrammar(editor);
+      expect(store.grammar).toEqual(grammar);
+      expect(store.language).toBe("python");
+    });
+
+    it("should set multi language grammar inside code block", () => {
+      const editor = {
+        getGrammar: () => {
+          return { scopeName: "source.gfm", name: "GitHub Markdown" };
+        },
+        getCursorBufferPosition: () => {},
+        scopeDescriptorForBufferPosition: () => {
+          return {
+            getScopesArray: () => [
+              "source.gfm",
+              "markup.code.python.gfm",
+              "source.embedded.python"
+            ]
+          };
+        }
+      };
+
+      const pythonGrammar = { scopeName: "source.python", name: "Python" };
+      spyOn(atom.grammars, "grammarForScopeName").andReturn(pythonGrammar);
+
+      store.setGrammar(editor);
+      expect(store.grammar).toEqual(pythonGrammar);
+      expect(store.language).toBe("python");
+    });
+
+    it("should set multi language grammar outside code block", () => {
+      const grammar = { scopeName: "source.gfm", name: "GitHub Markdown" };
+      const editor = {
+        getGrammar: () => grammar,
+        getCursorBufferPosition: () => {},
+        scopeDescriptorForBufferPosition: () => {
+          return {
+            getScopesArray: () => ["source.gfm", "markup.code.python.gfm"]
+          };
+        }
+      };
+
+      store.setGrammar(editor);
+      expect(store.grammar).toEqual(grammar);
+      expect(store.language).toBe("github markdown");
+    });
   });
 
   it("should add new kernel", () => {
