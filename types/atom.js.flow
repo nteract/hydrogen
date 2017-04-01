@@ -690,6 +690,7 @@ type MarkerOptions = {|
 |};
 
 declare class atom$TextEditor extends atom$Model {
+  element: atom$TextEditorElement,
   width: number,
 
   id: number,
@@ -892,6 +893,9 @@ declare class atom$TextEditor extends atom$Model {
   gutterWithName(name: string): ?atom$Gutter,
 
   // Scrolling the TextEditor
+  scrollToCursorPosition(
+    options?: {center?: boolean}
+  ): void,
   scrollToBufferPosition(
     position: atom$Point | [?number, ?number],
     options?: {center?: boolean}
