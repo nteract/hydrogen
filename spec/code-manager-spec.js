@@ -24,13 +24,13 @@ describe("CodeManager", () => {
 
     it("getRow", () => {
       spyOn(store.editor, "lineTextForBufferRow");
-      CM.getRow(123);
+      CM.getRow(store.editor, 123);
       expect(store.editor.lineTextForBufferRow).toHaveBeenCalledWith(123);
     });
 
     it("getRows", () => {
       spyOn(store.editor, "getTextInBufferRange");
-      CM.getRows(1, 10);
+      CM.getRows(store.editor, 1, 10);
       const range = {
         start: {
           row: 1,
@@ -46,7 +46,7 @@ describe("CodeManager", () => {
 
     it("getTextInRange", () => {
       spyOn(store.editor, "getTextInBufferRange");
-      CM.getTextInRange([1, 2], [3, 4]);
+      CM.getTextInRange(store.editor, [1, 2], [3, 4]);
       expect(store.editor.getTextInBufferRange).toHaveBeenCalledWith([
         [1, 2],
         [3, 4]
@@ -55,7 +55,7 @@ describe("CodeManager", () => {
 
     it("getSelectedText", () => {
       spyOn(store.editor, "getSelectedText");
-      CM.getSelectedText();
+      CM.getSelectedText(store.editor);
       expect(store.editor.getSelectedText).toHaveBeenCalled();
     });
   });
