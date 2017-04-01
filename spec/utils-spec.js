@@ -14,10 +14,30 @@ import {
 } from "./../lib/utils";
 
 describe("utils", () => {
-  it("grammarToLanguage", () => {
-    expect(grammarToLanguage({ name: "Kernel Name" })).toEqual("kernel name");
-    expect(grammarToLanguage(null)).toBeNull();
-    expect(grammarToLanguage(undefined)).toBeNull();
+  describe("grammarToLanguage", () => {
+    it("should return null if no rammar given", () => {
+      expect(grammarToLanguage()).toBeNull();
+      expect(grammarToLanguage(null)).toBeNull();
+      expect(grammarToLanguage(undefined)).toBeNull();
+    });
+
+    it("should return language from grammar", () => {
+      expect(grammarToLanguage({ name: "Kernel Name" })).toEqual("kernel name");
+    });
+
+    it("should return respect languageMappings", () => {
+      atom.config.set(
+        "Hydrogen.languageMappings",
+        `{"Kernel Language": "Grammar Language"}`
+      );
+      expect(grammarToLanguage({ name: "Grammar Language" })).toEqual(
+        "kernel language"
+      );
+      expect(grammarToLanguage({ name: "Kernel Language" })).toEqual(
+        "kernel language"
+      );
+      atom.config.set("Hydrogen.languageMappings", "");
+    });
   });
 
   it("reactFactory", () => {
