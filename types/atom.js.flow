@@ -1816,5 +1816,6 @@ declare class atom$Selection {
 declare class atom$LanguageMode {
  constructor(editor: atom$TextEditor) : void,
  buffer: atom$TextBuffer,
- rowRangeForCodeFoldAtBufferRow(row: number): ?Array<number> // Returns an {Array} of the [startRow, endRow]. Returns null if no range.
+ rowRangeForCodeFoldAtBufferRow(row: number): Array<number>, // Returns an {Array} of the [startRow, endRow]. Returns null if no range.
+ commentStartAndEndStringsForScope(row: atom$ScopeDescriptor): any // actually returns an object, like: {commentStartString: "// ", commentEndString: undefined}
 }
