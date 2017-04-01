@@ -2,12 +2,15 @@
 
 import ReactDOM from "react-dom";
 import { CompositeDisposable } from "atom";
+import os from "os";
+import path from "path";
 
 import {
   reactFactory,
   grammarToLanguage,
   isMultilanguageGrammar,
-  getEmbeddedScope
+  getEmbeddedScope,
+  getEditorDirectory
 } from "./../lib/utils";
 
 describe("utils", () => {
@@ -42,6 +45,19 @@ describe("utils", () => {
     ).toBe(false);
     expect(isMultilanguageGrammar({ scopeName: "source.gfm" })).toBe(true);
     expect(isMultilanguageGrammar({ scopeName: "source.asciidoc" })).toBe(true);
+  });
+
+  describe("getEditorDirectory", () => {
+    it("should return the directory of the current file", () => {
+      const filePath = "/directory/file.txt";
+      const editor = { getPath: () => filePath };
+      expect(getEditorDirectory(editor)).toBe(path.dirname(filePath));
+    });
+
+    it("should return the home directory if file isn't saved", () => {
+      const editor = { getPath: () => undefined };
+      expect(getEditorDirectory(editor)).toBe(os.homedir());
+    });
   });
 
   it("getEmbeddedScope", () => {
