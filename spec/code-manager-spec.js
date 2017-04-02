@@ -1,11 +1,11 @@
 "use babel";
 
 import * as CM from "../lib/code-manager";
-import store from "../lib/store";
 
 describe("CodeManager", () => {
+  let editor;
   beforeEach(() => {
-    store.updateEditor(atom.workspace.buildTextEditor());
+    editor = atom.workspace.buildTextEditor();
   });
 
   describe("Convert line endings", () => {
@@ -23,14 +23,14 @@ describe("CodeManager", () => {
     // afterEach(() => expect(CM.normalizeString).toHaveBeenCalled());
 
     it("getRow", () => {
-      spyOn(store.editor, "lineTextForBufferRow");
-      CM.getRow(store.editor, 123);
-      expect(store.editor.lineTextForBufferRow).toHaveBeenCalledWith(123);
+      spyOn(editor, "lineTextForBufferRow");
+      CM.getRow(editor, 123);
+      expect(editor.lineTextForBufferRow).toHaveBeenCalledWith(123);
     });
 
     it("getRows", () => {
-      spyOn(store.editor, "getTextInBufferRange");
-      CM.getRows(store.editor, 1, 10);
+      spyOn(editor, "getTextInBufferRange");
+      CM.getRows(editor, 1, 10);
       const range = {
         start: {
           row: 1,
@@ -41,22 +41,22 @@ describe("CodeManager", () => {
           column: 9999999
         }
       };
-      expect(store.editor.getTextInBufferRange).toHaveBeenCalledWith(range);
+      expect(editor.getTextInBufferRange).toHaveBeenCalledWith(range);
     });
 
     it("getTextInRange", () => {
-      spyOn(store.editor, "getTextInBufferRange");
-      CM.getTextInRange(store.editor, [1, 2], [3, 4]);
-      expect(store.editor.getTextInBufferRange).toHaveBeenCalledWith([
+      spyOn(editor, "getTextInBufferRange");
+      CM.getTextInRange(editor, [1, 2], [3, 4]);
+      expect(editor.getTextInBufferRange).toHaveBeenCalledWith([
         [1, 2],
         [3, 4]
       ]);
     });
 
     it("getSelectedText", () => {
-      spyOn(store.editor, "getSelectedText");
-      CM.getSelectedText(store.editor);
-      expect(store.editor.getSelectedText).toHaveBeenCalled();
+      spyOn(editor, "getSelectedText");
+      CM.getSelectedText(editor);
+      expect(editor.getSelectedText).toHaveBeenCalled();
     });
   });
 });
