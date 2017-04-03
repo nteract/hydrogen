@@ -187,6 +187,7 @@ declare class atom$Cursor {
   getBufferPosition(): atom$Point,
 
   // Cursor Position Details
+  getIndentLevel(): number,
   // Moving the Cursor
 
   // Local Positions and Ranges
@@ -559,6 +560,7 @@ type atom$StatusBarTile = {
 declare class atom$ScopeDescriptor {
   constructor(object: {scopes: Array<string>}): void,
   getScopesArray(): Array<string>,
+  getScopeChain(): string
 }
 
 /**
@@ -922,6 +924,7 @@ declare class atom$TextEditor extends atom$Model {
 
   // Undocumented properties
   presenter: ?atom$TextEditorPresenter,
+  languageMode: atom$LanguageMode,
 
   // Undocumented Methods
   getDefaultCharWidth(): number,
@@ -931,6 +934,10 @@ declare class atom$TextEditor extends atom$Model {
   onDidConflict(callback: () => void): IDisposable,
   serialize: () => mixed,
   foldBufferRowRange(startRow: number, endRow: number): void,
+  getCommentStrings(row: atom$ScopeDescriptor): any, // actuall returns an object, like: {commentStartString: "// ", commentEndString: undefined}
+  isBufferRowCommented(row: number): boolean,
+  getRootScopeDescriptor(): atom$ScopeDescriptor,
+  isFoldableAtBufferRow(row: number): boolean
 }
 
 /**
@@ -1525,6 +1532,7 @@ declare class atom$TextBuffer {
   getLastRow(): number,
   getRange(): atom$Range,
   rangeForRow(row: number, includeNewLine?: boolean): atom$Range,
+  getEndPosition(): atom$Point,
 
   // Position/Index mapping
   characterIndexForPosition(position: atom$PointLike): number,
@@ -1807,4 +1815,11 @@ declare class atom$Selection {
       undo?: boolean,
     },
   ): string,
+}
+
+declare class atom$LanguageMode {
+ constructor(editor: atom$TextEditor) : void,
+ buffer: atom$TextBuffer,
+ rowRangeForCodeFoldAtBufferRow(row: number): ?Array<number>, // Returns an {Array} of the [startRow, endRow]. Returns null if no range.
+ commentStartAndEndStringsForScope(row: atom$ScopeDescriptor): any // actually returns an object, like: {commentStartString: "// ", commentEndString: undefined}
 }
