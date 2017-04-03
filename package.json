@@ -97,6 +97,7 @@
     "husky": "^0.13.3",
     "lint-staged": "^3.4.0",
     "markdox": "^0.1.10",
+    "mobx-react-devtools": "^4.2.11",
     "prettier": "^0.22.0",
     "react-addons-test-utils": "^15.4.2"
   }
