@@ -49,7 +49,7 @@
     ]
   },
   "dependencies": {
-    "@jupyterlab/services": "^0.40.0",
+    "@jupyterlab/services": "^0.41.0",
     "atom-space-pen-views": "^2.0.5",
     "escape-string-regexp": "^1.0.5",
     "jmp": "^0.7.5",
