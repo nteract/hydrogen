@@ -6,6 +6,10 @@
 
 This package lets you run your code directly in Atom using any [Jupyter](https://jupyter.org/) kernels you have installed.
 
+Checkout our [Medium blog post](https://medium.com/nteract/hydrogen-interactive-computing-in-atom-89d291bcc4dd) to see what you can do with Hydrogen.
+
+![hero](https://cloud.githubusercontent.com/assets/13285808/20360886/7e03e524-ac03-11e6-9176-37677f226619.gif)
+
 ## Contents
 1. [Background](#background)
 2. [Features](#features)
@@ -25,9 +29,6 @@ Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous fe
 
 You also may be interested in our latest project – [nteract](https://github.com/nteract/nteract) – a desktop application that wraps up the best of the web based Jupyter notebook.
 
-Checkout our [Medium blog post](https://medium.com/nteract/hydrogen-interactive-computing-in-atom-89d291bcc4dd) to see what you can do with Hydrogen.
-
-![hero](https://cloud.githubusercontent.com/assets/13285808/20360886/7e03e524-ac03-11e6-9176-37677f226619.gif)
 
 ## Features
 
@@ -574,3 +575,5 @@ or when you want some feedback!
 You can run specs by triggering the `window:run-package-specs` command in Atom. To run tests on the command line use `apm test` within the package directory.
 
 You can learn more about how to write specs [here](http://flight-manual.atom.io/hacking-atom/sections/writing-specs/).
+
+**[⬆ back to top](#contents)**
