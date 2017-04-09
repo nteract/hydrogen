@@ -6,6 +6,21 @@
 
 This package lets you run your code directly in Atom using any [Jupyter](https://jupyter.org/) kernels you have installed.
 
+## Contents
+1. [Background](#background)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Troubleshooting](#troubleshooting)
+5. [Usage](#usage)
+6. [Plugins for Hydrogen](#plugins-for-hydrogen)
+7. [How it works](#how-it-works)
+8. [Remote kernels via kernel gateways](#remote-kernels-via-kernel-gateways)
+9. [Custom kernel connection](#custom-kernel-connection)
+10. [Why "Hydrogen"?](#why-"hydrogen"?)
+11. [Development](#development)
+
+## Background
+
 Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous feedback and the design of [Light Table](http://lighttable.com/). Running code inline and in real time is a more natural way to develop. By bringing the interactive style of Light Table to the rock-solid usability of Atom, Hydrogen makes it easy to write code the way you want to.
 
 You also may be interested in our latest project – [nteract](https://github.com/nteract/nteract) – a desktop application that wraps up the best of the web based Jupyter notebook.
