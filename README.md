@@ -16,7 +16,7 @@ This package lets you run your code directly in Atom using any [Jupyter](https:/
 7. [How it works](#how-it-works)
 8. [Remote kernels via kernel gateways](#remote-kernels-via-kernel-gateways)
 9. [Custom kernel connection](#custom-kernel-connection)
-10. [Why "Hydrogen"?](#why-"hydrogen"?)
+10. [Why "Hydrogen"?](#why-hydrogen)
 11. [Development](#development)
 
 ## Background
