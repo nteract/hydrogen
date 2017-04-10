@@ -64,7 +64,6 @@
     "requirejs": "^2.2.0",
     "spawnteract": "^2.1.1",
     "tildify": "^1.2.0",
-    "transformime": "^3.2.0",
     "uuid": "^3.0.1",
     "ws": "^2.0.0",
     "xmlhttprequest": "^1.8.0"
