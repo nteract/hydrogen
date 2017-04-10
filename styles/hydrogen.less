@@ -55,7 +55,7 @@
         .bubble-output-container {
             padding: 0 2px 0 2px;
             overflow: hidden;
-            pre {
+            code {
                 font-size: inherit;
                 line-height: inherit;
                 cursor: pointer;
@@ -70,6 +70,7 @@
     }
 
     &.multiline:not(.rich) {
+        font-size: @font-size;
         .bubble-action-panel {
             display: inline-flex;
         }
@@ -118,7 +119,7 @@
         max-height: unset !important;
         overflow: hidden !important;
         white-space: normal;
-        pre {
+        code {
             font-size: @font-size;
             font-family: inherit;
 
@@ -128,6 +129,8 @@
             margin: 0;
             padding: 0;
             border: none;
+
+            white-space: pre;
         }
 
         img, svg {
@@ -164,12 +167,12 @@
 
     .bubble-error-container {
         &.plain-error {
-            pre {
+            code {
                 color: @error-base-color;
             }
         }
 
-        pre {
+        code {
             font-size: @font-size;
             font-family: inherit;
 
@@ -386,7 +389,7 @@
             max-height: inherit;
 
             position: relative;
-            pre {
+            code {
                 padding: 3px;
                 font-size: inherit;
                 display: block;
@@ -401,7 +404,7 @@
         }
 
         .bubble-error-container {
-            pre {
+            code {
                 font-size: inherit;
             }
         }
