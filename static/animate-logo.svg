@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="169" height="169">
+    <circle fill="#6494ED" stroke="#6494ED" stroke-width="5" cx="84" cy="84" r="20" />
+    <circle fill="#6494ED" stroke="#6494ED" stroke-width="5" cx="35" cy="113" r="9">
+        <animateTransform attributeName="transform" begin="0s" dur="1.5s" type="rotate" from="0 84 84" to="360 84 84" repeatCount="indefinite" />
+    </circle>
+    <ellipse fill="none" stroke="#6494ED" stroke-width="6" cx="84" cy="84" rx="58" ry="57" />
+</svg>
