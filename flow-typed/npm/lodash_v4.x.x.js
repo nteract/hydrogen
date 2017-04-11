@@ -1,5 +1,5 @@
-// flow-typed signature: 0c44360c73d24505c966460972a30d4e
-// flow-typed version: 73bd90ad54/lodash_v4.x.x/flow_>=v0.38.x
+// flow-typed signature: a7d253bb465906a2d746884b23c74257
+// flow-typed version: df11ef698b/lodash_v4.x.x/flow_>=v0.38.x
 
 declare module 'lodash' {
   declare type TemplateSettings = {
@@ -179,9 +179,9 @@ declare module 'lodash' {
     every<T: Object>(object: T, iteratee?: OIteratee<T>): bool;
     filter<T>(array: ?Array<T>, predicate?: Predicate<T>): Array<T>;
     filter<A, T: {[id: string]: A}>(object: T, predicate?: OPredicate<A, T>): Array<A>;
-    find<T>(array: ?Array<T>, predicate?: Predicate<T>): T;
+    find<T>(array: ?Array<T>, predicate?: Predicate<T>): T|void;
     find<V, A, T: {[id: string]: A}>(object: T, predicate?: OPredicate<A, T>): V;
-    findLast<T>(array: ?Array<T>, predicate?: Predicate<T>): T;
+    findLast<T>(array: ?Array<T>, predicate?: Predicate<T>): T|void;
     findLast<V, A, T: {[id: string]: A}>(object: T, predicate?: OPredicate<A, T>): V;
     flatMap<T, U>(array: ?Array<T>, iteratee?: FlatMapIteratee<T, U>): Array<U>;
     flatMap<T: Object, U>(object: T, iteratee?: OFlatMapIteratee<T, U>): Array<U>;
