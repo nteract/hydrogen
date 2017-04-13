@@ -31,7 +31,7 @@ describe("Status Bar", () => {
   });
 
   it("should update status correctly", () => {
-    spyOn(StatusBar.prototype, "render").andCallThrough();
+    spyOn(StatusBar.prototype, "render").and.callThrough();
     const kernel = {
       language: "null grammar",
       displayName: "Null Kernel",
@@ -39,20 +39,20 @@ describe("Status Bar", () => {
     };
     const component = shallow(<StatusBar store={store} onClick={() => {}} />);
     // empty
-    expect(StatusBar.prototype.render.calls.length).toEqual(1);
+    expect(StatusBar.prototype.render).toHaveBeenCalledTimes(1);
     expect(component.type()).toBeNull();
     expect(component.text()).toBe("");
     // with kernel
     store.updateEditor(atom.workspace.buildTextEditor());
     store.newKernel(kernel);
-    expect(StatusBar.prototype.render.calls.length).toEqual(2);
+    expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
     expect(component.text()).toBe("Null Kernel | starting");
     // doesn't update if switched to editor with same grammar
     store.updateEditor(atom.workspace.buildTextEditor());
-    expect(StatusBar.prototype.render.calls.length).toEqual(2);
+    expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
     // update execution state
     store.kernel.executionState = "idle";
-    expect(StatusBar.prototype.render.calls.length).toEqual(3);
+    expect(StatusBar.prototype.render).toHaveBeenCalledTimes(3);
     expect(component.text()).toBe("Null Kernel | idle");
     // reset store
     store.runningKernels = new Map();

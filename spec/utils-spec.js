@@ -42,7 +42,7 @@ describe("utils", () => {
 
   it("reactFactory", () => {
     const compDisposable = new CompositeDisposable();
-    spyOn(compDisposable, "add").andCallThrough();
+    spyOn(compDisposable, "add").and.callThrough();
     spyOn(ReactDOM, "render");
     spyOn(ReactDOM, "unmountComponentAtNode");
     const teardown = jasmine.createSpy("teardown");
@@ -92,7 +92,7 @@ describe("utils", () => {
         };
       }
     };
-    spyOn(editor, "scopeDescriptorForBufferPosition").andCallThrough();
+    spyOn(editor, "scopeDescriptorForBufferPosition").and.callThrough();
     const scope = getEmbeddedScope(editor, "position");
     expect(scope).toEqual("source.embedded.python");
     expect(editor.scopeDescriptorForBufferPosition).toHaveBeenCalledWith(
