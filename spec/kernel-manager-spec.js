@@ -62,6 +62,7 @@ describe("Kernel manager", () => {
       });
 
       it("should return {} if no kernelspec is set", () => {
+        atom.config.set("Hydrogen.kernelspec", "");
         expect(kernelManager.getKernelSpecsFromSettings()).toEqual({});
       });
 
@@ -80,89 +81,62 @@ describe("Kernel manager", () => {
         expect(specs).toEqual(kernelSpecs.kernelspecs);
       }));
 
-    describe("getAllKernelSpecs", () =>
-      it("should return an array with specs", () =>
-        waitsForPromise(
-          () =>
-            new Promise(resolve => {
-              kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
-              kernelManager.getAllKernelSpecs(specs => {
-                expect(specs.length).toEqual(2);
-                expect(specs[0]).toEqual(
-                  kernelSpecs.kernelspecs.ijavascript.spec
-                );
-                expect(specs[1]).toEqual(kernelSpecs.kernelspecs.python2.spec);
-                resolve();
-              });
-            })
-        )));
+    describe("getAllKernelSpecs", () => {
+      it("should return an array with specs", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getAllKernelSpecs(specs => {
+          expect(specs.length).toEqual(2);
+          expect(specs[0]).toEqual(kernelSpecs.kernelspecs.ijavascript.spec);
+          expect(specs[1]).toEqual(kernelSpecs.kernelspecs.python2.spec);
+          done();
+        });
+      });
+    });
 
     describe("getAllKernelSpecsFor", () => {
-      it("should return an array with specs for given language", () =>
-        waitsForPromise(
-          () =>
-            new Promise(resolve => {
-              kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
-              kernelManager.getAllKernelSpecsFor("python", specs => {
-                expect(specs.length).toEqual(1);
-                expect(specs[0]).toEqual(kernelSpecs.kernelspecs.python2.spec);
-                resolve();
-              });
-            })
-        ));
+      it("should return an array with specs for given language", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getAllKernelSpecsFor("python", specs => {
+          expect(specs.length).toEqual(1);
+          expect(specs[0]).toEqual(kernelSpecs.kernelspecs.python2.spec);
+          done();
+        });
+      });
 
-      it("should return an empty array", () =>
-        waitsForPromise(
-          () =>
-            new Promise(resolve => {
-              kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
-              kernelManager.getAllKernelSpecsFor("julia", specs => {
-                expect(specs).toEqual([]);
-                resolve();
-              });
-            })
-        ));
+      it("should return an empty array", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getAllKernelSpecsFor("julia", specs => {
+          expect(specs).toEqual([]);
+          done();
+        });
+      });
     });
 
     describe("getKernelSpecFor", () => {
-      it("should return spec for given language", () =>
-        waitsForPromise(
-          () =>
-            new Promise(resolve => {
-              kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
-              kernelManager.getKernelSpecFor("python", kernelSpec => {
-                expect(kernelSpec).toEqual(
-                  kernelSpecs.kernelspecs.python2.spec
-                );
-                resolve();
-              });
-            })
-        ));
+      it("should return spec for given language", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getKernelSpecFor("python", kernelSpec => {
+          expect(kernelSpec).toEqual(kernelSpecs.kernelspecs.python2.spec);
+          done();
+        });
+      });
 
-      it("should return undefined", () =>
-        waitsForPromise(
-          () =>
-            new Promise(resolve => {
-              kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
-              kernelManager.getKernelSpecFor("julia", kernelSpecForJulia => {
-                expect(kernelSpecForJulia).toBeUndefined();
-                resolve();
-              });
-            })
-        ));
+      it("should return undefined", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getKernelSpecFor("julia", kernelSpecForJulia => {
+          expect(kernelSpecForJulia).toBeUndefined();
+          done();
+        });
+      });
     });
 
-    it("should update kernelspecs", () =>
-      waitsForPromise(
-        () =>
-          new Promise(resolve => {
-            kernelManager.getKernelSpecsFromJupyter((err, specs) => {
-              if (!err) {
-                expect(specs instanceof Object).toEqual(true);
-              }
-              resolve();
-            });
-          })
-      ));
+    it("should update kernelspecs", done => {
+      kernelManager.getKernelSpecsFromJupyter((err, specs) => {
+        if (!err) {
+          expect(specs instanceof Object).toEqual(true);
+        }
+        done();
+      });
+    });
   });
 });

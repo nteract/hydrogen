@@ -68,7 +68,9 @@ describe("Store", () => {
       };
 
       const pythonGrammar = { scopeName: "source.python", name: "Python" };
-      spyOn(atom.grammars, "grammarForScopeName").andReturn(pythonGrammar);
+      spyOn(atom.grammars, "grammarForScopeName").and.returnValue(
+        pythonGrammar
+      );
 
       store.setGrammar(editor);
       expect(store.grammar).toEqual(pythonGrammar);
@@ -113,7 +115,7 @@ describe("Store", () => {
   });
 
   it("should update editor", () => {
-    spyOn(store, "setGrammar").andCallThrough();
+    spyOn(store, "setGrammar").and.callThrough();
     expect(store.editor).toBeNull();
     const editor = atom.workspace.buildTextEditor();
     store.updateEditor(editor);

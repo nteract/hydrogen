@@ -37,6 +37,7 @@
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md",
     "precommit": "lint-staged"
   },
+  "atomTestRunner": "atom-jasmine2-test-runner",
   "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
@@ -90,6 +91,7 @@
     }
   },
   "devDependencies": {
+    "atom-jasmine2-test-runner": "^0.6.0",
     "babel-eslint": "^7.1.0",
     "enzyme": "^2.7.1",
     "eslint": "^3.16.1",
