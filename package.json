@@ -103,7 +103,7 @@
     "lint-staged": "^3.4.0",
     "markdox": "^0.1.10",
     "mobx-react-devtools": "^4.2.11",
-    "prettier": "^1.0.1",
+    "prettier": "^1.1.0",
     "react-addons-test-utils": "^15.4.2",
     "react-test-renderer": "^15.5.4"
   }
