@@ -11,7 +11,6 @@ describe("Store initialize", () => {
     expect(isObservable(store, "editor")).toBeTruthy();
     expect(isObservable(store, "grammar")).toBeTruthy();
     expect(isComputed(store, "kernel")).toBeTruthy();
-    expect(isComputed(store, "language")).toBeTruthy();
   });
 });
 
@@ -26,18 +25,42 @@ describe("Store", () => {
   describe("setGrammar", () => {
     it("should set grammar and determine language and current kernel", () => {
       const editor = atom.workspace.buildTextEditor();
-      store.runningKernels.set("null grammar", "current kernel");
-      store.runningKernels.set("mock grammar", "not current kernel");
-      store.setGrammar(editor);
-      expect(store.grammar).toBe(editor.getGrammar());
-      expect(store.language).toBe("null grammar");
-      expect(store.kernel).toBe("current kernel");
+      const grammar = editor.getGrammar();
+      expect(grammar.name).toBe("Null Grammar");
+      expect(store.editor).toBeNull();
+      store.updateEditorAndGrammar(editor);
+      expect(store.editor).toBe(editor);
+      expect(store.grammar).toBe(grammar);
+
+      const currentKernel = {
+        kernelSpec: { language: "null grammar" }
+      };
+      const notCurrentKernel = {
+        kernelSpec: { language: "mock grammar" }
+      };
+      const runningKernels = {
+        "current kernel": currentKernel,
+        "not current kernel": notCurrentKernel
+      };
+      for (let kernelLanguage of Object.keys(runningKernels)) {
+        const kernel = runningKernels[kernelLanguage];
+        store.runningKernels.set(kernelLanguage, kernel);
+      }
+      expect(Object.keys(store.runningKernels.toJS()).sort()).toEqual(
+        Object.keys(runningKernels).sort()
+      );
+      expect(store.kernel.kernelSpec.language).toBe(
+        currentKernel.kernelSpec.language
+      );
+    });
+
+    it("should set grammar to null if editor is null", () => {
+      store.updateEditorAndGrammar(null);
+      expect(store.grammar).toBeNull();
     });
 
     it("should set grammar to null if editor is undefined", () => {
-      store.setGrammar(null);
-      expect(store.grammar).toBeNull();
-      store.setGrammar(undefined);
+      store.updateEditorAndGrammar(undefined);
       expect(store.grammar).toBeNull();
     });
 
@@ -45,9 +68,9 @@ describe("Store", () => {
       const grammar = { scopeName: "source.python", name: "Python" };
       const editor = { getGrammar: () => grammar };
 
-      store.setGrammar(editor);
+      store.updateEditorAndGrammar(editor);
       expect(store.grammar).toEqual(grammar);
-      expect(store.language).toBe("python");
+      expect(store.grammar.name.toLowerCase()).toBe("python");
     });
 
     it("should set multi language grammar inside code block", () => {
@@ -72,9 +95,9 @@ describe("Store", () => {
         pythonGrammar
       );
 
-      store.setGrammar(editor);
+      store.updateEditorAndGrammar(editor);
       expect(store.grammar).toEqual(pythonGrammar);
-      expect(store.language).toBe("python");
+      expect(store.grammar.name.toLowerCase()).toBe("python");
     });
 
     it("should set multi language grammar outside code block", () => {
@@ -89,9 +112,9 @@ describe("Store", () => {
         }
       };
 
-      store.setGrammar(editor);
+      store.updateEditorAndGrammar(editor);
       expect(store.grammar).toEqual(grammar);
-      expect(store.language).toBe("github markdown");
+      expect(store.grammar.name.toLowerCase()).toBe("github markdown");
     });
   });
 
@@ -115,14 +138,14 @@ describe("Store", () => {
   });
 
   it("should update editor", () => {
-    spyOn(store, "setGrammar").and.callThrough();
+    spyOn(store, "updateEditorAndGrammar").and.callThrough();
     expect(store.editor).toBeNull();
     const editor = atom.workspace.buildTextEditor();
-    store.updateEditor(editor);
+    store.updateEditorAndGrammar(editor);
     expect(store.editor).toBe(editor);
-    expect(store.setGrammar).toHaveBeenCalledWith(editor);
+    expect(store.updateEditorAndGrammar).toHaveBeenCalledWith(editor);
     expect(store.grammar).toBe(editor.getGrammar());
-    expect(store.language).toBe("null grammar");
+    expect(store.grammar.name.toLowerCase()).toBe("null grammar");
   });
 
   it("should dispose kernels and subscriptions", () => {
