@@ -32,28 +32,52 @@ describe("Status Bar", () => {
 
   it("should update status correctly", () => {
     spyOn(StatusBar.prototype, "render").and.callThrough();
-    const kernel = {
-      language: "null grammar",
-      displayName: "Null Kernel",
-      executionState: "starting"
-    };
     const component = shallow(<StatusBar store={store} onClick={() => {}} />);
+
     // empty
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(1);
     expect(component.type()).toBeNull();
     expect(component.text()).toBe("");
+
     // with kernel
-    store.updateEditor(atom.workspace.buildTextEditor());
+    const editor = atom.workspace.buildTextEditor();
+    store.updateEditorAndGrammar(editor);
+    expect(store.editor).toBe(editor);
+
+    const grammar = editor.getGrammar();
+    expect(grammar.name).toBe("Null Grammar");
+
+    const kernelSpec = {
+      language: "null grammar",
+      display_name: "Null Kernel"
+    };
+    const kernel = {
+      kernelSpec: kernelSpec,
+      language: kernelSpec.language.toLowerCase(),
+      displayName: kernelSpec.display_name,
+      executionState: "starting"
+    };
     store.newKernel(kernel);
+    expect(store.runningKernels.toJS()["null grammar"]).toEqual(kernel);
+    expect(store.kernel.kernelSpec.language).toBe(kernel.kernelSpec.language);
+    expect(store.kernel.kernelSpec.display_name).toBe(
+      kernel.kernelSpec.display_name
+    );
+    expect(store.kernel.language).toBe(kernel.language);
+    expect(store.kernel.displayName).toBe(kernel.displayName);
+    expect(store.kernel.executionState).toBe(kernel.executionState);
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
     expect(component.text()).toBe("Null Kernel | starting");
+
     // doesn't update if switched to editor with same grammar
-    store.updateEditor(atom.workspace.buildTextEditor());
+    store.updateEditorAndGrammar(atom.workspace.buildTextEditor());
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
+
     // update execution state
     store.kernel.executionState = "idle";
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(3);
     expect(component.text()).toBe("Null Kernel | idle");
+
     // reset store
     store.runningKernels = new Map();
   });
