@@ -41,7 +41,7 @@ describe("Status Bar", () => {
 
     // with kernel
     const editor = atom.workspace.buildTextEditor();
-    store.updateEditorAndGrammar(editor);
+    store.updateEditor(editor);
     expect(store.editor).toBe(editor);
 
     const grammar = editor.getGrammar();
@@ -70,7 +70,7 @@ describe("Status Bar", () => {
     expect(component.text()).toBe("Null Kernel | starting");
 
     // doesn't update if switched to editor with same grammar
-    store.updateEditorAndGrammar(atom.workspace.buildTextEditor());
+    store.updateEditor(atom.workspace.buildTextEditor());
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
 
     // update execution state

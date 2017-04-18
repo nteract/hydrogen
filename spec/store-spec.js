@@ -28,8 +28,7 @@ describe("Store", () => {
       const grammar = editor.getGrammar();
       expect(grammar.name).toBe("Null Grammar");
       expect(store.editor).toBeNull();
-      store.updateEditorAndGrammar(editor);
-      expect(store.editor).toBe(editor);
+      store.setGrammar(editor);
       expect(store.grammar).toBe(grammar);
 
       const currentKernel = {
@@ -55,12 +54,12 @@ describe("Store", () => {
     });
 
     it("should set grammar to null if editor is null", () => {
-      store.updateEditorAndGrammar(null);
+      store.setGrammar(null);
       expect(store.grammar).toBeNull();
     });
 
     it("should set grammar to null if editor is undefined", () => {
-      store.updateEditorAndGrammar(undefined);
+      store.setGrammar(undefined);
       expect(store.grammar).toBeNull();
     });
 
@@ -68,7 +67,7 @@ describe("Store", () => {
       const grammar = { scopeName: "source.python", name: "Python" };
       const editor = { getGrammar: () => grammar };
 
-      store.updateEditorAndGrammar(editor);
+      store.setGrammar(editor);
       expect(store.grammar).toEqual(grammar);
       expect(store.grammar.name.toLowerCase()).toBe("python");
     });
@@ -95,7 +94,7 @@ describe("Store", () => {
         pythonGrammar
       );
 
-      store.updateEditorAndGrammar(editor);
+      store.setGrammar(editor);
       expect(store.grammar).toEqual(pythonGrammar);
       expect(store.grammar.name.toLowerCase()).toBe("python");
     });
@@ -112,7 +111,7 @@ describe("Store", () => {
         }
       };
 
-      store.updateEditorAndGrammar(editor);
+      store.setGrammar(editor);
       expect(store.grammar).toEqual(grammar);
       expect(store.grammar.name.toLowerCase()).toBe("github markdown");
     });
@@ -138,12 +137,12 @@ describe("Store", () => {
   });
 
   it("should update editor", () => {
-    spyOn(store, "updateEditorAndGrammar").and.callThrough();
+    spyOn(store, "setGrammar").and.callThrough();
     expect(store.editor).toBeNull();
     const editor = atom.workspace.buildTextEditor();
-    store.updateEditorAndGrammar(editor);
+    store.updateEditor(editor);
     expect(store.editor).toBe(editor);
-    expect(store.updateEditorAndGrammar).toHaveBeenCalledWith(editor);
+    expect(store.setGrammar).toHaveBeenCalledWith(editor);
     expect(store.grammar).toBe(editor.getGrammar());
     expect(store.grammar.name.toLowerCase()).toBe("null grammar");
   });
