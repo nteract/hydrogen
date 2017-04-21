@@ -4,3 +4,4 @@ node_modules
 .ipynb_checkpoints
 *.ipynb
 kernel-configs/
+_book/
