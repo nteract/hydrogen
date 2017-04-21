@@ -1,6 +1,7 @@
 # Summary
 
 * [Introduction](README.md)
+* [Installation](docs/Installation.md)
 * Usage
   * [Getting Started](docs/Usage/GettingStarted.md)
   * [Remote Kernels](docs/Usage/RemoteKernelConnection.md)
