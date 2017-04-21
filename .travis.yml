@@ -10,8 +10,4 @@ script:
 
 env:
   matrix:
-    - ATOM_CHANNEL=beta
-
-before_install:
-  - python -m pip install ipykernel --user
-  - python -m ipykernel install --user
+    - ATOM_CHANNEL=beta  
