@@ -19,4 +19,4 @@ You can get this information from copy and pasting the output of `atom --version
 
 **Logs:**
 
-Please post any error logs and the output of the developer tools as described in our [Debugging Guide](https://github.com/nteract/hydrogen/blob/master/TROUBLESHOOTING.md).
+Please post any error logs and the output of the developer tools as described in our [Debugging Guide](https://nteract.gitbooks.io/hydrogen/docs/Troubleshooting.html).
