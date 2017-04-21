@@ -40,7 +40,7 @@ You also may be interested in our latest project – [nteract](https://github.co
 ## [Documentation](https://nteract.gitbooks.io/hydrogen/)
 
 - [Installation](https://nteract.gitbooks.io/hydrogen/docs/Installation.html)
-- [Getting started](https://nteract.gitbooks.io/hydrogen/docs/GettingStarted.html)
+- [Getting started](https://nteract.gitbooks.io/hydrogen/docs/Usage/GettingStarted.html)
 
 ## Plugins for Hydrogen
 
