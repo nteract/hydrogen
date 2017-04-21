@@ -131,7 +131,7 @@ describe("Store", () => {
     store.runningKernels.set("lang1", "foo");
     store.runningKernels.set("lang2", "bar");
     expect(store.runningKernels.size).toBe(2);
-    store.deleteKernel("lang1");
+    store.deleteKernel("foo");
     expect(store.runningKernels.size).toBe(1);
     expect(store.runningKernels.get("lang2")).toBe("bar");
   });
