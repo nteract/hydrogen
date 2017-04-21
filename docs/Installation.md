@@ -22,7 +22,7 @@ Tested and works with:
 - [IElixir](https://github.com/pprzetacznik/IElixir)
 - [jupyter-scala](https://github.com/alexarchambault/jupyter-scala)
 
-But it _should_ work with any [kernel](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages). If you are using Hydrogen with another kernel please add it to this list or [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
+But it _should_ work with any [kernel](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels). If you are using Hydrogen with another kernel please add it to this list or [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/16931386/048f056e-4d41-11e6-8563-3baa8ed84371.png">
 

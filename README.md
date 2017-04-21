@@ -17,7 +17,8 @@ Checkout our [Medium blog post](https://medium.com/nteract/hydrogen-interactive-
 4. [How it works](#how-it-works)
 5. [Why "Hydrogen"?](#why-hydrogen)
 6. [Contributing](#contributing)
-7. [License](#license)
+7. [Changelog](#changelog)
+8. [License](#license)
 
 ## Background
 
@@ -40,14 +41,17 @@ You also may be interested in our latest project – [nteract](https://github.co
 ## [Documentation](https://nteract.gitbooks.io/hydrogen/)
 
 - [Installation](https://nteract.gitbooks.io/hydrogen/docs/Installation.html)
-- [Getting started](https://nteract.gitbooks.io/hydrogen/docs/Usage/GettingStarted.html)
+- [Usage](https://nteract.gitbooks.io/hydrogen/docs/Usage/GettingStarted.html)
+  - [Getting started](https://nteract.gitbooks.io/hydrogen/docs/Usage/GettingStarted.html)
+  - [Remote Kernels](https://nteract.gitbooks.io/hydrogen/docs/Usage/RemoteKernelConnection.html)
+- [Troubleshooting Guide](https://nteract.gitbooks.io/hydrogen/docs/Troubleshooting.html)
 
 ## Plugins for Hydrogen
 
 Hydrogen has support for plugins. Feel free to add your own to the list:
 - [Hydrogen Launcher](https://github.com/lgeiger/hydrogen-launcher)
 
-If you are interested in building a plugin take a look at our [plugin API documentation](PLUGIN_API.md).
+If you are interested in building a plugin take a look at our [plugin API documentation](https://nteract.gitbooks.io/hydrogen/docs/PluginAPI.md).
 
 ## How it works
 
@@ -63,8 +67,12 @@ Plus, it was easy to make a logo.
 
 Thanks for taking the time to contribute. Take a look at our [Contributing Guide](https://github.com/nteract/hydrogen/blob/master/CONTRIBUTING.md) to get started.
 
+## Changelog
+
+Every release is documented on the [GitHub Releases page](https://github.com/nteract/hydrogen/releases).
+
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/nteract/hydrogen/blob/master/LICENSE.md) file for details
 
 **[⬆ back to top](#contents)**

@@ -34,7 +34,7 @@
     "flow": "flow",
     "fix": "eslint . --fix",
     "prettier": "prettier --write 'lib/**/*.js' 'spec/**/*.js'",
-    "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o PLUGIN_API.md",
+    "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
     "precommit": "lint-staged"
   },
   "atomTestRunner": "atom-jasmine2-test-runner",
