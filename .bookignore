@@ -1,0 +1,15 @@
+lib/
+spec/
+static/
+styles/
+types/
+flow-typed/
+grammars/
+menus/
+keymaps/
+CHANGELOG.md
+package.json
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE.md
+.*
