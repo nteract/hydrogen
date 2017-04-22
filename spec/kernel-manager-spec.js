@@ -93,6 +93,43 @@ describe("Kernel manager", () => {
       });
     });
 
+    describe("getAllKernelSpecsForGrammar", () => {
+      it("should return an array with specs for given language", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getAllKernelSpecsForGrammar({ name: "python" }, specs => {
+          expect(specs.length).toEqual(1);
+          expect(specs[0]).toEqual(kernelSpecs.kernelspecs.python2.spec);
+          done();
+        });
+      });
+
+      it("should return an empty array", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getAllKernelSpecsForGrammar({ name: "julia" }, specs => {
+          expect(specs).toEqual([]);
+          done();
+        });
+      });
+    });
+
+    describe("getKernelSpecForGrammar", () => {
+      it("should return spec for given language", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getKernelSpecForGrammar({ name: "python" }, spec => {
+          expect(spec).toEqual(kernelSpecs.kernelspecs.python2.spec);
+          done();
+        });
+      });
+
+      it("should return undefined", done => {
+        kernelManager._kernelSpecs = kernelSpecs.kernelspecs;
+        kernelManager.getKernelSpecForGrammar({ name: "julia" }, spec => {
+          expect(spec).toBeUndefined();
+          done();
+        });
+      });
+    });
+
     it("should update kernelspecs", done => {
       kernelManager.getKernelSpecsFromJupyter((err, specs) => {
         if (!err) {
