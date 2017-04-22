@@ -1,0 +1,109 @@
+# Examples
+
+This is a collection of rich examples supported by Hydrogen.
+Please share your favorite snippets with us and add them to this page.
+
+## Interactive plots using [Plotly](https://plot.ly/api/)
+
+{% codetabs name="Python", type="py" -%}
+from plotly import offline
+offline.init_notebook_mode()
+
+offline.iplot([{"y": [1, 2, 1]}])
+{%- endcodetabs %}
+
+## Interactive JSON Objects
+
+{% codetabs name="Python", type="py" -%}
+from IPython.display import JSON
+
+data = {"foo": {"bar": "baz"}, "a": 1}
+JSON(data)
+{%- endcodetabs %}
+
+## Static plots
+
+With support for `svg`, `png`, `jpeg` and `gif`
+
+{% codetabs name="Python using matplotlib", type="py" -%}
+import matplotlib.pyplot as plt
+import numpy as np
+
+%matplotlib inline
+%config InlineBackend.figure_format = 'svg'
+t = np.linspace(0, 20, 500)
+
+plt.plot(t, np.sin(t))
+plt.show()
+{%- endcodetabs %}
+
+## LaTeX
+
+{% codetabs name="Python using sympy", type="py" -%}
+import sympy as sp
+sp.init_printing(use_latex='mathjax')
+
+x, y, z = sp.symbols('x y z')
+f = sp.sin(x * y) + sp.cos(y * z)
+sp.integrate(f, x)
+{%- language name="Python using Math", type="py" -%}
+from IPython.display import Math
+
+Math(r'i\hbar \frac{dA}{dt}~=~[A(t),H(t)]+i\hbar \frac{\partial A}{\partial t}.')
+{%- language name="Python using Latex", type="py" -%}
+from IPython.display import Latex
+Latex('''The mass-energy equivalence is described by the famous equation
+
+$$E=mc^2$$
+
+discovered in 1905 by Albert Einstein.
+In natural units ($c$ = 1), the formula expresses the identity
+
+\\begin{equation}
+E=m
+\\end{equation}''')
+{%- endcodetabs %}
+
+## Data frames
+
+{% codetabs name="Python using pandas", type="py" -%}
+import numpy as np
+import pandas as pd
+
+df = pd.DataFrame({'A': 1.,
+                   'B': pd.Timestamp('20130102'),
+                   'C': pd.Series(1, index=list(range(4)), dtype='float32'),
+                   'D': np.array([3] * 4, dtype='int32'),
+                   'E': pd.Categorical(["test", "train", "test", "train"]),
+                   'F': 'foo'})
+
+df
+{%- language name="Python using numpy", type="py" -%}
+import numpy as np
+
+t = np.linspace(0, 20, 500)
+t
+{%- endcodetabs %}
+
+## Images
+
+{% codetabs name="Python", type="py" -%}
+from IPython.display import Image
+Image('http://jakevdp.github.com/figures/xkcd_version.png')
+{%- endcodetabs %}
+
+
+## HTML
+
+{% codetabs name="Python", type="py" -%}
+from IPython.display import HTML
+HTML("<iframe src='https://nteract.io/' width='900' height='490'></iframe>")
+{%- endcodetabs %}
+
+## Plain Text
+
+{% codetabs name="Python", type="py" -%}
+print("Hello World!")
+{%- language name="JavaScript", type="js" -%}
+console.log("Hello World!");
+{%- endcodetabs %}

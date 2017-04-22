@@ -1,5 +1,5 @@
 {
-  "plugins": ["edit-link", "github"],
+  "plugins": ["edit-link", "github", "codetabs"],
   "pluginsConfig": {
     "edit-link": {
       "base": "https://github.com/nteract/hydrogen/tree/master/",
