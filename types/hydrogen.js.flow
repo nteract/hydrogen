@@ -10,3 +10,8 @@ export type Message = {
   header: Object,
   content: Object,
 }
+
+export type KernelCommand = {
+  command: string, 
+  payload: ?Kernelspec
+}
