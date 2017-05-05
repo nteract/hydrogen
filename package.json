@@ -54,7 +54,6 @@
     "@nteract/transform-plotly": "1.2.0",
     "@nteract/transforms": "^1.0.7",
     "atom-select-list": "^0.2.0",
-    "atom-space-pen-views": "^2.0.5",
     "escape-string-regexp": "^1.0.5",
     "immutable": "^3.8.1",
     "jmp": "^0.7.5",
