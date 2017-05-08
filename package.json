@@ -55,6 +55,7 @@
     "@nteract/transforms": "^1.0.7",
     "atom-select-list": "^0.2.0",
     "atom-space-pen-views": "^2.0.5",
+    "atom-package-deps": "^4.6.0",
     "escape-string-regexp": "^1.0.5",
     "immutable": "^3.8.1",
     "jmp": "^0.7.5",
@@ -72,10 +73,18 @@
     "ws": "^2.0.0",
     "xmlhttprequest": "^1.8.0"
   },
+  "package-deps": [
+    "busy-signal"
+  ],
   "consumedServices": {
     "status-bar": {
       "versions": {
         "^1.0.0": "consumeStatusBar"
+      }
+    },
+    "busy-signal": {
+      "versions": {
+        "^1.0.0": "consumeBusySignal"
       }
     }
   },
