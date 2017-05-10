@@ -98,7 +98,7 @@
     "eslint-config-prettier": "^2.0.0",
     "eslint-plugin-flowtype": "^2.30.4",
     "eslint-plugin-prettier": "^2.0.1",
-    "flow-bin": "^0.45.0",
+    "flow-bin": "^0.46.0",
     "husky": "^0.13.3",
     "lint-staged": "^3.4.0",
     "markdox": "^0.1.10",
