@@ -5,6 +5,83 @@
 @import "ui-variables";
 @import "syntax-variables";
 
+@hydrogen-light-background: fadein(lighten(@syntax-background-color, 40%), 100%);
+@hydrogen-dark-background: fadein(lighten(@syntax-background-color, 10%), 100%);
+
+@hydrogen-inline-background: contrast(@syntax-text-color, @hydrogen-dark-background, @hydrogen-light-background, 20%);
+@hydrogen-inline-color: lighten(@syntax-text-color, 10%);
+@hydrogen-error-color: average(@syntax-text-color, red);
+
+.hydrogen.marker {
+  display: flex;
+}
+
+.hydrogen {
+
+code {
+  color: inherit;
+  background: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+}
+
+.inline-container {
+  color: @hydrogen-inline-color;
+  background: @hydrogen-inline-background;
+  border-radius: 3px;
+  box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+}
+
+.inline-container .cell_display {
+  padding: 0 0.25em 0 0.25em;
+}
+
+.inline-container.icon::before {
+  font-size: 80%;
+  width: 1.2em;
+  margin: 0;
+}
+
+.spinner {
+  padding: 0 0.5em 0 0.5em;
+}
+
+.spinner > div {
+  background-color: @hydrogen-inline-color;
+  height: 100%;
+  width: 2px;
+  display: inline-block;
+  margin-left: 1px;
+  animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect1 {
+  margin-left: 0px;
+}
+
+.spinner .rect2 {
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  animation-delay: -0.8s;
+}
+
+@keyframes stretchdelay {
+  0%, 40%, 100% { transform: scaleY(0.32);}
+  20% { transform: scaleY(0.8); }
+}
+}
+
 .hydrogen.output-bubble {
     @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
     @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
@@ -426,66 +503,6 @@
 .hydrogen.input-view {
     .label {
         padding-bottom: @component-padding;
-    }
-}
-
-.hydrogen {
-    .spinner {
-        display:inline-block;
-        text-align: center;
-        line-height: 100%;
-        position: relative;
-        top: 1px;
-    }
-
-    .spinner > div {
-        background-color: @text-color;
-        height: 100%;
-        width: 2px;
-        display: inline-block;
-
-        -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
-        animation: stretchdelay 1.2s infinite ease-in-out;
-    }
-
-    .spinner .rect2 {
-        -webkit-animation-delay: -1.1s;
-        animation-delay: -1.1s;
-        margin-left: 1px;
-    }
-
-    .spinner .rect3 {
-        -webkit-animation-delay: -1.0s;
-        animation-delay: -1.0s;
-        margin-left: 1px;
-    }
-
-    .spinner .rect4 {
-        -webkit-animation-delay: -0.9s;
-        animation-delay: -0.9s;
-        margin-left: 1px;
-    }
-
-    .spinner .rect5 {
-        -webkit-animation-delay: -0.8s;
-        animation-delay: -0.8s;
-        margin-left: 1px;
-    }
-
-    @-webkit-keyframes stretchdelay {
-        0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
-        20% { -webkit-transform: scaleY(1.0) }
-    }
-
-    @keyframes stretchdelay {
-        0%, 40%, 100% {
-            transform: scaleY(0.4);
-            -webkit-transform: scaleY(0.4);
-            }
-        20% {
-            transform: scaleY(1.0);
-            -webkit-transform: scaleY(1.0);
-        }
     }
 }
 
