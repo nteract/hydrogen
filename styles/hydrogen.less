@@ -5,6 +5,7 @@
 @import "ui-variables";
 @import "syntax-variables";
 
+// -------------- Colors ------------------
 @hydrogen-light-background: fadein(lighten(@syntax-background-color, 40%), 100%);
 @hydrogen-dark-background: fadein(lighten(@syntax-background-color, 10%), 100%);
 
@@ -18,18 +19,55 @@
 
 .hydrogen {
 
+// -------------- Globals -----------------
 code {
   color: inherit;
   background: inherit;
   font-size: inherit;
   font-family: inherit;
   padding: 0;
+  white-space: pre;
 }
 
+img {
+    background-color: white;
+}
+
+img, svg, video, audio {
+  display: block;
+}
+
+td, th {
+    border: 1px solid average(@syntax-text-color, @base-border-color);
+    padding: 0.35em 0.7em;
+}
+
+svg:first-child {
+  background-color: white;
+}
+
+.MathJax_SVG_Display {
+    margin: 0;
+}
+
+.MathJax_SVG {
+    .noError {
+        padding: 0;
+        border: none;
+        color: @hydrogen-error-color
+    }
+    svg {
+        background-color: unset;
+        margin: 0 !important;
+        display: inline;
+    }
+}
+
+// ----------- Inline Output --------------
 .inline-container {
   color: @hydrogen-inline-color;
   background: @hydrogen-inline-background;
-  border-radius: 3px;
+  border-radius: @component-border-radius;
   box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
 }
 
@@ -43,6 +81,40 @@ code {
   margin: 0;
 }
 
+// ---------- Multiline Output ------------
+
+.multiline-container {
+  display: flex;
+  border: solid 1px @base-border-color;
+}
+
+.multiline-container .cell_display {
+  padding: @component-padding;
+}
+
+.multiline-container .toolbar {
+  border-left: solid 1px @base-border-color;
+  display: flex;
+  flex-direction: column;
+}
+
+.multiline-container .toolbar > :not(:first-child) {
+  border-top: solid 1px @base-border-color;
+}
+
+.multiline-container .toolbar .icon::before {
+  margin: 0;
+  width: 2.5em;
+  line-height: 2.5em;
+  height: 2.5em;
+  cursor: pointer;
+}
+
+.multiline-container .toolbar .icon:hover {
+  color: @hydrogen-inline-color;
+}
+
+// -------------- Spinner -----------------
 .spinner {
   padding: 0 0.5em 0 0.5em;
 }
@@ -80,420 +152,6 @@ code {
   0%, 40%, 100% { transform: scaleY(0.32);}
   20% { transform: scaleY(0.8); }
 }
-}
-
-.hydrogen.output-bubble {
-    @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
-    @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
-    @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
-    @button-text-color: lighten(@syntax-text-color, 20%);
-    @error-base-color: average(@syntax-text-color, red);
-    color: lighten(@syntax-text-color, 10%);
-
-    padding-left: 2px;
-    padding-right: 2px;
-    border-radius: 3px;
-    white-space: pre;
-    display: inline-block;
-
-    &.rich {
-        border: none;
-
-        .bubble-output-container{
-            max-height: 500px;
-            border-radius: 3px 0 3px 3px;
-        }
-
-        &.svg {
-            background-color: white;
-        }
-
-        .rich-close-button {
-            &::before {
-                color: @button-text-color;
-                background-color: @bubble-background;
-                display: block;
-                cursor: pointer;
-                border-radius: 0 3px 3px 0;
-                width: 1.5em;
-                height: 1.5em;
-                line-height: 1.5em;
-                text-align: center;
-                box-shadow: 0 0 3px 0px rgba(0,0,0,0.3);
-            }
-        }
-    }
-
-    &:not(.multiline) {
-        float: left;
-        display: inline-flex;
-        padding: 0;
-        width: 100%;
-        .bubble-output-container {
-            padding: 0 2px 0 2px;
-            overflow: hidden;
-            code {
-                font-size: inherit;
-                line-height: inherit;
-                cursor: pointer;
-            }
-        }
-    }
-
-    &.multiline {
-        padding-right: 0px;
-        display: flex;
-        margin: 0px !important;
-    }
-
-    &.multiline:not(.rich) {
-        font-size: @font-size;
-        .bubble-action-panel {
-            display: inline-flex;
-        }
-
-        .bubble-output-container {
-            border-radius: 3px 0 0 3px;
-            padding: 3px;
-            overflow: auto;
-        }
-
-        .rich-close-button::before {
-            display: none;
-        }
-    }
-
-    &.markdown .bubble-output-container{
-        max-height: 500px;
-    }
-
-    &.latex .bubble-output-container{
-        padding: 3px;
-    }
-
-    .rich-close-button::before {
-        display: none;
-    }
-
-    .bubble-output-container {
-        color: lighten(@syntax-text-color, 10%);
-        background-color: @bubble-background;
-        box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
-        // in order to be above the shadow of action-panel
-        z-index: 0;
-        border-radius: 3px;
-
-        display: flex;
-        max-height: 400px;
-        max-width: inherit;
-        overflow: auto;
-    }
-
-    .bubble-result-container {
-        width: fit-content !important;
-        height: fit-content !important;
-        max-width: unset !important;
-        max-height: unset !important;
-        overflow: hidden !important;
-        white-space: normal;
-        code {
-            font-size: @font-size;
-            font-family: inherit;
-
-            color: lighten(@syntax-text-color, 10%);
-            background-color: @bubble-background;
-
-            margin: 0;
-            padding: 0;
-            border: none;
-
-            white-space: pre;
-        }
-
-        img {
-            background-color: white;
-        }
-
-        svg:first-child {
-          background-color: white;
-        }
-
-        video, img, svg {
-            display: block;
-        }
-
-        td, th {
-            border: 1px solid darken(@bubble-background, 10%);
-            padding: 0.35em 0.7em;
-            font-size: @font-size;
-        }
-
-        .MathJax_SVG_Display {
-            margin: 0;
-        }
-
-        .MathJax_SVG {
-            .noError {
-                padding: 0;
-                border: none;
-                color: @error-base-color
-            }
-            svg {
-                background-color: unset;
-                margin: 0 !important;
-                display: inline;
-            }
-        }
-
-        .modebar-group {
-          display: flex;
-        }
-    }
-
-    .bubble-error-container {
-        &.plain-error {
-            code {
-                color: @error-base-color;
-            }
-        }
-
-        code {
-            font-size: @font-size;
-            font-family: inherit;
-
-            color: lighten(@syntax-text-color, 10%);
-            background-color: @bubble-background;
-
-            margin: 0;
-            padding: 0;
-        }
-    }
-
-    .bubble-status-container::before {
-        margin: 0px;
-        font-size: 80%;
-        width: 80%;
-    }
-
-    .bubble-action-panel {
-        display: inline-flex;
-        flex-direction: column;
-        width: 30px;
-        box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
-        border-radius: 0 3px 3px 0;
-
-        .action-button {
-            @separator-color: fade(darken(@bubble-background, 20%), 20%);
-            flex: none;
-
-            border-top: 1px solid @separator-color;
-
-            &:nth-child(1) {
-                border-top: none;
-                border-bottom: 1px solid @separator-color;
-            }
-
-            &::before {
-                width: 100%;
-                height: 30px;
-                text-align: center;
-                color: @button-text-color;
-                cursor: pointer;
-                text-align: center;
-                margin: 0;
-                line-height: 30px;
-            }
-
-        }
-
-        .padding {
-            flex: 1;
-        }
-    }
-
-    .close-button {
-        &::after {
-            color: @button-text-color;
-            background-color: @bubble-background;
-            display: none;
-            position: absolute;
-            top: -12px;
-            right: -12px;
-            cursor: pointer;
-            border-radius: 50%;
-            padding: 1px;
-            width: 1.5em;
-            height: 1.5em;
-            text-align: center;
-            box-shadow: 0 0 2px 0px rgba(0,0,0,0.5);
-        }
-    }
-
-}
-
-.hydrogen.watch-sidebar {
-    width: 300px;
-    min-width: 250px;
-    overflow-y: overlay;
-    padding: 10px;
-
-    .toolbar {
-        .language {
-            display: inline-block;
-            padding: @component-icon-padding - 1px;
-        }
-        .btn {
-            float: right;
-        }
-    }
-
-    .watch-view {
-        width: 100%;
-        .watch-input {
-            margin-top: 10px;
-            padding: 3px;
-            border-radius: 3px;
-            background-color: @syntax-background-color;
-            font-size: @font-size;
-            min-height: 3em;
-            border: 1px solid @base-border-color;
-        }
-
-        .history-switch {
-            padding: 3px 0 3px 0;
-            position: relative;
-
-            .counter {
-                position: absolute;
-                pointer-events: none;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-            }
-            .next-btn {
-                float: right;
-            }
-
-            .scrollbar {
-                overflow-x: scroll;
-                overflow-y: hidden;
-                margin-top: -@component-icon-size - @component-icon-padding - 1px;
-                margin-left: @component-icon-size + @component-icon-padding + 2px;
-                margin-right: @component-icon-size + @component-icon-padding + 2px;
-                .hidden {
-                    height: 1px;
-                    width: 1000px;
-                    visibility: hidden;
-                    display: block !important;
-                }
-            }
-            .hide {
-                display: none;
-            }
-            .show {
-                display: block;
-            }
-            ::-webkit-scrollbar {
-                height: @component-icon-size + @component-icon-padding;
-                -webkit-appearance: none;
-            }
-            ::-webkit-scrollbar-thumb {
-                border-radius: @component-border-radius;
-                border: 1px solid @button-border-color;
-                background: @button-background-color;
-            }
-            ::-webkit-scrollbar-thumb:hover {
-                background: @button-background-color-hover;
-            }
-        }
-
-    }
-
-    .watch-resize-handle {
-        position: absolute;
-        top: 0px;
-        bottom: 0px;
-        left: -5px;
-        width: 10px;
-        cursor: ew-resize;
-    }
-
-    .btn-group {
-        margin-top: 10px;
-        display: block;
-        .btn {
-            width: 50%;
-        }
-    }
-
-    .output-bubble {
-        @light-bubble-background: fadein(lighten(@syntax-background-color, 40%), 100%);
-        @dark-bubble-background: fadein(lighten(@syntax-background-color, 10%), 100%);
-        @bubble-background: contrast(@syntax-text-color, @dark-bubble-background, @light-bubble-background, 20%);
-        position: static;
-        display: flex;
-        float: none;
-        border-radius: 3px;
-        margin: 0px;
-        font-size: @font-size * 5/6;
-        box-shadow: none;
-        padding-left: 0px;
-        padding-right: 0px;
-        border: 1px solid @base-border-color;
-
-
-        &.rich .rich-close-button {
-            display: none;
-        }
-
-        &:not(.rich) {
-            .bubble-action-panel {
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-                width: 30px;
-                background-color: darken(@bubble-background, 10%);
-            }
-
-            .bubble-output-container {
-                border-radius: 3px 0 0 3px;
-            }
-        }
-
-        .bubble-output-container {
-            display: inline-block;
-            width: 100%;
-            max-width: 100%;
-            max-height: 350px;
-            white-space: pre-wrap;
-        }
-
-
-        .bubble-result-container {
-            max-width: inherit;
-            max-height: inherit;
-
-            position: relative;
-            code {
-                padding: 3px;
-                font-size: inherit;
-                display: block;
-            }
-
-            video, img, svg {
-                width: unset !important;
-                height: unset !important;
-                max-width: 100% !important;
-                max-height: 350px !important;
-            }
-        }
-
-        .bubble-error-container {
-            code {
-                font-size: inherit;
-            }
-        }
-    }
 }
 
 .hidden {
