@@ -25,7 +25,7 @@ package directory, followed by `apm install` to get dependencies.
 
 After pulling upstream changes, make sure to run `apm update`.
 
-To start hacking, run `atom --dev` from the package directory.
+To start hacking, run `atom --dev .` from the package directory.
 Cut a branch while you're working then either submit a Pull Request when done
 or when you want some feedback!
 
