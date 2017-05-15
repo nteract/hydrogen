@@ -158,14 +158,111 @@ svg:first-child {
 }
 }
 
+// -------------- Watches -----------------
+
+.hydrogen.watch-sidebar {
+  width: 300px;
+  min-width: 250px;
+  overflow-y: overlay;
+  padding: 10px;
+
+  .toolbar {
+    .language {
+      display: inline-block;
+      padding: @component-icon-padding - 1px;
+    }
+    .btn {
+      float: right;
+    }
+  }
+
+  .watch-view {
+    width: 100%;
+    .watch-input {
+      margin-top: 10px;
+      padding: 3px;
+      border-radius: 3px;
+      background-color: @syntax-background-color;
+      font-size: @font-size;
+      min-height: 3em;
+      border: 1px solid @base-border-color;
+    }
+
+    .history-switch {
+      padding: 3px 0 3px 0;
+      position: relative;
+
+      .counter {
+        position: absolute;
+        pointer-events: none;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .next-btn {
+        float: right;
+      }
+
+      .scrollbar {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        margin-top: -@component-icon-size - @component-icon-padding - 1px;
+        margin-left: @component-icon-size + @component-icon-padding + 2px;
+        margin-right: @component-icon-size + @component-icon-padding + 2px;
+        .hidden {
+          height: 1px;
+          width: 1000px;
+          visibility: hidden;
+          display: block !important;
+        }
+      }
+      .hide {
+        display: none;
+      }
+      .show {
+        display: block;
+      }
+      ::-webkit-scrollbar {
+        height: @component-icon-size + @component-icon-padding;
+        -webkit-appearance: none;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: @component-border-radius;
+        border: 1px solid @button-border-color;
+        background: @button-background-color;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: @button-background-color-hover;
+      }
+    }
+  }
+
+  .watch-resize-handle {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: -5px;
+    width: 10px;
+    cursor: ew-resize;
+  }
+
+  .btn-group {
+    margin-top: 10px;
+    display: block;
+    .btn {
+      width: 50%;
+    }
+  }
+}
+
 .hidden {
-    display: none;
+  display: none;
 }
 
 .hydrogen.input-view {
-    .label {
-        padding-bottom: @component-padding;
-    }
+  .label {
+      padding-bottom: @component-padding;
+  }
 }
 
 .hydrogen-panel-body {
