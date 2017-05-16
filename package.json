@@ -56,6 +56,7 @@
     "@nteract/transform-plotly": "^1.2.0",
     "@nteract/transforms": "^1.0.7",
     "atom-select-list": "^0.2.0",
+    "escape-carriage": "^1.1.1",
     "escape-string-regexp": "^1.0.5",
     "immutable": "^3.8.1",
     "jmp": "^0.7.5",
