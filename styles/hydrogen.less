@@ -83,6 +83,7 @@ svg:first-child {
   font-size: 80%;
   width: 1.2em;
   margin: 0;
+  text-align: center;
 }
 
 // ---------- Multiline Output ------------
@@ -94,6 +95,11 @@ svg:first-child {
 
 .multiline-container .cell_display {
   padding: @component-padding;
+
+  // Style fix for plotly toolbar
+  .modebar-group {
+    display: flex;
+  }
 }
 
 .multiline-container .toolbar {
