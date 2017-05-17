@@ -1,3 +1,5 @@
+language: generic
+dist: trusty
 sudo: false
 notifications:
   email:
@@ -10,4 +12,5 @@ script:
 
 env:
   matrix:
-    - ATOM_CHANNEL=beta  
+    - ATOM_CHANNEL=stable
+    - ATOM_CHANNEL=beta
