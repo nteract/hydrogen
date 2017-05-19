@@ -91,15 +91,15 @@ svg:first-child {
 .multiline-container {
   display: flex;
   border: solid 1px @base-border-color;
-}
-
-.multiline-container .cell_display {
-  padding: @component-padding;
 
   // Style fix for plotly toolbar
   .modebar-group {
     display: flex;
   }
+}
+
+.multiline-container .cell_display {
+  padding: @component-padding;
 }
 
 .multiline-container .toolbar {
@@ -195,51 +195,29 @@ svg:first-child {
       border: 1px solid @base-border-color;
     }
 
-    .history-switch {
-      padding: 3px 0 3px 0;
+    .slider {
+      @btn-size: @component-icon-size + @component-icon-padding;
+      @pad: 3px;
+      padding: @pad @btn-size + 1;
+      height: @btn-size + 2 * @pad;
       position: relative;
-
-      .counter {
-        position: absolute;
-        pointer-events: none;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .next-btn {
-        float: right;
-      }
-
-      .scrollbar {
-        overflow-x: scroll;
-        overflow-y: hidden;
-        margin-top: -@component-icon-size - @component-icon-padding - 1px;
-        margin-left: @component-icon-size + @component-icon-padding + 2px;
-        margin-right: @component-icon-size + @component-icon-padding + 2px;
-        .hidden {
-          height: 1px;
-          width: 1000px;
-          visibility: hidden;
-          display: block !important;
+      .rangeslider {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        .rangeslider__handle {
+          cursor: pointer;
+          display: block;
+          position: absolute;
+          width: @btn-size;
+          height: @btn-size;
+          border-radius: @component-border-radius;
+          border: 1px solid @button-border-color;
+          background: @button-background-color;
+          &:hover {
+            background: @button-background-color-hover;
+          }
         }
-      }
-      .hide {
-        display: none;
-      }
-      .show {
-        display: block;
-      }
-      ::-webkit-scrollbar {
-        height: @component-icon-size + @component-icon-padding;
-        -webkit-appearance: none;
-      }
-      ::-webkit-scrollbar-thumb {
-        border-radius: @component-border-radius;
-        border: 1px solid @button-border-color;
-        background: @button-background-color;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: @button-background-color-hover;
       }
     }
   }
@@ -261,15 +239,18 @@ svg:first-child {
     }
   }
 
-  .multiline-container, .multiline-container .cell_display {
+  .multiline-container {
     width: 100%;
+    max-height: 450px;
+    overflow: auto;
+    padding: @component-padding;
   }
 
   video, img, svg {
     width: unset !important;
     height: unset !important;
     max-width: 100% !important;
-    max-height: 350px !important;
+    max-height: 450px !important;
 }
 }
 

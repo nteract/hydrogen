@@ -2,7 +2,7 @@
 
 import { CompositeDisposable } from "atom";
 import { isObservableMap, isObservable, isComputed } from "mobx";
-import store from "./../lib/store";
+import store from "./../../lib/store";
 
 describe("Store initialize", () => {
   it("should correctly initialize store", () => {

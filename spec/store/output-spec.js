@@ -1,6 +1,6 @@
 "use babel";
 
-import { reduceOutputs } from "../../lib/components/result-view/index";
+import { reduceOutputs } from "../../lib/store/output";
 import Immutable from "immutable";
 
 // Adapted from https://github.com/nteract/nteract/blob/master/test/renderer/reducers/document-spec.js#L33
