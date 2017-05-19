@@ -89,4 +89,55 @@ describe("reduceOutputs", () => {
       ].toString()
     );
   });
+
+  it("keeps respective streams together", () => {
+    const outputs = [
+      Immutable.Map({ name: "stdout", text: "hello", output_type: "stream" }),
+      Immutable.Map({
+        name: "stderr",
+        text: "errors are",
+        output_type: "stream"
+      })
+    ];
+    const newOutputs = reduceOutputs(outputs, {
+      name: "stdout",
+      text: " world",
+      output_type: "stream"
+    });
+
+    expect(newOutputs.toString()).toEqual(
+      [
+        Immutable.Map({
+          name: "stdout",
+          text: "hello world",
+          output_type: "stream"
+        }),
+        Immutable.Map({
+          name: "stderr",
+          text: "errors are",
+          output_type: "stream"
+        })
+      ].toString()
+    );
+
+    const evenNewerOutputs = reduceOutputs(newOutputs, {
+      name: "stderr",
+      text: " informative",
+      output_type: "stream"
+    });
+    expect(evenNewerOutputs.toString()).toEqual(
+      [
+        Immutable.Map({
+          name: "stdout",
+          text: "hello world",
+          output_type: "stream"
+        }),
+        Immutable.Map({
+          name: "stderr",
+          text: "errors are informative",
+          output_type: "stream"
+        })
+      ].toString()
+    );
+  });
 });
