@@ -33,6 +33,11 @@ In your styles.less:
 }
 ```
 
+Depending on your active theme, this will look like:
+
+![](https://cloud.githubusercontent.com/assets/10860657/26287949/52c75e9c-3e4b-11e7-929b-b155434927b3.png)
+
+
 
 Change the icon color when you hover over the toolbar icons:
 
@@ -45,6 +50,8 @@ Change the icon color when you hover over the toolbar icons:
   }
 }
 ```
+
+![](https://cloud.githubusercontent.com/assets/10860657/26086644/8dbfd806-39b1-11e7-9149-e4d891d0455b.gif)
 
 ### Importing Hydrogen Style Variables
 
