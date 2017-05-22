@@ -92,6 +92,7 @@ declare class atom$CommandRegistry {
 
 declare class atom$CompositeDisposable {
   constructor(...disposables: Array<IDisposable>): void,
+  disposables: ?Set<IDisposable>,
   dispose(): void,
 
   add(...disposables: Array<IDisposable>): void,
