@@ -91,15 +91,14 @@ svg:first-child {
 .multiline-container {
   display: flex;
   border: solid 1px @base-border-color;
-
-  // Style fix for plotly toolbar
-  .modebar-group {
-    display: flex;
-  }
 }
 
 .multiline-container .cell_display {
   padding: @component-padding;
+  // Style fix for plotly toolbar
+  .modebar-group {
+    display: flex;
+  }
 }
 
 .multiline-container .toolbar {
@@ -244,6 +243,11 @@ svg:first-child {
     max-height: 450px;
     overflow: auto;
     padding: @component-padding;
+
+    // Style fix for plotly toolbar
+    .modebar-group {
+      display: flex;
+    }
   }
 
   video, img, svg {
