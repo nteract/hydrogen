@@ -353,6 +353,17 @@ declare class atom$StyleManager {
 
   // Paths
   getUserStyleSheetPath(): string,
+
+  // (Undocumented.)
+  addStyleSheet(
+    source: string,
+    params: {
+      sourcePath?: string,
+      context?: boolean,
+      priority?: number,
+      skipDeprecatedSelectorsTransformation?: boolean
+    }
+  ): IDisposable,
 }
 
 type atom$PaneSplitParams = {
@@ -399,6 +410,7 @@ declare class atom$Pane {
   onDidRemoveItem(cb: (event: {item: Object, index: number}) => void): IDisposable,
   onWillRemoveItem(cb: (event: {item: Object, index: number}) => void): IDisposable,
   onDidDestroy(cb: () => void): IDisposable,
+  onDidChangeFlexScale(cb: () => void): IDisposable,
   observeActiveItem(cb: (item: ?Object) => void): IDisposable,
 
   // Lifecycle
@@ -425,6 +437,7 @@ declare class atom$Pane {
   removeItem(item: Object, moved: ?boolean): void,
   setActiveItem(item: Object): Object,
   setFlexScale(flexScale: number): number,
+  getContainer(): atom$PaneContainer,
 }
 
 declare type atom$PaneItem = {
@@ -500,13 +513,13 @@ declare class atom$Point {
   negate(): atom$Point,
 
   // Comparison
-  min(point1: atom$Point, point2: atom$Point): atom$Point,
-  compare(other: atom$Point): -1 | 0 | 1,
+  min(point1: atom$PointLike, point2: atom$PointLike): atom$Point,
+  compare(other: atom$PointLike): -1 | 0 | 1,
   isEqual(otherRange: atom$PointLike): boolean,
-  isLessThan(other: atom$Point): boolean,
-  isLessThanOrEqual(other: atom$Point): boolean,
-  isGreaterThan(other: atom$Point): boolean,
-  isGreaterThanOrEqual(other: atom$Point): boolean,
+  isLessThan(other: atom$PointLike): boolean,
+  isLessThanOrEqual(other: atom$PointLike): boolean,
+  isGreaterThan(other: atom$PointLike): boolean,
+  isGreaterThanOrEqual(other: atom$PointLike): boolean,
 
   // Operations
   translate(other: atom$PointLike): atom$Point,
@@ -545,6 +558,7 @@ declare class atom$Range {
   union(other: atom$Range): atom$Range,
   serialize(): Array<Array<number>>,
   translate(startDelta: atom$PointLike, endDelta?: atom$PointLike): atom$Range,
+  getRowCount(): number,
 }
 
 type RawStatusBarTile = {
@@ -633,7 +647,12 @@ type atom$TooltipsAddOptions = {
   placement?: atom$TooltipsPlacementOption | () => atom$TooltipsPlacementOption,
 };
 
+type atom$Tooltip = {
+  hide(): void;
+};
+
 declare class atom$TooltipManager {
+  tooltips: Map<HTMLElement, atom$Tooltip>;
   add(
     target: HTMLElement,
     options: atom$TooltipsAddOptions,
@@ -657,7 +676,8 @@ type DecorateMarkerParams = {
   onlyNonEmpty?: boolean,
 } | {
   type: 'gutter',
-  class: string,
+  item?: HTMLElement,
+  class?: string,
   onlyHead?: boolean,
   onlyEmpty?: boolean,
   onlyNonEmpty?: boolean,
@@ -759,6 +779,8 @@ declare class atom$TextEditor extends atom$Model {
   duplicateLines: () => void,
 
   // History
+  createCheckpoint(): atom$TextBufferCheckpoint,
+  revertToCheckpoint(checkpoint: atom$TextBufferCheckpoint): boolean,
   transact(fn: () => mixed, _: void): void,
   transact(groupingInterval: number, fn: () => mixed): void,
 
@@ -772,7 +794,7 @@ declare class atom$TextEditor extends atom$Model {
     },
   ): atom$Point,
   bufferPositionForScreenPosition(
-    bufferPosition: atom$PointLike,
+    screenPosition: atom$PointLike,
     options?: {
       wrapBeyondNewlines?: boolean,
       wrapAtSoftNewlines?: boolean,
@@ -1043,6 +1065,7 @@ type atom$WorkspaceAddPanelOptions = {
   item: Object,
   visible?: boolean,
   priority?: number,
+  className?: string,
 };
 
 type atom$TextEditorParams = {
@@ -1147,13 +1170,39 @@ declare class atom$Workspace {
   getModalPanels(): Array<atom$Panel>,
   addModalPanel(options: atom$WorkspaceAddPanelOptions): atom$Panel,
 
+  // Docks. These became available in Atom 1.17.0, so uses should currently be guarded by a null
+  // check. Once we no longer want to support versions less than Atom 1.17 these typedefs can be
+  // changed to non-optional.
+  getLeftDock?: () => atom$Dock,
+  getRightDock?: () => atom$Dock,
+  getBottomDock?: () => atom$Dock,
+  getCenter?: () => atom$WorkspaceCenter,
+
   // Searching and Replacing
 
   destroyActivePaneItemOrEmptyPane(): void,
   destroyActivePaneItem(): void,
+}
 
-  // Undocumented properties
-  paneContainer: atom$PaneContainer,
+declare class atom$AbastractPaneContainer {
+  isVisible(): boolean,
+  show(): void,
+  hide(): void,
+  getActivePane(): atom$Pane,
+  getPanes(): Array<atom$Pane>,
+}
+
+declare class atom$Dock extends atom$AbastractPaneContainer {
+  // This is a woefully incomplete list, items can be added as needed from
+  // https://github.com/atom/atom/blob/master/src/dock.js
+  toggle(): void,
+}
+
+declare class atom$WorkspaceCenter extends atom$AbastractPaneContainer {
+  observeActivePaneItem(callback: atom$PaneItem => mixed): IDisposable;
+  onDidChangeActivePaneItem(callback: (item: mixed) => mixed): IDisposable;
+  // This should be removed soon anyway, it's currently deprecated.
+  paneContainer: Object;
 }
 
 /**
@@ -1361,7 +1410,7 @@ declare class atom$KeymapManager {
   getKeyBindings(): Array<atom$KeyBinding>,
   findKeyBindings(params: {
     keystrokes?: string,
-    command: string,
+    command?: string,
     target?: HTMLElement,
   }): Array<atom$KeyBinding>,
 
@@ -1412,6 +1461,7 @@ declare class atom$Project {
   getDirectories(): Array<atom$Directory>,
   relativizePath(relativizePath?: string): Array<string>, // [projectPath: ?string, relativePath: string]
   relativize(filePath: string): string,
+  contains(path: string): boolean,
 
   // Private API
   findBufferForPath(path: string): ?atom$TextBuffer,
@@ -1533,7 +1583,7 @@ declare class atom$TextBuffer {
   getLastRow(): number,
   getRange(): atom$Range,
   rangeForRow(row: number, includeNewLine?: boolean): atom$Range,
-  getEndPosition(): atom$Point,
+getEndPosition(): atom$Point,
 
   // Position/Index mapping
   characterIndexForPosition(position: atom$PointLike): number,
@@ -1716,6 +1766,8 @@ type RepositoryLineDiff = {
 //
 // [1]: https://github.com/atom/atom/blob/v1.7.3/src/git-repository.coffee
 declare class atom$Repository {
+  constructor(path: string, options?: {refreshOnWindowFocus?: boolean}): void,
+
   // Event Subscription
   onDidChangeStatus: (callback: RepositoryDidChangeStatusCallback) => IDisposable,
   onDidChangeStatuses: (callback: () => mixed) => IDisposable,
@@ -1791,9 +1843,18 @@ type atom$AutocompleteProvider = {
   getSuggestions: (
     request: atom$AutocompleteRequest,
   ) => Promise<?Array<atom$AutocompleteSuggestion>>,
+  onDidInsertSuggestion?: (
+    insertedSuggestion: atom$SuggestionInsertedRequest,
+  ) => void,
   disableForSelector?: string,
   inclusionPriority?: number,
   excludeLowerPriority?: boolean,
+};
+
+type atom$SuggestionInsertedRequest = {
+  editor: atom$TextEditor,
+  triggerPosition: atom$Point,
+  suggestion: atom$AutocompleteSuggestion,
 };
 
 // Undocumented API.
@@ -1816,11 +1877,4 @@ declare class atom$Selection {
       undo?: boolean,
     },
   ): string,
-}
-
-declare class atom$LanguageMode {
- constructor(editor: atom$TextEditor) : void,
- buffer: atom$TextBuffer,
- rowRangeForCodeFoldAtBufferRow(row: number): ?Array<number>, // Returns an {Array} of the [startRow, endRow]. Returns null if no range.
- commentStartAndEndStringsForScope(row: atom$ScopeDescriptor): any // actually returns an object, like: {commentStartString: "// ", commentEndString: undefined}
 }
