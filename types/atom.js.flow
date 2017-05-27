@@ -1136,6 +1136,8 @@ declare class atom$Workspace {
       searchAllPanes?: boolean,
     }
   ): Promise<atom$TextEditor>,
+  toggle(itemOrURI: string | atom$PaneItem): boolean,
+  hide(itemOrURI: string | atom$PaneItem): boolean,
   isTextEditor(item: ?mixed): boolean,
   /* Optional method because this was added post-1.0. */
   buildTextEditor: ((params: atom$TextEditorParams) => atom$TextEditor),
@@ -1173,10 +1175,10 @@ declare class atom$Workspace {
   // Docks. These became available in Atom 1.17.0, so uses should currently be guarded by a null
   // check. Once we no longer want to support versions less than Atom 1.17 these typedefs can be
   // changed to non-optional.
-  getLeftDock?: () => atom$Dock,
-  getRightDock?: () => atom$Dock,
-  getBottomDock?: () => atom$Dock,
-  getCenter?: () => atom$WorkspaceCenter,
+  getLeftDock: () => atom$Dock,
+  getRightDock: () => atom$Dock,
+  getBottomDock: () => atom$Dock,
+  getCenter: () => atom$WorkspaceCenter,
 
   // Searching and Replacing
 
@@ -1196,6 +1198,10 @@ declare class atom$Dock extends atom$AbastractPaneContainer {
   // This is a woefully incomplete list, items can be added as needed from
   // https://github.com/atom/atom/blob/master/src/dock.js
   toggle(): void,
+  show(): void,
+  hide(): void,
+  activate(): void,
+  isVisible(): bool
 }
 
 declare class atom$WorkspaceCenter extends atom$AbastractPaneContainer {
