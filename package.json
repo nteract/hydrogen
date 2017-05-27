@@ -67,7 +67,6 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-rangeslider": "^2.0.1",
-    "react-resizable-box": "^1.8.1",
     "requirejs": "^2.2.0",
     "spawnteract": "^2.1.1",
     "tildify": "^1.2.0",
