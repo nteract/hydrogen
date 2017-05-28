@@ -41,7 +41,7 @@
   "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
-    "atom": ">=1.17.0"
+    "atom": ">=1.17.0 <2.0.0"
   },
   "lint-staged": {
     "{lib,spec}/**/*.js": [
