@@ -1159,6 +1159,7 @@ declare class atom$Workspace {
   activatePreviousPane(): boolean,
   paneForURI(uri: string): atom$Pane,
   paneForItem(item: mixed): ?atom$Pane,
+  paneContainerForItem(item: mixed): ?atom$Dock | ?atom$WorkspaceCenter,
 
   // Panels
   getBottomPanels(): Array<atom$Panel>,
@@ -1197,11 +1198,19 @@ declare class atom$AbastractPaneContainer {
 declare class atom$Dock extends atom$AbastractPaneContainer {
   // This is a woefully incomplete list, items can be added as needed from
   // https://github.com/atom/atom/blob/master/src/dock.js
+  // Methods
   toggle(): void,
   show(): void,
   hide(): void,
   activate(): void,
-  isVisible(): bool
+  isVisible(): bool,
+  // Event Subscription
+
+  // Pane Items
+  // Panes
+
+  // Undocumented
+  paneForItem(item: mixed): ?atom$Dock | ?atom$WorkspaceCenter,
 }
 
 declare class atom$WorkspaceCenter extends atom$AbastractPaneContainer {
@@ -1209,6 +1218,7 @@ declare class atom$WorkspaceCenter extends atom$AbastractPaneContainer {
   onDidChangeActivePaneItem(callback: (item: mixed) => mixed): IDisposable;
   // This should be removed soon anyway, it's currently deprecated.
   paneContainer: Object;
+  paneForItem(item: mixed): ?atom$Pane;
 }
 
 /**
