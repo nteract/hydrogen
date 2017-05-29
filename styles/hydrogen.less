@@ -163,6 +163,33 @@ svg:first-child {
   0%, 40%, 100% { transform: scaleY(0.32);}
   20% { transform: scaleY(0.8); }
 }
+
+.slider {
+  @btn-size: @component-icon-size + @component-icon-padding;
+  @pad: 3px;
+  padding: @pad @btn-size + 1;
+  height: @btn-size + 2 * @pad;
+  position: relative;
+  .rangeslider {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    .rangeslider__handle {
+      cursor: pointer;
+      display: block;
+      position: absolute;
+      width: @btn-size;
+      height: @btn-size;
+      border-radius: @component-border-radius;
+      border: 1px solid @button-border-color;
+      background: @button-background-color;
+      &:hover {
+        background: @button-background-color-hover;
+      }
+    }
+  }
+}
+
 }
 
 // -------------- Watches -----------------
@@ -180,32 +207,6 @@ svg:first-child {
       font-size: @font-size;
       min-height: 3em;
       border: 1px solid @base-border-color;
-    }
-
-    .slider {
-      @btn-size: @component-icon-size + @component-icon-padding;
-      @pad: 3px;
-      padding: @pad @btn-size + 1;
-      height: @btn-size + 2 * @pad;
-      position: relative;
-      .rangeslider {
-        position: relative;
-        width: 100%;
-        max-width: 100%;
-        .rangeslider__handle {
-          cursor: pointer;
-          display: block;
-          position: absolute;
-          width: @btn-size;
-          height: @btn-size;
-          border-radius: @component-border-radius;
-          border: 1px solid @button-border-color;
-          background: @button-background-color;
-          &:hover {
-            background: @button-background-color-hover;
-          }
-        }
-      }
     }
   }
 
