@@ -2,6 +2,7 @@
 lib/
 
 [libs]
+node_modules/mobx/lib/mobx.js.flow
 types/
 
 [ignore]

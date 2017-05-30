@@ -5,11 +5,23 @@ Please share your favorite snippets with us and add them to this page.
 
 ## Interactive plots using [Plotly](https://plot.ly/api/)
 
-{% codetabs name="Python", type="py" -%}
+{% codetabs name="Python using plotly", type="py" -%}
 from plotly import offline
 offline.init_notebook_mode()
 
 offline.iplot([{"y": [1, 2, 1]}])
+{%- language name="Python using matplotlib", type="py" -%}
+import numpy as np
+import matplotlib.pyplot as plt
+from plotly import offline as py
+import plotly.tools as tls
+py.init_notebook_mode()
+
+t = np.linspace(0, 20, 500)
+plt.plot(t, np.sin(t))
+
+plotly_fig = tls.mpl_to_plotly(plt.gcf())
+py.iplot(plotly_fig)
 {%- endcodetabs %}
 
 ## Interactive JSON Objects

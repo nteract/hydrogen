@@ -10,7 +10,8 @@ import {
   grammarToLanguage,
   isMultilanguageGrammar,
   getEmbeddedScope,
-  getEditorDirectory
+  getEditorDirectory,
+  msgSpecToNotebookFormat
 } from "./../lib/utils";
 
 describe("utils", () => {
@@ -98,5 +99,18 @@ describe("utils", () => {
     expect(editor.scopeDescriptorForBufferPosition).toHaveBeenCalledWith(
       "position"
     );
+  });
+
+  describe("msgSpecToNotebookFormat", () => {
+    it("converts a message to the notebook format", () => {
+      const msg = {
+        content: { data: "test" },
+        header: { msg_type: "test_header" }
+      };
+      const notebookSpecMsg = msgSpecToNotebookFormat(msg);
+
+      expect(notebookSpecMsg.output_type).toEqual("test_header");
+      expect(notebookSpecMsg.data).toEqual("test");
+    });
   });
 });

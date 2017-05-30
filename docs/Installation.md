@@ -18,7 +18,7 @@ Tested and works with:
 - [iTorch](https://github.com/facebook/iTorch)
 - [IJavascript](https://github.com/n-riesco/ijavascript)
 - [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
-- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+`
+- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires [`language-r`](https://atom.io/packages/language-r) or similar
 - [IElixir](https://github.com/pprzetacznik/IElixir)
 - [jupyter-scala](https://github.com/alexarchambault/jupyter-scala)
 
