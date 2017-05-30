@@ -69,7 +69,7 @@
     "react-rangeslider": "^2.0.1",
     "requirejs": "^2.2.0",
     "resize-observer-polyfill": "^1.4.2",
-    "spawnteract": "^2.1.1",
+    "spawnteract": "^3.0.0",
     "tildify": "^1.2.0",
     "uuid": "^3.0.1",
     "ws": "^2.0.0",
