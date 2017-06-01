@@ -18,6 +18,40 @@ Please, also include the output or a screenshot of the debug messages. To access
 
 ## Common Issues
 
+### Debian 8 and Ubuntu 16.04 LTS
+
+Unfortunately, the versions of IPython provided in Debian's and Ubuntu's
+repositories are rather old and Hydrogen is unable to detect the kernel specs
+installed in your machine. To workaround this issue, Hydrogen provides the
+setting `KernelSpec`, where the user can declare the kernel specs manually.
+Find the `KernelSpec` setting in the Atom GUI by going to the Settings pane,
+click Packages, search for Hydrogen, and click the Hydrogen Settings button.
+
+Below is an example `KernelSpec` for IPython 2 and 3:
+
+```json
+{
+  "kernelspecs": {
+    "python2": {
+      "spec": {
+        "display_name": "Python 2",
+        "language": "python",
+        "argv": ["python2.7", "-m", "ipykernel", "-f", "{connection_file}"],
+        "env": {}
+      }
+    },
+    "python3": {
+      "spec": {
+        "display_name": "Python 3",
+        "language": "python",
+        "argv": ["python3.4", "-m", "ipykernel", "-f", "{connection_file}"],
+        "env": {}
+      }
+    }
+  }
+}
+```
+
 ### Installation fails on Linux 32-bit
 
 At the moment we don't ship prebuilts for 32-bit Linux. Hence you'll need some additional toolling to build from source:
