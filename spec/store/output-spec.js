@@ -172,51 +172,86 @@ describe("OutputStore", () => {
   beforeEach(() => {
     store = new OutputStore();
   });
-  it("checks if output lineHeight position gets updated", () => {
-    store.updatePosition({ lineHeight: 10 });
-    expect(store.position).toEqual({
-      lineHeight: 10,
-      lineLength: 0,
-      editorWidth: 0
+  describe("updatePosition", () => {
+    it("checks if output lineHeight position gets updated", () => {
+      store.updatePosition({ lineHeight: 10 });
+      expect(store.position).toEqual({
+        lineHeight: 10,
+        lineLength: 0,
+        editorWidth: 0
+      });
+    });
+    it("checks if output lineLength position gets updated", () => {
+      store.updatePosition({ lineLength: 10 });
+      expect(store.position).toEqual({
+        lineHeight: 0,
+        lineLength: 10,
+        editorWidth: 0
+      });
+    });
+    it("checks if output editorWidth position gets updated", () => {
+      store.updatePosition({ editorWidth: 10 });
+      expect(store.position).toEqual({
+        lineHeight: 0,
+        lineLength: 0,
+        editorWidth: 10
+      });
+    });
+    it("checks if all output positions get updated", () => {
+      store.updatePosition({
+        lineHeight: 10,
+        lineLength: 10,
+        editorWidth: 10
+      });
+      expect(store.position).toEqual({
+        lineHeight: 10,
+        lineLength: 10,
+        editorWidth: 10
+      });
     });
   });
-  it("checks if output lineLength position gets updated", () => {
-    store.updatePosition({ lineLength: 10 });
-    expect(store.position).toEqual({
-      lineHeight: 0,
-      lineLength: 10,
-      editorWidth: 0
+  describe("setIndex", () => {
+    it("checks if index is set up right ", () => {
+      store.outputs = [1, 2];
+      store.setIndex(0);
+      expect(store.index).toEqual(0);
+      store.setIndex(1);
+      expect(store.index).toEqual(1);
+      store.setIndex(2);
+      expect(store.index).toEqual(1);
+      store.setIndex(-2);
+      expect(store.index).toEqual(0);
     });
   });
-  it("checks if output editorWidth position gets updated", () => {
-    store.updatePosition({ editorWidth: 10 });
-    expect(store.position).toEqual({
-      lineHeight: 0,
-      lineLength: 0,
-      editorWidth: 10
+  describe("incrementIndex", () => {
+    it("checks if index incrementing works ", () => {
+      store.outputs = [1, 2];
+      store.setIndex(0);
+      store.incrementIndex();
+      expect(store.index).toEqual(1);
     });
   });
-  it("checks if all output positions get updated", () => {
-    store.updatePosition({
-      lineHeight: 10,
-      lineLength: 10,
-      editorWidth: 10
+  describe("decrementIndex", () => {
+    it("checks if index decrementing works ", () => {
+      store.outputs = [1, 2];
+      store.setIndex(1);
+      store.decrementIndex();
+      //index is now at 0
+      expect(0).toEqual(store.index);
+      store.decrementIndex();
+      //index is now at -1
+      expect(0).toEqual(store.index);
     });
-    expect(store.position).toEqual({
-      lineHeight: 10,
-      lineLength: 10,
-      editorWidth: 10
+    describe("clear", () => {
+      it("checks if output clearing works ", () => {
+        store.outputs.push("foo");
+        expect(store.outputs.length).toEqual(1);
+        store.setIndex(0);
+        expect(store.index).toEqual(0);
+        store.clear();
+        expect(store.outputs.length).toEqual(0);
+        expect(store.index).toEqual(-1);
+      });
     });
-  });
-  it("checks if index is set up right ", () => {
-    store.outputs = [1, 2];
-    store.setIndex(0);
-    expect(store.index).toEqual(0);
-    store.setIndex(1);
-    expect(store.index).toEqual(1);
-    store.setIndex(2);
-    expect(store.index).toEqual(1);
-    store.setIndex(-2);
-    expect(store.index).toEqual(0);
   });
 });
