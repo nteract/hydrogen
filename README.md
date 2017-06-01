@@ -6,7 +6,7 @@
 
 This package lets you run your code directly in Atom using any [Jupyter](https://jupyter.org/) kernels you have installed.
 
-Checkout our [Medium blog post](https://medium.com/nteract/hydrogen-interactive-computing-in-atom-89d291bcc4dd) to see what you can do with Hydrogen.
+Checkout our [Documentation](https://nteract.gitbooks.io/hydrogen/) and [Medium blog post](https://medium.com/nteract/hydrogen-interactive-computing-in-atom-89d291bcc4dd) to see what you can do with Hydrogen.
 
 ![hero](https://cloud.githubusercontent.com/assets/13285808/20360886/7e03e524-ac03-11e6-9176-37677f226619.gif)
 
