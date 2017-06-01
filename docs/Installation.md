@@ -2,7 +2,7 @@
 
 For all systems, you'll need
 
-- [Atom](https://atom.io/) `1.6.0+`
+- [Atom](https://atom.io/) `1.17.0+`
 - [Jupyter](http://jupyter.org): If you have Python and conda or pip setup, install the notebook directly with `conda install jupyter` or `pip install jupyter`.
 
 You can now run `apm install hydrogen` or search for *Hydrogen* in the Install pane of the Atom settings.
@@ -27,40 +27,6 @@ But it _should_ work with any [kernel](https://github.com/jupyter/jupyter/wiki/J
 <img src="https://cloud.githubusercontent.com/assets/13285808/16931386/048f056e-4d41-11e6-8563-3baa8ed84371.png">
 
 Note that if you install a new kernel, you'll need to run **Hydrogen: Update Kernels** for Hydrogen to find it. For performance reasons, Hydrogen only looks for available kernels when it first starts.
-
-### Debian 8 and Ubuntu 16.04 LTS
-
-Unfortunately, the versions of IPython provided in Debian's and Ubuntu's
-repositories are rather old and Hydrogen is unable to detect the kernel specs
-installed in your machine. To workaround this issue, Hydrogen provides the
-setting `KernelSpec`, where the user can declare the kernel specs manually.
-Find the `KernelSpec` setting in the Atom GUI by going to the Settings pane,
-click Packages, search for Hydrogen, and click the Hydrogen Settings button.
-
-Below is an example `KernelSpec` for IPython 2 and 3:
-
-```json
-{
-  "kernelspecs": {
-    "python2": {
-      "spec": {
-        "display_name": "Python 2",
-        "language": "python",
-        "argv": ["python2.7", "-m", "ipykernel", "-f", "{connection_file}"],
-        "env": {}
-      }
-    },
-    "python3": {
-      "spec": {
-        "display_name": "Python 3",
-        "language": "python",
-        "argv": ["python3.4", "-m", "ipykernel", "-f", "{connection_file}"],
-        "env": {}
-      }
-    }
-  }
-}
-```
 
 # Troubleshooting
 
