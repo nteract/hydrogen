@@ -9,6 +9,10 @@ Please join our [Slack channel](https://slackin-nteract.now.sh/) if you have any
 
 ## Project setup
 
+### Prerequisites
+
+For hacking on Hydrogen you'll need to have [Node.js and npm](https://docs.npmjs.com/getting-started/installing-node) installed.
+
 ### Quick and dirty setup
 
 `apm develop hydrogen`
