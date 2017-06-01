@@ -1,6 +1,6 @@
 "use babel";
 
-import { reduceOutputs } from "../../lib/store/output";
+import { reduceOutputs, isSingeLine } from "../../lib/store/output";
 import Immutable from "immutable";
 
 // Adapted from https://github.com/nteract/nteract/blob/master/test/renderer/reducers/document-spec.js#L33
@@ -138,6 +138,28 @@ describe("reduceOutputs", () => {
           output_type: "stream"
         })
       ].toString()
+    );
+  });
+});
+
+describe("isSingeLine", () => {
+  it("checks for single line output", () => {
+    const textSingle = "hello world";
+    expect(isSingeLine(textSingle, textSingle.length + 1)).toEqual(true);
+    expect(isSingeLine(textSingle, textSingle.length)).toEqual(false);
+  });
+  it("checks for multiple line output", () => {
+    const textMultiple = "hello \n world";
+    expect(isSingeLine(textMultiple, textMultiple.length + 1)).toEqual(false);
+    expect(isSingeLine(textMultiple, textMultiple.length)).toEqual(false);
+  });
+  it("checks for single line output with line break at the end ", () => {
+    const textEndlinebreak = "hello world \n";
+    expect(isSingeLine(textEndlinebreak, textEndlinebreak.length + 1)).toEqual(
+      true
+    );
+    expect(isSingeLine(textEndlinebreak, textEndlinebreak.length)).toEqual(
+      false
     );
   });
 });
