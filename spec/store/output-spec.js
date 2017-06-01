@@ -1,6 +1,9 @@
 "use babel";
 
-import { reduceOutputs, isSingeLine } from "../../lib/store/output";
+import OutputStore, {
+  reduceOutputs,
+  isSingeLine
+} from "../../lib/store/output";
 import Immutable from "immutable";
 
 // Adapted from https://github.com/nteract/nteract/blob/master/test/renderer/reducers/document-spec.js#L33
@@ -161,5 +164,48 @@ describe("isSingeLine", () => {
     expect(isSingeLine(textEndlinebreak, textEndlinebreak.length)).toEqual(
       false
     );
+  });
+});
+
+describe("OutputStore", () => {
+  let store;
+  beforeEach(() => {
+    store = new OutputStore();
+  });
+  it("checks if output lineHeight position gets updated", () => {
+    store.updatePosition({ lineHeight: 10 });
+    expect(store.position).toEqual({
+      lineHeight: 10,
+      lineLength: 0,
+      editorWidth: 0
+    });
+  });
+  it("checks if output lineLength position gets updated", () => {
+    store.updatePosition({ lineLength: 10 });
+    expect(store.position).toEqual({
+      lineHeight: 0,
+      lineLength: 10,
+      editorWidth: 0
+    });
+  });
+  it("checks if output editorWidth position gets updated", () => {
+    store.updatePosition({ editorWidth: 10 });
+    expect(store.position).toEqual({
+      lineHeight: 0,
+      lineLength: 0,
+      editorWidth: 10
+    });
+  });
+  it("checks if all output positions get updated", () => {
+    store.updatePosition({
+      lineHeight: 10,
+      lineLength: 10,
+      editorWidth: 10
+    });
+    expect(store.position).toEqual({
+      lineHeight: 10,
+      lineLength: 10,
+      editorWidth: 10
+    });
   });
 });
