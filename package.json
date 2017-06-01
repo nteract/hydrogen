@@ -68,7 +68,6 @@
     "react-dom": "^15.5.4",
     "react-rangeslider": "^2.0.1",
     "requirejs": "^2.2.0",
-    "resize-observer-polyfill": "^1.4.2",
     "spawnteract": "^3.0.0",
     "tildify": "^1.2.0",
     "uuid": "^3.0.1",
