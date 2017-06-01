@@ -208,4 +208,15 @@ describe("OutputStore", () => {
       editorWidth: 10
     });
   });
+  it("checks if index is set up right ", () => {
+    store.outputs = [1, 2];
+    store.setIndex(0);
+    expect(store.index).toEqual(0);
+    store.setIndex(1);
+    expect(store.index).toEqual(1);
+    store.setIndex(2);
+    expect(store.index).toEqual(1);
+    store.setIndex(-2);
+    expect(store.index).toEqual(0);
+  });
 });
