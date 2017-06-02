@@ -5,22 +5,30 @@ import WatchStore from "../../lib/store/watch";
 describe("WatchStore", () => {
   let store;
   beforeEach(() => {
-    store = new WatchStore({});
+    store = new WatchStore({
+      executeWatch: (code, callback) => callback("result")
+    });
   });
   describe("run", () => {
-    it("checks for @action run function", () => {
-      store.setCode("foo");
-      const code = store.getCode();
-      store.kernel = {
-        executeWatch: (code, callback) => callback("result")
-      };
+    it("checks for non-empty string", () => {
+      store.getCode = () => "foo";
+      spyOn(store.kernel, "executeWatch").and.callThrough();
       spyOn(store.outputStore, "appendOutput");
       store.run();
-      expect(store.outputStore.appendOutput).toHaveBeenCalled();
+      expect(store.kernel.executeWatch).toHaveBeenCalled();
+      expect(store.outputStore.appendOutput).toHaveBeenCalledWith("result");
+    });
+    it("checks for empty string function", () => {
+      store.getCode = () => "";
+      spyOn(store.kernel, "executeWatch").and.callThrough();
+      spyOn(store.outputStore, "appendOutput");
+      store.run();
+      expect(store.kernel.executeWatch).not.toHaveBeenCalled();
+      expect(store.outputStore.appendOutput).not.toHaveBeenCalledWith("result");
     });
   });
   describe("setCode", () => {
-    it("checks for setCode function", () => {
+    it("checks for foo to be set to code", () => {
       //setCode to some string
       spyOn(store.editor, "setText");
       store.setCode("foo");
@@ -28,14 +36,14 @@ describe("WatchStore", () => {
     });
   });
   describe("getCode", () => {
-    it("checks for getCode function", () => {
+    it("checks if it gets the right string", () => {
       //setCode to some string
       store.setCode("foo");
       expect(store.getCode()).toEqual("foo");
     });
   });
   describe("focus", () => {
-    it("checks for focus function", () => {
+    it("checks for function call", () => {
       spyOn(store.editor.element, "focus");
       store.focus();
       expect(store.editor.element.focus).toHaveBeenCalled();
