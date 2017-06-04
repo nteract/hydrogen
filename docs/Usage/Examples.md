@@ -5,7 +5,7 @@ Please share your favorite snippets with us and add them to this page.
 
 ## Interactive plots using [Plotly](https://plot.ly/api/)
 
-{% codetabs name="Python using plotly", type="py" -%}
+{% codetabs name="Python", type="py" -%}
 from plotly import offline
 offline.init_notebook_mode()
 
@@ -22,6 +22,14 @@ plt.plot(t, np.sin(t))
 
 plotly_fig = tls.mpl_to_plotly(plt.gcf())
 py.iplot(plotly_fig)
+{%- language name="R", type="r" -%}
+library(IRdisplay)
+
+data <- list(list(x=c(1999, 2000, 2001, 2002), y=c(10, 15, 13, 17), type='scatter'))
+figure <- list(data=data)
+
+mimebundle <- list('application/vnd.plotly.v1+json'=figure)
+IRdisplay::publish_mimebundle(mimebundle)
 {%- endcodetabs %}
 
 ## Interactive JSON Objects
