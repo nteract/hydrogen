@@ -4,19 +4,18 @@ import OutputStore, {
   reduceOutputs,
   isSingeLine
 } from "../../lib/store/output";
-import Immutable from "immutable";
 
 // Adapted from https://github.com/nteract/nteract/blob/master/test/renderer/reducers/document-spec.js#L33
 describe("reduceOutputs", () => {
   it("puts new outputs at the end by default", () => {
     const outputs = [
-      Immutable.Map({ output_type: "stream", name: "stdout", text: "Woo" }),
-      Immutable.Map({
+      { output_type: "stream", name: "stdout", text: "Woo" },
+      {
         output_type: "error",
         ename: "well",
         evalue: "actually",
-        traceback: Immutable.List()
-      })
+        traceback: []
+      }
     ];
     const newOutputs = reduceOutputs(outputs, {
       output_type: "display_data",
@@ -24,43 +23,37 @@ describe("reduceOutputs", () => {
       metadata: {}
     });
 
-    expect(newOutputs.toString()).toEqual(
-      [
-        Immutable.Map({ output_type: "stream", name: "stdout", text: "Woo" }),
-        Immutable.Map({
-          output_type: "error",
-          ename: "well",
-          evalue: "actually",
-          traceback: Immutable.List()
-        }),
-        Immutable.Map({
-          output_type: "display_data",
-          data: Immutable.Map(),
-          metadata: Immutable.Map()
-        })
-      ].toString()
-    );
+    expect(newOutputs).toEqual([
+      { output_type: "stream", name: "stdout", text: "Woo" },
+      {
+        output_type: "error",
+        ename: "well",
+        evalue: "actually",
+        traceback: []
+      },
+      {
+        output_type: "display_data",
+        data: {},
+        metadata: {}
+      }
+    ]);
   });
 
   it("handles the case of a single stream output", () => {
-    const outputs = [
-      Immutable.Map({ name: "stdout", text: "hello", output_type: "stream" })
-    ];
+    const outputs = [{ name: "stdout", text: "hello", output_type: "stream" }];
     const newOutputs = reduceOutputs(outputs, {
       name: "stdout",
       text: " world",
       output_type: "stream"
     });
 
-    expect(newOutputs.toString()).toEqual(
-      [
-        Immutable.Map({
-          name: "stdout",
-          text: "hello world",
-          output_type: "stream"
-        })
-      ].toString()
-    );
+    expect(newOutputs).toEqual([
+      {
+        name: "stdout",
+        text: "hello world",
+        output_type: "stream"
+      }
+    ]);
   });
 
   it("merges streams of text", () => {
@@ -71,36 +64,32 @@ describe("reduceOutputs", () => {
       text: "hello",
       output_type: "stream"
     });
-    expect(outputs.toString()).toEqual(
-      [
-        Immutable.Map({ output_type: "stream", name: "stdout", text: "hello" })
-      ].toString()
-    );
+    expect(outputs).toEqual([
+      { output_type: "stream", name: "stdout", text: "hello" }
+    ]);
 
     outputs = reduceOutputs(outputs, {
       name: "stdout",
       text: " world",
       output_type: "stream"
     });
-    expect(outputs.toString()).toEqual(
-      [
-        Immutable.Map({
-          output_type: "stream",
-          name: "stdout",
-          text: "hello world"
-        })
-      ].toString()
-    );
+    expect(outputs).toEqual([
+      {
+        output_type: "stream",
+        name: "stdout",
+        text: "hello world"
+      }
+    ]);
   });
 
   it("keeps respective streams together", () => {
     const outputs = [
-      Immutable.Map({ name: "stdout", text: "hello", output_type: "stream" }),
-      Immutable.Map({
+      { name: "stdout", text: "hello", output_type: "stream" },
+      {
         name: "stderr",
         text: "errors are",
         output_type: "stream"
-      })
+      }
     ];
     const newOutputs = reduceOutputs(outputs, {
       name: "stdout",
@@ -108,40 +97,36 @@ describe("reduceOutputs", () => {
       output_type: "stream"
     });
 
-    expect(newOutputs.toString()).toEqual(
-      [
-        Immutable.Map({
-          name: "stdout",
-          text: "hello world",
-          output_type: "stream"
-        }),
-        Immutable.Map({
-          name: "stderr",
-          text: "errors are",
-          output_type: "stream"
-        })
-      ].toString()
-    );
+    expect(newOutputs).toEqual([
+      {
+        name: "stdout",
+        text: "hello world",
+        output_type: "stream"
+      },
+      {
+        name: "stderr",
+        text: "errors are",
+        output_type: "stream"
+      }
+    ]);
 
     const evenNewerOutputs = reduceOutputs(newOutputs, {
       name: "stderr",
       text: " informative",
       output_type: "stream"
     });
-    expect(evenNewerOutputs.toString()).toEqual(
-      [
-        Immutable.Map({
-          name: "stdout",
-          text: "hello world",
-          output_type: "stream"
-        }),
-        Immutable.Map({
-          name: "stderr",
-          text: "errors are informative",
-          output_type: "stream"
-        })
-      ].toString()
-    );
+    expect(evenNewerOutputs).toEqual([
+      {
+        name: "stdout",
+        text: "hello world",
+        output_type: "stream"
+      },
+      {
+        name: "stderr",
+        text: "errors are informative",
+        output_type: "stream"
+      }
+    ]);
   });
 });
 
