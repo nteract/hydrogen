@@ -94,7 +94,7 @@
     }
   },
   "devDependencies": {
-    "atom-jasmine2-test-runner": "^0.7.2",
+    "atom-jasmine2-test-runner": "^0.8.0",
     "babel-eslint": "^7.1.0",
     "enzyme": "^2.8.2",
     "eslint": "^3.16.1",
