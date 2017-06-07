@@ -26,7 +26,8 @@
       "hydrogen:run-all",
       "hydrogen:run-all-above",
       "hydrogen:run-cell",
-      "hydrogen:run-cell-and-move-down"
+      "hydrogen:run-cell-and-move-down",
+      "hydrogen:refresh-all-result-bubbles"
     ]
   },
   "scripts": {
