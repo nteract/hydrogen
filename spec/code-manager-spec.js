@@ -66,12 +66,13 @@ describe("CodeManager", () => {
     const toRange = range => Range.fromObject(range);
 
     describe("getCellsForBreakPoints", () => {
-      it("return cell(range) from array of points", () => {
+      it("return cells(ranges) from array of points", () => {
         const points = [[1, 2], [3, 4], [5, 6], [10, 5]];
-        const cell1 = [[1, 2], [3, 4]];
-        const cell2 = [[4, 0], [5, 6]];
-        const cell3 = [[6, 0], [10, 5]];
-        const cellsExpected = [cell1, cell2, cell3].map(toRange);
+        const cell1 = [[0, 0], [1, 2]];
+        const cell2 = [[2, 0], [3, 4]];
+        const cell3 = [[4, 0], [5, 6]];
+        const cell4 = [[6, 0], [10, 5]];
+        const cellsExpected = [cell1, cell2, cell3, cell4].map(toRange);
         const cellsActual = CM.getCellsForBreakPoints(points.map(toPoint));
         expect(cellsActual).toEqual(cellsExpected);
       });
@@ -89,18 +90,18 @@ describe("CodeManager", () => {
       }
       beforeEach(
         waitAsync(async () => {
-          await atom.packages.activatePackage("language-javascript");
-          const jsGrammar = atom.grammars.grammarForScopeName("source.js");
-          editor.setGrammar(jsGrammar);
-          const code = "var v1 = 1; // %%\nvar v2 = 2;\nvar v2 = 3; // %%\n";
+          await atom.packages.activatePackage("language-python");
+          editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
+          const code = "v0 = 0 # %%\nv1 = 1\nv2 = 2 # %%\nv3 = 3\n";
           editor.setText(code);
         })
       );
       describe("no arg", () => {
-        it("return cell(range) by collecting breakpoints from comments in editor", () => {
-          const cell1 = [[0, 0], [0, 12]];
-          const cell2 = [[1, 0], [2, 12]];
-          const cell3 = [[3, 0], [3, 0]];
+        it("return cell(range) by collecting breakpoints from comments in comment", () => {
+          // EOF is always treated as implicit breakpoints
+          const cell1 = [[0, 0], [0, 7]];
+          const cell2 = [[1, 0], [2, 7]];
+          const cell3 = [[3, 0], [4, 0]];
           const cellsActual = CM.getCells(editor);
           const cellsExpected = [cell1, cell2, cell3].map(toRange);
           expect(cellsActual).toEqual(cellsExpected);
@@ -108,11 +109,11 @@ describe("CodeManager", () => {
       });
       describe("with arg(= oldBreakpoints)", () => {
         it("return cells(range) from exising and detected breakpoints", () => {
-          oldBreakpoints = [[1, 12], [2, 12]];
-          const cell1 = [[0, 0], [0, 12]];
-          const cell2 = [[1, 0], [1, 12]];
-          const cell3 = [[2, 0], [2, 12]];
-          const cell4 = [[3, 0], [3, 0]];
+          oldBreakpoints = [[1, 7], [2, 11]];
+          const cell1 = [[0, 0], [0, 7]];
+          const cell2 = [[1, 0], [1, 7]];
+          const cell3 = [[2, 0], [2, 7]];
+          const cell4 = [[3, 0], [4, 0]];
           const cellsActual = CM.getCells(editor, oldBreakpoints.map(toPoint));
           const cellsExpected = [cell1, cell2, cell3, cell4].map(toRange);
           expect(cellsActual).toEqual(cellsExpected);
