@@ -30,9 +30,7 @@
     ]
   },
   "scripts": {
-    "lint": "eslint .",
     "flow": "flow",
-    "fix": "eslint . --fix",
     "prettier": "prettier --write 'lib/**/*.js' 'spec/**/*.js'",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
     "precommit": "lint-staged"
@@ -95,12 +93,7 @@
   },
   "devDependencies": {
     "atom-jasmine2-test-runner": "^0.8.0",
-    "babel-eslint": "^7.1.0",
     "enzyme": "^2.8.2",
-    "eslint": "^3.16.1",
-    "eslint-config-prettier": "^2.0.0",
-    "eslint-plugin-flowtype": "^2.30.4",
-    "eslint-plugin-prettier": "^2.0.1",
     "flow-bin": "^0.46.0",
     "husky": "^0.13.3",
     "lint-staged": "^3.4.0",
