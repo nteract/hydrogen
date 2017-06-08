@@ -67,14 +67,20 @@ describe("CodeManager", () => {
 
     describe("getCellsForBreakPoints", () => {
       it("return cells(ranges) from array of points", () => {
-        const points = [[1, 2], [3, 4], [5, 6], [10, 5]];
-        const cell1 = [[0, 0], [1, 2]];
-        const cell2 = [[2, 0], [3, 4]];
-        const cell3 = [[4, 0], [5, 6]];
-        const cell4 = [[6, 0], [10, 5]];
-        const cellsExpected = [cell1, cell2, cell3, cell4].map(toRange);
-        const cellsActual = CM.getCellsForBreakPoints(points.map(toPoint));
-        expect(cellsActual).toEqual(cellsExpected);
+        const points = [
+          [1, 2], // bp1
+          [3, 4], // bp2
+          [5, 6], // bp3
+          [10, 5] // bp4
+        ].map(toPoint);
+        const cellsExpected = [
+          [[0, 0], [1, 2]], // zero-to-bp1
+          [[2, 0], [3, 4]], // nextRow of bp1 to bp2
+          [[4, 0], [5, 6]], // nextRow of bp2 to bp3
+          [[6, 0], [10, 5]] // nextRow of bp3 to bp4
+        ].map(toRange);
+
+        expect(CM.getCellsForBreakPoints(points)).toEqual(cellsExpected);
       });
     });
     describe("getCells", () => {
@@ -92,31 +98,40 @@ describe("CodeManager", () => {
         waitAsync(async () => {
           await atom.packages.activatePackage("language-python");
           editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
-          const code = "v0 = 0 # %%\nv1 = 1\nv2 = 2 # %%\nv3 = 3\n";
-          editor.setText(code);
+          const code = [
+            "v0 = 0 # %%", // row0:bp
+            "v1 = 1", // row1
+            "v2 = 2 # %%", // row2:bp
+            "v3 = 3" // row3
+          ];
+          editor.setText(code.join("\n") + "\n");
         })
       );
       describe("no arg", () => {
-        it("return cell(range) by collecting breakpoints from comments in comment", () => {
+        it("return cell(range) by detecting breakpoints in comment", () => {
           // EOF is always treated as implicit breakpoints
-          const cell1 = [[0, 0], [0, 7]];
-          const cell2 = [[1, 0], [2, 7]];
-          const cell3 = [[3, 0], [4, 0]];
-          const cellsActual = CM.getCells(editor);
-          const cellsExpected = [cell1, cell2, cell3].map(toRange);
-          expect(cellsActual).toEqual(cellsExpected);
+          const cellsExpected = [
+            [[0, 0], [0, 7]], // zero-to-row0:bp
+            [[1, 0], [2, 7]], // nextRow of row0:bp to row2:bp
+            [[3, 0], [4, 0]] // nextRow of row2:bp to EOF(= implicit bp)
+          ].map(toRange);
+          expect(CM.getCells(editor)).toEqual(cellsExpected);
         });
       });
-      describe("with arg(= oldBreakpoints)", () => {
-        it("return cells(range) from exising and detected breakpoints", () => {
-          oldBreakpoints = [[1, 7], [2, 11]];
-          const cell1 = [[0, 0], [0, 7]];
-          const cell2 = [[1, 0], [1, 7]];
-          const cell3 = [[2, 0], [2, 7]];
-          const cell4 = [[3, 0], [4, 0]];
-          const cellsActual = CM.getCells(editor, oldBreakpoints.map(toPoint));
-          const cellsExpected = [cell1, cell2, cell3, cell4].map(toRange);
-          expect(cellsActual).toEqual(cellsExpected);
+      describe("with arg(= breakpoints)", () => {
+        it("return cells(range) from passed breakpoints(with auto-sort-by-position)", () => {
+          breakpoints = [
+            [0, 11], // row0:bp
+            [2, 11], // row2:bp
+            [1, 6] // row1:bp
+          ].map(toPoint);
+          const cellsExpected = [
+            [[0, 0], [0, 11]], // zero to row0:bp
+            [[1, 0], [1, 6]], // nextRow of row0:bp to row1:bp
+            [[2, 0], [2, 11]] // nextRow of row1:bp to row2:bp
+          ].map(toRange);
+
+          expect(CM.getCells(editor, breakpoints)).toEqual(cellsExpected);
         });
       });
     });
