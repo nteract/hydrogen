@@ -35,6 +35,11 @@ When you place the cursor inside a cell and hit **"Run Cell"**, Hydrogen will ex
 These commands will run all code inside the editor or all code above the cursor.
 
 
+## "Hydrogen: Refresh All Result Bubbles"
+
+Restart running kernel and re-evaluate all bubbles on editor.  
+It evaluate all code in editor, and each existing bubbles up-to-date state.  
+
 ## Watch Expressions
 
 After you've run some code with Hydrogen, you can use the **"Hydrogen: Toggle Watches"** command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code.
