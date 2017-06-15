@@ -43,6 +43,12 @@ This command works in following way.
 1. Restart kernel to cleanup evaluation environment.
 2. Run all code and update all existing bubbles.
 
+## "Hydrogen: Toggle Bubble"
+
+Toggle(add or remove) bobble at current cursor line.
+You can **preset** bubble before executing code.
+If executed with selection, toggle bubble on each selected lines respectively.
+
 ## Watch Expressions
 
 After you've run some code with Hydrogen, you can use the **"Hydrogen: Toggle Watches"** command from the Command Palette to open the watch expression sidebar. Whatever code you write in watch expressions will be re-run after each time you send that kernel any other code.
