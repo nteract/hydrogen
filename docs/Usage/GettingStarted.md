@@ -35,10 +35,13 @@ When you place the cursor inside a cell and hit **"Run Cell"**, Hydrogen will ex
 These commands will run all code inside the editor or all code above the cursor.
 
 
-## "Hydrogen: Refresh All Result Bubbles"
+## "Hydrogen: Restart Kernel And Re Evaluate Bubbles"
 
 Restart running kernel and re-evaluate all bubbles on editor.  
-It evaluate all code in editor, and each existing bubbles up-to-date state.  
+This command works in following way.
+
+1. Restart kernel to cleanup evaluation environment.
+2. Run all code and update all existing bubbles.
 
 ## Watch Expressions
 
