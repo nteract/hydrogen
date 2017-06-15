@@ -832,6 +832,7 @@ declare class atom$TextEditor extends atom$Model {
   getCursorScreenPosition(): atom$Point,
   getCursorScreenPositions(): Array<atom$Point>,
   getLastCursor(): atom$Cursor,
+  getLastSelection(): atom$Selection,
   moveToBeginningOfLine(): void,
   moveToEndOfLine(): void,
   moveToBottom(): void,
@@ -1893,6 +1894,7 @@ declare class atom$Selection {
       undo?: boolean,
     },
   ): string,
+  getBufferRowRange(): [number, number]
 }
 
 declare class atom$LanguageMode {
