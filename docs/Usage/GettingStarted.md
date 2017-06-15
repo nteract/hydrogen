@@ -47,7 +47,13 @@ This command works in following way.
 
 Toggle(add or remove) bobble at current cursor line.
 You can **preset** bubble before executing code.
-If executed with selection, toggle bubble on each selected lines respectively.
+If executed with selection, toggle bubble on each selected line.
+
+Typical workflow with this command is
+
+1. Add bubble at line you want manually by `hydrogen:toggle-bubble`
+2. Execute code cleanly by `restart-kernel-and-re-evaluate-bubbles`
+3. Modify code, then repeat 1-3 until you fully understand/investigated code.
 
 ## Watch Expressions
 
