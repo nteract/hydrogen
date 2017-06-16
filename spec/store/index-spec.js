@@ -118,7 +118,11 @@ describe("Store", () => {
   });
 
   it("should add new kernel", () => {
-    const kernel = { language: "null grammar", foo: "bar" };
+    const kernel = {
+      language: "null grammar",
+      foo: "bar",
+      kernelSpec: { language: "null grammar", display_name: "null grammar" }
+    };
     store.newKernel(kernel);
     expect(store.runningKernels.size).toBe(1);
     expect(store.runningKernels.get("null grammar").language).toBe(
