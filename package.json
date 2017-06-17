@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "1.16.0",
+  "version": "1.17.1",
   "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
   "author": "Will Whitney <me@willwhitney.com>",
   "keywords": [
@@ -26,7 +26,8 @@
       "hydrogen:run-all",
       "hydrogen:run-all-above",
       "hydrogen:run-cell",
-      "hydrogen:run-cell-and-move-down"
+      "hydrogen:run-cell-and-move-down",
+      "hydrogen:restart-kernel-and-re-evaluate-bubbles"
     ]
   },
   "scripts": {
