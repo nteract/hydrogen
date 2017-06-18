@@ -7,6 +7,7 @@ import store from "./../../lib/store";
 describe("Store initialize", () => {
   it("should correctly initialize store", () => {
     expect(store.subscriptions instanceof CompositeDisposable).toBeTruthy();
+    expect(isObservableMap(store.startingKernels)).toBeTruthy();
     expect(isObservableMap(store.runningKernels)).toBeTruthy();
     expect(isObservable(store, "editor")).toBeTruthy();
     expect(isObservable(store, "grammar")).toBeTruthy();
@@ -17,6 +18,7 @@ describe("Store initialize", () => {
 describe("Store", () => {
   beforeEach(() => {
     store.subscriptions = new CompositeDisposable();
+    store.startingKernels = new Map();
     store.runningKernels = new Map();
     store.editor = null;
     store.grammar = null;
@@ -37,6 +39,7 @@ describe("Store", () => {
       const notCurrentKernel = {
         kernelSpec: { language: "mock grammar" }
       };
+
       const runningKernels = {
         "current kernel": currentKernel,
         "not current kernel": notCurrentKernel
@@ -117,13 +120,24 @@ describe("Store", () => {
     });
   });
 
-  it("should add new kernel", () => {
+  it("should add new kernel and reset starting kernel indicator", () => {
+    const kernelSpec = {
+      language: "null grammar",
+      display_name: "null grammar"
+    };
     const kernel = {
       language: "null grammar",
       foo: "bar",
-      kernelSpec: { language: "null grammar", display_name: "null grammar" }
+      kernelSpec: kernelSpec
     };
+    const { display_name } = kernelSpec;
+
+    store.startKernel(display_name);
+    expect(store.startingKernels.get(display_name)).toBeTruthy();
+
     store.newKernel(kernel);
+    expect(store.startingKernels.get(display_name)).toBeUndefined();
+
     expect(store.runningKernels.size).toBe(1);
     expect(store.runningKernels.get("null grammar").language).toBe(
       "null grammar"
