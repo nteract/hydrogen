@@ -97,7 +97,7 @@
     "enzyme": "^2.8.2",
     "flow-bin": "^0.46.0",
     "husky": "^0.13.3",
-    "lint-staged": "^3.4.0",
+    "lint-staged": "^4.0.0",
     "markdox": "^0.1.10",
     "mobx-react-devtools": "^4.2.11",
     "prettier": "1.4.2",
