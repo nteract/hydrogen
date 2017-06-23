@@ -953,6 +953,7 @@ declare class atom$TextEditor extends atom$Model {
   // Undocumented Methods
   getDefaultCharWidth(): number,
   getLineHeightInPixels(): number,
+  getEditorWidthInChars(): number,
   moveToTop(): void,
   tokenForBufferPosition(position: atom$Point | [?number, ?number]): atom$Token,
   onDidConflict(callback: () => void): IDisposable,
