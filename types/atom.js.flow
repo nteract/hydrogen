@@ -1159,9 +1159,10 @@ declare class atom$Workspace {
   getActivePane(): atom$Pane,
   activateNextPane(): boolean,
   activatePreviousPane(): boolean,
-  paneForURI(uri: string): atom$Pane,
+  paneForURI(uri: string): ?atom$Pane,
   paneForItem(item: mixed): ?atom$Pane,
   paneContainerForItem(item: mixed): ?atom$Dock | ?atom$WorkspaceCenter,
+  paneContainerForURI(uri: string): ?atom$Dock | ?atom$WorkspaceCenter,
 
   // Panels
   getBottomPanels(): Array<atom$Panel>,
