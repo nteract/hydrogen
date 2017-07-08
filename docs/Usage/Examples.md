@@ -14,14 +14,12 @@ offline.iplot([{"y": [1, 2, 1]}])
 import numpy as np
 import matplotlib.pyplot as plt
 from plotly import offline as py
-import plotly.tools as tls
 py.init_notebook_mode()
 
 t = np.linspace(0, 20, 500)
 plt.plot(t, np.sin(t))
 
-plotly_fig = tls.mpl_to_plotly(plt.gcf())
-py.iplot(plotly_fig)
+py.iplot_mpl(plt.gcf())
 {%- language name="R", type="r" -%}
 library(IRdisplay)
 
