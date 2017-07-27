@@ -649,8 +649,10 @@ declare class atom$ThemeManager {
 
 type atom$TooltipsPlacementOption = 'top' | 'bottom' | 'left' | 'right' | 'auto';
 
+// https://atom.io/docs/api/v1.18.0/TooltipManager#instance-add
+// if `title` is a function, `this` will be bound to the tooltip target element
 type atom$TooltipsAddOptions = {
-  title: string,
+  title: string | () => string,
   keyBindingCommand?: string,
   keyBindingTarget?: HTMLElement,
   animation?: boolean,
