@@ -92,7 +92,7 @@
     }
   },
   "devDependencies": {
-    "atom-jasmine2-test-runner": "^0.8.0",
+    "atom-jasmine2-test-runner": "^1.0.0",
     "enzyme": "^2.8.2",
     "flow-bin": "^0.51.1",
     "husky": "^0.14.0",
