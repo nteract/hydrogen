@@ -53,6 +53,33 @@ t = np.linspace(0, 20, 500)
 
 plt.plot(t, np.sin(t))
 plt.show()
+{%- language name="Python using altair < v1.3", type="py" -%}
+from IPython.display import display
+from altair import Chart, load_dataset
+def vegify(spec):
+    display({
+        'application/vnd.vegalite.v1+json': spec.to_dict()
+    }, raw=True)
+
+cars = load_dataset('cars')
+spec = Chart(cars).mark_point().encode(
+    x='Horsepower',
+    y='Miles_per_Gallon',
+    color='Origin',
+)
+
+vegify(spec)
+{%- language name="Python using altair v1.3+", type="py" -%}
+from altair import Chart, load_dataset, enable_mime_rendering
+enable_mime_rendering()
+
+cars = load_dataset('cars')
+spec = Chart(cars).mark_point().encode(
+    x='Horsepower',
+    y='Miles_per_Gallon',
+    color='Origin',
+)
+spec
 {%- endcodetabs %}
 
 ## LaTeX

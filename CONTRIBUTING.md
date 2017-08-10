@@ -44,6 +44,7 @@ We use [Jasmine](https://jasmine.github.io/2.5/introduction) for writing specs.
 To build the website locally run:
 ```bash
 npm install gitbook-cli -g
+gitbook install
 gitbook serve
 ```
 For more information take a look at https://toolchain.gitbook.com/setup.html.
