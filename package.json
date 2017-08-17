@@ -69,7 +69,7 @@
     "spawnteract": "^4.0.0",
     "tildify": "^1.2.0",
     "uuid": "^3.0.1",
-    "ws": "^2.0.0",
+    "ws": "^3.1.0",
     "xmlhttprequest": "^1.8.0"
   },
   "consumedServices": {
@@ -94,7 +94,7 @@
   "devDependencies": {
     "atom-jasmine2-test-runner": "^1.0.0",
     "enzyme": "^2.8.2",
-    "flow-bin": "^0.52.0",
+    "flow-bin": "^0.53.1",
     "husky": "^0.14.0",
     "lint-staged": "^4.0.0",
     "markdox": "^0.1.10",
