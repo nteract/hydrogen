@@ -98,5 +98,5 @@ If you are working in a markup file that supports highlighted code blocks, we ca
 
 We support [markdown](https://github.com/burodepeper/language-markdown), [gfm](https://github.com/atom/language-gfm), [asciidoc](https://github.com/asciidoctor/atom-language-asciidoc), [reStructuredText](https://github.com/Lukasa/language-restructuredtext),
 [Pweave](https://github.com/mpastell/language-weave),
-[Weave.jl](https://github.com/mpastell/language-weave),
+[Weave.jl](https://github.com/mpastell/language-weave)
 and [knitr](https://github.com/christophergandrud/language-knitr/).
