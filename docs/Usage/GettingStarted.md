@@ -37,7 +37,7 @@ These commands will run all code inside the editor or all code above the cursor.
 
 ## "Hydrogen: Restart Kernel And Re Evaluate Bubbles"
 
-Restart running kernel and re-evaluate all bubbles on editor.  
+Restart running kernel and re-evaluate all bubbles on editor.
 This command works in following way.
 
 1. Restart kernel to cleanup evaluation environment.
@@ -96,4 +96,7 @@ If you are working in a markup file that supports highlighted code blocks, we ca
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/24365090/0af6a91c-1315-11e7-92c6-849031bf9f6a.gif" height=350>
 
-We support [markdown](https://github.com/burodepeper/language-markdown), [gfm](https://github.com/atom/language-gfm), [asciidoc](https://github.com/asciidoctor/atom-language-asciidoc), [reStructuredText](https://github.com/Lukasa/language-restructuredtext) and [knitr](https://github.com/christophergandrud/language-knitr/).
+We support [markdown](https://github.com/burodepeper/language-markdown), [gfm](https://github.com/atom/language-gfm), [asciidoc](https://github.com/asciidoctor/atom-language-asciidoc), [reStructuredText](https://github.com/Lukasa/language-restructuredtext),
+[Pweave](https://github.com/mpastell/language-weave),
+[Weave.jl](https://github.com/mpastell/language-weave),
+and [knitr](https://github.com/christophergandrud/language-knitr/).
