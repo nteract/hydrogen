@@ -39,15 +39,6 @@ Get the `atom$Range` that will run if `hydrogen:run-cell` is called.
 
 * **Class** `atom$Range`
 
-## getCodeBlockRange()
-
-Get the `atom$Range` that will run if `hydrogen:run` is called.
-`null` is returned if no active text editor.
-
-### Return:
-
-* **Class** `atom$Range`
-
 --------
 
 <!-- End lib/plugin-api/hydrogen-provider.js -->
