@@ -99,7 +99,7 @@
     "lint-staged": "^4.0.0",
     "markdox": "^0.1.10",
     "mobx-react-devtools": "^4.2.11",
-    "prettier": "1.5.3",
+    "prettier": "1.6.1",
     "react-test-renderer": "^15.5.4"
   }
 }
