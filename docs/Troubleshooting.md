@@ -98,12 +98,12 @@ Again, there are a number of possible causes and solutions:
   [#53](https://github.com/nteract/hydrogen/issues/53) the details of your
   installation.
 
-# Hydrogen No kernel specs found Issue!
+# Setting environment variables on Windows
 
-----------
 ## problem:
 
 In windows if python is not added to environment variables, you will get this `No kernel specs found` problem.
+> Make sure that you have Jupyer installed, if not use `py -m pip install jupyer` to install it
 
 ![Kernel specs not found](https://preview.ibb.co/jw40ta/Screenshot_40.png)
 
@@ -150,4 +150,3 @@ You can also add python to the environment variables manually
 You should see something like this,
 
 ![Result](https://d2mxuefqeaa7sj.cloudfront.net/s_72AB4F9B801403E4852A7178F94F1BB891F67B88E721FB948C0DB4747940E7E2_1504306452541_test.gif)
-
