@@ -103,7 +103,6 @@ Again, there are a number of possible causes and solutions:
 ## problem:
 
 In windows if python is not added to environment variables, you will get this `No kernel specs found` problem.
-> Make sure that you have Jupyer installed, if not use `py -m pip install jupyer` to install it
 
 ![Kernel specs not found](https://preview.ibb.co/jw40ta/Screenshot_40.png)
 
