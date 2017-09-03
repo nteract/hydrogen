@@ -2,8 +2,8 @@
   "name": "Hydrogen",
   "main": "./lib/main",
   "version": "1.21.1",
-  "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
-  "author": "Will Whitney <me@willwhitney.com>",
+  "description": "Run code interactively, inspect data, and plot. All the power of Jupyter kernels, inside your favorite text editor.",
+  "author": "nteract contributors",
   "keywords": [
     "execute",
     "run",
@@ -13,6 +13,7 @@
     "python",
     "torch",
     "ijulia",
+    "irkernel",
     "itorch",
     "plot",
     "image"
