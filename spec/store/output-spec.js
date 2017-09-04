@@ -163,7 +163,8 @@ describe("OutputStore", () => {
       expect(store.position).toEqual({
         lineHeight: 10,
         lineLength: 0,
-        editorWidth: 0
+        editorWidth: 0,
+        charWidth: 0
       });
     });
     it("checks if output lineLength position gets updated", () => {
@@ -171,7 +172,8 @@ describe("OutputStore", () => {
       expect(store.position).toEqual({
         lineHeight: 0,
         lineLength: 10,
-        editorWidth: 0
+        editorWidth: 0,
+        charWidth: 0
       });
     });
     it("checks if output editorWidth position gets updated", () => {
@@ -179,19 +181,22 @@ describe("OutputStore", () => {
       expect(store.position).toEqual({
         lineHeight: 0,
         lineLength: 0,
-        editorWidth: 10
+        editorWidth: 10,
+        charWidth: 0
       });
     });
     it("checks if all output positions get updated", () => {
       store.updatePosition({
         lineHeight: 10,
         lineLength: 10,
-        editorWidth: 10
+        editorWidth: 10,
+        charWidth: 12
       });
       expect(store.position).toEqual({
         lineHeight: 10,
         lineLength: 10,
-        editorWidth: 10
+        editorWidth: 10,
+        charWidth: 12
       });
     });
   });
