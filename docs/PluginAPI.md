@@ -4,7 +4,7 @@
 
 ## HydrogenProvider
 
-Version: 1.0.0 
+Version: 1.2.0 
 
 The Plugin API allows you to make Hydrogen awesome.
 You will be able to interact with this class in your Hydrogen Plugin using
@@ -14,13 +14,21 @@ Take a look at our [Example Plugin](https://github.com/lgeiger/hydrogen-example-
 and the [Atom Flight Manual](http://flight-manual.atom.io/hacking-atom/) for
 learning how to interact with Hydrogen in your own plugin.
 
-## onDidChangeKernel(Callback)
+## onDidChangeKernel(Callback(?kernel))
 
 Calls your callback when the kernel has changed.
 
 ### Params:
 
-* **Function** *Callback* 
+* **Function** *Callback(?kernel)* 
+
+## onDidStartKernel(Callback(?kernel))
+
+Calls your callback when a new kernel starts.
+
+### Params:
+
+* **Function** *Callback(?kernel)* 
 
 ## getActiveKernel()
 
