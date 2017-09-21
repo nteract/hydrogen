@@ -19,6 +19,12 @@
           'label': 'Run and Move Down'
           'command': 'hydrogen:run-and-move-down'
         }, {
+          'label': 'Run Cell'
+          'command': 'hydrogen:run-cell'
+        }, {
+          'label': 'Run Cell and Move Down'
+          'command': 'hydrogen:run-cell-and-move-down'
+        }, {
           'label': 'Run All'
           'command': 'hydrogen:run-all'
         }, {
