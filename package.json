@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "1.22.0",
+  "version": "1.23.0",
   "description": "Run code interactively, inspect data, and plot. All the power of Jupyter kernels, inside your favorite text editor.",
   "author": "nteract contributors",
   "keywords": [
@@ -45,7 +45,10 @@
     "atom": ">=1.20.0 <2.0.0"
   },
   "lint-staged": {
-    "{lib,spec}/**/*.js": ["prettier --write", "git add"]
+    "{lib,spec}/**/*.js": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "@jupyterlab/services": "^0.42.0",
