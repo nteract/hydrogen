@@ -200,6 +200,17 @@ describe("Store", () => {
     });
   });
 
+  describe("get filePath", () => {
+    it("should return null if no editor", () => {
+      expect(store.filePath).toBeNull();
+    });
+
+    it("should return file path", () => {
+      store.editor = { getPath: () => "foo.py" };
+      expect(store.filePath).toBe("foo.py");
+    });
+  });
+
   describe("get kernel", () => {
     it("should return null if no editor", () => {
       expect(store.kernel).toBeNull();
