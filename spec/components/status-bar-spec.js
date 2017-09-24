@@ -52,11 +52,11 @@ describe("Status Bar", () => {
     });
     kernel2.executionState = "idle";
 
-    store.kernelMapping = {
-      "foo.py": kernel,
-      "bar.py": kernel,
-      "foo.js": kernel2
-    };
+    store.kernelMapping = new Map([
+      ["foo.py", kernel],
+      ["bar.py", kernel],
+      ["foo.js", kernel2]
+    ]);
 
     store.editor = { getPath: () => "foo.py" };
 
@@ -82,6 +82,6 @@ describe("Status Bar", () => {
     expect(component.text()).toBe("Javascript | idle");
 
     // reset store
-    store.kernelMapping = {};
+    store.kernelMapping = new Map();
   });
 });

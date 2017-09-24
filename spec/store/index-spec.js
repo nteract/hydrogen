@@ -12,7 +12,7 @@ describe("Store initialize", () => {
     expect(store.markers instanceof MarkerStore).toBeTruthy();
     expect(store.runningKernels).toEqual(new Set());
     expect(isObservableMap(store.startingKernels)).toBeTruthy();
-    expect(isObservable(store.kernelMapping)).toBeTruthy();
+    expect(isObservableMap(store.kernelMapping)).toBeTruthy();
     expect(isObservable(store, "editor")).toBeTruthy();
     expect(isObservable(store, "grammar")).toBeTruthy();
     expect(isComputed(store, "kernel")).toBeTruthy();
@@ -24,7 +24,7 @@ describe("Store", () => {
     store.subscriptions = new CompositeDisposable();
     store.startingKernels = new Map();
     store.runningKernels = new Set();
-    store.kernelMapping = {};
+    store.kernelMapping = new Map();
     store.editor = null;
     store.grammar = null;
   });
@@ -119,7 +119,8 @@ describe("Store", () => {
       spyOn(store.startingKernels, "delete");
 
       store.newKernel(kernel, "foo.py", editor);
-      expect(store.kernelMapping).toEqual({ "foo.py": kernel });
+      expect(store.kernelMapping.size).toBe(1);
+      expect(store.kernelMapping.get("foo.py")).toEqual(kernel);
       expect(store.runningKernels).toEqual(new Set([kernel]));
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
     });
@@ -130,7 +131,8 @@ describe("Store", () => {
       spyOn(store.startingKernels, "delete");
 
       store.newKernel(kernel, "foo.md", editor, { name: "python" });
-      expect(store.kernelMapping).toEqual({ "foo.md": { python: kernel } });
+      expect(store.kernelMapping.size).toBe(1);
+      expect(store.kernelMapping.get("foo.md")).toEqual({ python: kernel });
       expect(store.runningKernels).toEqual(new Set([kernel]));
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
     });
@@ -152,18 +154,19 @@ describe("Store", () => {
       });
 
       store.runningKernels = new Set([kernel1, kernel2, kernel3]);
-      store.kernelMapping = {
-        "foo.py": kernel1,
-        "bar.py": kernel1,
-        "baz.py": kernel2,
-        "foo.md": { python: kernel1, javascript: kernel3 }
-      };
+      store.kernelMapping = new Map([
+        ["foo.py", kernel1],
+        ["bar.py", kernel1],
+        ["baz.py", kernel2],
+        ["foo.md", { python: kernel1, javascript: kernel3 }]
+      ]);
 
       store.deleteKernel(kernel1);
 
-      expect(store.kernelMapping).toEqual({
-        "baz.py": kernel2,
-        "foo.md": { javascript: kernel3 }
+      expect(store.kernelMapping.size).toBe(2);
+      expect(store.kernelMapping.get("baz.py")).toEqual(kernel2);
+      expect(store.kernelMapping.get("foo.md")).toEqual({
+        javascript: kernel3
       });
       expect(store.runningKernels).toEqual(new Set([kernel2, kernel3]));
     });
@@ -192,7 +195,7 @@ describe("Store", () => {
       store.runningKernels.add(kernel2);
       store.dispose();
       expect(store.runningKernels).toEqual(new Set());
-      expect(store.kernelMapping).toEqual({});
+      expect(store.kernelMapping.size).toBe(0);
       expect(kernel1.destroy).toHaveBeenCalled();
       expect(kernel2.destroy).toHaveBeenCalled();
       expect(store.subscriptions.dispose).toHaveBeenCalled();
@@ -227,7 +230,7 @@ describe("Store", () => {
         display_name: "Python 3",
         language: "python"
       });
-      store.kernelMapping = { "foo.py": kernel };
+      store.kernelMapping = new Map([["foo.py", kernel]]);
       expect(store.kernel).toEqual(kernel);
     });
 
@@ -237,7 +240,7 @@ describe("Store", () => {
         display_name: "Python 3",
         language: "python"
       });
-      store.kernelMapping = { "bar.py": kernel };
+      store.kernelMapping = new Map([["bar.py", kernel]]);
       expect(store.kernel).toBeUndefined();
     });
 
@@ -247,7 +250,7 @@ describe("Store", () => {
         display_name: "Python 3",
         language: "python"
       });
-      store.kernelMapping = { "foo.md": { python: kernel } };
+      store.kernelMapping = new Map([["foo.md", { python: kernel }]]);
       store.grammar = { name: "python" };
       expect(store.kernel).toEqual(kernel);
     });
