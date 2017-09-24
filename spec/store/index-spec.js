@@ -172,6 +172,32 @@ describe("Store", () => {
     });
   });
 
+  describe("getFilesForKernel", () => {
+    it("should return files related to kernel", () => {
+      const kernel1 = new Kernel({
+        display_name: "Python 3",
+        language: "python"
+      });
+      const kernel2 = new Kernel({
+        display_name: "Python 3",
+        language: "python"
+      });
+
+      store.kernelMapping = new Map([
+        ["foo.py", kernel1],
+        ["bar.py", kernel1],
+        ["baz.py", kernel2],
+        ["foo.md", { python: kernel1, javascript: kernel2 }]
+      ]);
+
+      expect(store.getFilesForKernel(kernel1)).toEqual([
+        "foo.py",
+        "bar.py",
+        "foo.md"
+      ]);
+    });
+  });
+
   describe("updateEditor", () => {
     it("should update editor", () => {
       spyOn(store, "setGrammar").and.callThrough();
