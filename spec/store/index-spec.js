@@ -10,7 +10,7 @@ describe("Store initialize", () => {
   it("should correctly initialize store", () => {
     expect(store.subscriptions instanceof CompositeDisposable).toBeTruthy();
     expect(store.markers instanceof MarkerStore).toBeTruthy();
-    expect(store.runningKernels).toEqual(new Set());
+    expect(store.runningKernels.slice()).toEqual([]);
     expect(isObservableMap(store.startingKernels)).toBeTruthy();
     expect(isObservableMap(store.kernelMapping)).toBeTruthy();
     expect(isObservable(store, "editor")).toBeTruthy();
@@ -23,7 +23,7 @@ describe("Store", () => {
   beforeEach(() => {
     store.subscriptions = new CompositeDisposable();
     store.startingKernels = new Map();
-    store.runningKernels = new Set();
+    store.runningKernels.clear();
     store.kernelMapping = new Map();
     store.editor = null;
     store.grammar = null;
@@ -121,7 +121,7 @@ describe("Store", () => {
       store.newKernel(kernel, "foo.py", editor);
       expect(store.kernelMapping.size).toBe(1);
       expect(store.kernelMapping.get("foo.py")).toEqual(kernel);
-      expect(store.runningKernels).toEqual(new Set([kernel]));
+      expect(store.runningKernels.slice()).toEqual([kernel]);
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
     });
 
@@ -133,7 +133,7 @@ describe("Store", () => {
       store.newKernel(kernel, "foo.md", editor, { name: "python" });
       expect(store.kernelMapping.size).toBe(1);
       expect(store.kernelMapping.get("foo.md")).toEqual({ python: kernel });
-      expect(store.runningKernels).toEqual(new Set([kernel]));
+      expect(store.runningKernels.slice()).toEqual([kernel]);
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
     });
   });
@@ -153,7 +153,7 @@ describe("Store", () => {
         language: "Javascript"
       });
 
-      store.runningKernels = new Set([kernel1, kernel2, kernel3]);
+      store.runningKernels.replace([kernel1, kernel2, kernel3]);
       store.kernelMapping = new Map([
         ["foo.py", kernel1],
         ["bar.py", kernel1],
@@ -168,7 +168,7 @@ describe("Store", () => {
       expect(store.kernelMapping.get("foo.md")).toEqual({
         javascript: kernel3
       });
-      expect(store.runningKernels).toEqual(new Set([kernel2, kernel3]));
+      expect(store.runningKernels.slice()).toEqual([kernel2, kernel3]);
     });
   });
 
@@ -217,10 +217,9 @@ describe("Store", () => {
       spyOn(store.markers, "clear");
       const kernel1 = jasmine.createSpyObj("kernel1", ["destroy"]);
       const kernel2 = jasmine.createSpyObj("kernel2", ["destroy"]);
-      store.runningKernels.add(kernel1);
-      store.runningKernels.add(kernel2);
+      store.runningKernels.replace([kernel1, kernel2]);
       store.dispose();
-      expect(store.runningKernels).toEqual(new Set());
+      expect(store.runningKernels.length).toEqual(0);
       expect(store.kernelMapping.size).toBe(0);
       expect(kernel1.destroy).toHaveBeenCalled();
       expect(kernel2.destroy).toHaveBeenCalled();
