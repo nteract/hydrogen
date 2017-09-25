@@ -88,7 +88,9 @@ You can also access these commands by clicking on the kernel status in the statu
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/16894732/e4e5b4de-4b5f-11e6-8b8e-facf17a7c6c4.png" width=300>
 
-Additionally, if you have two or more kernels for a particular language (grammar), you can select which kernel to use with the "Switch to <kernel>" option in the Kernel Commands menu.
+Additionally, if you have more kernels running, you can open the kernel monitor via **Hydrogen: Toggle Kernel Monitor** to see a list of all running kernels and shut them down if needed:
+
+<img width="802" alt="monitor" src="https://user-images.githubusercontent.com/13285808/30815792-7b685b8a-a214-11e7-863e-f334f03eef0f.png">
 
 ## Multiple kernels inside one rich document
 
