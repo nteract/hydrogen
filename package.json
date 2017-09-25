@@ -67,7 +67,6 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-rangeslider": "^2.1.0",
-    "requirejs": "^2.2.0",
     "spawnteract": "^4.0.0",
     "tildify": "^1.2.0",
     "uuid": "^3.0.1",
