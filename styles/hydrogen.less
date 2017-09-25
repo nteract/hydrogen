@@ -12,6 +12,8 @@
 @hydrogen-inline-background: contrast(@syntax-text-color, @hydrogen-dark-background, @hydrogen-light-background, 20%);
 @hydrogen-inline-color: lighten(@syntax-text-color, 10%);
 @hydrogen-error-color: average(@syntax-text-color, red);
+@hydrogen-separator-border-color: contrast(@pane-item-background-color, fade(@pane-item-border-color, 20%), @pane-item-border-color);
+
 
 .hydrogen.marker {
   display: flex;
@@ -244,6 +246,28 @@ svg:first-child {
     }
   }
 
+}
+
+// ----------- Kernel Monitor -------------
+.kernel-monitor {
+  header {
+    line-height: 2.5em;
+    font-weight: 600;
+    border-bottom: 1px solid @base-border-color;
+    padding: 0 10px;
+  }
+
+  div:not(:first-child) header {
+    border-top: 1px solid @base-border-color;
+  }
+
+  .icon::before {
+    width: 100%;
+  }
+
+  .icon:hover {
+    color: @text-color-subtle;
+  }
 }
 
 // -------------- Watches -----------------
