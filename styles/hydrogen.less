@@ -12,7 +12,6 @@
 @hydrogen-inline-background: contrast(@syntax-text-color, @hydrogen-dark-background, @hydrogen-light-background, 20%);
 @hydrogen-inline-color: lighten(@syntax-text-color, 10%);
 @hydrogen-error-color: average(@syntax-text-color, red);
-@hydrogen-separator-border-color: contrast(@pane-item-background-color, fade(@pane-item-border-color, 20%), @pane-item-border-color);
 
 
 .hydrogen.marker {
@@ -266,7 +265,7 @@ svg:first-child {
   }
 
   .icon:hover {
-    color: @text-color-subtle;
+    color: @text-color-error;
   }
 }
 
