@@ -65,7 +65,7 @@
     "mobx": "^3.1.11",
     "mobx-react": "^4.2.1",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4",
+    "react-dom": "^16.0.0",
     "react-rangeslider": "^2.1.0",
     "requirejs": "^2.2.0",
     "spawnteract": "^4.0.0",
