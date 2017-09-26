@@ -1,10 +1,13 @@
 "use babel";
 
 import React from "react";
-import { shallow } from "enzyme";
+import Enzyme, { shallow } from "enzyme";
+import Adapter from "enzyme-adapter-react-15";
 
 import store from "../../lib/store";
 import StatusBar from "../../lib/components/status-bar";
+
+Enzyme.configure({ adapter: new Adapter() });
 
 describe("Status Bar", () => {
   it("should render status bar and call onClick if clicked", () => {
@@ -67,6 +70,7 @@ describe("Status Bar", () => {
     expect(store.kernel.displayName).toBe(kernel.displayName);
     expect(store.kernel.executionState).toBe(kernel.executionState);
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
+    console.log(component);
     expect(component.text()).toBe("Null Kernel | starting");
 
     // doesn't update if switched to editor with same grammar
