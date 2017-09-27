@@ -27,16 +27,13 @@ describe("utils", () => {
     });
 
     it("should return respect languageMappings", () => {
-      atom.config.set(
-        "Hydrogen.languageMappings",
-        `{"Kernel Language": "Grammar Language"}`
-      );
-      expect(grammarToLanguage({ name: "Grammar Language" })).toEqual(
-        "kernel language"
-      );
-      expect(grammarToLanguage({ name: "Kernel Language" })).toEqual(
-        "kernel language"
-      );
+      atom.config.set("Hydrogen.languageMappings", `{"Kernel Language": "Grammar Language"}`);
+      expect(grammarToLanguage({
+          name: "Grammar Language"
+        })).toEqual("kernel language");
+      expect(grammarToLanguage({
+          name: "Kernel Language"
+        })).toEqual("kernel language");
       atom.config.set("Hydrogen.languageMappings", "");
     });
   });
@@ -61,9 +58,9 @@ describe("utils", () => {
   });
 
   it("isMultilanguageGrammar", () => {
-    expect(
-      isMultilanguageGrammar(atom.workspace.buildTextEditor().getGrammar())
-    ).toBe(false);
+    expect(isMultilanguageGrammar(atom.workspace
+          .buildTextEditor()
+          .getGrammar())).toBe(false);
     expect(isMultilanguageGrammar({ scopeName: "source.gfm" })).toBe(true);
     expect(isMultilanguageGrammar({ scopeName: "source.asciidoc" })).toBe(true);
   });
@@ -82,31 +79,18 @@ describe("utils", () => {
   });
 
   it("getEmbeddedScope", () => {
-    const editor = {
-      scopeDescriptorForBufferPosition: () => {
-        return {
-          getScopesArray: () => [
-            "text.md",
-            "fenced.code.md",
-            "source.embedded.python"
-          ]
-        };
-      }
-    };
+    const editor = { scopeDescriptorForBufferPosition: () => {
+        return { getScopesArray: () => ["text.md", "fenced.code.md", "source.embedded.python"] };
+      } };
     spyOn(editor, "scopeDescriptorForBufferPosition").and.callThrough();
     const scope = getEmbeddedScope(editor, "position");
     expect(scope).toEqual("source.embedded.python");
-    expect(editor.scopeDescriptorForBufferPosition).toHaveBeenCalledWith(
-      "position"
-    );
+    expect(editor.scopeDescriptorForBufferPosition).toHaveBeenCalledWith("position");
   });
 
   describe("msgSpecToNotebookFormat", () => {
     it("converts a message to the notebook format", () => {
-      const msg = {
-        content: { data: "test" },
-        header: { msg_type: "test_header" }
-      };
+      const msg = { content: { data: "test" }, header: { msg_type: "test_header" } };
       const notebookSpecMsg = msgSpecToNotebookFormat(msg);
 
       expect(notebookSpecMsg.output_type).toEqual("test_header");
