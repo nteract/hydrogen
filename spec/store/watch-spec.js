@@ -15,7 +15,10 @@ describe("WatchStore", () => {
       spyOn(store.kernel, "executeWatch").and.callThrough();
       spyOn(store.outputStore, "appendOutput");
       store.run();
-      expect(store.kernel.executeWatch).toHaveBeenCalledWith("foo", jasmine.any(Function));
+      expect(store.kernel.executeWatch).toHaveBeenCalledWith(
+        "foo",
+        jasmine.any(Function)
+      );
       expect(store.outputStore.appendOutput).toHaveBeenCalledWith("result");
     });
     it("checks for empty string function", () => {

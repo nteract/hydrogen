@@ -72,7 +72,8 @@ describe("Kernel manager", () => {
       });
     });
 
-    describe("mergeKernelSpecs", () => it("should merge kernelspecs", () => {
+    describe("mergeKernelSpecs", () =>
+      it("should merge kernelspecs", () => {
         kernelManager._kernelSpecs = firstKernelSpec.kernelspecs;
         kernelManager.mergeKernelSpecs(secondKernelSpec.kernelspecs);
 
