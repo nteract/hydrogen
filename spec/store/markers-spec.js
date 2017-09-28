@@ -55,7 +55,9 @@ describe("MarkerStore", () => {
   });
 
   it("clears bubble on row", () => {
-    const bubble = { marker: { getBufferRange: () => new Range([5, 1], [5, 3]) } };
+    const bubble = {
+      marker: { getBufferRange: () => new Range([5, 1], [5, 3]) }
+    };
 
     spyOn(store, "delete");
 

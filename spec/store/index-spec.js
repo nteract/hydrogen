@@ -36,13 +36,20 @@ describe("Store", () => {
       const currentKernel = { kernelSpec: { language: "null grammar" } };
       const notCurrentKernel = { kernelSpec: { language: "mock grammar" } };
 
-      const runningKernels = { "current kernel": currentKernel, "not current kernel": notCurrentKernel };
+      const runningKernels = {
+        "current kernel": currentKernel,
+        "not current kernel": notCurrentKernel
+      };
       for (let kernelLanguage of Object.keys(runningKernels)) {
         const kernel = runningKernels[kernelLanguage];
         store.runningKernels.set(kernelLanguage, kernel);
       }
-      expect(Object.keys(store.runningKernels.toJS()).sort()).toEqual(Object.keys(runningKernels).sort());
-      expect(store.kernel.kernelSpec.language).toBe(currentKernel.kernelSpec.language);
+      expect(Object.keys(store.runningKernels.toJS()).sort()).toEqual(
+        Object.keys(runningKernels).sort()
+      );
+      expect(store.kernel.kernelSpec.language).toBe(
+        currentKernel.kernelSpec.language
+      );
     });
 
     it("should set grammar to null if editor is null", () => {
@@ -65,14 +72,26 @@ describe("Store", () => {
     });
 
     it("should set multi language grammar inside code block", () => {
-      const editor = { getGrammar: () => {
+      const editor = {
+        getGrammar: () => {
           return { scopeName: "source.gfm", name: "GitHub Markdown" };
-        }, getCursorBufferPosition: () => {}, scopeDescriptorForBufferPosition: () => {
-          return { getScopesArray: () => ["source.gfm", "markup.code.python.gfm", "source.embedded.python"] };
-        } };
+        },
+        getCursorBufferPosition: () => {},
+        scopeDescriptorForBufferPosition: () => {
+          return {
+            getScopesArray: () => [
+              "source.gfm",
+              "markup.code.python.gfm",
+              "source.embedded.python"
+            ]
+          };
+        }
+      };
 
       const pythonGrammar = { scopeName: "source.python", name: "Python" };
-      spyOn(atom.grammars, "grammarForScopeName").and.returnValue(pythonGrammar);
+      spyOn(atom.grammars, "grammarForScopeName").and.returnValue(
+        pythonGrammar
+      );
 
       store.setGrammar(editor);
       expect(store.grammar).toEqual(pythonGrammar);
@@ -81,9 +100,15 @@ describe("Store", () => {
 
     it("should set multi language grammar outside code block", () => {
       const grammar = { scopeName: "source.gfm", name: "GitHub Markdown" };
-      const editor = { getGrammar: () => grammar, getCursorBufferPosition: () => {}, scopeDescriptorForBufferPosition: () => {
-          return { getScopesArray: () => ["source.gfm", "markup.code.python.gfm"] };
-        } };
+      const editor = {
+        getGrammar: () => grammar,
+        getCursorBufferPosition: () => {},
+        scopeDescriptorForBufferPosition: () => {
+          return {
+            getScopesArray: () => ["source.gfm", "markup.code.python.gfm"]
+          };
+        }
+      };
 
       store.setGrammar(editor);
       expect(store.grammar).toEqual(grammar);
@@ -92,8 +117,15 @@ describe("Store", () => {
   });
 
   it("should add new kernel and reset starting kernel indicator", () => {
-    const kernelSpec = { language: "null grammar", display_name: "null grammar" };
-    const kernel = { language: "null grammar", foo: "bar", kernelSpec: kernelSpec };
+    const kernelSpec = {
+      language: "null grammar",
+      display_name: "null grammar"
+    };
+    const kernel = {
+      language: "null grammar",
+      foo: "bar",
+      kernelSpec: kernelSpec
+    };
     const { display_name } = kernelSpec;
 
     store.startKernel(display_name);
@@ -103,7 +135,9 @@ describe("Store", () => {
     expect(store.startingKernels.get(display_name)).toBeUndefined();
 
     expect(store.runningKernels.size).toBe(1);
-    expect(store.runningKernels.get("null grammar").language).toBe("null grammar");
+    expect(store.runningKernels.get("null grammar").language).toBe(
+      "null grammar"
+    );
     expect(store.runningKernels.get("null grammar").foo).toBe("bar");
   });
 

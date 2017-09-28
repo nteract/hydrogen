@@ -8,7 +8,10 @@ import OutputStore, {
 // Adapted from https://github.com/nteract/nteract/blob/master/test/renderer/reducers/document-spec.js#L33
 describe("reduceOutputs", () => {
   it("puts new outputs at the end by default", () => {
-    const outputs = [{ output_type: "stream", name: "stdout", text: "Woo" }, { output_type: "error", ename: "well", evalue: "actually", traceback: [] }];
+    const outputs = [
+      { output_type: "stream", name: "stdout", text: "Woo" },
+      { output_type: "error", ename: "well", evalue: "actually", traceback: [] }
+    ];
     const newOutputs = reduceOutputs(outputs, {
       output_type: "display_data",
       data: {},
@@ -75,7 +78,10 @@ describe("reduceOutputs", () => {
   });
 
   it("keeps respective streams together", () => {
-    const outputs = [{ name: "stdout", text: "hello", output_type: "stream" }, { name: "stderr", text: "errors are", output_type: "stream" }];
+    const outputs = [
+      { name: "stdout", text: "hello", output_type: "stream" },
+      { name: "stderr", text: "errors are", output_type: "stream" }
+    ];
     const newOutputs = reduceOutputs(outputs, {
       name: "stdout",
       text: " world",
@@ -128,8 +134,12 @@ describe("isSingeLine", () => {
   });
   it("checks for single line output with line break at the end ", () => {
     const textEndlinebreak = "hello world \n";
-    expect(isSingeLine(textEndlinebreak, textEndlinebreak.length + 1)).toEqual(true);
-    expect(isSingeLine(textEndlinebreak, textEndlinebreak.length)).toEqual(false);
+    expect(isSingeLine(textEndlinebreak, textEndlinebreak.length + 1)).toEqual(
+      true
+    );
+    expect(isSingeLine(textEndlinebreak, textEndlinebreak.length)).toEqual(
+      false
+    );
   });
 });
 
