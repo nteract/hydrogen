@@ -22,9 +22,9 @@ describe("Store initialize", () => {
 describe("Store", () => {
   beforeEach(() => {
     store.subscriptions = new CompositeDisposable();
-    store.startingKernels = new Map();
+    store.startingKernels.clear();
     store.runningKernels.clear();
-    store.kernelMapping = new Map();
+    store.kernelMapping.clear();
     store.editor = null;
     store.grammar = null;
   });
@@ -128,6 +128,7 @@ describe("Store", () => {
     it("should store kernel for multilanguage file", () => {
       const editor = { getGrammar: () => ({ scopeName: "source.gfm" }) };
       const kernel = { kernelSpec: { display_name: "Python 3" } };
+      const kernel2 = { kernelSpec: { display_name: "Javascript" } };
       spyOn(store.startingKernels, "delete");
 
       store.newKernel(kernel, "foo.md", editor, { name: "python" });
@@ -135,6 +136,15 @@ describe("Store", () => {
       expect(store.kernelMapping.get("foo.md")).toEqual({ python: kernel });
       expect(store.runningKernels.slice()).toEqual([kernel]);
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
+
+      store.newKernel(kernel2, "foo.md", editor, { name: "javascript" });
+      expect(store.kernelMapping.size).toBe(1);
+      expect(store.kernelMapping.get("foo.md")).toEqual({
+        python: kernel,
+        javascript: kernel2
+      });
+      expect(store.runningKernels.slice()).toEqual([kernel, kernel2]);
+      expect(store.startingKernels.delete).toHaveBeenCalledWith("Javascript");
     });
   });
 
