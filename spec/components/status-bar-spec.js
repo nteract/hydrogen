@@ -1,7 +1,10 @@
 "use babel";
 
 import React from "react";
-import { shallow } from "enzyme";
+import Enzyme, { shallow } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+
+Enzyme.configure({ adapter: new Adapter() });
 
 import store from "../../lib/store";
 import Kernel from "../../lib/kernel";
@@ -60,6 +63,8 @@ describe("Status Bar", () => {
 
     store.editor = { getPath: () => "foo.py" };
 
+    // FixMe: Enzyme https://github.com/airbnb/enzyme/issues/1184
+    component.setState();
     expect(store.kernel.displayName).toBe(kernel.displayName);
     expect(store.kernel.executionState).toBe(kernel.executionState);
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
@@ -67,6 +72,9 @@ describe("Status Bar", () => {
 
     // update execution state
     store.kernel.executionState = "idle";
+
+    // FixMe: Enzyme https://github.com/airbnb/enzyme/issues/1184
+    component.setState();
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(3);
     expect(component.text()).toBe("Python 3 | idle");
 
@@ -76,6 +84,9 @@ describe("Status Bar", () => {
 
     // update kernel
     store.editor = { getPath: () => "foo.js" };
+
+    // FixMe: Enzyme https://github.com/airbnb/enzyme/issues/1184
+    component.setState();
     expect(store.kernel.displayName).toBe(kernel2.displayName);
     expect(store.kernel.executionState).toBe(kernel2.executionState);
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(4);
