@@ -1,6 +1,6 @@
 # Installation
 
-Hydrogen requires **[Atom](https://atom.io/)** `1.20.0+` and a **[Kernel](##kernels)** for the language you intend to use Hydrogen with.
+Hydrogen requires **[Atom](https://atom.io/)** `1.20.0+` and a **[kernels](##kernels)** for the languages you intend to use Hydrogen with.
 
 To install Hydrogen run `apm install hydrogen` or search for *Hydrogen* in the Install pane of the Atom settings.
 
@@ -13,12 +13,11 @@ Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on ho
 Tested and works with:
 
 - [IPython](http://ipython.org/)
-- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires
+- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires [`language-r`](https://atom.io/packages/language-r) or similar
 - [IJulia](https://github.com/JuliaLang/IJulia.jl)
 - [iTorch](https://github.com/facebook/iTorch)
 - [IJavascript](https://github.com/n-riesco/ijavascript)
 - [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
- [`language-r`](https://atom.io/packages/language-r) or similar
 - [IElixir](https://github.com/pprzetacznik/IElixir)
 - [jupyter-scala](https://github.com/alexarchambault/jupyter-scala)
 - [kotlin-jupyter](https://github.com/ligee/kotlin-jupyter)
