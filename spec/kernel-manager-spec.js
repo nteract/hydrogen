@@ -134,4 +134,24 @@ describe("Kernel manager", () => {
       expect(atom.notifications.addInfo).toHaveBeenCalled();
     });
   });
+
+  describe("startKernelFor", () => {
+    it("should notify if no kernel specs are found", done => {
+      spyOn(atom.notifications, "addError");
+      spyOn(manager, "getKernelSpecForGrammar").and.returnValue(
+        Promise.resolve(null)
+      );
+      spyOn(manager, "startKernel");
+      const grammar = { name: "python" };
+
+      manager.startKernelFor(grammar);
+      expect(manager.getKernelSpecForGrammar).toHaveBeenCalledWith(grammar);
+      expect(manager.startKernel).not.toHaveBeenCalled();
+      // Hacky
+      setTimeout(() => {
+        expect(atom.notifications.addError).toHaveBeenCalled();
+        done();
+      }, 0);
+    });
+  });
 });
