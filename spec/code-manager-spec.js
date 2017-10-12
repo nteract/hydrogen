@@ -20,7 +20,7 @@ describe("CodeManager", () => {
 
   describe("Get code", () => {
     // normalizeString should be called
-    // beforeEach(() => spyOn(CM, 'normalizeString'));
+    // beforeEach(() => spyOn(CM, "normalizeString"));
     // afterEach(() => expect(CM.normalizeString).toHaveBeenCalled());
 
     it("getRow", () => {
