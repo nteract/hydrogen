@@ -70,7 +70,7 @@
     "spawnteract": "^4.0.0",
     "tildify": "^1.2.0",
     "uuid": "^3.0.1",
-    "ws": "^2.0.0",
+    "ws": "^3.0.0",
     "xmlhttprequest": "^1.8.0"
   },
   "consumedServices": {
