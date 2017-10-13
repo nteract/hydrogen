@@ -2,8 +2,7 @@
   "name": "Hydrogen",
   "main": "./lib/main",
   "version": "1.23.0",
-  "description":
-    "Run code interactively, inspect data, and plot. All the power of Jupyter kernels, inside your favorite text editor.",
+  "description": "Run code interactively, inspect data, and plot. All the power of Jupyter kernels, inside your favorite text editor.",
   "author": "nteract contributors",
   "keywords": [
     "execute",
@@ -36,8 +35,7 @@
   "scripts": {
     "flow": "flow",
     "prettier": "prettier --write 'lib/**/*.js' 'spec/**/*.js'",
-    "build:docs":
-      "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
+    "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
     "precommit": "lint-staged"
   },
   "atomTestRunner": "atom-jasmine2-test-runner",
@@ -47,10 +45,13 @@
     "atom": ">=1.20.0 <2.0.0"
   },
   "lint-staged": {
-    "{lib,spec}/**/*.js": ["prettier --write", "git add"]
+    "{lib,spec}/**/*.js": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
-    "@jupyterlab/services": "^0.50.0",
+    "@jupyterlab/services": "^0.50.2",
     "@nteract/display-area": "^3.0.0",
     "@nteract/transform-plotly": "^3.0.0",
     "@nteract/transform-vega": "^3.0.0",
