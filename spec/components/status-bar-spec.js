@@ -1,9 +1,13 @@
 "use babel";
 
 import React from "react";
-import { shallow } from "enzyme";
+import Enzyme, { shallow } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+
+Enzyme.configure({ adapter: new Adapter() });
 
 import store from "../../lib/store";
+import Kernel from "../../lib/kernel";
 import StatusBar from "../../lib/components/status-bar";
 
 describe("Status Bar", () => {
@@ -39,46 +43,56 @@ describe("Status Bar", () => {
     expect(component.type()).toBeNull();
     expect(component.text()).toBe("");
 
-    // with kernel
-    const editor = atom.workspace.buildTextEditor();
-    store.updateEditor(editor);
-    expect(store.editor).toBe(editor);
+    const kernel = new Kernel({
+      display_name: "Python 3",
+      language: "python"
+    });
+    kernel.executionState = "starting";
 
-    const grammar = editor.getGrammar();
-    expect(grammar.name).toBe("Null Grammar");
+    const kernel2 = new Kernel({
+      display_name: "Javascript",
+      language: "Javascript"
+    });
+    kernel2.executionState = "idle";
 
-    const kernelSpec = {
-      language: "null grammar",
-      display_name: "Null Kernel"
-    };
-    const kernel = {
-      kernelSpec: kernelSpec,
-      language: kernelSpec.language.toLowerCase(),
-      displayName: kernelSpec.display_name,
-      executionState: "starting"
-    };
-    store.newKernel(kernel);
-    expect(store.runningKernels.toJS()["null grammar"]).toEqual(kernel);
-    expect(store.kernel.kernelSpec.language).toBe(kernel.kernelSpec.language);
-    expect(store.kernel.kernelSpec.display_name).toBe(
-      kernel.kernelSpec.display_name
-    );
-    expect(store.kernel.language).toBe(kernel.language);
+    store.kernelMapping = new Map([
+      ["foo.py", kernel],
+      ["bar.py", kernel],
+      ["foo.js", kernel2]
+    ]);
+
+    store.editor = { getPath: () => "foo.py" };
+
+    // FixMe: Enzyme https://github.com/airbnb/enzyme/issues/1184
+    component.setState();
     expect(store.kernel.displayName).toBe(kernel.displayName);
     expect(store.kernel.executionState).toBe(kernel.executionState);
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
-    expect(component.text()).toBe("Null Kernel | starting");
-
-    // doesn't update if switched to editor with same grammar
-    store.updateEditor(atom.workspace.buildTextEditor());
-    expect(StatusBar.prototype.render).toHaveBeenCalledTimes(2);
+    expect(component.text()).toBe("Python 3 | starting");
 
     // update execution state
     store.kernel.executionState = "idle";
+
+    // FixMe: Enzyme https://github.com/airbnb/enzyme/issues/1184
+    component.setState();
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(3);
-    expect(component.text()).toBe("Null Kernel | idle");
+    expect(component.text()).toBe("Python 3 | idle");
+
+    // doesn't update if switched to editor with same grammar
+    store.editor = { getPath: () => "bar.py" };
+    expect(StatusBar.prototype.render).toHaveBeenCalledTimes(3);
+
+    // update kernel
+    store.editor = { getPath: () => "foo.js" };
+
+    // FixMe: Enzyme https://github.com/airbnb/enzyme/issues/1184
+    component.setState();
+    expect(store.kernel.displayName).toBe(kernel2.displayName);
+    expect(store.kernel.executionState).toBe(kernel2.executionState);
+    expect(StatusBar.prototype.render).toHaveBeenCalledTimes(4);
+    expect(component.text()).toBe("Javascript | idle");
 
     // reset store
-    store.runningKernels = new Map();
+    store.kernelMapping = new Map();
   });
 });

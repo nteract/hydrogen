@@ -20,7 +20,7 @@ describe("CodeManager", () => {
 
   describe("Get code", () => {
     // normalizeString should be called
-    // beforeEach(() => spyOn(CM, 'normalizeString'));
+    // beforeEach(() => spyOn(CM, "normalizeString"));
     // afterEach(() => expect(CM.normalizeString).toHaveBeenCalled());
 
     it("getRow", () => {
@@ -33,14 +33,8 @@ describe("CodeManager", () => {
       spyOn(editor, "getTextInBufferRange");
       CM.getRows(editor, 1, 10);
       const range = {
-        start: {
-          row: 1,
-          column: 0
-        },
-        end: {
-          row: 10,
-          column: 9999999
-        }
+        start: { row: 1, column: 0 },
+        end: { row: 10, column: 9999999 }
       };
       expect(editor.getTextInBufferRange).toHaveBeenCalledWith(range);
     });
@@ -67,18 +61,13 @@ describe("CodeManager", () => {
 
     describe("getCellsForBreakPoints", () => {
       it("return cells(ranges) from array of points", () => {
-        const points = [
-          [1, 2], // bp1
-          [3, 4], // bp2
-          [5, 6], // bp3
-          [10, 5] // bp4
-        ].map(toPoint);
+        const points = [[1, 2], [3, 4], [5, 6], [10, 5]].map(toPoint); // bp1 // bp2 // bp3 // bp4
         const cellsExpected = [
-          [[0, 0], [1, 2]], // zero-to-bp1
-          [[2, 0], [3, 4]], // nextRow of bp1 to bp2
-          [[4, 0], [5, 6]], // nextRow of bp2 to bp3
-          [[6, 0], [10, 5]] // nextRow of bp3 to bp4
-        ].map(toRange);
+          [[0, 0], [1, 2]],
+          [[2, 0], [3, 4]],
+          [[4, 0], [5, 6]],
+          [[6, 0], [10, 5]]
+        ].map(toRange); // zero-to-bp1 // nextRow of bp1 to bp2 // nextRow of bp2 to bp3 // nextRow of bp3 to bp4
 
         expect(CM.getCellsForBreakPoints(points)).toEqual(cellsExpected);
       });
@@ -98,12 +87,7 @@ describe("CodeManager", () => {
         waitAsync(async () => {
           await atom.packages.activatePackage("language-python");
           editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
-          const code = [
-            "v0 = 0 # %%", // row0:bp
-            "v1 = 1", // row1
-            "v2 = 2 # %%", // row2:bp
-            "v3 = 3" // row3
-          ];
+          const code = ["v0 = 0 # %%", "v1 = 1", "v2 = 2 # %%", "v3 = 3"]; // row0:bp // row1 // row2:bp // row3
           editor.setText(code.join("\n") + "\n");
         })
       );
@@ -111,25 +95,21 @@ describe("CodeManager", () => {
         it("return cell(range) by detecting breakpoints in comment", () => {
           // EOF is always treated as implicit breakpoints
           const cellsExpected = [
-            [[0, 0], [0, 7]], // zero-to-row0:bp
-            [[1, 0], [2, 7]], // nextRow of row0:bp to row2:bp
-            [[3, 0], [4, 0]] // nextRow of row2:bp to EOF(= implicit bp)
-          ].map(toRange);
+            [[0, 0], [0, 7]],
+            [[1, 0], [2, 7]],
+            [[3, 0], [4, 0]]
+          ].map(toRange); // zero-to-row0:bp // nextRow of row0:bp to row2:bp // nextRow of row2:bp to EOF(= implicit bp)
           expect(CM.getCells(editor)).toEqual(cellsExpected);
         });
       });
       describe("with arg(= breakpoints)", () => {
         it("return cells(range) from passed breakpoints(with auto-sort-by-position)", () => {
-          breakpoints = [
-            [0, 11], // row0:bp
-            [2, 11], // row2:bp
-            [1, 6] // row1:bp
-          ].map(toPoint);
+          breakpoints = [[0, 11], [2, 11], [1, 6]].map(toPoint); // row0:bp // row2:bp // row1:bp
           const cellsExpected = [
-            [[0, 0], [0, 11]], // zero to row0:bp
-            [[1, 0], [1, 6]], // nextRow of row0:bp to row1:bp
-            [[2, 0], [2, 11]] // nextRow of row1:bp to row2:bp
-          ].map(toRange);
+            [[0, 0], [0, 11]],
+            [[1, 0], [1, 6]],
+            [[2, 0], [2, 11]]
+          ].map(toRange); // zero to row0:bp // nextRow of row0:bp to row1:bp // nextRow of row1:bp to row2:bp
 
           expect(CM.getCells(editor, breakpoints)).toEqual(cellsExpected);
         });

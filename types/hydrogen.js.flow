@@ -2,11 +2,15 @@ export type Kernelspec = {
   env: Object,
   argv: Array<string>,
   display_name: string,
-  language: string,
-}
+  language: string
+};
 
 // Be more specific
 export type Message = {
   header: Object,
-  content: Object,
-}
+  content: Object
+};
+
+// We can't put it in store/index.js because Atom's babel version doesn't support this syntax
+export type KernelObj = { [string]: Kernel };
+export type KernelMapping = Map<string, Kernel | KernelObj>;

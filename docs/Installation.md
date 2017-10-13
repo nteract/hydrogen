@@ -1,26 +1,26 @@
 # Installation
 
-For all systems, you'll need
+Hydrogen requires **[Atom](https://atom.io/)** `1.20.0+` and a **[kernels](##kernels)** for the languages you intend to use Hydrogen with.
 
-- [Atom](https://atom.io/) `1.17.0+`
-- [Jupyter](http://jupyter.org): If you have Python and conda or pip setup, install the notebook directly with `conda install jupyter` or `pip install jupyter`.
-
-You can now run `apm install hydrogen` or search for *Hydrogen* in the Install pane of the Atom settings.
+To install Hydrogen run `apm install hydrogen` or search for *Hydrogen* in the Install pane of the Atom settings.
 
 If you are using Linux 32-bit follow the installation instructions [here](Troubleshooting.md).
 
 ## Kernels
 
+Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on how to install the most popular kernels.
+
 Tested and works with:
 
 - [IPython](http://ipython.org/)
+- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires [`language-r`](https://atom.io/packages/language-r) or similar
 - [IJulia](https://github.com/JuliaLang/IJulia.jl)
 - [iTorch](https://github.com/facebook/iTorch)
 - [IJavascript](https://github.com/n-riesco/ijavascript)
 - [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
-- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires [`language-r`](https://atom.io/packages/language-r) or similar
 - [IElixir](https://github.com/pprzetacznik/IElixir)
 - [jupyter-scala](https://github.com/alexarchambault/jupyter-scala)
+- [kotlin-jupyter](https://github.com/ligee/kotlin-jupyter)
 
 But it _should_ work with any [kernel](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels). If you are using Hydrogen with another kernel please add it to this list or [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 

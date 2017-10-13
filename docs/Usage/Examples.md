@@ -14,14 +14,12 @@ offline.iplot([{"y": [1, 2, 1]}])
 import numpy as np
 import matplotlib.pyplot as plt
 from plotly import offline as py
-import plotly.tools as tls
 py.init_notebook_mode()
 
 t = np.linspace(0, 20, 500)
 plt.plot(t, np.sin(t))
 
-plotly_fig = tls.mpl_to_plotly(plt.gcf())
-py.iplot(plotly_fig)
+py.iplot_mpl(plt.gcf())
 {%- language name="R", type="r" -%}
 library(IRdisplay)
 
@@ -55,6 +53,33 @@ t = np.linspace(0, 20, 500)
 
 plt.plot(t, np.sin(t))
 plt.show()
+{%- language name="Python using altair < v1.3", type="py" -%}
+from IPython.display import display
+from altair import Chart, load_dataset
+def vegify(spec):
+    display({
+        'application/vnd.vegalite.v1+json': spec.to_dict()
+    }, raw=True)
+
+cars = load_dataset('cars')
+spec = Chart(cars).mark_point().encode(
+    x='Horsepower',
+    y='Miles_per_Gallon',
+    color='Origin',
+)
+
+vegify(spec)
+{%- language name="Python using altair v1.3+", type="py" -%}
+from altair import Chart, load_dataset, enable_mime_rendering
+enable_mime_rendering()
+
+cars = load_dataset('cars')
+spec = Chart(cars).mark_point().encode(
+    x='Horsepower',
+    y='Miles_per_Gallon',
+    color='Origin',
+)
+spec
 {%- endcodetabs %}
 
 ## LaTeX

@@ -13,6 +13,7 @@
 @hydrogen-inline-color: lighten(@syntax-text-color, 10%);
 @hydrogen-error-color: average(@syntax-text-color, red);
 
+
 .hydrogen.marker {
   display: flex;
 }
@@ -232,12 +233,47 @@ svg:first-child {
   .multiline-container {
     flex: 0 1 auto;
   }
+  .scroll-list {
+    .cell_display {
+      height: 100%;
+      padding: 0;
+
+      > div {
+        margin-bottom: 10px;
+        margin-top: 10px;
+      }
+    }
+  }
+
+}
+
+// ----------- Kernel Monitor -------------
+.kernel-monitor {
+  header {
+    line-height: 2.5em;
+    font-weight: 600;
+    border-bottom: 1px solid @base-border-color;
+    padding: 0 10px;
+  }
+
+  div:not(:first-child) header {
+    border-top: 1px solid @base-border-color;
+  }
+
+  .icon::before {
+    width: 100%;
+  }
+
+  .icon:hover {
+    color: @text-color-error;
+  }
 }
 
 // -------------- Watches -----------------
 
 .watch-sidebar {
   overflow-y: auto;
+  height: 100%;
 
   .watch-view {
     .watch-input {

@@ -31,12 +31,16 @@ describe("utils", () => {
         "Hydrogen.languageMappings",
         `{"Kernel Language": "Grammar Language"}`
       );
-      expect(grammarToLanguage({ name: "Grammar Language" })).toEqual(
-        "kernel language"
-      );
-      expect(grammarToLanguage({ name: "Kernel Language" })).toEqual(
-        "kernel language"
-      );
+      expect(
+        grammarToLanguage({
+          name: "Grammar Language"
+        })
+      ).toEqual("kernel language");
+      expect(
+        grammarToLanguage({
+          name: "Kernel Language"
+        })
+      ).toEqual("kernel language");
       atom.config.set("Hydrogen.languageMappings", "");
     });
   });
