@@ -50,7 +50,7 @@
     "{lib,spec}/**/*.js": ["prettier --write", "git add"]
   },
   "dependencies": {
-    "@jupyterlab/services": "^0.42.0",
+    "@jupyterlab/services": "^0.50.0",
     "@nteract/display-area": "^3.0.0",
     "@nteract/transform-plotly": "^3.0.0",
     "@nteract/transform-vega": "^3.0.0",
