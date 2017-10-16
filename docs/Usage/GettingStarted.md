@@ -38,7 +38,7 @@ These commands will run all code inside the editor or all code above the cursor.
 An external output area can be used to display output instead of the inline result view. 
 The output can be displayed either in a scrolling view or a sliding history.
 
-<img width=280 src=https://user-images.githubusercontent.com/13285808/30063620-9de1e71e-924f-11e7-8345-8a3291f0e0aa.gif>
+<img width=280 src=https://user-images.githubusercontent.com/13436188/31638453-f897d912-b2d3-11e7-915c-f3fb4079c18d.gif>
 
 
 
