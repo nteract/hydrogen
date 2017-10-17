@@ -1,4 +1,3 @@
-/* @flow */
 "use babel";
 
 import React from "react";
