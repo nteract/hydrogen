@@ -2,12 +2,7 @@
 
 import React from "react";
 import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 
-Enzyme.configure({ adapter: new Adapter() });
-
-import store from "../../../lib/store";
-import Kernel from "../../../lib/kernel";
 import History from "../../../lib/components/result-view/history";
 
 describe("History", () => {
