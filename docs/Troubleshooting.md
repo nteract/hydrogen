@@ -70,7 +70,7 @@ Again, there are a number of possible causes and solutions:
 ### Hydrogen fails to import modules:
 If hydrogen works for standard libraries but you encounter `ModuleNotFoundError: No module named 'your_package'` for custom installed packages, check that the path of the kernel you are using is the one specified in the windows `PATH`. Especially when using virtual environments like `virtualenv` and `anaconda` ensure that the corresponding python executables are set in the windows path. 
 
-To find the path, enter `where python` in the windows command line and chose the apporiate entry. Then, add it manually to the windows `PATH`, similarly as detailed below for the standard python path.
+To add the path, enter `where python` in the windows command line and chose the apporiate entry. Then, add it manually to the windows `PATH`, similarly as detailed below for the standard python path.
 
 
 ### Hydrogen does not recognize python:
