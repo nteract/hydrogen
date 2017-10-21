@@ -13,7 +13,8 @@ import StatusBar from "../../lib/components/status-bar";
 describe("Status Bar", () => {
   it("should render status bar and call onClick if clicked", () => {
     const mockStore = {
-      kernel: { displayName: "Foo Kernel", executionState: "idle" }
+      kernel: { displayName: "Foo Kernel", executionState: "idle" },
+      configMapping: new Map()
     };
     const onClick = jasmine.createSpy("onClick");
     const component = shallow(
