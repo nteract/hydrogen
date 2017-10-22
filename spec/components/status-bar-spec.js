@@ -92,8 +92,18 @@ describe("Status Bar", () => {
     expect(store.kernel.executionState).toBe(kernel2.executionState);
     expect(StatusBar.prototype.render).toHaveBeenCalledTimes(4);
     expect(component.text()).toBe("Javascript | idle");
+  });
 
-    // reset store
-    store.kernelMapping = new Map();
+  it("hides the component based on config setting", () => {
+    store.setConfigValue("Hydrogen.statusBarDisable", true);
+    expect(store.kernel).toBeDefined();
+    const component = shallow(<StatusBar store={store} onClick={() => {}} />);
+
+    expect(component.text()).toBe("");
+    store.setConfigValue("Hydrogen.statusBarDisable", false);
+    expect(component.text()).not.toBe("Javascript | idle");
   });
 });
+
+// reset store
+store.kernelMapping = new Map();
