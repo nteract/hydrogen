@@ -48,7 +48,7 @@ jupyter notebook --port=8888
 
 TODO: what is the difference between running the kernel gateway and the notebook?
 
-# Docker execution via kernel gateways
+# Running a Kernel gateway on Docker
 
 You can use the same technique to create a kernel gateway in a Docker container. That would allow you to develop from Atom but with all the dependencies, autocompletion, environment, etc. of a Docker container.
 
@@ -56,7 +56,6 @@ You can use the same technique to create a kernel gateway in a Docker container.
 
 If all you need is a Docker Python environment to execute your code, you can read the section [**Example Jupyter Docker Stack kernel gateway**](#example-jupyter-docker-stack-kernel-gateway) (this method uses **tini** under the hood).
 
-If you want to add a temporal Kernel Gateway (for development) to your current Docker images or need to modify an existing image to add the Kernel Gateway functionality, read the section [**Example Docker kernel gateway**](#example-docker-kernel-gateway) (this method runs the kernel gateway from an interactive console).
 
 ## Jupyter Docker Stack kernel gateway
 
@@ -64,54 +63,44 @@ Follow this if you only need to have a simple environment to run commands inside
 
 If you need to customize a Docker image (e.g. for web development) follow the section below: [**Example Docker kernel gateway**](#example-docker-kernel-gateway).
 
-### Docker Stack Dockerfile
+### Dockerfile
 
-- Create a `Dockerfile` based on one of the [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks).
-- Install `jupyter_kernel_gateway` in your `Dockerfile`
+- Create a `Dockerfile` based on either one of the [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks), or one you supply
+- Ensure `jupyter_kernel_gateway` and `tini` are installed, either in the image or as an additional command in the `Dockerfile`
 - Expose the gateway port, in this example it will be `8888`
-- Make the command to run be the Kernel Gateway:
+- Make the command to run be the Kernel Gateway (though run through an init manager such as `tini`):
 
 ```Dockerfile
 FROM jupyter/minimal-notebook
+# this can also be an image of your own, e.g.:
+# FROM acmecorp/our-libaries:4.2.0
+
+ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /tini
+RUN chmod +x /tini
 
 RUN pip install jupyter_kernel_gateway
 
 EXPOSE 8888
-CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatewayApp.port=8888"]
+ENTRYPOINT [/tini, --]
+CMD [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
 ```
 
-### Run Docker Stack Container with Docker commands
-
-**Note**: alternatively, see below for `docker-compose` instructions.
-
-- Build your container:
-
-```bash
-docker build -t hydro-kernel-gateway .
-```
-
-- Run your container mapping the port of the gateway
-- Give your container a name
-
-```bash
-docker run -it --rm --name hydro-kernel-gateway -p 8888:8888 hydro-kernel-gateway
-```
-
-**Note**: you will only be able to run one container using that port mapping. So, if you had another container using that port, you will have to stop that one first. Or alternatively, you can create a mapping to a new port and add that configuration in the Hydrogen settings (see below).
-
-### Run Docker Stack Container with Docker Compose
+### Run with Docker Compose
 
 - Create a `docker-compose.yml` file with something like:
 
 ```yml
 version: '2'
 services:
-  hydro-kernel-gateway:
+  hydro:
     build: .
+    entrypoint: [/tini, --]
+    command: [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
     ports:
-      - "8888:8888"
+      - 8888:8888
 ```
 
+- This duplicates the entrypoint & command between this and the Dockerfile - strictly speaking, you only need one of these 
 - The `docker-compose.yml` file has a port mapping using the port exposed in the `Dockerfile` and used in the `jupyter kernelgateway` command
 
 **Note**: you will only be able to run one container using that port mapping. So, if you had another container using that port, you will have to stop that one first. Or alternatively, you can create a mapping to a new port and add that configuration in the Hydrogen settings (see below).
@@ -128,32 +117,7 @@ docker-compose up -d
 docker-compose ps
 ```
 
-### Connect Atom
-
-Now you need to connect Atom to your setup. Follow the section [**Connect Atom**](#connect-atom-1) below.
-
-## Custom Docker kernel gateway
-
-Follow this if you need to customize a Docker image you already have. For example, for a web project.
-
-If you only need a simple environment in where to run Python commands with Hydrogen inside a Docker container, follow the section above: [**Example Jupyter Docker Stack kernel gateway**](#example-jupyter-docker-stack-kernel-gateway).
-
-### Dockerfile
-
-- Create a `Dockerfile`
-- Install `jupyter_kernel_gateway` in your `Dockerfile`
-- Expose the gateway port, in this example it will be `8888`:
-
-```Dockerfile
-FROM python:2.7
-
-RUN pip install jupyter_kernel_gateway
-EXPOSE 8888
-```
-
-### Run Docker Container with Docker commands
-
-**Note**: alternatively, see below for `docker-compose` instructions.
+### Run with Docker commands
 
 - Build your container:
 
@@ -163,57 +127,11 @@ docker build -t hydro .
 
 - Run your container mapping the port of the gateway
 - Give your container a name
-- Make it run an infinite loop that just keeps the container alive:
 
 ```bash
-docker run -d -p 8888:8888 --name hydro  hydro bash -c "while true; do sleep 10; done"
+docker run -it --rm --name hydro -p 8888:8888 hydro
 ```
 
-**Note**: you will only be able to run one container using that port mapping. So, if you had another container using that port, you will have to stop that one first. Or alternatively, you can create a mapping to a new port and add that configuration in the Hydrogen settings (see below).
-
-- Execute an interactive bash session in your running container:
-
-```bash
-docker exec -it hydro bash
-```
-
-- From that interactive session, start the gateway
-- Specify the IP `0.0.0.0` to make your container listen to public connections
-- Specify the port that you exposed in your `Dockerfile`:
-
-```bash
-jupyter kernelgateway --ip=0.0.0.0 --port=8888
-```
-
-### Run Docker Container with Docker Compose
-
-- Create a `docker-compose.yml` file with something like:
-
-```yml
-version: '2'
-services:
-  hydro:
-    entrypoint: [/tini, --]
-    command: [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
-    ports:
-      - 8888:8888
-```
-
-- The `docker-compose.yml` file has a port mapping using the port exposed in the `Dockerfile` and used in the `jupyter kernelgateway` command
-
-**Note**: you will only be able to run one container using that port mapping. So, if you had another container using that port, you will have to stop that one first. Or alternatively, you can create a mapping to a new port and add that configuration in the Hydrogen settings (see below).
-
-- Now start (and build) your container with `docker-compose`:
-
-```bash
-docker-compose up -d
-```
-
-- Check the name of your running container with:
-
-```bash
-docker-compose ps
-```
 
 ## Connect Atom
 
@@ -238,19 +156,17 @@ You can test that it is actually working by installing a package in your contain
 - For example, install the Python package `markdown` in your `Dockerfile`:
 
 ```Dockerfile
-FROM python:2.7
 
-RUN pip install markdown
+ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /tini
+RUN chmod +x /tini
 
-# Remove in production
 RUN pip install jupyter_kernel_gateway
-EXPOSE 8888
-```
 
-**Note**: If you followed the [**Example Jupyter Docker Stack kernel gateway**](#example-jupyter-docker-stack-kernel-gateway) section, your `Dockerfile` will look different. Just make sure you add a line with:
-
-```Dockerfile
 RUN pip install markdown
+
+EXPOSE 8888
+ENTRYPOINT [/tini, --]
+CMD [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
 ```
 
 - Follow all the instructions above, and use a Python file that has:
