@@ -6,7 +6,7 @@ To connect to a server, you must first add the connection information to the Hyd
 
 ```json
 [{
-  "name": "Remote notebook",
+  "name": "Remote kernel",
   "options": {
     "baseUrl": "http://example.com:8888",
     "token": "my_secret_token"
@@ -48,20 +48,12 @@ jupyter notebook --port=8888
 
 TODO: what is the difference between running the kernel gateway and the notebook?
 
-# Running a Kernel gateway on Docker
+# Running a Kernel gateway using Docker
 
 You can use the same technique to create a kernel gateway in a Docker container. That would allow you to develop from Atom but with all the dependencies, autocompletion, environment, etc. of a Docker container.
 
 **Note**: due to the way that the kernel gateway creates sub-processes for each kernel, you have to use it in a special way, you can't run the `jupyter kernelgateway` directly in your `Dockerfile` `CMD` section. You need to call it with an init manager such as [**tini**](https://github.com/krallin/tini) or run it from an interactive console.
 
-If all you need is a Docker Python environment to execute your code, you can read the section [**Example Jupyter Docker Stack kernel gateway**](#example-jupyter-docker-stack-kernel-gateway) (this method uses **tini** under the hood).
-
-
-## Jupyter Docker Stack kernel gateway
-
-Follow this if you only need to have a simple environment to run commands inside a Docker container and nothing more.
-
-If you need to customize a Docker image (e.g. for web development) follow the section below: [**Example Docker kernel gateway**](#example-docker-kernel-gateway).
 
 ### Dockerfile
 
@@ -144,7 +136,7 @@ docker run -it --rm --name hydro -p 8888:8888 hydro
 - If running locally, you can use `localhost` as the host of your `baseUrl`
 - In Atom, open a Python file, e.g. `main.py`
 - Connect to the kernel you just configured: `ctrl-shift-p` and type: `Hydrogen: Connect To Remote Kernel`
-- Select the kernel gateway you configured, e.g. `docker-kernel`
+- Select the kernel gateway you configured, e.g. `Remote kernel`
 - Select the "type of kernel" to run, there will just be the option `Python 2` or `Python 3`
 - Then select the line or block of code that you want to execute inside of your container
 - Run the code with: `ctrl-shift-p` and type: `Hydrogen: Run`
@@ -186,4 +178,4 @@ markdown.version ['2.6.6']
 ## Terminate the connection and container
 
 - To terminate a running kernel gateway you can "kill" it as any Linux process with `ctrl-c`
-- If you're running the kernel gateway as a Docker container, you can stop the Docker container (this assumes you're using an init manager, such as tini. If you're not, this may not close the process)
+- If you're running the kernel gateway as a Docker container, you can stop the Docker container (this assumes you're using an init manager, such as tini. If you're not, this may not close the process.)
