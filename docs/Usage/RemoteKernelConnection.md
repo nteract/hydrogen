@@ -127,14 +127,8 @@ docker run -it --rm --name hydro -p 8888:8888 hydro
 
 ## Connect Atom
 
-- Go to the settings in Atom with: `ctrl-shift-p` and type `Settings View: Open`
-- Go to the "Packages" section
-- Type `Hydrogen` and go to package settings
-- In the section "List of kernel gateways to use" add settings for the container your created
-- Use a `name` that you can remind when running Hydrogen
-- In the `baseUrl` section use the host or IP that you use to access your Docker containers:
-- If running locally, you can use `localhost` as the host of your `baseUrl`
-- In Atom, open a Python file, e.g. `main.py`
+- Add the connection information to the Hydrogen `gateways` setting, as above. If running locally, you can use `localhost` as the host of your `baseUrl`
+- In Atom, open a Python file
 - Connect to the kernel you just configured: `ctrl-shift-p` and type: `Hydrogen: Connect To Remote Kernel`
 - Select the kernel gateway you configured, e.g. `Remote kernel`
 - Select the "type of kernel" to run, there will just be the option `Python 2` or `Python 3`
