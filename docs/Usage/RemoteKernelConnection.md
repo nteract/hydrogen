@@ -1,6 +1,6 @@
 # Remote kernels via kernel gateways
 
-In addition to managing local kernels and connecting to them over ZeroMQ, Hydrogen is also able to connect to Jupyter Notebook (or Jupyter Kernel Gateway) servers. This is most useful for running code remotely (e.g. in the cloud).
+In addition to managing local kernels and connecting to them over ZeroMQ, Hydrogen is also able to connect to Jupyter Notebook (or Jupyter Kernel Gateway) servers. This is most useful for running code remotely (e.g. in the cloud), or in a Docker container running locally.
 
 To connect to a server, you must first add the connection information to the Hydrogen `gateways` setting. An example settings entry might be:
 
@@ -46,9 +46,7 @@ jupyter notebook --port=8888
 
 - To run a public server, consult the [official instructions](http://jupyter-notebook.readthedocs.io/en/latest/public_server.html) for setting up certificates. Skip the steps for setting up a password: hydrogen only supports token-based authentication. Also note that hydrogen does not support self-signed certificates -- we recommend that you use Let's Encrypt or consider alternatives such as listening on localhost followed by SSH port forwarding.
 
-## Example with kernel gateway server
-
-As of December 2016, we recommend that you use a notebook server (version 4.3 or greater) instead of the Jupyter Kernel Gateway. We expect this to change in the future, and will update this README when that occurs.
+TODO: what is the difference between running the kernel gateway and the notebook?
 
 # Docker execution via kernel gateways
 
@@ -60,13 +58,13 @@ If all you need is a Docker Python environment to execute your code, you can rea
 
 If you want to add a temporal Kernel Gateway (for development) to your current Docker images or need to modify an existing image to add the Kernel Gateway functionality, read the section [**Example Docker kernel gateway**](#example-docker-kernel-gateway) (this method runs the kernel gateway from an interactive console).
 
-## Example Jupyter Docker Stack kernel gateway
+## Jupyter Docker Stack kernel gateway
 
 Follow this if you only need to have a simple environment to run commands inside a Docker container and nothing more.
 
 If you need to customize a Docker image (e.g. for web development) follow the section below: [**Example Docker kernel gateway**](#example-docker-kernel-gateway).
 
-### Dockerfile
+### Docker Stack Dockerfile
 
 - Create a `Dockerfile` based on one of the [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks).
 - Install `jupyter_kernel_gateway` in your `Dockerfile`
@@ -82,7 +80,7 @@ EXPOSE 8888
 CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatewayApp.port=8888"]
 ```
 
-### Run Docker Container with Docker commands
+### Run Docker Stack Container with Docker commands
 
 **Note**: alternatively, see below for `docker-compose` instructions.
 
@@ -101,7 +99,7 @@ docker run -it --rm --name hydro-kernel-gateway -p 8888:8888 hydro-kernel-gatewa
 
 **Note**: you will only be able to run one container using that port mapping. So, if you had another container using that port, you will have to stop that one first. Or alternatively, you can create a mapping to a new port and add that configuration in the Hydrogen settings (see below).
 
-### Run Docker Container with Docker Compose
+### Run Docker Stack Container with Docker Compose
 
 - Create a `docker-compose.yml` file with something like:
 
@@ -134,7 +132,7 @@ docker-compose ps
 
 Now you need to connect Atom to your setup. Follow the section [**Connect Atom**](#connect-atom-1) below.
 
-## Example Docker kernel gateway
+## Custom Docker kernel gateway
 
 Follow this if you need to customize a Docker image you already have. For example, for a web project.
 
@@ -149,7 +147,6 @@ If you only need a simple environment in where to run Python commands with Hydro
 ```Dockerfile
 FROM python:2.7
 
-# Remove in production
 RUN pip install jupyter_kernel_gateway
 EXPOSE 8888
 ```
@@ -196,14 +193,13 @@ jupyter kernelgateway --ip=0.0.0.0 --port=8888
 version: '2'
 services:
   hydro:
-    build: .
+    entrypoint: [/tini, --]
+    command: [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
     ports:
-      - "8888:8888"
-    command: bash -c "while true; do sleep 10; done"
+      - 8888:8888
 ```
 
 - The `docker-compose.yml` file has a port mapping using the port exposed in the `Dockerfile` and used in the `jupyter kernelgateway` command
-- The `command` overrides the default `CMD` in the `Dockerfile` (if there was one) and executes an infinite loop that would just keep the container alive
 
 **Note**: you will only be able to run one container using that port mapping. So, if you had another container using that port, you will have to stop that one first. Or alternatively, you can create a mapping to a new port and add that configuration in the Hydrogen settings (see below).
 
@@ -219,20 +215,6 @@ docker-compose up -d
 docker-compose ps
 ```
 
-- Execute an interactive bash session in your running container (use the name from above), e.g.:
-
-```bash
-docker exec -it myproject_hydro_1 bash
-```
-
-- From that interactive session, start the gateway
-- Specify the IP `0.0.0.0` to make your container listen to public connections
-- Specify the port that you exposed in your `Dockerfile`:
-
-```bash
-jupyter kernelgateway --ip=0.0.0.0 --port=8888
-```
-
 ## Connect Atom
 
 - Go to the settings in Atom with: `ctrl-shift-p` and type `Settings View: Open`
@@ -241,17 +223,10 @@ jupyter kernelgateway --ip=0.0.0.0 --port=8888
 - In the section "List of kernel gateways to use" add settings for the container your created
 - Use a `name` that you can remind when running Hydrogen
 - In the `baseUrl` section use the host or IP that you use to access your Docker containers:
-  - If you are using Docker Toolbox in Windows or Mac (or Docker for Windows, Docker for Mac), as it will be running in a virtual machine, the IP (host) would probably be like: `192.168.99.100`, you can read about it and check the `docker-machine ip default` command [in the official Docker docs](https://docs.docker.com/machine/get-started/#/run-containers-and-experiment-with-machine-commands)
-  - If you are using Docker in a Linux machine and you are running Atom in that same machine you can just use `localhost` as the host of your `baseUrl`
-- For example, a possible configuration for Docker Toolbox in Windows or Mac could be:
-
-```JSON
-[{"name": "Docker Toolbox", "options": {"baseUrl": "http://192.168.99.100:8888"}}]
-```
-
+- If running locally, you can use `localhost` as the host of your `baseUrl`
 - In Atom, open a Python file, e.g. `main.py`
 - Connect to the kernel you just configured: `ctrl-shift-p` and type: `Hydrogen: Connect To Remote Kernel`
-- Select the kernel gateway you configured, e.g. `Docker Toolbox`
+- Select the kernel gateway you configured, e.g. `docker-kernel`
 - Select the "type of kernel" to run, there will just be the option `Python 2` or `Python 3`
 - Then select the line or block of code that you want to execute inside of your container
 - Run the code with: `ctrl-shift-p` and type: `Hydrogen: Run`
@@ -295,37 +270,4 @@ markdown.version ['2.6.6']
 ## Terminate the connection and container
 
 - To terminate a running kernel gateway you can "kill" it as any Linux process with `ctrl-c`
-
-- If you followed the [**Example Jupyter Docker Stack kernel gateway**](#example-jupyter-docker-stack-kernel-gateway) section, it will just work.
-
-But, if you are using the general instructions (for a custom Docker image), because of the way Jupyter Kernel Gateway creates sub-processes and due to the fact that you are running in a Docker container, the actual kernel process will still be running.
-
-- Before exiting the terminal, find the still running (Python) kernel process with:
-
-```bash
-ps -fA
-```
-
-- You will get something like:
-
-```
-root@6d09f8fee132:/# ps -fA
-UID        PID  PPID  C STIME TTY          TIME CMD
-root         1     0  0 00:21 ?        00:00:00 bash -c while true; do sleep 10; done
-root        10     0  0 00:22 ?        00:00:00 bash
-root        23     0  0 00:22 ?        00:00:00 /usr/local/bin/python2 -m ipykernel -f /root/.local/share/jupyter/runtime/kernel-95baef8a-6427-4415-bc95-e02dc74e4ebb.js
-root        77     1  0 00:28 ?        00:00:00 sleep 10
-root        78    10  0 00:28 ?        00:00:00 ps -fA
-```
-
-- Kill the `ipykernel` process by killing all the `python` processes:
-
-```bash
-pkill python
-```
-
-- Now you can exit the interactive terminal with:
-
-```bash
-exit
-```
+- If you're running the kernel gateway as a Docker container, you can stop the Docker container (this assumes you're using an init manager, such as tini. If you're not, this may not close the process)
