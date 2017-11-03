@@ -185,10 +185,19 @@ svg:first-child {
       height: @btn-size;
       border-radius: @component-border-radius;
       border: 1px solid @button-border-color;
+      margin-left: -(@btn-size / 2);
+      left: @btn-size / 2;
       background: @button-background-color;
       &:hover {
         background: @button-background-color-hover;
       }
+      &:focus {
+        border-color: @button-background-color-selected;
+      }
+    }
+
+    .rangeslider__labels {
+      display: none;
     }
   }
 }

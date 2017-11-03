@@ -34,6 +34,13 @@ When you place the cursor inside a cell and hit **"Run Cell"**, Hydrogen will ex
 ## "Hydrogen: Run All" and "Hydrogen: Run All Above"
 These commands will run all code inside the editor or all code above the cursor.
 
+## "Hydrogen: Toggle Output Area"
+An external output area can be used to display output instead of the inline result view. 
+The output can be displayed either in a scrolling view or a sliding history.
+
+<img width=560 src=https://user-images.githubusercontent.com/13436188/31737963-799d2ad2-b449-11e7-9b4c-78e51851e204.gif>
+
+
 
 ## "Hydrogen: Restart Kernel And Re Evaluate Bubbles"
 

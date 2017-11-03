@@ -60,15 +60,24 @@ Again, there are a number of possible causes and solutions:
   [#53](https://github.com/nteract/hydrogen/issues/53) the details of your
   installation.
 
+
+
+
+
 ## Setting environment variables on Windows
 
-### Problem:
+
+### Hydrogen fails to import modules:
+If hydrogen works for standard libraries but you encounter `ModuleNotFoundError: No module named 'your_package'` for custom installed packages, check that the path of the kernel you are using is the one specified in the windows `PATH`. Especially when using virtual environments like `virtualenv` and `anaconda` ensure that the corresponding python executables are set in the windows path. 
+
+To add the path, enter `where python` in the windows command line and chose the apporiate entry. Then, add it manually to the windows `PATH`, similarly as detailed below for the standard python path.
+
+
+### Hydrogen does not recognize python:
 
 On Windows if Python is not added to your environment variables, Hydrogen won't be able to locate your Python installations (`No kernel specs found`).
 
 ![Kernel specs not found](https://preview.ibb.co/jw40ta/Screenshot_40.png)
-
-### Solution:
 
 To solve this problem you need to add Python to your systems environment variables. This can be done in 2 ways:
 
