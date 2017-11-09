@@ -5,6 +5,7 @@ import { isObservableMap, isObservable, isComputed } from "mobx";
 import store from "./../../lib/store";
 import Kernel from "./../../lib/kernel";
 import MarkerStore from "./../../lib/store/markers";
+const commutable = require("@nteract/commutable");
 
 describe("Store initialize", () => {
   it("should correctly initialize store", () => {
@@ -246,6 +247,49 @@ describe("Store", () => {
     it("should return file path", () => {
       store.editor = { getPath: () => "foo.py" };
       expect(store.filePath).toBe("foo.py");
+    });
+  });
+
+  describe("get notebook", () => {
+    it("should return null if no editor", () => {
+      expect(store.notebook).toBeNull();
+    });
+
+    it("should return a single cell notebook for empty file", () => {
+      // This editor will be empty.
+      const editor = atom.workspace.buildTextEditor();
+      store.updateEditor(editor);
+      // Build a notebook with one code cell.
+      let codeCell = commutable.emptyCodeCell.set("source", "");
+      const nb = commutable.appendCellToNotebook(
+        commutable.emptyNotebook,
+        codeCell
+      );
+      expect(store.notebook).toEqual(commutable.toJS(nb));
+    });
+
+    it("should return a fully-fledged notebook when the file isn't empty", () => {
+      // This editor will have some cells.
+      const editor = atom.workspace.buildTextEditor();
+      editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
+      // Add some code to the editor.
+      const source1 = 'print "Hola World! I <3 ZMQ!"';
+      const source2 = "2 + 2";
+      editor.insertText(source1);
+      editor.insertNewline();
+      editor.insertText("# %%");
+      editor.insertNewline();
+      editor.insertText(source2);
+      store.updateEditor(editor);
+      // Build a notebook with these two cells.
+      const codeCell1 = commutable.emptyCodeCell.set("source", source1);
+      const codeCell2 = commutable.emptyCodeCell.set("source", source2);
+      let nb = commutable.appendCellToNotebook(
+        commutable.emptyNotebook,
+        codeCell1
+      );
+      nb = commutable.appendCellToNotebook(nb, codeCell2);
+      expect(store.notebook).toEqual(commutable.toJS(nb));
     });
   });
 
