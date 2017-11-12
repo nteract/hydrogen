@@ -969,7 +969,6 @@ declare class atom$TextEditor extends atom$Model {
   onDidConflict(callback: () => void): IDisposable,
   serialize: () => mixed,
   foldBufferRowRange(startRow: number, endRow: number): void,
-  getCommentStrings(row: atom$ScopeDescriptor): any, // actuall returns an object, like: {commentStartString: "// ", commentEndString: undefined}
   isBufferRowCommented(row: number): boolean,
   getRootScopeDescriptor(): atom$ScopeDescriptor,
   isFoldableAtBufferRow(row: number): boolean
