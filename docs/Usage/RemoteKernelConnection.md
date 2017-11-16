@@ -2,11 +2,11 @@
 
 In addition to managing local kernels and connecting to them over ZeroMQ, Hydrogen is also able to connect to Jupyter Notebook (or Jupyter Kernel Gateway) servers. This is most useful for running code remotely (e.g. in the cloud), or in a Docker container running locally.
 
-To connect to a server, you must first add the connection information to the Hydrogen `gateways` setting. An example settings entry might be:
+To connect to a server, add the connection information to the Hydrogen `gateways` setting. For example:
 
 ```json
 [{
-  "name": "Remote kernel",
+  "name": "Remote server",
   "options": {
     "baseUrl": "http://example.com:8888",
     "token": "my_secret_token"
@@ -46,8 +46,6 @@ jupyter notebook --port=8888
 
 - To run a public server, consult the [official instructions](http://jupyter-notebook.readthedocs.io/en/latest/public_server.html) for setting up certificates. Skip the steps for setting up a password: hydrogen only supports token-based authentication. Also note that hydrogen does not support self-signed certificates -- we recommend that you use Let's Encrypt or consider alternatives such as listening on localhost followed by SSH port forwarding.
 
-TODO: what is the difference between running the kernel gateway and the notebook?
-
 # Running a Kernel gateway using Docker
 
 You can use the same technique to create a kernel gateway in a Docker container. That would allow you to develop from Atom but with all the dependencies, autocompletion, environment, etc. of a Docker container.
@@ -57,15 +55,14 @@ You can use the same technique to create a kernel gateway in a Docker container.
 
 ### Dockerfile
 
-- Create a `Dockerfile` based on either one of the [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks), or one you supply
+- Create a `Dockerfile` based on either one of the [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks) (recommended), or your own
 - Ensure `jupyter_kernel_gateway` and `tini` are installed, either in the image or as an additional command in the `Dockerfile`
 - Expose the gateway port, in this example it will be `8888`
-- Make the command to run be the Kernel Gateway (though run through an init manager such as `tini`):
+- Set the `CMD` instruction to starting a Kernel Gateway (though run through an init manager such as `tini`):
 
 ```Dockerfile
+# If using your own Docker image, use the following `FROM` command syntax substituting your image name
 FROM jupyter/minimal-notebook
-# this can also be an image of your own, e.g.:
-# FROM acmecorp/our-libaries:4.2.0
 
 ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /tini
 RUN chmod +x /tini
@@ -130,7 +127,7 @@ docker run -it --rm --name hydro -p 8888:8888 hydro
 - Add the connection information to the Hydrogen `gateways` setting, as above. If running locally, you can use `localhost` as the host of your `baseUrl`
 - In Atom, open a Python file
 - Connect to the kernel you just configured: `ctrl-shift-p` and type: `Hydrogen: Connect To Remote Kernel`
-- Select the kernel gateway you configured, e.g. `Remote kernel`
+- Select the kernel gateway you configured, e.g. `Remote server`
 - Select the "type of kernel" to run, there will just be the option `Python 2` or `Python 3`
 - Then select the line or block of code that you want to execute inside of your container
 - Run the code with: `ctrl-shift-p` and type: `Hydrogen: Run`
