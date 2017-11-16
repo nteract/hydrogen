@@ -58,6 +58,7 @@ You can use the same technique to create a kernel gateway in a Docker container.
 - Create a `Dockerfile` based on either one of the [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks) (recommended), or your own
 - Ensure `jupyter_kernel_gateway` and `tini` are installed, either in the image or as an additional command in the `Dockerfile`
 - Expose the gateway port, in this example it will be `8888`
+- Add an environment variable allowing the Kernel Gateway to get a list of the kernels running
 - Set the `CMD` instruction to starting a Kernel Gateway (though run through an init manager such as `tini`):
 
 ```Dockerfile
@@ -68,6 +69,8 @@ ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /tini
 RUN chmod +x /tini
 
 RUN pip install jupyter_kernel_gateway
+
+ENV KG_LIST_KERNELS=True
 
 EXPOSE 8888
 ENTRYPOINT [/tini, --]
@@ -87,6 +90,8 @@ services:
     command: [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
     ports:
       - 8888:8888
+    environment:
+      - KG_LIST_KERNELS=True
 ```
 
 - This duplicates the entrypoint & command between this and the Dockerfile - strictly speaking, you only need one of these 
