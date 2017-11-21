@@ -1,6 +1,6 @@
-# Remote kernels via kernel gateways
+# Remote kernels
 
-In addition to managing local kernels and connecting to them over ZeroMQ, Hydrogen is also able to connect to Jupyter Notebook (or Jupyter Kernel Gateway) servers. This is most useful for running code remotely (e.g. in the cloud), or in a Docker container running locally.
+In addition to managing local kernels and connecting to them over ZeroMQ, Hydrogen is also able to connect to Jupyter Notebook servers. This is most useful for running code remotely (e.g. in the cloud), or in a Docker container running locally.
 
 To connect to a server, add the connection information to the Hydrogen `gateways` setting. For example:
 
@@ -46,20 +46,19 @@ jupyter notebook --port=8888
 
 - To run a public server, consult the [official instructions](http://jupyter-notebook.readthedocs.io/en/latest/public_server.html) for setting up certificates. Skip the steps for setting up a password: hydrogen only supports token-based authentication. Also note that hydrogen does not support self-signed certificates -- we recommend that you use Let's Encrypt or consider alternatives such as listening on localhost followed by SSH port forwarding.
 
-# Running a Kernel gateway using Docker
+# Running a notebook server using Docker
 
-You can use the same technique to create a kernel gateway in a Docker container. That would allow you to develop from Atom but with all the dependencies, autocompletion, environment, etc. of a Docker container.
+You can use the same technique to create a notebook server in a Docker container. That would allow you to develop from Atom but with all the dependencies, autocompletion, environment, etc. of a Docker container.
 
-**Note**: due to the way that the kernel gateway creates sub-processes for each kernel, you have to use it in a special way, you can't run the `jupyter kernelgateway` directly in your `Dockerfile` `CMD` section. You need to call it with an init manager such as [**tini**](https://github.com/krallin/tini) or run it from an interactive console.
+**Note**: due to the way that the notebook creates sub-processes for each kernel, you have to use it in a special way, you can't run the `jupyter notebook` directly in your `Dockerfile` `CMD` section. You need to call it with an init manager such as [**tini**](https://github.com/krallin/tini) or run it from an interactive console.
 
 
 ### Dockerfile
 
 - Create a `Dockerfile` based on either one of the [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks) (recommended), or your own
-- Ensure `jupyter_kernel_gateway` and `tini` are installed, either in the image or as an additional command in the `Dockerfile`
+- Ensure `jupyter` and `tini` are installed, either in the image or as an additional command in the `Dockerfile`
 - Expose the gateway port, in this example it will be `8888`
-- Add an environment variable allowing the Kernel Gateway to get a list of the kernels running
-- Set the `CMD` instruction to starting a Kernel Gateway (though run through an init manager such as `tini`):
+- Set the `CMD` instruction to starting a notebook server, run through an init manager such as `tini`:
 
 ```Dockerfile
 # If using your own Docker image, use the following `FROM` command syntax substituting your image name
@@ -68,13 +67,16 @@ FROM jupyter/minimal-notebook
 ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /tini
 RUN chmod +x /tini
 
-RUN pip install jupyter_kernel_gateway
+# If using your own Docker image without jupyter installed:
+# RUN pip install jupyter
 
-ENV KG_LIST_KERNELS=True
+ENV JUPYTER_TOKEN=my_secret_token  # you can also pass this at runtime
 
 EXPOSE 8888
 ENTRYPOINT [/tini, --]
-CMD [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
+CMD [jupyter-notebook]
+# if running as root, you need to explicitly allow this:
+# CMD [jupyter-notebook, --alow-root]
 ```
 
 ### Run with Docker Compose
@@ -87,15 +89,15 @@ services:
   hydro:
     build: .
     entrypoint: [/tini, --]
-    command: [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
+    command: [jupyter-notebook, --alow-root]
     ports:
       - 8888:8888
     environment:
-      - KG_LIST_KERNELS=True
+      # if you can also have this var in your environment it will override this
+      - JUPYTER_TOKEN=my_secret_token
 ```
 
-- This duplicates the entrypoint & command between this and the Dockerfile - strictly speaking, you only need one of these 
-- The `docker-compose.yml` file has a port mapping using the port exposed in the `Dockerfile` and used in the `jupyter kernelgateway` command
+- This duplicates the entrypoint & command between this and the Dockerfile - strictly speaking, you only need one of these
 
 **Note**: you will only be able to run one container using that port mapping. So, if you had another container using that port, you will have to stop that one first. Or alternatively, you can create a mapping to a new port and add that configuration in the Hydrogen settings (see below).
 
@@ -105,11 +107,6 @@ services:
 docker-compose up -d
 ```
 
-- Check the name of your running container with:
-
-```bash
-docker-compose ps
-```
 
 ### Run with Docker commands
 
@@ -123,7 +120,7 @@ docker build -t hydro .
 - Give your container a name
 
 ```bash
-docker run -it --rm --name hydro -p 8888:8888 hydro
+docker run -it --rm --name hydro -p 8888:8888 -e JUYTER_TOKEN=my_secret_token hydro
 ```
 
 
@@ -144,17 +141,18 @@ You can test that it is actually working by installing a package in your contain
 - For example, install the Python package `markdown` in your `Dockerfile`:
 
 ```Dockerfile
+FROM jupyter/minimal-notebook
 
 ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /tini
 RUN chmod +x /tini
 
-RUN pip install jupyter_kernel_gateway
-
-RUN pip install markdown
+ENV JUPYTER_TOKEN=my_secret_token # you can also pass this at runtime
 
 EXPOSE 8888
 ENTRYPOINT [/tini, --]
-CMD [jupyter, kernelgateway, --ip=0.0.0.0, --port=8888]
+CMD [jupyter-notebook]
+
+RUN pip install markdown # <- installing new package
 ```
 
 - Follow all the instructions above, and use a Python file that has:
@@ -173,5 +171,5 @@ markdown.version ['2.6.6']
 
 ## Terminate the connection and container
 
-- To terminate a running kernel gateway you can "kill" it as any Linux process with `ctrl-c`
-- If you're running the kernel gateway as a Docker container, you can stop the Docker container (this assumes you're using an init manager, such as tini. If you're not, this may not close the process.)
+- To terminate a running notebook server you can "kill" it as any Linux process with `ctrl-c`
+- If you're running the notebook server as a Docker container, you can stop the Docker container (this assumes you're using an init manager, such as tini. If you're not, this may not close the process.)
