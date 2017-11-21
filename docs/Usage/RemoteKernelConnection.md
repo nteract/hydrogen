@@ -93,7 +93,7 @@ services:
     ports:
       - 8888:8888
     environment:
-      # if you can also have this var in your environment it will override this
+      # the value of `JUPYTER_TOKEN` in your environment will override `my_secret_token`
       - JUPYTER_TOKEN=my_secret_token
 ```
 
