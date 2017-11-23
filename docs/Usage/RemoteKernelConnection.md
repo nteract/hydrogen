@@ -77,7 +77,7 @@ ENTRYPOINT [/tini, --]
 # --no-browser & --port aren't strictly necessary. presented here for clarity
 CMD [jupyter-notebook, --no-browser, --port=8888]
 # if running as root, you need to explicitly allow this:
-# CMD [jupyter-notebook, --alow-root, --no-browser, --port=8888]
+# CMD [jupyter-notebook, --allow-root, --no-browser, --port=8888]
 
 ```
 
@@ -91,7 +91,7 @@ services:
   hydro:
     build: .
     entrypoint: [/tini, --]
-    command: [jupyter-notebook, --alow-root, --no-browser, --port=8888]
+    command: [jupyter-notebook, --allow-root, --no-browser, --port=8888]
     ports:
       - 8888:8888
     environment:
