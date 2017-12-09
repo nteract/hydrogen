@@ -6,6 +6,18 @@ To install Hydrogen run `apm install hydrogen` or search for *Hydrogen* in the I
 
 If you are using Linux 32-bit follow the installation instructions [here](Troubleshooting.md).
 
+**NOTE:**
+
+`apm` seems to have a bit of issue in the latest version `1.23.0-beta1`. If you get an error that starts with:
+```
+fs.js:640
+  return binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);
+                 ^
+
+Error: ENOENT: no such file or directory
+```
+we recommend you to install `Hydrogen` via console command: `apm install hydrogen`.
+
 ## Kernels
 
 Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on how to install the most popular kernels.
