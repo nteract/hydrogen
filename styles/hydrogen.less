@@ -76,7 +76,7 @@ svg:first-child {
   box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
 }
 
-.inline-container .cell_display {
+.inline-container .hydrogen_cell_display {
   padding: 0 0.25em 0 0.25em;
 }
 
@@ -95,9 +95,14 @@ svg:first-child {
   border: solid 1px @base-border-color;
 }
 
-.multiline-container .cell_display {
+.multiline-container .hydrogen_cell_display {
   padding: @component-padding;
   // Style fix for plotly toolbar
+  .cell_display {
+    overflow-y: hidden;
+    display: initial;
+    height: 100%;
+  }
   .modebar-group {
     display: flex;
   }
