@@ -37,7 +37,7 @@ describe("Store", () => {
       expect(grammar.name).toBe("Null Grammar");
       expect(store.editor).toBeNull();
       store.setGrammar(editor);
-      expect(store.grammar).toBe(grammar);
+      expect(store.grammar).toEqual(grammar);
     });
 
     it("should set grammar to null if editor is null", () => {
@@ -217,7 +217,7 @@ describe("Store", () => {
       store.updateEditor(editor);
       expect(store.editor).toBe(editor);
       expect(store.setGrammar).toHaveBeenCalledWith(editor);
-      expect(store.grammar).toBe(editor.getGrammar());
+      expect(store.grammar).toEqual(editor.getGrammar());
       expect(store.grammar.name.toLowerCase()).toBe("null grammar");
     });
   });
