@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@jupyterlab/services": "^0.52.0",
-    "@nteract/commutable": "^2.2.0",
+    "@nteract/commutable": "^3.0.1",
     "@nteract/display-area": "^3.1.0",
     "@nteract/transform-plotly": "^3.1.0",
     "@nteract/transform-vega": "^3.0.1",
