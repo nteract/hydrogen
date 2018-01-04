@@ -52,7 +52,7 @@ This command works in following way.
 
 ## "Hydrogen: Toggle Bubble"
 
-Toggle(add or remove) bobble at current cursor line.
+Toggle(add or remove) bubble at current cursor line.
 You can **preset** bubble before executing code.
 If executed with selection, toggle bubble on each selected line.
 
