@@ -5,6 +5,7 @@ Please share your favorite snippets with us and add them to this page.
 
 ## Interactive plots using [Plotly](https://plot.ly/api/)
 
+```
 {% codetabs name="Python", type="py" -%}
 from plotly import offline
 offline.init_notebook_mode()
@@ -29,11 +30,13 @@ figure <- list(data=data)
 mimebundle <- list('application/vnd.plotly.v1+json'=figure)
 IRdisplay::publish_mimebundle(mimebundle)
 {%- endcodetabs %}
+```
 
 ## Interactive plots using Matplotlib
 
 Interactive plots via PyQt/Pyside (creates separate window).
 
+```
 {% codetabs name="Python", type="py" -%}
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -46,20 +49,24 @@ t = np.linspace(0, 20, 500)
 plt.plot(t, np.sin(t))
 plt.show()
 {%- endcodetabs %}
+```
 
 ## Interactive JSON Objects
 
+```
 {% codetabs name="Python", type="py" -%}
 from IPython.display import JSON
 
 data = {"foo": {"bar": "baz"}, "a": 1}
 JSON(data)
 {%- endcodetabs %}
+```
 
 ## Static plots
 
 With support for `svg`, `png`, `jpeg` and `gif`
 
+```
 {% codetabs name="Python using matplotlib", type="py" -%}
 import matplotlib.pyplot as plt
 import numpy as np
@@ -98,9 +105,11 @@ spec = Chart(cars).mark_point().encode(
 )
 spec
 {%- endcodetabs %}
+```
 
 ## LaTeX
 
+```
 {% codetabs name="Python using sympy", type="py" -%}
 import sympy as sp
 sp.init_printing(use_latex='mathjax')
@@ -125,9 +134,11 @@ In natural units ($c$ = 1), the formula expresses the identity
 E=m
 \\end{equation}''')
 {%- endcodetabs %}
+```
 
 ## Data frames
 
+```
 {% codetabs name="Python using pandas", type="py" -%}
 import numpy as np
 import pandas as pd
@@ -146,26 +157,32 @@ import numpy as np
 t = np.linspace(0, 20, 500)
 t
 {%- endcodetabs %}
+```
 
 ## Images
 
+```
 {% codetabs name="Python", type="py" -%}
 from IPython.display import Image
 Image('http://jakevdp.github.com/figures/xkcd_version.png')
 {%- endcodetabs %}
-
+```
 
 ## HTML
 
+```
 {% codetabs name="Python", type="py" -%}
 from IPython.display import HTML
 HTML("<iframe src='https://nteract.io/' width='900' height='490'></iframe>")
 {%- endcodetabs %}
+```
 
 ## Plain Text
 
+```
 {% codetabs name="Python", type="py" -%}
 print("Hello World!")
 {%- language name="JavaScript", type="js" -%}
 console.log("Hello World!");
 {%- endcodetabs %}
+```
