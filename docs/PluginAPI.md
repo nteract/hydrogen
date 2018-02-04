@@ -50,6 +50,27 @@ Get the `atom$Range` that will run if `hydrogen:run-cell` is called.
 The `HydrogenKernel` class wraps Hydrogen's internal representation of kernels
 and exposes a small set of methods that should be usable by plugins.
 
+## language
+
+The language of the kernel, as specified in its kernelspec
+
+## displayName
+
+The display name of the kernel, as specified in its kernelspec
+
+## addMiddleware(middleware)
+
+Add a kernel middleware, which allows intercepting and issuing commands to
+the kernel.
+
+All of the middleware object's methods are called with `this` set to the
+middleware object. Also note that adding or removing methods from the
+middleware object after this method has been called is not supported.
+
+### Params:
+
+* **HydrogenKernelMiddleware** *middleware* 
+
 ## onDidDestroy(Callback)
 
 Calls your callback when the kernel has been destroyed.
