@@ -2,6 +2,7 @@
 
 import { Store } from "../lib/store";
 import { toggleInspector } from "../lib/commands";
+import KernelTransport from "../lib/kernel-transport";
 import Kernel from "../lib/kernel";
 
 describe("commands", () => {
@@ -12,10 +13,12 @@ describe("commands", () => {
     filePath = "fake.py";
     grammar = atom.grammars.grammarForScopeName("source.python");
     editor = atom.workspace.buildTextEditor();
-    mockKernel = new Kernel({
-      display_name: "Python 3",
-      language: "python"
-    });
+    mockKernel = new Kernel(
+      new KernelTransport({
+        display_name: "Python 3",
+        language: "python"
+      })
+    );
 
     spyOn(editor, "getPath").and.returnValue(filePath);
     spyOn(storeMock.subscriptions, "dispose");
