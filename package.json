@@ -56,7 +56,7 @@
     "@nteract/display-area": "^3.1.7",
     "@nteract/transform-plotly": "^3.1.4",
     "@nteract/transform-vega": "^3.0.5",
-    "@nteract/transforms": "^3.1.4",
+    "@nteract/transforms": "^4.0.0",
     "anser": "^1.4.4",
     "atom-select-list": "^0.7.0",
     "escape-carriage": "^1.2.0",
