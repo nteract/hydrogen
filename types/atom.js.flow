@@ -768,6 +768,7 @@ declare class atom$TextEditor extends atom$Model {
   verticalScrollMargin: number,
 
   // Event Subscription
+  onDidChangeTitle(callback: (title: string) => void): IDisposable,
   onDidChange(callback: () => void): IDisposable,
   onDidChangePath(callback: (newPath: string) => mixed): IDisposable,
   onDidStopChanging(callback: () => void): IDisposable,
