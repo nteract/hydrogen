@@ -63,9 +63,8 @@ The display name of the kernel, as specified in its kernelspec
 Add a kernel middleware, which allows intercepting and issuing commands to
 the kernel.
 
-All of the middleware object's methods are called with `this` set to the
-middleware object. Also note that adding or removing methods from the
-middleware object after this method has been called is not supported.
+If the methods of a `middleware` object are added/modified/deleted after
+`addMiddleware` has been called, the changes will take effect immediately.
 
 ### Params:
 
