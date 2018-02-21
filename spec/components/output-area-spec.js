@@ -5,6 +5,7 @@ import Enzyme, { shallow } from "enzyme";
 
 import OutputArea from "../../lib/components/output-area";
 import { Store } from "../../lib/store";
+import KernelTransport from "../../lib/kernel-transport";
 import Kernel from "../../lib/kernel";
 
 describe("Output area component", () => {
@@ -39,10 +40,12 @@ describe("Output area component", () => {
 
   beforeAll(() => {
     storeMock = new Store();
-    mockKernel = new Kernel({
-      display_name: "Python 3",
-      language: "python"
-    });
+    mockKernel = new Kernel(
+      new KernelTransport({
+        display_name: "Python 3",
+        language: "python"
+      })
+    );
     spyOn(mockKernel, "inspect");
 
     grammar = atom.grammars.grammarForScopeName("source.python");

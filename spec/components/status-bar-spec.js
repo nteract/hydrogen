@@ -7,6 +7,7 @@ import Adapter from "enzyme-adapter-react-16";
 Enzyme.configure({ adapter: new Adapter() });
 
 import store from "../../lib/store";
+import KernelTransport from "../../lib/kernel-transport";
 import Kernel from "../../lib/kernel";
 import StatusBar from "../../lib/components/status-bar";
 
@@ -44,17 +45,21 @@ describe("Status Bar", () => {
     expect(component.type()).toBeNull();
     expect(component.text()).toBe("");
 
-    const kernel = new Kernel({
-      display_name: "Python 3",
-      language: "python"
-    });
-    kernel.executionState = "starting";
+    const kernel = new Kernel(
+      new KernelTransport({
+        display_name: "Python 3",
+        language: "python"
+      })
+    );
+    kernel.setExecutionState("starting");
 
-    const kernel2 = new Kernel({
-      display_name: "Javascript",
-      language: "Javascript"
-    });
-    kernel2.executionState = "idle";
+    const kernel2 = new Kernel(
+      new KernelTransport({
+        display_name: "Javascript",
+        language: "Javascript"
+      })
+    );
+    kernel2.setExecutionState("idle");
 
     store.kernelMapping = new Map([
       ["foo.py", kernel],
@@ -72,7 +77,7 @@ describe("Status Bar", () => {
     expect(component.text()).toBe("Python 3 | starting");
 
     // update execution state
-    store.kernel.executionState = "idle";
+    store.kernel.setExecutionState("idle");
 
     // FixMe: Enzyme https://github.com/airbnb/enzyme/issues/1184
     component.setState();
