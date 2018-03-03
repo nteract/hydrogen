@@ -279,7 +279,7 @@ describe("Store", () => {
       expect(store.notebook).toEqual(commutable.toJS(nb));
     });
 
-    it("should return a fully-fledged notebook when the file isn't empty", () => {
+    xit("should return a fully-fledged notebook when the file isn't empty", () => {
       // This editor will have some cells.
       const editor = atom.workspace.buildTextEditor();
       editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
