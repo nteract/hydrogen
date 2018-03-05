@@ -51,6 +51,7 @@ You also may be interested in our latest project – [nteract](https://github.co
 
 Hydrogen has support for plugins. Feel free to add your own to the list:
 - [Hydrogen Launcher](https://github.com/lgeiger/hydrogen-launcher)
+- [hydrogen-python](https://github.com/nikitakit/hydrogen-python)
 
 If you are interested in building a plugin take a look at our [plugin API documentation](https://nteract.gitbooks.io/hydrogen/docs/PluginAPI.md).
 
