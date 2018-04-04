@@ -1,7 +1,7 @@
 "use babel";
 
 import { CompositeDisposable } from "atom";
-import { isObservableMap, isObservable, isComputed } from "mobx";
+import { isObservableMap, isObservableProp, isComputedProp, keys } from "mobx";
 import store from "./../../lib/store";
 import KernelTransport from "./../../lib/kernel-transport";
 import Kernel from "./../../lib/kernel";
@@ -15,9 +15,9 @@ describe("Store initialize", () => {
     expect(store.runningKernels.slice()).toEqual([]);
     expect(isObservableMap(store.startingKernels)).toBeTruthy();
     expect(isObservableMap(store.kernelMapping)).toBeTruthy();
-    expect(isObservable(store, "editor")).toBeTruthy();
-    expect(isObservable(store, "grammar")).toBeTruthy();
-    expect(isComputed(store, "kernel")).toBeTruthy();
+    expect(isObservableProp(store, "editor")).toBeTruthy();
+    expect(isObservableProp(store, "grammar")).toBeTruthy();
+    expect(isComputedProp(store, "kernel")).toBeTruthy();
   });
 });
 
