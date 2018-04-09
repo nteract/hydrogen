@@ -41,10 +41,13 @@ describe("Output area component", () => {
   beforeAll(() => {
     storeMock = new Store();
     mockKernel = new Kernel(
-      new KernelTransport({
-        display_name: "Python 3",
-        language: "python"
-      })
+      new KernelTransport(
+        {
+          display_name: "Python 3",
+          language: "python"
+        },
+        { name: "python" }
+      )
     );
     spyOn(mockKernel, "inspect");
 

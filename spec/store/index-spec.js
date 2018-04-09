@@ -1,7 +1,7 @@
 "use babel";
 
 import { CompositeDisposable } from "atom";
-import { isObservableMap, isObservableProp, isComputedProp, keys } from "mobx";
+import { isObservableMap, isObservableProp, isComputedProp } from "mobx";
 import store from "./../../lib/store";
 import KernelTransport from "./../../lib/kernel-transport";
 import Kernel from "./../../lib/kernel";
@@ -135,16 +135,18 @@ describe("Store", () => {
 
       store.newKernel(kernel, "foo.md", editor, { name: "python" });
       expect(store.kernelMapping.size).toBe(1);
-      expect(store.kernelMapping.get("foo.md")).toEqual({ python: kernel });
+      expect(store.kernelMapping.get("foo.md").toJS()).toEqual(
+        new Map([["python", kernel]])
+      );
       expect(store.runningKernels.slice()).toEqual([kernel]);
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
 
       store.newKernel(kernel2, "foo.md", editor, { name: "javascript" });
       expect(store.kernelMapping.size).toBe(1);
-      expect(store.kernelMapping.get("foo.md")).toEqual({
-        python: kernel,
-        javascript: kernel2
-      });
+      expect(store.kernelMapping.get("foo.md").toJS()).toEqual(
+        new Map([["python", kernel], ["javascript", kernel2]])
+      );
+
       expect(store.runningKernels.slice()).toEqual([kernel, kernel2]);
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Javascript");
     });
@@ -153,22 +155,31 @@ describe("Store", () => {
   describe("deleteKernel", () => {
     it("should delete kernel", () => {
       const kernel1 = new Kernel(
-        new KernelTransport({
-          display_name: "Python 3",
-          language: "python"
-        })
+        new KernelTransport(
+          {
+            display_name: "Python 3",
+            language: "python"
+          },
+          { name: "python" }
+        )
       );
       const kernel2 = new Kernel(
-        new KernelTransport({
-          display_name: "Python 3",
-          language: "python"
-        })
+        new KernelTransport(
+          {
+            display_name: "Python 3",
+            language: "python"
+          },
+          { name: "python" }
+        )
       );
       const kernel3 = new Kernel(
-        new KernelTransport({
-          display_name: "JS",
-          language: "Javascript"
-        })
+        new KernelTransport(
+          {
+            display_name: "JS",
+            language: "Javascript"
+          },
+          { name: "javascript" }
+        )
       );
 
       store.runningKernels.replace([kernel1, kernel2, kernel3]);
@@ -176,16 +187,18 @@ describe("Store", () => {
         ["foo.py", kernel1],
         ["bar.py", kernel1],
         ["baz.py", kernel2],
-        ["foo.md", { python: kernel1, javascript: kernel3 }]
+        ["foo.md", new Map([["python", kernel1], ["javascript", kernel3]])]
       ]);
 
+      const kernelFiles = new Set(["foo.py", "bar.py", "foo.md"]);
+      expect(new Set(store.getFilesForKernel(kernel1))).toEqual(kernelFiles);
+      expect(store.kernelMapping.size).toBe(4);
       store.deleteKernel(kernel1);
-
       expect(store.kernelMapping.size).toBe(2);
       expect(store.kernelMapping.get("baz.py")).toEqual(kernel2);
-      expect(store.kernelMapping.get("foo.md")).toEqual({
-        javascript: kernel3
-      });
+      expect(store.kernelMapping.get("foo.md").toJS()).toEqual(
+        new Map([["javascript", kernel3]])
+      );
       expect(store.runningKernels.slice()).toEqual([kernel2, kernel3]);
     });
   });
@@ -193,23 +206,39 @@ describe("Store", () => {
   describe("getFilesForKernel", () => {
     it("should return files related to kernel", () => {
       const kernel1 = new Kernel(
-        new KernelTransport({
-          display_name: "Python 3",
-          language: "python"
-        })
+        new KernelTransport(
+          {
+            display_name: "Python 3",
+            language: "python"
+          },
+          { name: "python" }
+        )
       );
       const kernel2 = new Kernel(
-        new KernelTransport({
-          display_name: "Python 3",
-          language: "python"
-        })
+        new KernelTransport(
+          {
+            display_name: "Python 3",
+            language: "python"
+          },
+          { name: "python" }
+        )
+      );
+
+      const kernel3 = new Kernel(
+        new KernelTransport(
+          {
+            display_name: "JS",
+            language: "Javascript"
+          },
+          { name: "javascript" }
+        )
       );
 
       store.kernelMapping = new Map([
         ["foo.py", kernel1],
         ["bar.py", kernel1],
         ["baz.py", kernel2],
-        ["foo.md", { python: kernel1, javascript: kernel2 }]
+        ["foo.md", new Map([["python", kernel1], ["javascript", kernel2]])]
       ]);
 
       expect(store.getFilesForKernel(kernel1)).toEqual([
