@@ -61,7 +61,7 @@ Hydrogen implements the [messaging protocol](http://jupyter-client.readthedocs.i
 
 ## Why "Hydrogen"?
 
-Hydrogen atoms make up 90% of Jupiter by volume.
+Hydrogen atoms make up 90% of Jupyter by volume.
 
 Plus, it was easy to make a logo.
 
