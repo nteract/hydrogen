@@ -367,7 +367,7 @@ describe("Store", () => {
       expect(store.kernel).toBeUndefined();
     });
 
-    it("should return null if no kernel for file", () => {
+    it("should return the correct kernel for multilanguage files", () => {
       store.editor = { getPath: () => "foo.md" };
       const kernel = new Kernel(
         new KernelTransport({
@@ -375,7 +375,9 @@ describe("Store", () => {
           language: "python"
         })
       );
-      store.kernelMapping = new Map([["foo.md", { python: kernel }]]);
+      store.kernelMapping = new Map([
+        ["foo.md", new Map([["python", kernel]])]
+      ]);
       store.grammar = { name: "python" };
       expect(store.kernel).toEqual(kernel);
     });
