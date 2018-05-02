@@ -2,7 +2,7 @@
 
 import { CompositeDisposable } from "atom";
 import { isObservableMap, isObservableProp, isComputedProp } from "mobx";
-import store from "./../../lib/store";
+import store, { Store } from "./../../lib/store";
 import KernelTransport from "./../../lib/kernel-transport";
 import Kernel from "./../../lib/kernel";
 import MarkerStore from "./../../lib/store/markers";
@@ -380,6 +380,41 @@ describe("Store", () => {
       ]);
       store.grammar = { name: "python" };
       expect(store.kernel).toEqual(kernel);
+    });
+  });
+
+  describe("global mode", () => {
+    let mockStore, kernelSpec, grammar, editor1, editor2, kernel1;
+
+    beforeEach(() => {
+      atom.config.set("Hydrogen.globalMode", true);
+      mockStore = new Store();
+      kernelSpec = { language: "python", display_name: "Python 3" };
+      grammar = {
+        scopeName: "source.python",
+        name: "Python"
+      };
+
+      editor1 = atom.workspace.buildTextEditor();
+      editor2 = atom.workspace.buildTextEditor();
+      spyOn(editor1, "getPath").and.returnValue("foo.py");
+      spyOn(editor2, "getPath").and.returnValue("bar.py");
+      spyOn(editor1, "getGrammar").and.returnValue(grammar);
+      spyOn(editor2, "getGrammar").and.returnValue(grammar);
+      kernel1 = new Kernel(new KernelTransport(kernelSpec, grammar));
+    });
+
+    afterEach(() => {
+      atom.config.set("Hydrogen.globalMode", false);
+    });
+
+    it("should use the same kernel if two files have the same grammar", () => {
+      mockStore.updateEditor(editor1);
+      mockStore.newKernel(kernel1, editor1.getPath(), editor1);
+      expect(mockStore.kernel).toEqual(kernel1);
+
+      mockStore.updateEditor(editor2);
+      expect(mockStore.kernel).toEqual(kernel1);
     });
   });
 });
