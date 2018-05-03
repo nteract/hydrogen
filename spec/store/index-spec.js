@@ -415,6 +415,13 @@ describe("Store", () => {
 
       mockStore.updateEditor(editor2);
       expect(mockStore.kernel).toEqual(kernel1);
+
+      // store should still keep track of all filePaths
+      expect(mockStore.filePaths).toEqual(["foo.py", "bar.py"]);
+      expect(mockStore.getFilesForKernel(mockStore.kernel)).toEqual([
+        "foo.py",
+        "bar.py"
+      ]);
     });
   });
 });
