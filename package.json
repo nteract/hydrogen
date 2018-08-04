@@ -72,7 +72,7 @@
     "react-hot-loader": "^4.3.3",
     "react-rangeslider": "^2.1.0",
     "spawnteract": "^5.0.0",
-    "styled-jsx": "^2.2.7",
+    "styled-jsx": "^3.0.0",
     "tildify": "^1.2.0",
     "uuid": "^3.2.1",
     "ws": "^3.3.1",
