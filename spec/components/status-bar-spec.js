@@ -99,14 +99,17 @@ describe("Status Bar", () => {
     expect(component.text()).toBe("Javascript | idle");
   });
 
-  xit("hides the component based on config setting", () => {
+  it("hides the component based on config setting", () => {
+    // disable the status bar
     store.setConfigValue("Hydrogen.statusBarDisable", true);
     expect(store.kernel).toBeDefined();
     const component = shallow(<StatusBar store={store} onClick={() => {}} />);
 
     expect(component.text()).toBe("");
+
+    // re-enable the status bar
     store.setConfigValue("Hydrogen.statusBarDisable", false);
-    expect(component.text()).not.toBe("Javascript | idle");
+    expect(component.text()).toBe("Javascript | idle");
   });
 });
 
