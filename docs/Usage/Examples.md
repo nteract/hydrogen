@@ -169,3 +169,34 @@ print("Hello World!")
 {%- language name="JavaScript", type="js" -%}
 console.log("Hello World!");
 {%- endcodetabs %}
+
+## Automatic visualization with the nteract [Data Explorer](https://blog.nteract.io/designing-the-nteract-data-explorer-f4476d53f897) 
+
+{% codetabs name="Python", type="py" -%}
+import pandas as pd
+
+pd.options.display.html.table_schema = True
+pd.options.display.max_rows = None
+
+
+iris_url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+
+df1 = pd.read_csv(iris_url)
+
+df1
+{%- endcodetabs %}
+(https://blog.nteract.io/designing-the-nteract-data-explorer-f4476d53f897) 
+
+{% codetabs name="Python", type="py" -%}
+import pandas as pd
+
+pd.options.display.html.table_schema = True
+pd.options.display.max_rows = None
+
+
+iris_url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+
+df1 = pd.read_csv(iris_url)
+
+df1
+{%- endcodetabs %}
