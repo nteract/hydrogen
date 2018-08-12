@@ -12,7 +12,7 @@ describe("Store initialize", () => {
   it("should correctly initialize store", () => {
     expect(store.subscriptions instanceof CompositeDisposable).toBeTruthy();
     expect(store.markers instanceof MarkerStore).toBeTruthy();
-    expect(store.runningKernels.slice()).toEqual([]);
+    expect(store.runningKernels).toEqual([]);
     expect(isObservableMap(store.startingKernels)).toBeTruthy();
     expect(isObservableMap(store.kernelMapping)).toBeTruthy();
     expect(isObservableProp(store, "editor")).toBeTruthy();
@@ -123,7 +123,7 @@ describe("Store", () => {
       store.newKernel(kernel, "foo.py", editor);
       expect(store.kernelMapping.size).toBe(1);
       expect(store.kernelMapping.get("foo.py")).toEqual(kernel);
-      expect(store.runningKernels.slice()).toEqual([kernel]);
+      expect(store.runningKernels).toEqual([kernel]);
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
     });
 
@@ -138,7 +138,7 @@ describe("Store", () => {
       expect(store.kernelMapping.get("foo.md").toJS()).toEqual(
         new Map([["python", kernel]])
       );
-      expect(store.runningKernels.slice()).toEqual([kernel]);
+      expect(store.runningKernels).toEqual([kernel]);
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
 
       store.newKernel(kernel2, "foo.md", editor, { name: "javascript" });
@@ -147,7 +147,7 @@ describe("Store", () => {
         new Map([["python", kernel], ["javascript", kernel2]])
       );
 
-      expect(store.runningKernels.slice()).toEqual([kernel, kernel2]);
+      expect(store.runningKernels).toEqual([kernel, kernel2]);
       expect(store.startingKernels.delete).toHaveBeenCalledWith("Javascript");
     });
   });
@@ -199,7 +199,7 @@ describe("Store", () => {
       expect(store.kernelMapping.get("foo.md").toJS()).toEqual(
         new Map([["javascript", kernel3]])
       );
-      expect(store.runningKernels.slice()).toEqual([kernel2, kernel3]);
+      expect(store.runningKernels).toEqual([kernel2, kernel3]);
     });
   });
 
