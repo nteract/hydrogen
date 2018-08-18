@@ -45,10 +45,7 @@
     "atom": ">=1.20.0 <2.0.0"
   },
   "lint-staged": {
-    "{lib,spec}/**/*.js": [
-      "prettier --write",
-      "git add"
-    ]
+    "{lib,spec}/**/*.js": ["prettier --write", "git add"]
   },
   "dependencies": {
     "@jupyterlab/services": "^0.52.0",
@@ -102,7 +99,7 @@
     "atom-jasmine3-test-runner": "^4.0.0",
     "enzyme": "^3.1.1",
     "enzyme-adapter-react-16": "^1.0.4",
-    "flow-bin": "^0.67.1",
+    "flow-bin": "^0.79.0",
     "husky": "^0.14.0",
     "lint-staged": "^7.0.0",
     "markdox": "^0.1.10",
