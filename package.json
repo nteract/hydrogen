@@ -98,7 +98,7 @@
   "devDependencies": {
     "atom-jasmine3-test-runner": "^4.0.0",
     "enzyme": "^3.4.4",
-    "enzyme-adapter-react-16": "^1.0.4",
+    "enzyme-adapter-react-16": "^1.2.0",
     "flow-bin": "^0.79.0",
     "husky": "^0.14.0",
     "lint-staged": "^7.0.0",
