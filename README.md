@@ -11,6 +11,7 @@ Checkout our [Documentation](https://nteract.gitbooks.io/hydrogen/) and [Medium 
 ![hero](https://cloud.githubusercontent.com/assets/13285808/20360886/7e03e524-ac03-11e6-9176-37677f226619.gif)
 
 ## Contents
+
 1. [Background](#background)
 2. [Features](#features)
 3. [Plugins for Hydrogen](#plugins-for-hydrogen)
@@ -25,7 +26,6 @@ Checkout our [Documentation](https://nteract.gitbooks.io/hydrogen/) and [Medium 
 Hydrogen was inspired by Bret Victor's ideas about the power of instantaneous feedback and the design of [Light Table](http://lighttable.com/). Running code inline and in real time is a more natural way to develop. By bringing the interactive style of Light Table to the rock-solid usability of Atom, Hydrogen makes it easy to write code the way you want to.
 
 You also may be interested in our latest project – [nteract](https://github.com/nteract/nteract) – a desktop application that wraps up the best of the web based Jupyter notebook.
-
 
 ## Features
 
@@ -50,8 +50,10 @@ You also may be interested in our latest project – [nteract](https://github.co
 ## Plugins for Hydrogen
 
 Hydrogen has support for plugins. Feel free to add your own to the list:
+
 - [Hydrogen Launcher](https://github.com/lgeiger/hydrogen-launcher)
 - [hydrogen-python](https://github.com/nikitakit/hydrogen-python)
+- [Data Explorer](https://github.com/BenRussert/data-explorer)
 
 If you are interested in building a plugin take a look at our [plugin API documentation](https://nteract.gitbooks.io/hydrogen/docs/PluginAPI.md).
 
