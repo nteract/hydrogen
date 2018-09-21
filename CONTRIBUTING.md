@@ -37,7 +37,12 @@ or when you want some feedback!
 
 You can run specs by triggering the `window:run-package-specs` command in Atom. To run tests on the command line use `apm test` within the package directory.
 
-We use [Jasmine](https://jasmine.github.io/2.8/introduction) for writing specs.
+We use [Jasmine](https://jasmine.github.io/3.2/introduction) for writing specs.
+
+### Flow
+
+We use [flow](https://flow.org/) for type checking. Before you make a pull request, you should run `npm run flow`
+to see if there are any errors. If you have an error you can't fix after taking a crack at it, feel free to open your PR anyway and ask for help there.
 
 ### Build Documentation
 
@@ -47,4 +52,7 @@ npm install gitbook-cli -g
 gitbook install
 gitbook serve
 ```
+
+Open up `http://localhost:4000` in your browser to live preview changes in the `./docs/` directory. If you want to add or remove a page in the docs, be sure to edit `SUMMARY.md`.
+
 For more information take a look at https://toolchain.gitbook.com/setup.html.
