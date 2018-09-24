@@ -1,6 +1,6 @@
 <!-- If this is a bug report fill out this template (otherwise you can exclude it)
 
-Questions? Feel free to ping us on https://slack.nteract.in -->
+Questions? Feel free to ping us on https://slack.nteract.io -->
 
 **Description:**
 
