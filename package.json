@@ -35,14 +35,18 @@
   "scripts": {
     "flow": "flow",
     "prettier": "prettier --write 'lib/**/*.js' 'spec/**/*.js'",
-    "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
-    "precommit": "lint-staged"
+    "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md"
   },
   "atomTestRunner": "atom-jasmine3-test-runner",
   "repository": "git@github.com:nteract/hydrogen.git",
   "license": "MIT",
   "engines": {
     "atom": ">=1.20.0 <2.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "{lib,spec}/**/*.js": [
