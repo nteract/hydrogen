@@ -10,9 +10,6 @@ script:
   - curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh
   - npm run flow
 
-after_success:
-  - curl -s https://raw.githubusercontent.com/lgeiger/prettier-greenkeeper/master/travis.sh | sh
-
 env:
   matrix:
     - ATOM_CHANNEL=stable
