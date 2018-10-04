@@ -1,5 +1,5 @@
-// flow-typed signature: 687805dabf4b11b8ad99d263c9d3703d
-// flow-typed version: f0c7fe5246/enzyme_v3.x.x/flow_>=v0.53.x
+// flow-typed signature: e50486ad88c5bbfcdfde9fef4fc4c5d1
+// flow-typed version: ab187b275b/enzyme_v3.x.x/flow_>=v0.53.x
 
 import * as React from "react";
 
@@ -20,6 +20,7 @@ declare module "enzyme" {
     findWhere(predicate: PredicateFunction<this>): this,
     filter(selector: EnzymeSelector): this,
     filterWhere(predicate: PredicateFunction<this>): this,
+    hostNodes(): this,
     contains(nodeOrNodes: NodeOrNodes): boolean,
     containsMatchingElement(node: React.Node): boolean,
     containsAllMatchingElements(nodes: NodeOrNodes): boolean,
@@ -42,7 +43,6 @@ declare module "enzyme" {
     text(): string,
     html(): string,
     get(index: number): React.Node,
-    getNodes(): Array<React.Node>,
     getDOMNode(): HTMLElement | HTMLInputElement,
     at(index: number): this,
     first(): this,
@@ -53,12 +53,13 @@ declare module "enzyme" {
     prop(key: string): any,
     key(): string,
     simulate(event: string, ...args: Array<any>): this,
+    slice(begin?: number, end?: number): this,
     setState(state: {}, callback?: Function): this,
     setProps(props: {}): this,
     setContext(context: Object): this,
     instance(): React.Component<*, *>,
     update(): this,
-    debug(): string,
+    debug(options?: Object): string,
     type(): string | Function | null,
     name(): string,
     forEach(fn: (node: this, index: number) => mixed): this,
@@ -92,7 +93,9 @@ declare module "enzyme" {
       options?: ?Object
     ): ShallowWrapper,
     equals(node: React.Node): boolean,
-    shallow(options?: { context?: Object }): ShallowWrapper
+    shallow(options?: { context?: Object }): ShallowWrapper,
+    getElement(): React.Node,
+    getElements(): Array<React.Node>
   }
 
   declare function shallow(
