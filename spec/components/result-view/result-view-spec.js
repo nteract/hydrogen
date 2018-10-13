@@ -52,10 +52,7 @@ describe("ResultViewComponent", () => {
 
     const mockKernel = {};
 
-    let destroyInvoked = false;
-    const destroy = () => {
-      destroyInvoked = true;
-    };
+    const destroy = jasmine.createSpy("destroy");
 
     const component = shallow(
       <ResultViewComponent
@@ -67,6 +64,6 @@ describe("ResultViewComponent", () => {
     );
 
     component.find(".icon-x").simulate("click");
-    expect(destroyInvoked).toBe(true);
+    expect(destroy).toHaveBeenCalled();
   });
 });
