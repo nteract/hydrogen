@@ -24,9 +24,8 @@ describe("Store initialize", () => {
 describe("Store", () => {
   beforeEach(() => {
     store.subscriptions = new CompositeDisposable();
-    store.startingKernels.clear();
-    store.runningKernels.clear();
-    store.kernelMapping.clear();
+    store.startingKernels = store.kernelMapping = new Map();
+    store.runningKernels = [];
     store.editor = null;
     store.grammar = null;
   });
@@ -182,7 +181,7 @@ describe("Store", () => {
         )
       );
 
-      store.runningKernels.replace([kernel1, kernel2, kernel3]);
+      store.runningKernels = [kernel1, kernel2, kernel3];
       store.kernelMapping = new Map([
         ["foo.py", kernel1],
         ["bar.py", kernel1],
@@ -268,7 +267,7 @@ describe("Store", () => {
       spyOn(store.markers, "clear");
       const kernel1 = jasmine.createSpyObj("kernel1", ["destroy"]);
       const kernel2 = jasmine.createSpyObj("kernel2", ["destroy"]);
-      store.runningKernels.replace([kernel1, kernel2]);
+      store.runningKernels = [kernel1, kernel2];
       store.dispose();
       expect(store.runningKernels.length).toEqual(0);
       expect(store.kernelMapping.size).toBe(0);
