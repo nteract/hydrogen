@@ -57,7 +57,7 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.0.0",
     "@jupyterlab/services": "^0.52.0",
-    "@nteract/commutable": "^4.0.0",
+    "@nteract/commutable": "^5.0.0",
     "@nteract/display-area": "^3.1.7",
     "@nteract/transform-plotly": "^3.1.4",
     "@nteract/transform-vega": "^3.1.1",
