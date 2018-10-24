@@ -2063,6 +2063,7 @@ declare class atom$Token {
 
 declare class atom$Selection {
   clear(): void,
+  fold(): void,
   getText(): string,
   getBufferRange(): atom$Range,
   insertText(
