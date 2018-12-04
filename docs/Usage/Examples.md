@@ -70,6 +70,28 @@ t = np.linspace(0, 20, 500)
 
 plt.plot(t, np.sin(t))
 plt.show()
+{%- language name="Python using altair >= 2.0", type="py" -%}
+import altair as alt
+from vega_datasets import data
+
+iris = data.iris()
+
+alt.Chart(iris).mark_point().encode(
+    x='petalLength',
+    y='petalWidth',
+    color='species'
+)
+{%- language name="Python using altair >= v1.3 < 2.0", type="py" -%}
+from altair import Chart, load_dataset, enable_mime_rendering
+enable_mime_rendering()
+
+cars = load_dataset('cars')
+spec = Chart(cars).mark_point().encode(
+    x='Horsepower',
+    y='Miles_per_Gallon',
+    color='Origin',
+)
+spec
 {%- language name="Python using altair < v1.3", type="py" -%}
 from IPython.display import display
 from altair import Chart, load_dataset
@@ -84,19 +106,7 @@ spec = Chart(cars).mark_point().encode(
     y='Miles_per_Gallon',
     color='Origin',
 )
-
 vegify(spec)
-{%- language name="Python using altair v1.3+", type="py" -%}
-from altair import Chart, load_dataset, enable_mime_rendering
-enable_mime_rendering()
-
-cars = load_dataset('cars')
-spec = Chart(cars).mark_point().encode(
-    x='Horsepower',
-    y='Miles_per_Gallon',
-    color='Origin',
-)
-spec
 {%- endcodetabs %}
 
 ## LaTeX
@@ -170,7 +180,7 @@ print("Hello World!")
 console.log("Hello World!");
 {%- endcodetabs %}
 
-## Automatic visualization with the nteract [Data Explorer](https://blog.nteract.io/designing-the-nteract-data-explorer-f4476d53f897) 
+## Automatic visualization with the nteract [Data Explorer](https://blog.nteract.io/designing-the-nteract-data-explorer-f4476d53f897)
 
 {% codetabs name="Python", type="py" -%}
 import pandas as pd
@@ -185,7 +195,7 @@ df1 = pd.read_csv(iris_url)
 
 df1
 {%- endcodetabs %}
-(https://blog.nteract.io/designing-the-nteract-data-explorer-f4476d53f897) 
+(https://blog.nteract.io/designing-the-nteract-data-explorer-f4476d53f897)
 
 {% codetabs name="Python", type="py" -%}
 import pandas as pd
