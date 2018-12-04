@@ -115,5 +115,109 @@ describe("CodeManager", () => {
         });
       });
     });
+
+    describe("foldCells", () => {
+      // runAsync is borrowed and modified from link below.
+      // https://github.com/jasmine/jasmine/issues/923#issuecomment-169634461
+      function waitAsync(fn) {
+        return done => {
+          fn().then(done, function rejected(e) {
+            fail(e);
+            done();
+          });
+        };
+      }
+      beforeEach(
+        waitAsync(async () => {
+          await atom.packages.activatePackage("language-python");
+          editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
+          const code = [
+            "# %% Block 1",
+            "print('hi')",
+            "",
+            "# %% Block 2",
+            "print('hi')",
+            "",
+            "# %% Block 3",
+            "print('hi')"
+          ];
+          editor.setText(code.join("\n") + "\n");
+          // # %% Block 1
+          // print('hi')
+          //
+          // # %% Block 2
+          // print('hi')
+          //
+          // # %% Block 3
+          // print('hi')
+          //
+        })
+      );
+      describe("foldCurrentCell", () => {
+        it("folds cell range correctly", () => {
+          editor.setCursorBufferPosition([1, 0]);
+          CM.foldCurrentCell(editor);
+          const screenRowsExpected = [
+            "# %% Block 1",
+            "# %% Block 2",
+            "print('hi')",
+            "",
+            "# %% Block 3",
+            "print('hi')",
+            ""
+          ];
+          expect(editor.getScreenLineCount()).toEqual(
+            screenRowsExpected.length
+          );
+          for (var i = 0; i < screenRowsExpected.length; i++) {
+            expect(editor.lineTextForScreenRow(i).trim()).toEqual(
+              screenRowsExpected[i]
+            );
+          }
+        });
+        it("folds last cell range correctly", () => {
+          editor.setCursorBufferPosition([6, 0]);
+          CM.foldCurrentCell(editor);
+          const screenRowsExpected = [
+            "# %% Block 1",
+            "print('hi')",
+            "",
+            "# %% Block 2",
+            "print('hi')",
+            "",
+            "# %% Block 3"
+          ];
+          expect(editor.getScreenLineCount()).toEqual(
+            screenRowsExpected.length
+          );
+          for (var i = 0; i < screenRowsExpected.length; i++) {
+            expect(editor.lineTextForScreenRow(i).trim()).toEqual(
+              screenRowsExpected[i]
+            );
+          }
+        });
+      });
+      describe("foldAllButCurrentCell", () => {
+        it("folds cell ranges correctly", () => {
+          editor.setCursorBufferPosition([1, 0]);
+          CM.foldAllButCurrentCell(editor);
+          const screenRowsExpected = [
+            "# %% Block 1",
+            "print('hi')",
+            "",
+            "# %% Block 2",
+            "# %% Block 3"
+          ];
+          expect(editor.getScreenLineCount()).toEqual(
+            screenRowsExpected.length
+          );
+          for (var i = 0; i < screenRowsExpected.length; i++) {
+            expect(editor.lineTextForScreenRow(i).trim()).toEqual(
+              screenRowsExpected[i]
+            );
+          }
+        });
+      });
+    });
   });
 });
