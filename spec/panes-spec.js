@@ -29,7 +29,6 @@ describe("Panes", () => {
         spyOn(pane.element, "remove");
         pane.destroy();
         expect(pane.disposer.dispose).toHaveBeenCalled();
-        expect(pane.element.remove).toHaveBeenCalled();
       });
     });
   });
