@@ -62,7 +62,7 @@ describe("commands", () => {
       const outputPane = new OutputPane(storeMock);
       const workspacePaneItems = [outputPane];
       spyOn(atom.workspace, "getPaneItems").and.returnValue(workspacePaneItems);
-      spyOn(outputPane, "destroy").and.callThrough();
+      spyOn(outputPane, "destroy");
       toggleOutputMode();
       expect(outputPane.destroy).toHaveBeenCalled();
     });
