@@ -69,7 +69,9 @@ describe("CodeManager", () => {
           [[6, 0], [10, 5]]
         ].map(toRange); // zero-to-bp1 // nextRow of bp1 to bp2 // nextRow of bp2 to bp3 // nextRow of bp3 to bp4
 
-        expect(CM.getCellsForBreakPoints(points)).toEqual(cellsExpected);
+        expect(CM.getCellsForBreakPoints(editor, points)).toEqual(
+          cellsExpected
+        );
       });
     });
     describe("getCells", () => {

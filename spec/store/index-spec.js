@@ -290,26 +290,23 @@ describe("Store", () => {
   });
 
   describe("get notebook", () => {
+    let editor;
+    beforeEach(() => {
+      editor = atom.workspace.buildTextEditor();
+    });
+
     it("should return null if no editor", () => {
       expect(store.notebook).toBeNull();
     });
 
-    it("should return a single cell notebook for empty file", () => {
-      // This editor will be empty.
-      const editor = atom.workspace.buildTextEditor();
+    it("should return an empty notebook for empty file", () => {
       store.updateEditor(editor);
       // Build a notebook with one code cell.
-      let codeCell = commutable.emptyCodeCell.set("source", "");
-      const nb = commutable.appendCellToNotebook(
-        commutable.emptyNotebook,
-        codeCell
-      );
+      const nb = commutable.emptyNotebook;
       expect(store.notebook).toEqual(commutable.toJS(nb));
     });
 
     xit("should return a fully-fledged notebook when the file isn't empty", () => {
-      // This editor will have some cells.
-      const editor = atom.workspace.buildTextEditor();
       editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
       // Add some code to the editor.
       const source1 = 'print "Hola World! I <3 ZMQ!"';
