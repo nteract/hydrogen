@@ -307,13 +307,15 @@ describe("Store", () => {
       expect(store.notebook).toEqual(commutable.toJS(nb));
     });
 
-    xit("should return a fully-fledged notebook when the file isn't empty", () => {
+    it("should return a fully-fledged notebook when the file isn't empty", () => {
       // This editor will have some cells.
       const editor = atom.workspace.buildTextEditor();
       editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
       // Add some code to the editor.
       const source1 = 'print "Hola World! I <3 ZMQ!"';
       const source2 = "2 + 2";
+      editor.insertText("# %%");
+      editor.insertNewline();
       editor.insertText(source1);
       editor.insertNewline();
       editor.insertText("# %%");
@@ -323,8 +325,10 @@ describe("Store", () => {
       // Build a notebook with these two cells.
       const codeCell1 = commutable.emptyCodeCell.set("source", source1);
       const codeCell2 = commutable.emptyCodeCell.set("source", source2);
+      // The outputted notebook will have three cells because currently a cell
+      // is always created before the first `# %%`
       let nb = commutable.appendCellToNotebook(
-        commutable.emptyNotebook,
+        commutable.monocellNotebook,
         codeCell1
       );
       nb = commutable.appendCellToNotebook(nb, codeCell2);
