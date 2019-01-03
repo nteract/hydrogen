@@ -329,12 +329,8 @@ describe("Store", () => {
     it("should return a fully-fledged notebook when the file isn't empty", () => {
       const source1 = 'print("Hola World! I <3 ZMQ!")\n';
       const source2 = "2 + 2\n";
-      editor.insertText("# %%\n");
-      editor.insertText(source1);
-      editor.insertText("# %%\n");
-      editor.insertText(source2);
+      editor.setText(`# %%\n${source1}# %%\n${source2}`);
       store.updateEditor(editor);
-      // Build a notebook with these two cells.
       const codeCell1 = commutable.emptyCodeCell.set("source", source1);
       const codeCell2 = commutable.emptyCodeCell.set("source", source2);
       // The outputted notebook will have three cells because currently a cell
@@ -344,6 +340,23 @@ describe("Store", () => {
         codeCell1
       );
       nb = commutable.appendCellToNotebook(nb, codeCell2);
+      expect(store.notebook).toEqual(commutable.toJS(nb));
+    });
+
+    it("should export markdown to markdown cells", () => {
+      const source1 = 'print("Hola World! I <3 ZMQ!")\n';
+      const source2 = "2 + 2\n";
+      editor.setText(`# %%\n${source1}# %% markdown\n${source2}`);
+      store.updateEditor(editor);
+      const codeCell = commutable.emptyCodeCell.set("source", source1);
+      const markdownCell = commutable.emptyMarkdownCell.set("source", source2);
+      // The outputted notebook will have three cells because currently a cell
+      // is always created before the first `# %%`
+      let nb = commutable.appendCellToNotebook(
+        commutable.monocellNotebook,
+        codeCell
+      );
+      nb = commutable.appendCellToNotebook(nb, markdownCell);
       expect(store.notebook).toEqual(commutable.toJS(nb));
     });
   });
