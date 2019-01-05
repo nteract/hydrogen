@@ -33,6 +33,7 @@ Tested and works with:
 - [IElixir](https://github.com/pprzetacznik/IElixir)
 - [jupyter-scala](https://github.com/alexarchambault/jupyter-scala)
 - [kotlin-jupyter](https://github.com/ligee/kotlin-jupyter)
+- [stata-kernel](https://github.com/kylebarron/stata_kernel)
 
 But it _should_ work with any [kernel](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels). If you are using Hydrogen with another kernel please add it to this list or [post an issue](https://github.com/nteract/hydrogen/issues) if anything is broken!
 
