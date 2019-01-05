@@ -3,7 +3,7 @@
 'injectionSelector': 'comment.line'
 'patterns': [
   {
-    'match': '%%| %%| <codecell>| In\\[[0-9 ]*\\]:?'
+    'match': '%%| %%| <(codecell|md|markdown)>| In\\[[0-9 ]*\\]:?'
     'name': 'entity.name.section.breakpoint'
   }
 ]
