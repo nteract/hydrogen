@@ -315,14 +315,10 @@ describe("Store", () => {
       expect(store.notebook).toBeNull();
     });
 
-    it("should return a single cell notebook for empty file", () => {
+    it("should return an empty notebook for empty file", () => {
       store.updateEditor(editor);
       // Build a notebook with one code cell.
-      let codeCell = commutable.emptyCodeCell.set("source", "");
-      const nb = commutable.appendCellToNotebook(
-        commutable.emptyNotebook,
-        codeCell
-      );
+      const nb = commutable.emptyNotebook;
       expect(store.notebook).toEqual(commutable.toJS(nb));
     });
 
@@ -336,7 +332,7 @@ describe("Store", () => {
       // The outputted notebook will have three cells because currently a cell
       // is always created before the first `# %%`
       let nb = commutable.appendCellToNotebook(
-        commutable.monocellNotebook,
+        commutable.emptyNotebook,
         codeCell1
       );
       nb = commutable.appendCellToNotebook(nb, codeCell2);
@@ -353,7 +349,7 @@ describe("Store", () => {
       // The outputted notebook will have three cells because currently a cell
       // is always created before the first `# %%`
       let nb = commutable.appendCellToNotebook(
-        commutable.monocellNotebook,
+        commutable.emptyNotebook,
         codeCell
       );
       nb = commutable.appendCellToNotebook(nb, markdownCell);
