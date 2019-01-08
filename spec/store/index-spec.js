@@ -332,7 +332,7 @@ describe("Store", () => {
       // The outputted notebook will have three cells because currently a cell
       // is always created before the first `# %%`
       let nb = commutable.appendCellToNotebook(
-        commutable.monocellNotebook,
+        commutable.emptyNotebook,
         codeCell1
       );
       nb = commutable.appendCellToNotebook(nb, codeCell2);
@@ -349,7 +349,7 @@ describe("Store", () => {
       // The outputted notebook will have three cells because currently a cell
       // is always created before the first `# %%`
       let nb = commutable.appendCellToNotebook(
-        commutable.monocellNotebook,
+        commutable.emptyNotebook,
         codeCell
       );
       nb = commutable.appendCellToNotebook(nb, markdownCell);
