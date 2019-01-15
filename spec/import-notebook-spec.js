@@ -3,17 +3,7 @@
 // const { dialog } = require("electron").remote;
 const { existsSync } = require("fs");
 import { loadNotebook } from "../lib/import-notebook";
-
-// runAsync is borrowed and modified from link below.
-// https://github.com/jasmine/jasmine/issues/923#issuecomment-169634461
-function waitAsync(fn) {
-  return done => {
-    fn().then(done, function rejected(e) {
-      fail(e);
-      done();
-    });
-  };
-}
+import { waitAsync } from "./helpers/test-utils";
 
 describe("Import notebook", () => {
   const sampleNotebook = require.resolve("./helpers/test-notebook.ipynb");
