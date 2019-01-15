@@ -7,6 +7,7 @@ import KernelTransport from "./../../lib/kernel-transport";
 import Kernel from "./../../lib/kernel";
 import MarkerStore from "./../../lib/store/markers";
 const commutable = require("@nteract/commutable");
+import { waitAsync } from "../helpers/test-utils";
 
 describe("Store initialize", () => {
   it("should correctly initialize store", () => {
@@ -291,17 +292,6 @@ describe("Store", () => {
   });
 
   describe("get notebook", () => {
-    // runAsync is borrowed and modified from link below.
-    // https://github.com/jasmine/jasmine/issues/923#issuecomment-169634461
-    // This is duplicated from code-manager-spec.js
-    function waitAsync(fn) {
-      return done => {
-        fn().then(done, function rejected(e) {
-          fail(e);
-          done();
-        });
-      };
-    }
     let editor;
     beforeEach(
       waitAsync(async () => {
