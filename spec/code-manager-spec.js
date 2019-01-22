@@ -1,10 +1,13 @@
 "use babel";
 
+import { waitAsync } from "./helpers/test-utils";
+
 import * as CM from "../lib/code-manager";
 import { Point, Range } from "atom";
 
 describe("CodeManager", () => {
   let editor;
+
   beforeEach(() => {
     editor = atom.workspace.buildTextEditor();
   });
@@ -75,16 +78,6 @@ describe("CodeManager", () => {
       });
     });
     describe("getCells", () => {
-      // runAsync is borrowed and modified from link below.
-      // https://github.com/jasmine/jasmine/issues/923#issuecomment-169634461
-      function waitAsync(fn) {
-        return done => {
-          fn().then(done, function rejected(e) {
-            fail(e);
-            done();
-          });
-        };
-      }
       beforeEach(
         waitAsync(async () => {
           await atom.packages.activatePackage("language-python");
@@ -155,16 +148,6 @@ describe("CodeManager", () => {
     });
 
     describe("foldCells", () => {
-      // runAsync is borrowed and modified from link below.
-      // https://github.com/jasmine/jasmine/issues/923#issuecomment-169634461
-      function waitAsync(fn) {
-        return done => {
-          fn().then(done, function rejected(e) {
-            fail(e);
-            done();
-          });
-        };
-      }
       beforeEach(
         waitAsync(async () => {
           await atom.packages.activatePackage("language-python");
@@ -256,6 +239,19 @@ describe("CodeManager", () => {
           }
         });
       });
+    });
+  });
+
+  describe("Get comment start string", () => {
+    beforeEach(
+      waitAsync(async () => {
+        await atom.packages.activatePackage("language-python");
+        editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
+      })
+    );
+    it("Should return the comment string for an editor", () => {
+      const commentString = CM.getCommentStartString(editor);
+      expect(commentString).toEqual("#");
     });
   });
 });
