@@ -41,7 +41,7 @@
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md"
   },
   "atomTestRunner": "atom-jasmine3-test-runner",
-  "repository": "git@github.com:nteract/hydrogen.git",
+  "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
     "atom": ">=1.20.0 <2.0.0"
