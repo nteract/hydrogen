@@ -25,7 +25,7 @@ Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on ho
 Tested and works with:
 
 - [IPython](http://ipython.org/)
-- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires [`language-r`](https://atom.io/packages/language-r) or similar
+- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires [`language-r`](https://atom.io/packages/language-r) or similar. See [here](https://github.com/kiwi0fruit/pandoctools/blob/master/docs/tips.md#install-r) how to install R kernel in Anaconda/Miniconda.
 - [IJulia](https://github.com/JuliaLang/IJulia.jl)
 - [iTorch](https://github.com/facebook/iTorch)
 - [IJavascript](https://github.com/n-riesco/ijavascript)
