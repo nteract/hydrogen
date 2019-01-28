@@ -132,6 +132,12 @@ describe("CodeManager", () => {
           );
           expect(CM.getCells(editor)).toEqual(cellsExpected);
         });
+        it("doesn't start a cell outside of a line comment scope", () => {
+          const code = ["# %%", "print('# %%')"];
+          editor.setText(code.join("\n") + "\n");
+          const cellsExpected = [[[1, 0], [2, 0]]].map(toRange);
+          expect(CM.getCells(editor)).toEqual(cellsExpected);
+        });
       });
       describe("with arg(= breakpoints)", () => {
         it("return cells(range) from passed breakpoints(with auto-sort-by-position)", () => {
