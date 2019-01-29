@@ -20,12 +20,12 @@ we recommend you to install `Hydrogen` via console command: `apm install hydroge
 
 ## Kernels
 
-Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on how to install the most popular kernels.
+Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on how to install the most popular kernels. Additionally see how to install **activated** Python and R kernel in Anaconda/Miniconda: [Python](https://github.com/kiwi0fruit/pandoctools/blob/master/docs/tips.md#install-python-kernel), [R](https://github.com/kiwi0fruit/pandoctools/blob/master/docs/tips.md#install-r).
 
 Tested and works with:
 
 - [IPython](http://ipython.org/)
-- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires [`language-r`](https://atom.io/packages/language-r) or similar. See [here](https://github.com/kiwi0fruit/pandoctools/blob/master/docs/tips.md#install-r) how to install R kernel in Anaconda/Miniconda.
+- [IRkernel](https://github.com/IRkernel/IRkernel) `0.4+` requires [`language-r`](https://atom.io/packages/language-r) or similar.
 - [IJulia](https://github.com/JuliaLang/IJulia.jl)
 - [iTorch](https://github.com/facebook/iTorch)
 - [IJavascript](https://github.com/n-riesco/ijavascript)
