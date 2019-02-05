@@ -1,9 +1,11 @@
 "use babel";
 
 import { Store } from "../lib/store";
-import { toggleInspector } from "../lib/commands";
+import { toggleInspector, toggleOutputMode } from "../lib/commands";
 import KernelTransport from "../lib/kernel-transport";
 import Kernel from "../lib/kernel";
+import { OUTPUT_AREA_URI } from "../lib/utils";
+import OutputPane from "../lib/panes/output-area";
 
 describe("commands", () => {
   let storeMock, mockKernel, filePath, grammar, editor;
@@ -43,6 +45,26 @@ describe("commands", () => {
         codeText.length,
         jasmine.any(Function)
       );
+    });
+  });
+
+  describe("toggle output-area", () => {
+    it("should open the output area if it was not already", () => {
+      spyOn(atom.workspace, "open");
+      spyOn(atom.workspace, "getPaneItems").and.returnValue([]);
+      toggleOutputMode();
+      expect(atom.workspace.open).toHaveBeenCalledWith(
+        OUTPUT_AREA_URI,
+        jasmine.any(Object)
+      );
+    });
+    it("should destroy output-pane if it was active", () => {
+      const outputPane = new OutputPane(storeMock);
+      const workspacePaneItems = [outputPane];
+      spyOn(atom.workspace, "getPaneItems").and.returnValue(workspacePaneItems);
+      spyOn(outputPane, "destroy");
+      toggleOutputMode();
+      expect(outputPane.destroy).toHaveBeenCalled();
     });
   });
 });
