@@ -2,7 +2,7 @@
 
 // const { dialog } = require("electron").remote;
 const { existsSync } = require("fs");
-import { loadNotebook } from "../lib/import-notebook";
+import { _loadNotebook } from "../lib/import-notebook";
 import { waitAsync } from "./helpers/test-utils";
 
 describe("Import notebook", () => {
@@ -10,7 +10,7 @@ describe("Import notebook", () => {
   beforeEach(
     waitAsync(async () => {
       await atom.packages.activatePackage("language-python");
-      await loadNotebook(sampleNotebook);
+      await _loadNotebook(sampleNotebook);
     })
   );
 
