@@ -1,11 +1,13 @@
 "use babel";
 
-import { CompositeDisposable } from "atom";
+import { CompositeDisposable, Point } from "atom";
 import { isObservableMap, isObservableProp, isComputedProp } from "mobx";
 import store, { Store } from "./../../lib/store";
 import KernelTransport from "./../../lib/kernel-transport";
 import Kernel from "./../../lib/kernel";
 import MarkerStore from "./../../lib/store/markers";
+
+import { getEmbeddedScope } from "../../lib/utils";
 const commutable = require("@nteract/commutable");
 import { waitAsync } from "../helpers/test-utils";
 
@@ -92,7 +94,7 @@ describe("Store", () => {
       const grammar = { scopeName: "source.gfm", name: "GitHub Markdown" };
       const editor = {
         getGrammar: () => grammar,
-        getCursorBufferPosition: () => {},
+        getCursorBufferPosition: () => new Point(0, 0),
         scopeDescriptorForBufferPosition: () => {
           return {
             getScopesArray: () => ["source.gfm", "markup.code.python.gfm"]
@@ -352,13 +354,15 @@ describe("Store", () => {
       expect(store.kernel).toBeNull();
     });
 
-    it("should return null if editor isn't saved", () => {
+    it("should return null if no kernel is associated with the editor", () => {
       store.editor = { getPath: () => {} };
       expect(store.kernel).toBeNull();
     });
 
     it("should return kernel", () => {
-      store.editor = { getPath: () => "foo.py" };
+      const editor = atom.workspace.buildTextEditor();
+      spyOn(editor, "getPath").and.returnValue("foo.py");
+      store.updateEditor(editor);
       const kernel = new Kernel(
         new KernelTransport({
           display_name: "Python 3",
@@ -369,7 +373,7 @@ describe("Store", () => {
       expect(store.kernel).toEqual(kernel);
     });
 
-    it("should return null if no kernel for file", () => {
+    it("should return null if no kernel for editor", () => {
       store.editor = { getPath: () => "foo.py" };
       const kernel = new Kernel(
         new KernelTransport({
@@ -378,11 +382,16 @@ describe("Store", () => {
         })
       );
       store.kernelMapping = new Map([["bar.py", kernel]]);
-      expect(store.kernel).toBeUndefined();
+      expect(store.kernel).toBeNull();
     });
 
     it("should return the correct kernel for multilanguage files", () => {
-      store.editor = { getPath: () => "foo.md" };
+      store.updateEditor({
+        getPath: () => "foo.md",
+        getGrammar: () => {
+          return { name: "python" };
+        }
+      });
       const kernel = new Kernel(
         new KernelTransport({
           display_name: "Python 3",
@@ -392,7 +401,6 @@ describe("Store", () => {
       store.kernelMapping = new Map([
         ["foo.md", new Map([["python", kernel]])]
       ]);
-      store.grammar = { name: "python" };
       expect(store.kernel).toEqual(kernel);
     });
   });

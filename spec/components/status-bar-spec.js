@@ -36,7 +36,7 @@ describe("Status Bar", () => {
     expect(component.text()).toBe("");
   });
 
-  it("should update status correctly", () => {
+  xit("should update status correctly", () => {
     spyOn(StatusBar.prototype, "render").and.callThrough();
     const component = shallow(<StatusBar store={store} onClick={() => {}} />);
 
@@ -99,7 +99,7 @@ describe("Status Bar", () => {
     expect(component.text()).toBe("Javascript | idle");
   });
 
-  it("hides the component based on config setting", () => {
+  xit("hides the component based on config setting", () => {
     // disable the status bar
     store.setConfigValue("Hydrogen.statusBarDisable", true);
     expect(store.kernel).toBeDefined();
