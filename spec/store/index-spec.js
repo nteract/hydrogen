@@ -289,6 +289,15 @@ describe("Store", () => {
       store.editor = { getPath: () => "foo.py" };
       expect(store.filePath).toBe("foo.py");
     });
+
+    it("should update filepath when the editor is saved or renamed", () => {
+      const editor = atom.workspace.buildTextEditor();
+      expect(store.filePath).toBeFalsy();
+      spyOn(editor, "getPath").and.returnValue("fake.py");
+
+      store.updateEditor(editor);
+      expect(store.filePath).toEqual("fake.py");
+    });
   });
 
   describe("get notebook", () => {
