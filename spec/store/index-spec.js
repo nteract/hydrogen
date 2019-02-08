@@ -2,7 +2,7 @@
 
 import { CompositeDisposable } from "atom";
 import { isObservableMap, isObservableProp, isComputedProp } from "mobx";
-import store, { Store } from "./../../lib/store";
+import globalStore, { Store } from "./../../lib/store";
 import KernelTransport from "./../../lib/kernel-transport";
 import Kernel from "./../../lib/kernel";
 import MarkerStore from "./../../lib/store/markers";
@@ -11,25 +11,24 @@ import { waitAsync } from "../helpers/test-utils";
 
 describe("Store initialize", () => {
   it("should correctly initialize store", () => {
-    expect(store.subscriptions instanceof CompositeDisposable).toBeTruthy();
-    expect(store.markers instanceof MarkerStore).toBeTruthy();
-    expect(store.runningKernels).toEqual([]);
-    expect(isObservableMap(store.startingKernels)).toBeTruthy();
-    expect(isObservableMap(store.kernelMapping)).toBeTruthy();
-    expect(isObservableProp(store, "editor")).toBeTruthy();
-    expect(isObservableProp(store, "grammar")).toBeTruthy();
-    expect(isComputedProp(store, "kernel")).toBeTruthy();
-    expect(isComputedProp(store, "notebook")).toBeTruthy();
+    expect(
+      globalStore.subscriptions instanceof CompositeDisposable
+    ).toBeTruthy();
+    expect(globalStore.markers instanceof MarkerStore).toBeTruthy();
+    expect(globalStore.runningKernels).toEqual([]);
+    expect(isObservableMap(globalStore.startingKernels)).toBeTruthy();
+    expect(isObservableMap(globalStore.kernelMapping)).toBeTruthy();
+    expect(isObservableProp(globalStore, "editor")).toBeTruthy();
+    expect(isObservableProp(globalStore, "grammar")).toBeTruthy();
+    expect(isComputedProp(globalStore, "kernel")).toBeTruthy();
+    expect(isComputedProp(globalStore, "notebook")).toBeTruthy();
   });
 });
 
 describe("Store", () => {
+  let store;
   beforeEach(() => {
-    store.subscriptions = new CompositeDisposable();
-    store.startingKernels = store.kernelMapping = new Map();
-    store.runningKernels = [];
-    store.editor = null;
-    store.grammar = null;
+    store = new Store();
   });
 
   describe("setGrammar", () => {
@@ -37,7 +36,7 @@ describe("Store", () => {
       const editor = atom.workspace.buildTextEditor();
       const grammar = editor.getGrammar();
       expect(grammar.name).toBe("Null Grammar");
-      expect(store.editor).toBeNull();
+
       store.setGrammar(editor);
       expect(store.grammar).toEqual(grammar);
     });
@@ -119,13 +118,11 @@ describe("Store", () => {
     it("should store kernel", () => {
       const editor = { getGrammar: () => ({ scopeName: "source.python" }) };
       const kernel = { kernelSpec: { display_name: "Python 3" } };
-      spyOn(store.startingKernels, "delete");
 
       store.newKernel(kernel, "foo.py", editor);
       expect(store.kernelMapping.size).toBe(1);
       expect(store.kernelMapping.get("foo.py")).toEqual(kernel);
       expect(store.runningKernels).toEqual([kernel]);
-      expect(store.startingKernels.delete).toHaveBeenCalledWith("Python 3");
     });
 
     it("should store kernel for multilanguage file", () => {
@@ -253,7 +250,7 @@ describe("Store", () => {
   describe("updateEditor", () => {
     it("should update editor", () => {
       spyOn(store, "setGrammar").and.callThrough();
-      expect(store.editor).toBeNull();
+      expect(store.editor).not.toBeDefined();
       const editor = atom.workspace.buildTextEditor();
       store.updateEditor(editor);
       expect(store.editor).toBe(editor);
@@ -286,7 +283,9 @@ describe("Store", () => {
     });
 
     it("should return file path", () => {
-      store.editor = { getPath: () => "foo.py" };
+      const editor = atom.workspace.buildTextEditor();
+      spyOn(editor, "getPath").and.returnValue("foo.py");
+      store.updateEditor(editor);
       expect(store.filePath).toBe("foo.py");
     });
 
@@ -357,51 +356,53 @@ describe("Store", () => {
   });
 
   describe("get kernel", () => {
+    let editor, kernel;
+    beforeEach(() => {
+      editor = atom.workspace.buildTextEditor();
+      spyOn(editor, "getPath").and.returnValue("foo.py");
+      spyOn(editor, "getGrammar").and.returnValue("python");
+      store.updateEditor(editor);
+      kernel = new Kernel(
+        new KernelTransport({
+          display_name: "Python 3",
+          language: "python"
+        })
+      );
+      store.newKernel(kernel, store.filePath, store.editor, store.grammar);
+    });
     it("should return null if no editor", () => {
+      store.updateEditor();
       expect(store.kernel).toBeNull();
     });
 
     it("should return null if editor isn't saved", () => {
-      store.editor = { getPath: () => {} };
+      store.updateEditor(atom.workspace.buildTextEditor());
       expect(store.kernel).toBeNull();
     });
 
     it("should return kernel", () => {
-      store.editor = { getPath: () => "foo.py" };
-      const kernel = new Kernel(
-        new KernelTransport({
-          display_name: "Python 3",
-          language: "python"
-        })
-      );
-      store.kernelMapping = new Map([["foo.py", kernel]]);
       expect(store.kernel).toEqual(kernel);
     });
 
     it("should return null if no kernel for file", () => {
-      store.editor = { getPath: () => "foo.py" };
-      const kernel = new Kernel(
-        new KernelTransport({
-          display_name: "Python 3",
-          language: "python"
-        })
-      );
-      store.kernelMapping = new Map([["bar.py", kernel]]);
-      expect(store.kernel).toBeUndefined();
+      const editorWithoutKernel = atom.workspace.buildTextEditor();
+      spyOn(editorWithoutKernel, "getPath").and.returnValue("no-kernel-yet.py");
+      spyOn(editorWithoutKernel, "getGrammar").and.returnValue("python");
+      store.updateEditor(editorWithoutKernel);
+      expect(store.kernel).not.toBeDefined();
     });
-
     it("should return the correct kernel for multilanguage files", () => {
-      store.editor = { getPath: () => "foo.md" };
+      const editor = atom.workspace.buildTextEditor();
+      spyOn(editor, "getPath").and.returnValue("foo.md");
+      spyOn(editor, "getGrammar").and.returnValue("python");
+      store.updateEditor(editor);
       const kernel = new Kernel(
         new KernelTransport({
           display_name: "Python 3",
           language: "python"
         })
       );
-      store.kernelMapping = new Map([
-        ["foo.md", new Map([["python", kernel]])]
-      ]);
-      store.grammar = { name: "python" };
+      store.newKernel(kernel, store.filePath, store.editor, store.grammar);
       expect(store.kernel).toEqual(kernel);
     });
   });
