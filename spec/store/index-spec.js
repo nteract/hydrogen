@@ -202,48 +202,78 @@ describe("Store", () => {
   });
 
   describe("getFilesForKernel", () => {
-    it("should return files related to kernel", () => {
+    const defaultGrammar = {
+      scopeName: "text.plain.null",
+      name: "Null Grammar"
+    };
+    function createMockEditor(grammar = defaultGrammar) {
+      // const grammar = { scopeName: "source.python", name: "Python" };
+      const editor = atom.workspace.buildTextEditor();
+      spyOn(editor, "getGrammar").and.returnValue(grammar);
+      return editor;
+    }
+    it("kernel should have grammar...", () => {
+      const grammar1 = { scopeName: "source.julia", name: "Julia" };
       const kernel1 = new Kernel(
         new KernelTransport(
           {
-            display_name: "Python 3",
-            language: "python"
+            display_name: "Julia 1.0.0",
+            language: "julia"
           },
-          { name: "python" }
+          grammar1
         )
       );
+    });
+    it("should return files related to kernel", () => {
+      // store.globalMode = true;
+      const grammar1 = { scopeName: "source.julia", name: "Julia" };
+      const kernel1 = new Kernel(
+        new KernelTransport(
+          {
+            display_name: "Julia 1.0.0",
+            language: "julia"
+          },
+          grammar1
+        )
+      );
+
+      const grammar2 = { scopeName: "source.python", name: "python" };
       const kernel2 = new Kernel(
         new KernelTransport(
           {
             display_name: "Python 3",
             language: "python"
           },
-          { name: "python" }
+          grammar2
         )
       );
 
+      const grammar3 = { scopeName: "source.js", name: "javascript" };
       const kernel3 = new Kernel(
         new KernelTransport(
           {
-            display_name: "JS",
+            display_name: "JavaScript (node)",
             language: "Javascript"
           },
-          { name: "javascript" }
+          grammar3
         )
       );
 
-      store.kernelMapping = new Map([
-        ["foo.py", kernel1],
-        ["bar.py", kernel1],
-        ["baz.py", kernel2],
-        ["foo.md", new Map([["python", kernel1], ["javascript", kernel2]])]
-      ]);
+      // prettier-ignore
+      store.newKernel(kernel1, "foo.jl", createMockEditor(grammar1), grammar1);
+      // prettier-ignore
+      store.newKernel(kernel1, "bar.jl", createMockEditor(grammar1), grammar1);
+      // prettier-ignore
+      store.newKernel(kernel2, "baz.py", createMockEditor(grammar2), grammar2);
+      // prettier-ignore
+      // store.newKernel(kernel1, "baz.md", getEditorWithGrammarMock(grammar1), grammar1);
+      store.kernelMapping.set("baz.md", new Map([[grammar2.name, kernel1],[grammar1.name, kernel1]]));
+      // prettier-ignore
+      store.newKernel(kernel3, "index-spec.js", createMockEditor(grammar3), grammar3);
 
-      expect(store.getFilesForKernel(kernel1)).toEqual([
-        "foo.py",
-        "bar.py",
-        "foo.md"
-      ]);
+      const filesForKernel1 = new Set(store.getFilesForKernel(kernel1));
+      expect(filesForKernel1).toEqual(new Set(["foo.jl", "bar.jl", "baz.md"]));
+      expect(store.getFilesForKernel(kernel3)).toEqual(["index-spec.js"]);
     });
   });
 
