@@ -43,6 +43,7 @@ You also may be interested in our latest project – [nteract](https://github.co
 - [Usage](https://nteract.gitbooks.io/hydrogen/docs/Usage/GettingStarted.html)
   - [Getting started](https://nteract.gitbooks.io/hydrogen/docs/Usage/GettingStarted.html)
   - [Examples](https://nteract.gitbooks.io/hydrogen/docs/Usage/Examples.html)
+  - [Notebook Import and Export](https://nteract.gitbooks.io/hydrogen/docs/Usage/NotebookFiles.html)
   - [Remote Kernels](https://nteract.gitbooks.io/hydrogen/docs/Usage/RemoteKernelConnection.html)
 - [Troubleshooting Guide](https://nteract.gitbooks.io/hydrogen/docs/Troubleshooting.html)
 
