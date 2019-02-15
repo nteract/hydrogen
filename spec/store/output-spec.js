@@ -2,7 +2,7 @@
 
 import OutputStore, {
   reduceOutputs,
-  isSingeLine
+  isSingleLine
 } from "../../lib/store/output";
 
 // Adapted from https://github.com/nteract/nteract/blob/master/test/renderer/reducers/document-spec.js#L33
@@ -121,23 +121,23 @@ describe("reduceOutputs", () => {
   });
 });
 
-describe("isSingeLine", () => {
+describe("isSingleLine", () => {
   it("checks for single line output", () => {
     const textSingle = "hello world";
-    expect(isSingeLine(textSingle, textSingle.length + 1)).toEqual(true);
-    expect(isSingeLine(textSingle, textSingle.length)).toEqual(false);
+    expect(isSingleLine(textSingle, textSingle.length + 1)).toEqual(true);
+    expect(isSingleLine(textSingle, textSingle.length)).toEqual(false);
   });
   it("checks for multiple line output", () => {
     const textMultiple = "hello \n world";
-    expect(isSingeLine(textMultiple, textMultiple.length + 1)).toEqual(false);
-    expect(isSingeLine(textMultiple, textMultiple.length)).toEqual(false);
+    expect(isSingleLine(textMultiple, textMultiple.length + 1)).toEqual(false);
+    expect(isSingleLine(textMultiple, textMultiple.length)).toEqual(false);
   });
   it("checks for single line output with line break at the end ", () => {
     const textEndlinebreak = "hello world \n";
-    expect(isSingeLine(textEndlinebreak, textEndlinebreak.length + 1)).toEqual(
+    expect(isSingleLine(textEndlinebreak, textEndlinebreak.length + 1)).toEqual(
       true
     );
-    expect(isSingeLine(textEndlinebreak, textEndlinebreak.length)).toEqual(
+    expect(isSingleLine(textEndlinebreak, textEndlinebreak.length)).toEqual(
       false
     );
   });
