@@ -12,13 +12,14 @@ import { waitAsync } from "../helpers/test-utils";
 describe("Store initialize", () => {
   it("should correctly initialize store", () => {
     expect(store.subscriptions instanceof CompositeDisposable).toBeTruthy();
-    expect(store.markers instanceof MarkerStore).toBeTruthy();
     expect(store.runningKernels).toEqual([]);
     expect(isObservableMap(store.startingKernels)).toBeTruthy();
     expect(isObservableMap(store.kernelMapping)).toBeTruthy();
+    expect(isObservableMap(store.markersMapping)).toBeTruthy();
     expect(isObservableProp(store, "editor")).toBeTruthy();
     expect(isObservableProp(store, "grammar")).toBeTruthy();
     expect(isComputedProp(store, "kernel")).toBeTruthy();
+    expect(isComputedProp(store, "markers")).toBeTruthy();
     expect(isComputedProp(store, "notebook")).toBeTruthy();
   });
 });
@@ -266,17 +267,16 @@ describe("Store", () => {
   describe("dispose", () => {
     it("should dispose kernels and subscriptions", () => {
       spyOn(store.subscriptions, "dispose");
-      spyOn(store.markers, "clear");
       const kernel1 = jasmine.createSpyObj("kernel1", ["destroy"]);
       const kernel2 = jasmine.createSpyObj("kernel2", ["destroy"]);
       store.runningKernels = [kernel1, kernel2];
       store.dispose();
       expect(store.runningKernels.length).toEqual(0);
+      expect(store.markersMapping.size).toEqual(0);
       expect(store.kernelMapping.size).toBe(0);
       expect(kernel1.destroy).toHaveBeenCalled();
       expect(kernel2.destroy).toHaveBeenCalled();
       expect(store.subscriptions.dispose).toHaveBeenCalled();
-      expect(store.markers.clear).toHaveBeenCalled();
     });
   });
 
