@@ -44,7 +44,7 @@
   "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
-    "atom": ">=1.20.0 <2.0.0"
+    "atom": ">=1.28.0 <2.0.0"
   },
   "husky": {
     "hooks": {
