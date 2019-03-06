@@ -60,7 +60,7 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.0.0",
     "@jupyterlab/services": "^0.52.0",
-    "@nteract/commutable": "^5.0.0",
+    "@nteract/commutable": "^7.0.0",
     "@nteract/display-area": "^4.4.8",
     "@nteract/mathjax": "^3.0.1",
     "@nteract/transform-plotly": "^3.2.5",
