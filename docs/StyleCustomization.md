@@ -2,11 +2,11 @@
 
 By default Hydrogen leans towards plain styling so that its elements can be customized easily to your liking.
 
-Below are some tips to get started with styling Hydrogen. If you are unfamiliar with this topic there is more detailed information availible in the [Atom Flight Manual](http://flight-manual.atom.io/using-atom/sections/basic-customization/#style-tweaks).
+Below are some tips to get started with styling Hydrogen. If you are unfamiliar with this topic there is more detailed information available in the [Atom Flight Manual](http://flight-manual.atom.io/using-atom/sections/basic-customization/#style-tweaks).
 
 Start out by opening your styles.less file or searching your command palette for "stylesheet", you will see atom's: **Application: Open Your Stylesheet** command.
 
-To follow these examples make sure you have theme variables imported by puting this at the top of your styles.less file.
+To follow these examples make sure you have theme variables imported by putting this at the top of your styles.less file.
 
 ```less
 @import "ui-variables";
@@ -26,7 +26,7 @@ In your styles.less:
 ```less
 .hydrogen {
   .multiline-container {
-    .cell_display {
+    .hydrogen_cell_display {
       background-color: @background-color-highlight;
     }
   }
