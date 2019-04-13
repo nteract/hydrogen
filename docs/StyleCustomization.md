@@ -26,7 +26,7 @@ In your styles.less:
 ```less
 .hydrogen {
   .multiline-container {
-    .cell_display {
+    .hydrogen_cell_display {
       background-color: @background-color-highlight;
     }
   }
