@@ -59,7 +59,16 @@ Again, there are a number of possible causes and solutions:
   been seen recently. Please, post in issue
   [#53](https://github.com/nteract/hydrogen/issues/53) the details of your
   installation.
-
+  
+  ## Hydrogen stopped working after updating Atom
+  Whenever your Atom is upgraded, the Hydrogen package needs to be rebuilt. Atom should prompt you to rebuild Hydrogen after upgrading. In case it doesn't, you can manually rebuild Hydrogen from the Panel that opens when executing `Incompatible Packages: View` via the [command palette](https://flight-manual.atom.io/getting-started/sections/atom-basics/#command-palette). 
+  
+  You can also access this Panel by clicking on the tiny red bug icon at the bottom right of Atom.
+  
+  ![fullscreen-tiny-bug](https://user-images.githubusercontent.com/10860657/38326862-1c5b9cac-3804-11e8-9c08-7d020650288e.png)
+  ![tiny-bug](https://user-images.githubusercontent.com/32625394/38327162-2bfa86a6-380d-11e8-8ff5-aab77393a834.png)
+  
+  In case the Atom GUI `Rebuild Packages` button doesn't work, you can try running `apm rebuild hydrogen` (to rebuild) or `apm install hydrogen` (to reinstall) in the package directory then restarting Atom to resolve.
 
 
 
