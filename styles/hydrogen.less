@@ -271,7 +271,7 @@ svg:first-child {
 // ----------- Kernel Monitor -------------
 .kernel-monitor {
   header {
-    line-height: 2.5em;
+    line-height: 3em;
     font-weight: 600;
     border-bottom: 1px solid @base-border-color;
     padding: 0 10px;
@@ -281,8 +281,19 @@ svg:first-child {
     border-top: 1px solid @base-border-color;
   }
 
+  .kernel-line {
+    line-height: 2.5em;
+    // align-items: center;
+    display: flex;
+    padding: 0px 10px;
+  }
+  .kernel-line:nth-child(odd) {
+    background-color: @hydrogen-dark-background;
+  }
+
   .icon::before {
     width: 100%;
+    padding: 0px 3px;
   }
 
   .icon:hover {
