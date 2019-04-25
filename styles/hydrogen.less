@@ -269,31 +269,16 @@ svg:first-child {
 }
 
 // ----------- Kernel Monitor -------------
+
 .kernel-monitor {
-  header {
-    line-height: 3em;
-    font-weight: 600;
-    border-bottom: 1px solid @base-border-color;
-    padding: 0 10px;
-  }
-
-  div:not(:first-child) header {
-    border-top: 1px solid @base-border-color;
-  }
-
-  .kernel-line {
-    line-height: 2.5em;
-    // align-items: center;
-    display: flex;
-    padding: 0px 10px;
-  }
-  .kernel-line:nth-child(odd) {
-    background-color: @hydrogen-dark-background;
+  .table-header {
+    font-weight: bold;
   }
 
   .icon::before {
-    width: 100%;
-    padding: 0px 3px;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: table-cell;
   }
 
   .icon:hover {
