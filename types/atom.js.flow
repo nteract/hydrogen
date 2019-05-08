@@ -1208,7 +1208,7 @@ declare class atom$Workspace {
 
   // Opening
   open(
-    uri?: string,
+    uri?: string | atom$TextEditor,
     options?: {
       activatePane?: ?boolean,
       initialLine?: ?number,
@@ -1551,7 +1551,7 @@ declare class atom$KeyBinding {
   cachedKeyups: ?Array<string>,
   command: string,
   index: number,
-  keystrokeArray : Array<string>,
+  keystrokeArray: Array<string>,
   keystrokeCount: number,
   keystrokes: string,
   priority: number,
@@ -2098,4 +2098,4 @@ declare class atom$PanelContainer {
   viewRegistry: atom$ViewRegistry,
 
   getPanels(): Array<atom$Panel>,
-};
+}
