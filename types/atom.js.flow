@@ -428,6 +428,7 @@ declare class atom$Pane {
   getActiveItemIndex(): number,
   activateItem(item: Object): ?Object,
   activateItemAtIndex(index: number): void,
+  activateItemForURI(uri: string): boolean,
   moveItemToPane(item: Object, pane: atom$Pane, index: number): void,
   destroyItem(item: Object, force?: boolean): boolean | Promise<boolean>,
   itemForURI(uri: string): Object,
