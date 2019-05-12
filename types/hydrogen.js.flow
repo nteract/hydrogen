@@ -8,6 +8,7 @@ export type Kernelspec = {
 // Be more specific
 export type Message = {
   header: Object,
+  parent_header: Object,
   content: Object
 };
 

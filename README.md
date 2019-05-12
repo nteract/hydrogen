@@ -46,6 +46,8 @@ You also may be interested in our latest project – [nteract](https://github.co
   - [Notebook Import and Export](https://nteract.gitbooks.io/hydrogen/docs/Usage/NotebookFiles.html)
   - [Remote Kernels](https://nteract.gitbooks.io/hydrogen/docs/Usage/RemoteKernelConnection.html)
 - [Troubleshooting Guide](https://nteract.gitbooks.io/hydrogen/docs/Troubleshooting.html)
+- [Style Customization](https://nteract.gitbooks.io/hydrogen/docs/StyleCustomization.html)
+- [Plugin API](https://nteract.gitbooks.io/hydrogen/docs/PluginAPI.html)
 
 ## Plugins for Hydrogen
 
@@ -55,7 +57,7 @@ Hydrogen has support for plugins. Feel free to add your own to the list:
 - [hydrogen-python](https://github.com/nikitakit/hydrogen-python)
 - [Data Explorer](https://github.com/BenRussert/data-explorer)
 
-If you are interested in building a plugin take a look at our [plugin API documentation](https://nteract.gitbooks.io/hydrogen/docs/PluginAPI.md).
+If you are interested in building a plugin take a look at our [plugin API documentation](https://nteract.gitbooks.io/hydrogen/docs/PluginAPI.html).
 
 ## How it works
 

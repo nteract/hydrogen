@@ -4,6 +4,7 @@
 // for a full listing of what's available.
 @import "ui-variables";
 @import "syntax-variables";
+@import (less, optional) "../node_modules/react-table/react-table.css";
 
 // -------------- Colors ------------------
 @hydrogen-light-background: fadein(lighten(@syntax-background-color, 40%), 100%);
@@ -269,20 +270,16 @@ svg:first-child {
 }
 
 // ----------- Kernel Monitor -------------
-.kernel-monitor {
-  header {
-    line-height: 2.5em;
-    font-weight: 600;
-    border-bottom: 1px solid @base-border-color;
-    padding: 0 10px;
-  }
 
-  div:not(:first-child) header {
-    border-top: 1px solid @base-border-color;
+.kernel-monitor {
+  .table-header {
+    font-weight: bold;
   }
 
   .icon::before {
-    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: table-cell;
   }
 
   .icon:hover {
