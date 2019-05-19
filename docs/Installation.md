@@ -1,6 +1,6 @@
 # Installation
 
-Hydrogen requires **[Atom](https://atom.io/)** `1.20.0+` and **[kernels](##kernels)** for the languages you intend to use Hydrogen with.
+Hydrogen requires **[Atom](https://atom.io/)** `1.20.0+` and **[kernels](#kernels)** for the languages you intend to use Hydrogen with.
 
 To install Hydrogen run `apm install hydrogen` or search for *Hydrogen* in the Install pane of the Atom settings.
 
