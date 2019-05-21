@@ -82,7 +82,7 @@ describe("CodeManager", () => {
         waitAsync(async () => {
           await atom.packages.activatePackage("language-python");
           editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
-          const code = ["v0 = 0 # %%", "v1 = 1", "v2 = 2 # %%", "v3 = 3"]; // row0:bp // row1 // row2:bp // row3
+          const code = ["v0 = 0 #   %%", "v1 = 1", "v2 = 2 #%%", "v3 = 3"]; // row0:bp // row1 // row2:bp // row3
           editor.setText(code.join("\n") + "\n");
         })
       );
