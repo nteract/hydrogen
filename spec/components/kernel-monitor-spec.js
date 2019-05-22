@@ -55,6 +55,8 @@ describe("Kernel monitor", () => {
           )
         );
         spyOn(kernel, "interrupt");
+        spyOn(kernel, "restart");
+        spyOn(kernel, "shutdown");
 
         store.newKernel(kernel, filename, newEditor, {
           name: grammarName
@@ -90,6 +92,24 @@ describe("Kernel monitor", () => {
     const interuptButton = component.find('[title="Interrupt kernel"]').first();
     interuptButton.simulate("click");
     expect(store.runningKernels[0].interrupt).toHaveBeenCalledTimes(1);
+  });
+
+  it("has an 'Restart kernel' button", () => {
+    const component = mount(<KernelMonitor store={store} />);
+
+    // title attribute is what provides the hover tooltip "Interupt kernel"
+    const restartButton = component.find('[title="Restart kernel"]').first();
+    restartButton.simulate("click");
+    expect(store.runningKernels[0].restart).toHaveBeenCalledTimes(1);
+  });
+
+  it("has an 'Shutdown kernel' button", () => {
+    const component = mount(<KernelMonitor store={store} />);
+
+    // title attribute is what provides the hover tooltip "Interupt kernel"
+    const shutdownButton = component.find('[title="Shutdown kernel"]').first();
+    shutdownButton.simulate("click");
+    expect(store.runningKernels[0].shutdown).toHaveBeenCalledTimes(1);
   });
 
   it("activates related editor when Jump to file clicked", done => {
