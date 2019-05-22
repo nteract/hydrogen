@@ -2,6 +2,7 @@
 
 // const { dialog } = require("electron").remote;
 const { existsSync } = require("fs");
+const { EOL } = require("os");
 import { _loadNotebook } from "../lib/import-notebook";
 import { waitAsync } from "./helpers/test-utils";
 
@@ -17,7 +18,7 @@ describe("Import notebook", () => {
   it("Should import a notebook and convert it to a script", () => {
     const editor = atom.workspace.getActiveTextEditor();
     const code = editor.getText();
-    expect(code.split("\n")).toEqual([
+    expect(code.split(EOL)).toEqual([
       "# %%",
       "import pandas as pd",
       "# %%",
