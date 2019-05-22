@@ -31,6 +31,8 @@ describe("Kernel monitor", () => {
         }
       ];
 
+      spyOn(atom.notifications, "addInfo"); // Spied for 'Show kernel spec' link testing
+
       for (let mockSetting of mockSettings) {
         let { ext, unsaved, debugName, grammarName } = mockSetting;
         const newEditor = await atom.workspace.open();
@@ -83,6 +85,18 @@ describe("Kernel monitor", () => {
   afterEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeoutInterval;
     filesToDelete.forEach(file => fs.unlinkSync(file));
+  });
+
+  it("has an 'Show kernel spec' link to show kernel spec within `atom.notifications.addInfo({ detail })`", () => {
+    const component = mount(<KernelMonitor store={store} />);
+
+    // title attribute is what provides the hover tooltip "Interupt kernel"
+    const kernelSpecLink = component.find('[title="Show kernel spec"]').first();
+    kernelSpecLink.simulate("click");
+    // Substitute `atom.notifications.addInfo` for `showKernelSpec`,
+    // and a kernel spec should be shown within `detail` for readability
+    const args = atom.notifications.addInfo.calls.argsFor(0)[1];
+    expect(args.hasOwnProperty("detail")).toBe(true);
   });
 
   it("has an 'Interrupt kernel' button", () => {
