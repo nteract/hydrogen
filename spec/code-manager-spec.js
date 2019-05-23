@@ -67,9 +67,9 @@ describe("CodeManager", () => {
         const points = [[1, 2], [3, 4], [5, 6], [10, 5]].map(toPoint); // bp1 // bp2 // bp3 // bp4
         const cellsExpected = [
           [[0, 0], [1, 2]],
-          [[2, 0], [3, 4]],
-          [[4, 0], [5, 6]],
-          [[6, 0], [10, 5]]
+          [[1, 2], [3, 4]],
+          [[3, 4], [5, 6]],
+          [[5, 6], [10, 5]]
         ].map(toRange); // zero-to-bp1 // nextRow of bp1 to bp2 // nextRow of bp2 to bp3 // nextRow of bp3 to bp4
 
         expect(CM.getCellsForBreakPoints(editor, points)).toEqual(
@@ -91,8 +91,8 @@ describe("CodeManager", () => {
           // EOF is always treated as implicit breakpoints
           const cellsExpected = [
             [[0, 0], [0, 7]],
-            [[1, 0], [2, 7]],
-            [[3, 0], [4, 0]]
+            [[0, 7], [2, 7]],
+            [[2, 7], [4, 0]]
           ].map(toRange); // zero-to-row0:bp // nextRow of row0:bp to row2:bp // nextRow of row2:bp to EOF(= implicit bp)
           expect(CM.getCells(editor)).toEqual(cellsExpected);
         });
@@ -105,7 +105,7 @@ describe("CodeManager", () => {
             "print('foo bar')"
           ];
           editor.setText(code.join("\n") + "\n");
-          const cellsExpected = [[[2, 0], [3, 0]], [[4, 0], [5, 0]]].map(
+          const cellsExpected = [[[2, 0], [3, 0]], [[3, 0], [5, 0]]].map(
             toRange
           );
           expect(CM.getCells(editor)).toEqual(cellsExpected);
@@ -119,7 +119,7 @@ describe("CodeManager", () => {
             "print('foo bar')"
           ];
           editor.setText(code.join("\n") + "\n");
-          const cellsExpected = [[[2, 0], [3, 0]], [[4, 0], [5, 0]]].map(
+          const cellsExpected = [[[1, 0], [3, 0]], [[3, 0], [5, 0]]].map(
             toRange
           );
           expect(CM.getCells(editor)).toEqual(cellsExpected);
@@ -127,7 +127,7 @@ describe("CodeManager", () => {
         it("doesn't create initial empty cell with no whitespace", () => {
           const code = ["print('hello world')", "# %%", "print('foo bar')"];
           editor.setText(code.join("\n") + "\n");
-          const cellsExpected = [[[0, 0], [1, 0]], [[2, 0], [3, 0]]].map(
+          const cellsExpected = [[[0, 0], [1, 0]], [[1, 0], [3, 0]]].map(
             toRange
           );
           expect(CM.getCells(editor)).toEqual(cellsExpected);
@@ -135,7 +135,7 @@ describe("CodeManager", () => {
         it("doesn't start a cell outside of a line comment scope", () => {
           const code = ["# %%", "print('# %%')"];
           editor.setText(code.join("\n") + "\n");
-          const cellsExpected = [[[1, 0], [2, 0]]].map(toRange);
+          const cellsExpected = [[[0, 0], [2, 0]]].map(toRange);
           expect(CM.getCells(editor)).toEqual(cellsExpected);
         });
       });
@@ -144,8 +144,8 @@ describe("CodeManager", () => {
           breakpoints = [[0, 11], [2, 11], [1, 6]].map(toPoint); // row0:bp // row2:bp // row1:bp
           const cellsExpected = [
             [[0, 0], [0, 11]],
-            [[1, 0], [1, 6]],
-            [[2, 0], [2, 11]]
+            [[0, 11], [1, 6]],
+            [[1, 6], [2, 11]]
           ].map(toRange); // zero to row0:bp // nextRow of row0:bp to row1:bp // nextRow of row1:bp to row2:bp
 
           expect(CM.getCells(editor, breakpoints)).toEqual(cellsExpected);
