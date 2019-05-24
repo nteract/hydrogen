@@ -370,7 +370,7 @@ describe("Store", () => {
     it("should export markdown to markdown cells", () => {
       const source1 = 'print("Hola World! I <3 ZMQ!")';
       const source2 = "2 + 2";
-      editor.setText(`# %%\n${source1}\n# %% markdown\n${source2}\n`);
+      editor.setText(`# %%\n${source1}\n# %% markdown\n# ${source2}`);
       store.updateEditor(editor);
       const codeCell = commutable.emptyCodeCell.set("source", source1);
       const markdownCell = commutable.emptyMarkdownCell.set("source", source2);
