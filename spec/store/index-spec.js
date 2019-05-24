@@ -353,7 +353,7 @@ describe("Store", () => {
     it("should return a fully-fledged notebook when the file isn't empty", () => {
       const source1 = 'print("Hola World! I <3 ZMQ!")';
       const source2 = "2 + 2";
-      editor.setText(`# %%\n${source1}\n# %%\n${source2}\n`);
+      editor.setText(`# %%\n${source1}\n# %%\n${source2}\n\n\n`);
       store.updateEditor(editor);
       const codeCell1 = commutable.emptyCodeCell.set("source", source1);
       const codeCell2 = commutable.emptyCodeCell.set("source", source2);
