@@ -1,3 +1,13 @@
+export type HydrogenCellType = 'markdown' | 'codecell';
+
+export type HydrogenCell = {
+  start: atom$Point,
+  end: atom$Point,
+  range: atom$Range,
+  cellType: HydrogenCellType,
+  code: string
+}
+
 export type Kernelspec = {
   env: Object,
   argv: Array<string>,
