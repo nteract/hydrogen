@@ -37,7 +37,7 @@
   },
   "scripts": {
     "flow": "flow",
-    "prettier": "prettier --write 'lib/**/*.js' 'spec/**/*.js'",
+    "prettier": "prettier --write \"lib/**/*.js\" \"spec/**/*.js\"",
     "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md"
   },
   "atomTestRunner": "atom-jasmine3-test-runner",
