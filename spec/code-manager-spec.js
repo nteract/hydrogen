@@ -151,6 +151,58 @@ describe("CodeManager", () => {
           expect(CM.getCells(editor, breakpoints)).toEqual(cellsExpected);
         });
       });
+      describe("labeled markdown", () => {
+        beforeEach(() => {
+          const code = [
+            "#%% md Block 1",
+            "##Markdown Header",
+            "Plain Text",
+            "# %%markdown Block 2",
+            "#`code`",
+            "`code`",
+            "# <markdown> Block 3",
+            "#*Italics*"
+          ];
+          editor.setText(code.join("\n") + "\n");
+        });
+        it("returns correct cellType", () => {
+          expect(CM.getMetadataForRow(editor, new Point(1, 0))).toBe(
+            "markdown"
+          );
+          expect(CM.getMetadataForRow(editor, new Point(5, 0))).toBe(
+            "markdown"
+          );
+          expect(CM.getMetadataForRow(editor, new Point(7, 0))).toBe(
+            "markdown"
+          );
+        });
+      });
+      describe("labeled markdown and codecell", () => {
+        beforeEach(() => {
+          const code = [
+            "#%% md Block 1",
+            "##Markdown Header",
+            "Plain Text",
+            "# %% Block 2",
+            "#comment",
+            "print('hi')",
+            "# ln[0] Block 3",
+            "#comment"
+          ];
+          editor.setText(code.join("\n") + "\n");
+        });
+        it("returns correct cellType", () => {
+          expect(CM.getMetadataForRow(editor, new Point(2, 0))).toBe(
+            "markdown"
+          );
+          expect(CM.getMetadataForRow(editor, new Point(5, 0))).toBe(
+            "codecell"
+          );
+          expect(CM.getMetadataForRow(editor, new Point(7, 0))).toBe(
+            "codecell"
+          );
+        });
+      });
     });
 
     describe("foldCells", () => {
