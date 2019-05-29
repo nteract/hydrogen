@@ -1,3 +1,5 @@
+export type HydrogenCellType = 'codecell' | 'markdown';
+
 export type Kernelspec = {
   env: Object,
   argv: Array<string>,
