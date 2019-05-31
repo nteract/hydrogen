@@ -27,8 +27,7 @@
       "hydrogen:run-all",
       "hydrogen:run-all-above",
       "hydrogen:run-cell",
-      "hydrogen:run-cell-and-move-down",
-      "hydrogen:clear-result"
+      "hydrogen:run-cell-and-move-down"
     ],
     "atom-workspace": [
       "hydrogen:import-notebook"
