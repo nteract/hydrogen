@@ -42,9 +42,9 @@ The output can be displayed either in a scrolling view or a sliding history.
 
 <img width=560 src=https://user-images.githubusercontent.com/13436188/31737963-799d2ad2-b449-11e7-9b4c-78e51851e204.gif>
 
-## "Hydrogen: Clear Bubble"
+## "Hydrogen: Clear Result"
 
-Remove bubble at current cursor line or current lines within a selection.
+Remove results at current cursor line or current lines within a selection.
 
 ## "Hydrogen: Toggle Watches"
 
