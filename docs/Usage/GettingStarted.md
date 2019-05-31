@@ -42,25 +42,9 @@ The output can be displayed either in a scrolling view or a sliding history.
 
 <img width=560 src=https://user-images.githubusercontent.com/13436188/31737963-799d2ad2-b449-11e7-9b4c-78e51851e204.gif>
 
-## "Hydrogen: Restart Kernel And Re Evaluate Bubbles"
+## "Hydrogen: Clear Bubble"
 
-Restart running kernel and re-evaluate all bubbles on editor.
-This command works in following way.
-
-1. Restart kernel to cleanup evaluation environment.
-2. Run all code and update all existing bubbles.
-
-## "Hydrogen: Toggle Bubble"
-
-Toggle(add or remove) bubble at current cursor line.
-You can **preset** bubble before executing code.
-If executed with selection, toggle bubble on each selected line.
-
-Typical workflow with this command is
-
-1. Add bubble at line you want manually by **"Hydrogen: Toggle-Bubble"**
-2. Execute code cleanly by **"Hydrogen: Restart-Kernel-And-Re-Evaluate-Bubbles"**
-3. Modify code, then repeat 1-3 until you fully understand/investigated code.
+Remove bubble at current cursor line or current lines within a selection.
 
 ## "Hydrogen: Toggle Watches"
 
@@ -107,7 +91,7 @@ If you are working in a markup file that supports highlighted code blocks, we ca
 
 <img src="https://cloud.githubusercontent.com/assets/13285808/24365090/0af6a91c-1315-11e7-92c6-849031bf9f6a.gif" height=350>
 
-We support 
+We support
 [markdown](https://github.com/burodepeper/language-markdown),
 [gfm](https://github.com/atom/language-gfm),
 [asciidoc](https://github.com/asciidoctor/atom-language-asciidoc),
