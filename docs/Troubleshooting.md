@@ -30,9 +30,15 @@ Use your distribution's package manager to install.
 
 If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install hydrogen` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
 
-### No kernel for language X found
+### No kernel for grammar X found
 
-Hydrogen requires a Kernel to run code. Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on how to install the most popular kernels.
+Hydrogen requires a Kernel and a valid Grammar to run code.
+
+If you have a Null Grammar, then you must save your file with a valid file extension.
+
+If you do not have a Grammar for the file extension you are working with, please install one via Atom.
+
+If you believe you have a kernel installed correctly, try running `Hydrogen: Start Local Kernel`. If your desired kernel is found, then you must create a Language Mapping under the Hydrogen package settings. If your kernel is not found, you have not installed it properly for Hydrogen. Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on how to install the most popular kernels.
 
 Atom won't pick up kernels inside a virtualenv unless Atom is launched as `atom .` within the virtualenv. The alternative is to [create a kernel specifically for a virtualenv](http://www.alfredo.motta.name/create-isolated-jupyter-ipython-kernels-with-pyenv-and-virtualenv/).
 
@@ -59,15 +65,15 @@ Again, there are a number of possible causes and solutions:
   been seen recently. Please, post in issue
   [#53](https://github.com/nteract/hydrogen/issues/53) the details of your
   installation.
-  
+
   ## Hydrogen stopped working after updating Atom
-  Whenever your Atom is upgraded, the Hydrogen package needs to be rebuilt. Atom should prompt you to rebuild Hydrogen after upgrading. In case it doesn't, you can manually rebuild Hydrogen from the Panel that opens when executing `Incompatible Packages: View` via the [command palette](https://flight-manual.atom.io/getting-started/sections/atom-basics/#command-palette). 
-  
+  Whenever your Atom is upgraded, the Hydrogen package needs to be rebuilt. Atom should prompt you to rebuild Hydrogen after upgrading. In case it doesn't, you can manually rebuild Hydrogen from the Panel that opens when executing `Incompatible Packages: View` via the [command palette](https://flight-manual.atom.io/getting-started/sections/atom-basics/#command-palette).
+
   You can also access this Panel by clicking on the tiny red bug icon at the bottom right of Atom.
-  
+
   ![fullscreen-tiny-bug](https://user-images.githubusercontent.com/10860657/38326862-1c5b9cac-3804-11e8-9c08-7d020650288e.png)
   ![tiny-bug](https://user-images.githubusercontent.com/32625394/38327162-2bfa86a6-380d-11e8-8ff5-aab77393a834.png)
-  
+
   In case the Atom GUI `Rebuild Packages` button doesn't work, you can try running `apm rebuild hydrogen` (to rebuild) or `apm install hydrogen` (to reinstall) in the package directory then restarting Atom to resolve.
 
 
@@ -77,7 +83,7 @@ Again, there are a number of possible causes and solutions:
 
 
 ### Hydrogen fails to import modules:
-If hydrogen works for standard libraries but you encounter `ModuleNotFoundError: No module named 'your_package'` for custom installed packages, check that the path of the kernel you are using is the one specified in the windows `PATH`. Especially when using virtual environments like `virtualenv` and `anaconda` ensure that the corresponding python executables are set in the windows path. 
+If hydrogen works for standard libraries but you encounter `ModuleNotFoundError: No module named 'your_package'` for custom installed packages, check that the path of the kernel you are using is the one specified in the windows `PATH`. Especially when using virtual environments like `virtualenv` and `anaconda` ensure that the corresponding python executables are set in the windows path.
 
 To add the path, enter `where python` in the windows command line and chose the apporiate entry. Then, add it manually to the windows `PATH`, similarly as detailed below for the standard python path.
 
