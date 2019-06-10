@@ -30,7 +30,7 @@ Use your distribution's package manager to install.
 
 If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install hydrogen` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
 
-### No kernel for language X found
+### No kernel for grammar X found
 
 Hydrogen requires a Kernel to run code. Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on how to install the most popular kernels.
 
