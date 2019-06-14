@@ -63,7 +63,7 @@
     "@nteract/display-area": "^4.4.8",
     "@nteract/mathjax": "^3.0.1",
     "@nteract/transform-plotly": "^3.2.5",
-    "@nteract/transform-vega": "^3.2.6",
+    "@nteract/transform-vega": "^5.0.0",
     "@nteract/transforms": "^4.4.7",
     "anser": "^1.4.4",
     "atom-select-list": "^0.7.0",
