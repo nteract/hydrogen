@@ -1,4 +1,4 @@
-// @flow //
+/* @flow */
 
 /**
  * Adapted from https://github.com/facebook/nuclide/tree/master/flow-libs

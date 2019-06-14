@@ -1,4 +1,4 @@
-// @flow //
+/* @flow */
 
 declare module "electron" {
   declare module.exports: any;
