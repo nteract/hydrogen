@@ -1,3 +1,5 @@
+/* @flow */
+
 /**
  * Adapted from https://github.com/facebook/nuclide/tree/master/flow-libs
  * Copyright (c) 2015-present, Facebook, Inc.
@@ -5,8 +7,6 @@
  *
  * This source code is licensed under the license found in the LICENSE file in
  * the root directory of this source tree.
- *
- * @flow
  */
 
 /**
@@ -47,10 +47,10 @@ type atom$Octicon = 'alert' | 'alignment-align' | 'alignment-aligned-to' | 'alig
   'shield' | 'sign-in' | 'sign-out' | 'smiley' | 'split' | 'squirrel' | 'star' | 'star-add' |
   'star-delete' | 'steps' | 'stop' | 'sync' | 'tag' | 'tag-add' | 'tag-remove' | 'tasklist' |
   'telescope' | 'terminal' | 'text-size' | 'three-bars' | 'thumbsdown' | 'thumbsup' | 'tools' |
-  'trashcan' | 'triangle-down' | 'triangle-left' | 'triangle-right' | 'triangle-up' | 'type-array'|
-  'type-boolean'| 'type-class'| 'type-constant'| 'type-constructor'| 'type-enum'| 'type-field'|
-  'type-file'| 'type-function'| 'type-interface'| 'type-method'| 'type-module'| 'type-namespace'|
-  'type-number'| 'type-package'| 'type-property'| 'type-string'| 'type-variable' | 'unfold' |
+  'trashcan' | 'triangle-down' | 'triangle-left' | 'triangle-right' | 'triangle-up' | 'type-array' |
+  'type-boolean' | 'type-class' | 'type-constant' | 'type-constructor' | 'type-enum' | 'type-field' |
+  'type-file' | 'type-function' | 'type-interface' | 'type-method' | 'type-module' | 'type-namespace' |
+  'type-number' | 'type-package' | 'type-property' | 'type-string' | 'type-variable' | 'unfold' |
   'unmute' | 'unverified' | 'verified' | 'versions' | 'watch' | 'x' | 'zap';
 
 type atom$PaneLocation = 'left' | 'right' | 'bottom' | 'center';
