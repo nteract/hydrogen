@@ -22,6 +22,7 @@
 .hydrogen {
 
 // -------------- Globals -----------------
+
 code, pre {
   color: inherit;
   background: inherit;
@@ -32,7 +33,7 @@ code, pre {
 }
 
 img {
-    background-color: white;
+  background-color: white;
 }
 
 img, svg, video, audio {
@@ -40,8 +41,8 @@ img, svg, video, audio {
 }
 
 td, th {
-    border: 1px solid average(@syntax-text-color, @base-border-color);
-    padding: 0.35em 0.7em;
+  border: 1px solid average(@syntax-text-color, @base-border-color);
+  padding: 0.35em 0.7em;
 }
 
 svg:first-child {
@@ -58,26 +59,26 @@ svg:first-child {
 }
 
 .MathJax_SVG_Display {
-    margin: 0;
+  margin: 0;
 }
 
 .MathJax_SVG {
-    .noError {
-        padding: 0;
-        border: none;
-        color: @hydrogen-error-color
-    }
-    svg {
-        background-color: unset;
-        margin: 0 !important;
-        display: inline;
-    }
+  .noError {
+    padding: 0;
+    border: none;
+    color: @hydrogen-error-color
+  }
+  svg {
+    background-color: unset;
+    margin: 0 !important;
+    display: inline;
+  }
 }
 
 .js-plotly-plot {
-    svg {
-        background-color: unset;
-    }
+  svg {
+    background-color: unset;
+  }
 }
 
 .nteract-display-area-stderr {
@@ -85,6 +86,7 @@ svg:first-child {
 }
 
 // ----------- Inline Output --------------
+
 .inline-container {
   color: @hydrogen-inline-color;
   background: @hydrogen-inline-background;
@@ -336,7 +338,7 @@ svg:first-child {
 
 .hydrogen.input-view {
   .label {
-      padding-bottom: @component-padding;
+    padding-bottom: @component-padding;
   }
 
   &.password .scroll-view {
@@ -349,6 +351,6 @@ svg:first-child {
   overflow-y: auto;
 
   span[style] {
-      color: @text-color-info !important;
+    color: @text-color-info !important;
   }
 }
