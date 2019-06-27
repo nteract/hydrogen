@@ -1,5 +1,7 @@
 /* @flow */
 
+import Kernel from './../lib/kernel';
+
 export type HydrogenCellType = 'codecell' | 'markdown';
 
 export type Kernelspec = {
