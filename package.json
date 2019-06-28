@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.0.0",
-    "@jupyterlab/services": "^0.52.0",
+    "@jupyterlab/services": "^3.0.0",
     "@nteract/commutable": "^7.0.0",
     "@nteract/markdown": "^4.0.0",
     "@nteract/mathjax": "^4.0.0",
