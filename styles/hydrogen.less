@@ -29,7 +29,7 @@ code, pre {
   font-size: inherit;
   font-family: inherit;
   padding: 0;
-  white-space: pre-wrap;
+  white-space: pre;
 }
 
 img {
@@ -111,6 +111,12 @@ svg:first-child {
 .multiline-container {
   display: flex;
   border: solid 1px @base-border-color;
+  &[hydrogen-wrapoutput="true"] {
+    code, pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
 }
 
 .multiline-container .hydrogen_cell_display {
