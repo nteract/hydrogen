@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: Bug Report
 about: For reporting unexpected errors or behavior.
 title: ''
 labels: 'bug :bug:'
