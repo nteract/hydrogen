@@ -6,6 +6,10 @@ import { shallow } from "enzyme";
 import ResultViewComponent from "../../../lib/components/result-view/result-view";
 
 describe("ResultViewComponent", () => {
+  beforeEach(() => {
+    atom.config.set(`Hydrogen.wrapOutput`, false);
+  });
+
   it("should render", () => {
     const mockStore = {
       index: 0,
