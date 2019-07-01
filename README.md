@@ -73,6 +73,7 @@ Plus, it was easy to make a logo.
 ## Contributing
 
 Thanks for taking the time to contribute. Take a look at our [Contributing Guide](https://github.com/nteract/hydrogen/blob/master/CONTRIBUTING.md) to get started.
+
 Then, take a look at any issue labeled [good first issue](https://github.com/nteract/hydrogen/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or [help wanted](https://github.com/nteract/hydrogen/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) that has not been claimed. These are great starting points.
 
 ## Changelog
