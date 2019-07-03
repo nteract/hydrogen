@@ -1,9 +1,9 @@
 language: generic
 
-notifications:
-  email:
-    on_success: never
-    on_failure: change
+env:
+  matrix:
+    - ATOM_CHANNEL=stable
+    - ATOM_CHANNEL=beta
 
 script:
   - curl -s -O https://raw.githubusercontent.com/atom/ci/master/build-package.sh
@@ -11,13 +11,8 @@ script:
   - ./build-package.sh
   - npm run flow
 
-env:
-  matrix:
-    - ATOM_CHANNEL=stable
-    - ATOM_CHANNEL=beta
-
+sudo: false
 dist: xenial
-
 addons:
   apt:
     packages:
@@ -25,6 +20,12 @@ addons:
     - fakeroot
     - git
     - libsecret-1-dev
-    - libgconf2-4 # TODO: Remove once Atom v1.39 is stable
+    - libgconf2-4 # @TODO: Remove once Atom v1.39 is stable
 
-sudo: false
+git:
+  depth: 10
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
