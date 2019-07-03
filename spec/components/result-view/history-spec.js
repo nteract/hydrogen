@@ -6,6 +6,10 @@ import Enzyme, { shallow } from "enzyme";
 import History from "../../../lib/components/result-view/history";
 
 describe("History", () => {
+  beforeEach(() => {
+    atom.config.set(`Hydrogen.wrapOutput`, false);
+  });
+
   it("should render and display the current output", () => {
     const mockStore = {
       index: 0,
