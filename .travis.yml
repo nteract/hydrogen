@@ -1,16 +1,31 @@
 language: generic
-dist: trusty
-sudo: false
-notifications:
-  email:
-    on_success: never
-    on_failure: change
-
-script:
-  - curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh
-  - npm run flow
 
 env:
   matrix:
     - ATOM_CHANNEL=stable
     - ATOM_CHANNEL=beta
+
+script:
+  - curl -s -O https://raw.githubusercontent.com/atom/ci/master/build-package.sh
+  - chmod u+x build-package.sh
+  - ./build-package.sh
+  - npm run flow
+
+sudo: false
+dist: xenial
+addons:
+  apt:
+    packages:
+    - build-essential
+    - fakeroot
+    - git
+    - libsecret-1-dev
+    - libgconf2-4 # @TODO: Remove once Atom v1.39 is stable
+
+git:
+  depth: 10
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
