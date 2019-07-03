@@ -6,7 +6,9 @@ notifications:
     on_failure: change
 
 script:
-  - curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh
+  - curl -s -O https://raw.githubusercontent.com/atom/ci/master/build-package.sh
+  - chmod u+x build-package.sh
+  - ./build-package.sh
   - npm run flow
 
 env:
