@@ -1,7 +1,5 @@
 "use babel";
 
-import React from "react";
-
 import HydrogenProvider from "./../../lib/plugin-api/hydrogen-provider";
 import Hydrogen from "./../../lib/main";
 import transformManager from "./../../lib/components/transforms";
@@ -15,13 +13,13 @@ describe("Hydrogen Provider", () => {
 
   describe("registerTransform", () => {
     it("should add a new transform", () => {
-      expect(plugin.registerTransform(<Markdown />, "mark")).toBeTruthy();
+      expect(plugin.registerTransform(Markdown, "mark")).toBeTruthy();
       expect(transformManager.transforms.has("mark")).toBeTruthy();
       expect(transformManager.transforms.get("mark").type).toEqual(Markdown);
     });
 
     it("should not override an existing transform", () => {
-      expect(plugin.registerTransform(<Markdown />, "svg")).toBeTruthy();
+      expect(plugin.registerTransform(Markdown, "svg")).toBeTruthy();
       expect(transformManager.transforms.get("svg").type).not.toEqual(Markdown);
     });
   });
