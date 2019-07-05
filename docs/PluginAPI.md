@@ -49,6 +49,7 @@ Registers a new transform for `display_data` and `execute_result` outputs.
 
 The following keys are registered by default:
 `["vega3", "vega2", "plotly", "vegalite2", "vegalite1", "json", "js", "html", "markdown", "latex", "svg", "gif", "jpeg", "png", "plain"]`
+It is recommended you don't delete those, since custom transforms will take priority in displaying.
 
 ### Params:
 
@@ -56,6 +57,7 @@ The following keys are registered by default:
    * **Note:** This must be compatible with `React.createElement(transform)`.
    * **Note:** You must set your `defaultProps` to have a `mediaType`.
       * **Ex:** `defaultProps = { mediaType: "text/markdown"}`.
+   * **Note:** Data is passed in via a prop called `data`.
 * **String** *key*
 
 ### Return:
