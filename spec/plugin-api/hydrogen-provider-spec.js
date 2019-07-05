@@ -2,7 +2,6 @@
 
 import React from "react";
 
-import { toJS } from "mobx";
 import HydrogenProvider from "./../../lib/plugin-api/hydrogen-provider";
 import Hydrogen from "./../../lib/main";
 import transformManager from "./../../lib/components/transforms";
