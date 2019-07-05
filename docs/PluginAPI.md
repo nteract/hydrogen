@@ -49,7 +49,7 @@ Registers a new transform for `display_data` and `execute_result` outputs.
 
 ### Params:
 
-* **Symbol(react.element)** *transform*
+* **Function | Class<any>** *transform compatible with React.createElement*
 * **String** *key*
 
 ### Return:
