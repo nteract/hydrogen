@@ -4,7 +4,7 @@
 
 ## HydrogenProvider
 
-Version: 1.0.0 
+Version: 1.3.0
 
 The Plugin API allows you to make Hydrogen awesome.
 You will be able to interact with this class in your Hydrogen Plugin using
@@ -20,7 +20,7 @@ Calls your callback when the kernel has changed.
 
 ### Params:
 
-* **Function** *Callback* 
+* **Function** *Callback*
 
 ## getActiveKernel()
 
@@ -39,6 +39,36 @@ Get the `atom$Range` that will run if `hydrogen:run-cell` is called.
 
 * **Class** `atom$Range`
 
+## registerTransform(transform, key)
+
+Registers a new transform for `display_data` and `execute_result` outputs.
+
+* If the provided key already exists, no change will be made.
+* `undefined` is returned if the registry fails.
+* A `Symbol(react.element)` is returned else-wise.
+
+### Params:
+
+* **Symbol(react.element)** *transform*
+* **String** *key*
+
+### Return:
+* **Symbol(react.element) | undefined** *transform for key*
+
+## unregisterTransform(key)
+
+Unregisters a transform for `display_data` and `execute_result` outputs.
+* `false` is returned if the key does not exist.
+* `true` is returned else-wise.
+
+### Params:
+
+* **String** *key*
+
+### Return:
+* **Boolean** *didKeyExist*
+
+
 --------
 
 <!-- End lib/plugin-api/hydrogen-provider.js -->
@@ -52,11 +82,11 @@ and exposes a small set of methods that should be usable by plugins.
 
 ## language
 
-The language of the kernel, as specified in its kernelspec
+The language of the kernel, as specified in its kernelspec.
 
 ## displayName
 
-The display name of the kernel, as specified in its kernelspec
+The display name of the kernel, as specified in its kernelspec.
 
 ## addMiddleware(middleware)
 
@@ -68,7 +98,7 @@ If the methods of a `middleware` object are added/modified/deleted after
 
 ### Params:
 
-* **HydrogenKernelMiddleware** *middleware* 
+* **HydrogenKernelMiddleware** *middleware*
 
 ## onDidDestroy(Callback)
 
@@ -76,7 +106,7 @@ Calls your callback when the kernel has been destroyed.
 
 ### Params:
 
-* **Function** *Callback* 
+* **Function** *Callback*
 
 ## getConnectionFile()
 
@@ -87,4 +117,3 @@ Get the [connection file](http://jupyter-notebook.readthedocs.io/en/latest/examp
 * **String** Path to connection file.
 
 <!-- End lib/plugin-api/hydrogen-kernel.js -->
-
