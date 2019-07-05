@@ -34,7 +34,10 @@ describe("Hydrogen Provider", () => {
     });
 
     it("should return false for non-existent key", () => {
+      //Previously a transform
       expect(!plugin.unregisterTransform("mark")).toBeTruthy();
+      //Never a transform
+      expect(!plugin.unregisterTransform("non-existent")).toBeTruthy();
     });
   });
 });
