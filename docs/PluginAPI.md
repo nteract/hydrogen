@@ -53,12 +53,12 @@ It is recommended you don't delete those, since custom transforms will take prio
 
 ### Params:
 
+* **String** *key*
 * **Function | Class<any>** *transform*
    * **Note:** This must be compatible with `React.createElement(transform)`.
    * **Note:** You must set your `defaultProps` to have a `mediaType`.
       * **Ex:** `defaultProps = { mediaType: "text/markdown"}`.
    * **Note:** Data is passed in via a prop called `data`.
-* **String** *key*
 
 ### Return:
 * **Symbol(react.element) | undefined** *transform for key*

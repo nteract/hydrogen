@@ -26,13 +26,13 @@ describe("Transforms", () => {
 
   describe("addTransform", () => {
     it("should add a new transform", () => {
-      expect(transformManager.addTransform(Markdown, "mark")).toBeTruthy();
+      expect(transformManager.addTransform("mark", Markdown)).toBeTruthy();
       expect(transformManager.transforms.has("mark")).toBeTruthy();
       expect(transformManager.transforms.get("mark").type).toEqual(Markdown);
     });
 
     it("should not override an existing transform", () => {
-      expect(transformManager.addTransform(Markdown, "svg")).toBeTruthy();
+      expect(transformManager.addTransform("svg", Markdown)).toBeTruthy();
       expect(transformManager.transforms.get("svg").type).not.toEqual(Markdown);
     });
   });

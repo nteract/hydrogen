@@ -13,13 +13,13 @@ describe("Hydrogen Provider", () => {
 
   describe("registerTransform", () => {
     it("should add a new transform", () => {
-      expect(plugin.registerTransform(Markdown, "mark")).toBeTruthy();
+      expect(plugin.registerTransform("mark", Markdown)).toBeTruthy();
       expect(transformManager.transforms.has("mark")).toBeTruthy();
       expect(transformManager.transforms.get("mark").type).toEqual(Markdown);
     });
 
     it("should not override an existing transform", () => {
-      expect(plugin.registerTransform(Markdown, "svg")).toBeTruthy();
+      expect(plugin.registerTransform("svg", Markdown)).toBeTruthy();
       expect(transformManager.transforms.get("svg").type).not.toEqual(Markdown);
     });
   });
