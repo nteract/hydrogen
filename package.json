@@ -87,6 +87,11 @@
     "xmlhttprequest": "^1.8.0"
   },
   "consumedServices": {
+    "autocomplete.watchEditor": {
+      "versions": {
+        "^1.0.0": "consumeWatchEditor"
+      }
+    },
     "status-bar": {
       "versions": {
         "^1.0.0": "consumeStatusBar"
