@@ -1,6 +1,10 @@
 "use babel";
 
+import { Disposable } from "atom";
+
+import { waitAsync } from "../helpers/test-utils";
 import WatchStore from "../../lib/store/watch";
+import _store from "../../lib/store";
 
 describe("WatchStore", () => {
   let store;
@@ -50,6 +54,19 @@ describe("WatchStore", () => {
       spyOn(store.editor.element, "focus");
       store.focus();
       expect(store.editor.element.focus).toHaveBeenCalled();
+    });
+  });
+  describe("addAutocomplete", () => {
+    beforeEach(
+      waitAsync(async () => {
+        const p = await atom.packages.activatePackage("autocomplete-plus");
+        //modelled after consumeWatchEditor in lib/main.js
+        _store.enableAutocomplete(p.mainModule.provideWatchEditor());
+      })
+    );
+    it("checks if autocompleteDisposable gets set", () => {
+      store.addAutocomplete();
+      expect(store.autocompleteDisposable instanceof Disposable).toBeTruthy();
     });
   });
 });
