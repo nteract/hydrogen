@@ -91,11 +91,6 @@
       "versions": {
         "^1.0.0": "consumeStatusBar"
       }
-    },
-    "tree-view": {
-      "versions": {
-        "^1.0.0": "consumeTreeView"
-      }
     }
   },
   "providedServices": {
