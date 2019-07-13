@@ -54,12 +54,14 @@ describe("Status Bar", () => {
       kernel.setExecutionState("idle");
     });
     it("hides the component based on config setting", () => {
-      // disable the status bar
-      store.setConfigValue("Hydrogen.statusBarDisable", true);
-
       expect(store.kernel).toBeDefined();
       const component = shallow(<StatusBar store={store} onClick={() => {}} />);
 
+      // the status bar is enabled by default
+      expect(component.text()).toBe("Kernel Language Display Name | idle");
+
+      // disable the status bar
+      store.setConfigValue("Hydrogen.statusBarDisable", true);
       expect(component.text()).toBe("");
 
       // re-enable the status bar
