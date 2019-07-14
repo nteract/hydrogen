@@ -98,6 +98,11 @@
       "versions": {
         "^1.0.0": "consumeStatusBar"
       }
+    },
+    "datatip": {
+      "versions": {
+        "0.1.0": "consumeDatatip"
+      }
     }
   },
   "providedServices": {
