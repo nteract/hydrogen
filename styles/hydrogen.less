@@ -357,14 +357,14 @@ svg:first-child {
 
 // -------------- Autocomplete Inside Watches -----------------
 
-  .autocomplete-plus img {
-    display: inline;
-    background-color: transparent;
-  }
-
+.autocomplete-plus img {
+  display: inline;
+  background-color: transparent;
 }
 
-.hydrogen.input-view {
+// -------------- Input view -----------------
+
+&.input-view {
   .label {
     padding-bottom: @component-padding;
   }
@@ -374,7 +374,9 @@ svg:first-child {
   }
 }
 
-.hydrogen.inspector {
+// -------------- Inspector pane -----------------
+
+&.inspector {
   padding: @component-padding;
   overflow-y: auto;
   code {
@@ -385,7 +387,8 @@ svg:first-child {
   }
 }
 
-.hydrogen.datatip {
+// -------------- Atom-IDE Datatip -----------------
+&.datatip {
   code {
     font-family: var(--editor-font-family);
   }
@@ -395,4 +398,6 @@ svg:first-child {
   white-space: pre-wrap;
   word-wrap: break-word;
   max-width: 500px;
+}
+
 }
