@@ -89,7 +89,7 @@
   "consumedServices": {
     "autocomplete.watchEditor": {
       "versions": {
-        "^1.0.0": "consumeWatchEditor"
+        "^1.0.0": "consumeAutocompleteWatchEditor"
       }
     },
     "status-bar": {

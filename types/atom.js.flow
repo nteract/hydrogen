@@ -2056,6 +2056,10 @@ type atom$AutocompleteProvider = {
   ) => void,
 };
 
+type atom$AutocompleteWatchEditor = (
+  editor: atom$TextEditor, labels: Array<string>
+) => ?atom$Disposable;
+
 type atom$SuggestionInsertedRequest = {
   +editor: atom$TextEditor,
   +triggerPosition: atom$Point,
