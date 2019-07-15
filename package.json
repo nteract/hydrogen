@@ -91,17 +91,12 @@
       "versions": {
         "^1.0.0": "consumeStatusBar"
       }
-    },
-    "tree-view": {
-      "versions": {
-        "^1.0.0": "consumeTreeView"
-      }
     }
   },
   "providedServices": {
     "autocomplete.provider": {
       "versions": {
-        "2.0.0": "provide"
+        "2.0.0": "provideAutocompleteResults"
       }
     },
     "hydrogen.provider": {
