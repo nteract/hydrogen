@@ -1,10 +1,6 @@
 "use babel";
 
-import { Disposable } from "atom";
-
-import { waitAsync } from "../helpers/test-utils";
 import WatchStore from "../../lib/store/watch";
-import _store from "../../lib/store";
 
 describe("WatchStore", () => {
   let store;
