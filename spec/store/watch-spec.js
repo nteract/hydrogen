@@ -56,17 +56,4 @@ describe("WatchStore", () => {
       expect(store.editor.element.focus).toHaveBeenCalled();
     });
   });
-  describe("addAutocomplete", () => {
-    beforeEach(
-      waitAsync(async () => {
-        const p = await atom.packages.activatePackage("autocomplete-plus");
-        //modelled after consumeWatchEditor in lib/main.js
-        _store.enableAutocomplete(p.mainModule.provideWatchEditor());
-      })
-    );
-    it("checks if autocompleteDisposable gets set", () => {
-      store.addAutocomplete();
-      expect(store.autocompleteDisposable instanceof Disposable).toBeTruthy();
-    });
-  });
 });
