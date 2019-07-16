@@ -16,11 +16,10 @@ The [Atom Services API](https://flight-manual.atom.io/behind-atom/sections/inter
 
 ### Provided Services
 - [Autocomplete Results: `autocomplete-plus`](./provided/autocomplete.js)
-   - This allows us to provide autocomplete results that are similiar to jupyter's tab completion.
+   - This allows us to provide autocomplete results that are similar to jupyter's tab completion.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/nteract/hydrogen/blob/master/LICENSE.md) file for details.
 
 <!-- End lib\services\index.js -->
-
