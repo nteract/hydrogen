@@ -151,8 +151,8 @@ RUN chmod +x /tini
 ENV JUPYTER_TOKEN=my_secret_token # you can also pass this at runtime
 
 EXPOSE 8888
-ENTRYPOINT [/tini, --]
-CMD [jupyter-notebook, --no-browser, --port=8888]
+ENTRYPOINT ["/tini", "--"]
+CMD ["jupyter-notebook", "--no-browser", "--port=8888"]
 
 RUN pip install markdown # <- installing new package
 ```
