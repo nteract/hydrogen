@@ -20,7 +20,6 @@ addons:
     - fakeroot
     - git
     - libsecret-1-dev
-    - libgconf2-4 # @TODO: Remove once Atom v1.39 is stable
 
 git:
   depth: 10
