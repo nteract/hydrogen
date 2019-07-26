@@ -73,11 +73,11 @@ RUN chmod +x /tini
 ENV JUPYTER_TOKEN=my_secret_token  # you can also pass this at runtime
 
 EXPOSE 8888
-ENTRYPOINT [/tini, --]
+ENTRYPOINT ["/tini", "--"]
 # --no-browser & --port aren't strictly necessary. presented here for clarity
-CMD [jupyter-notebook, --no-browser, --port=8888]
+CMD ["jupyter-notebook", "--no-browser", "--port=8888"]
 # if running as root, you need to explicitly allow this:
-# CMD [jupyter-notebook, --allow-root, --no-browser, --port=8888]
+# CMD ["jupyter-notebook", "--allow-root", "--no-browser", "--port=8888"]
 
 ```
 
@@ -90,8 +90,8 @@ version: '2'
 services:
   hydro:
     build: .
-    entrypoint: [/tini, --]
-    command: [jupyter-notebook, --allow-root, --no-browser, --port=8888]
+    entrypoint: ["/tini", "--"]
+    command: ["jupyter-notebook", "--allow-root", "--no-browser", "--port=8888"]
     ports:
       - 8888:8888
     environment:
@@ -151,8 +151,8 @@ RUN chmod +x /tini
 ENV JUPYTER_TOKEN=my_secret_token # you can also pass this at runtime
 
 EXPOSE 8888
-ENTRYPOINT [/tini, --]
-CMD [jupyter-notebook, --no-browser, --port=8888]
+ENTRYPOINT ["/tini", "--"]
+CMD ["jupyter-notebook", "--no-browser", "--port=8888"]
 
 RUN pip install markdown # <- installing new package
 ```
