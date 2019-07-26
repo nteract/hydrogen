@@ -1535,7 +1535,7 @@ declare class atom$GrammarRegistry {
   removeGrammarForScopeName(scopeName: string): ?atom$Grammar,
   loadGrammarSync(grammarPath: string): atom$Grammar,
   selectGrammar(filePath: string, fileContents: string): atom$Grammar,
-  assignLanguageMode(bufferOrEditor: atom$TextBuffer | atom$TextEditor, languageId:string): boolean,
+  assignLanguageMode(bufferOrEditor: atom$TextBuffer | atom$TextEditor, languageId: string): boolean,
 
   // Private API
   clear(): IDisposable,
