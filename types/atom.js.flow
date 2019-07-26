@@ -14,7 +14,7 @@
  */
 
 // Octicons v4.4.0. List extracted from the atom-styleguide package.
-type atom$Octicon = 'alert' | 'alignment-align' | 'alignment-aligned-to' | 'alignment-unalign' |
+declare type atom$Octicon = 'alert' | 'alignment-align' | 'alignment-aligned-to' | 'alignment-unalign' |
   'arrow-down' | 'arrow-left' | 'arrow-right' | 'arrow-small-down' | 'arrow-small-left' |
   'arrow-small-right' | 'arrow-small-up' | 'arrow-up' | 'beaker' | 'beer' | 'bell' | 'bold' |
   'book' | 'bookmark' | 'briefcase' | 'broadcast' | 'browser' | 'bug' | 'calendar' | 'check' |
@@ -2040,7 +2040,7 @@ type atom$AutocompleteRequest = {
   activatedManually?: boolean,
 };
 
-type atom$AutocompleteProvider = {
+declare type atom$AutocompleteProvider = {
   +selector: string,
   +getSuggestions: (
     request: atom$AutocompleteRequest,
@@ -2056,7 +2056,7 @@ type atom$AutocompleteProvider = {
   ) => void,
 };
 
-type atom$AutocompleteWatchEditor = (
+declare type atom$AutocompleteWatchEditor = (
   editor: atom$TextEditor, labels: Array<string>
 ) => ?atom$Disposable;
 
