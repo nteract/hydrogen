@@ -30,12 +30,26 @@ Use your distribution's package manager to install.
 
 If your default `python` is 3.x, you need to run instead `PYTHON=python2.7 apm install hydrogen` or change the default version for `apm` with `apm config set python $(which python2.7)` beforehand. You can still use 3.x versions of Python in Hydrogen, but it will only build with 2.x due to a [longstanding issue with `gyp`](https://bugs.chromium.org/p/gyp/issues/detail?id=36).
 
-### No kernel for grammar X found
+### No kernel for grammar XXX found
 
 Hydrogen requires a Kernel to run code. Checkout [nteract.io/kernels](https://nteract.io/kernels) for instructions on how to install the most popular kernels.
 
 Atom won't pick up kernels inside a virtualenv unless Atom is launched as `atom .` within the virtualenv. The alternative is to [create a kernel specifically for a virtualenv](http://www.alfredo.motta.name/create-isolated-jupyter-ipython-kernels-with-pyenv-and-virtualenv/).
 
+#### No kernel for grammar `Python` found error on Mac OS
+
+First off, make sure that you run
+```
+python3 -m pip install ipykernel
+python3 -m ipykernel install --user
+```
+and
+```
+jupyter --paths
+```
+shows IPython kernels you want to use.
+
+Even after the above steps have been done successfully, if Hydrogen still keeps complaining the "No kernel for grammar `Python` found" error on Mac OS, [this workaround](https://github.com/nteract/hydrogen/issues/1074#issuecomment-514080192) may help you solve it.
 
 ### Hydrogen doesn't show my results.
 
