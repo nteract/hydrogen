@@ -1,0 +1,53 @@
+/* @flow */
+
+// One of text or snippet is required.
+// TODO(hansonw): use a union + intersection type
+type atom$AutocompleteSuggestion = {
+  text?: string,
+  snippet?: string,
+  displayText?: string,
+  replacementPrefix?: string,
+  type?: ?string,
+  leftLabel?: ?string,
+  leftLabelHTML?: ?string,
+  rightLabel?: ?string,
+  rightLabelHTML?: ?string,
+  className?: ?string,
+  iconHTML?: ?string,
+  description?: ?string,
+  descriptionMoreURL?: ?string,
+};
+
+type atom$AutocompleteRequest = {
+  editor: TextEditor,
+  bufferPosition: atom$Point,
+  scopeDescriptor: string,
+  prefix: string,
+  activatedManually?: boolean,
+};
+
+type atom$SuggestionInsertedRequest = {
+  +editor: atom$TextEditor,
+  +triggerPosition: atom$Point,
+  +suggestion: atom$AutocompleteSuggestion,
+};
+
+export type atom$AutocompleteProvider = {
+  +selector: string,
+  +getSuggestions: (
+    request: atom$AutocompleteRequest,
+  ) => Promise<?Array<atom$AutocompleteSuggestion>> | ?Array<atom$AutocompleteSuggestion>,
+  +disableForSelector?: string,
+  +inclusionPriority?: number,
+  +excludeLowerPriority?: boolean,
+  +suggestionPriority?: number,
+  +filterSuggestions?: boolean,
+  +disposable?: () => void,
+  +onDidInsertSuggestion?: (
+    insertedSuggestion: atom$SuggestionInsertedRequest,
+  ) => void,
+};
+
+export type atom$AutocompleteWatchEditor = (
+  editor: atom$TextEditor, labels: Array<string>
+) => ?atom$Disposable;
