@@ -355,14 +355,7 @@ svg:first-child {
   }
 }
 
-// -------------- Autocomplete Inside Watches -----------------
-
-  .autocomplete-plus img {
-    display: inline;
-    background-color: transparent;
-  }
-
-}
+// -------------- Input view -----------------
 
 .hydrogen.input-view {
   .label {
@@ -380,5 +373,19 @@ svg:first-child {
 
   span[style] {
     color: @text-color-info !important;
+  }
+}
+
+}
+
+// -------------- Overwrite Autocomplete-Plus style -----------------
+
+.autocomplete-plus {
+  img {
+    display: inline;
+    background-color: transparent;
+  }
+  autocomplete-suggestion-list.select-list.popover-list .suggestion-description {
+    max-width: 500px;
   }
 }

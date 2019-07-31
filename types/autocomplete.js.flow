@@ -1,21 +1,22 @@
 /* @flow */
 
-// One of text or snippet is required.
-// TODO(hansonw): use a union + intersection type
 type atom$AutocompleteSuggestion = {
-  text?: string,
-  snippet?: string,
+  // @NOTE: One of `text` or `snippet` is required.
+  text: string,
+  // snippet: string,
+  replacementPrefix: string,
+  // @NOTE: Only needed for Hydrogen implementation of `getSuggestionDetailsOnSelect`
+  replacedText: string,
+  iconHTML?: string,
+  type?: string,
+  description?: string,
+  descriptionMoreURL?: string,
   displayText?: string,
-  replacementPrefix?: string,
-  type?: ?string,
-  leftLabel?: ?string,
-  leftLabelHTML?: ?string,
-  rightLabel?: ?string,
-  rightLabelHTML?: ?string,
-  className?: ?string,
-  iconHTML?: ?string,
-  description?: ?string,
-  descriptionMoreURL?: ?string,
+  leftLabel?: string,
+  leftLabelHTML?: string,
+  rightLabel?: string,
+  rightLabelHTML?: string,
+  className?: string,
 };
 
 type atom$AutocompleteRequest = {
