@@ -103,7 +103,7 @@
   "providedServices": {
     "autocomplete.provider": {
       "versions": {
-        "2.0.0": "provideAutocompleteResults"
+        "4.0.0": "provideAutocompleteResults"
       }
     },
     "hydrogen.provider": {
