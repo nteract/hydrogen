@@ -37,7 +37,9 @@
   "scripts": {
     "flow": "flow",
     "prettier": "prettier --write \"lib/**/*.js\" \"spec/**/*.js\"",
-    "build:docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md"
+    "build:services-docs": "markdox lib/services/index.js -o lib/services/README.md",
+    "build:plugin-docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
+    "build:docs": "npm run build:plugin-docs && npm run build:services-docs"
   },
   "atomTestRunner": "atom-jasmine3-test-runner",
   "repository": "https://github.com/nteract/hydrogen",
@@ -65,7 +67,7 @@
     "@nteract/outputs": "^2.1.5",
     "@nteract/plotly": "^1.48.3",
     "@nteract/transform-vega": "^6.0.0",
-    "anser": "^1.4.4",
+    "anser": "^1.4.8",
     "atom-select-list": "^0.7.0",
     "escape-carriage": "^1.2.0",
     "escape-string-regexp": "^2.0.0",
@@ -87,6 +89,11 @@
     "xmlhttprequest": "^1.8.0"
   },
   "consumedServices": {
+    "autocomplete.watchEditor": {
+      "versions": {
+        "^1.0.0": "consumeAutocompleteWatchEditor"
+      }
+    },
     "status-bar": {
       "versions": {
         "^1.0.0": "consumeStatusBar"
@@ -96,7 +103,7 @@
   "providedServices": {
     "autocomplete.provider": {
       "versions": {
-        "2.0.0": "provideAutocompleteResults"
+        "4.0.0": "provideAutocompleteResults"
       }
     },
     "hydrogen.provider": {

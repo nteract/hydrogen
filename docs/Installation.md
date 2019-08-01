@@ -31,7 +31,7 @@ Tested and works with:
 - [IJavascript](https://github.com/n-riesco/ijavascript)
 - [jupyter-nodejs](https://github.com/notablemind/jupyter-nodejs)
 - [IElixir](https://github.com/pprzetacznik/IElixir)
-- [jupyter-scala](https://github.com/alexarchambault/jupyter-scala)
+- [Almond (previously called jupyter-scala)](https://github.com/almond-sh/almond)
 - [kotlin-jupyter](https://github.com/ligee/kotlin-jupyter)
 - [stata-kernel](https://github.com/kylebarron/stata_kernel)
 

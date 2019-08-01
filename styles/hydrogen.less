@@ -40,9 +40,18 @@ img, svg, video, audio {
   display: block;
 }
 
-td, th {
-  border: 1px solid average(@syntax-text-color, @base-border-color);
-  padding: 0.35em 0.7em;
+table {
+  border: 1px double average(@syntax-text-color, @base-border-color);
+  border-collapse: collapse;
+
+  thead, tbody, tr {
+    border: inherit;
+  }
+
+  td, th {
+    border: inherit;
+    padding: 0.35em 0.7em;
+  }
 }
 
 svg:first-child {
@@ -345,7 +354,17 @@ svg:first-child {
     max-height: 450px !important;
   }
 }
+
+// -------------- Autocomplete-Plus inside Watches -----------------
+
+.autocomplete-plus {
+  img {
+    display: inline;
+    background-color: transparent;
+  }
 }
+
+// -------------- Input view -----------------
 
 .hydrogen.input-view {
   .label {
@@ -363,5 +382,16 @@ svg:first-child {
 
   span[style] {
     color: @text-color-info !important;
+  }
+}
+
+}
+
+// -------------- Overwrite Autocomplete-Plus style -----------------
+
+// @NOTE: This would pollute global style and could cause some styling issues for users
+.autocomplete-plus {
+  autocomplete-suggestion-list.select-list.popover-list .suggestion-description {
+    max-width: 500px;
   }
 }

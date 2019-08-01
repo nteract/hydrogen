@@ -14,7 +14,7 @@
  */
 
 // Octicons v4.4.0. List extracted from the atom-styleguide package.
-type atom$Octicon = 'alert' | 'alignment-align' | 'alignment-aligned-to' | 'alignment-unalign' |
+declare type atom$Octicon = 'alert' | 'alignment-align' | 'alignment-aligned-to' | 'alignment-unalign' |
   'arrow-down' | 'arrow-left' | 'arrow-right' | 'arrow-small-down' | 'arrow-small-left' |
   'arrow-small-right' | 'arrow-small-up' | 'arrow-up' | 'beaker' | 'beer' | 'bell' | 'bold' |
   'book' | 'bookmark' | 'briefcase' | 'broadcast' | 'browser' | 'bug' | 'calendar' | 'check' |
@@ -156,6 +156,7 @@ type atom$ConfigSchema = {
 
   // Managing Settings
   // get method for special cases (@NOTE: This should be listed ABOVE the general case one)
+  get("Hydrogen.autocompleteSuggestionPriority"): number,
   get("Hydrogen.wrapOutput"): boolean,
   // get method for general cases
   get(
@@ -1535,6 +1536,7 @@ declare class atom$GrammarRegistry {
   removeGrammarForScopeName(scopeName: string): ?atom$Grammar,
   loadGrammarSync(grammarPath: string): atom$Grammar,
   selectGrammar(filePath: string, fileContents: string): atom$Grammar,
+  assignLanguageMode(bufferOrEditor: atom$TextBuffer | atom$TextEditor, languageId: string): boolean,
 
   // Private API
   clear(): IDisposable,
@@ -2012,54 +2014,6 @@ declare class atom$GitRepositoryInternal {
   isStatusStaged: (status: number) => boolean,
   isStatusDeleted: (status: number) => boolean,
 }
-
-// One of text or snippet is required.
-// TODO(hansonw): use a union + intersection type
-type atom$AutocompleteSuggestion = {
-  text?: string,
-  snippet?: string,
-  displayText?: string,
-  replacementPrefix?: string,
-  type?: ?string,
-  leftLabel?: ?string,
-  leftLabelHTML?: ?string,
-  rightLabel?: ?string,
-  rightLabelHTML?: ?string,
-  className?: ?string,
-  iconHTML?: ?string,
-  description?: ?string,
-  descriptionMoreURL?: ?string,
-};
-
-type atom$AutocompleteRequest = {
-  editor: TextEditor,
-  bufferPosition: atom$Point,
-  scopeDescriptor: string,
-  prefix: string,
-  activatedManually?: boolean,
-};
-
-type atom$AutocompleteProvider = {
-  +selector: string,
-  +getSuggestions: (
-    request: atom$AutocompleteRequest,
-  ) => Promise<?Array<atom$AutocompleteSuggestion>> | ?Array<atom$AutocompleteSuggestion>,
-  +disableForSelector?: string,
-  +inclusionPriority?: number,
-  +excludeLowerPriority?: boolean,
-  +suggestionPriority?: number,
-  +filterSuggestions?: boolean,
-  +disposable?: () => void,
-  +onDidInsertSuggestion?: (
-    insertedSuggestion: atom$SuggestionInsertedRequest,
-  ) => void,
-};
-
-type atom$SuggestionInsertedRequest = {
-  +editor: atom$TextEditor,
-  +triggerPosition: atom$Point,
-  +suggestion: atom$AutocompleteSuggestion,
-};
 
 // Undocumented API.
 declare class atom$Token {
