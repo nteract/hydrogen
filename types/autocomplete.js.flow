@@ -1,11 +1,17 @@
 /* @flow */
 
+// @TODO?: Use a union + intersection type
 type atom$AutocompleteSuggestion = {
-  // @NOTE: One of `text` or `snippet` is required.
+  /**
+   * @NOTE
+   * Autocomplet-Plus needs either `text` or `snippet` field, but Jupyter kernels don't offer
+   *   "snippet" or "signature" style completions, thus `text` field is defined as required here
+   *   to prevent unnecessary flow condition checks.
+   */
   text: string,
   // snippet: string,
   replacementPrefix: string,
-  // @NOTE: Only needed for Hydrogen implementation of `getSuggestionDetailsOnSelect`
+  /* @NOTE: Only needed for Hydrogen implementation of `getSuggestionDetailsOnSelect` */
   replacedText: string,
   iconHTML?: string,
   type?: string,
