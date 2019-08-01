@@ -1,21 +1,28 @@
 /* @flow */
 
-// One of text or snippet is required.
-// TODO(hansonw): use a union + intersection type
+// @TODO?: Use a union + intersection type
 type atom$AutocompleteSuggestion = {
-  text?: string,
-  snippet?: string,
+  /**
+   * @NOTE
+   * Autocomplet-Plus needs either `text` or `snippet` field, but Jupyter kernels don't offer
+   *   "snippet" or "signature" style completions, thus `text` field is defined as required here
+   *   to prevent unnecessary flow condition checks.
+   */
+  text: string,
+  // snippet: string,
+  replacementPrefix: string,
+  /* @NOTE: Only needed for Hydrogen implementation of `getSuggestionDetailsOnSelect` */
+  replacedText: string,
+  iconHTML?: string,
+  type?: string,
+  description?: string,
+  descriptionMoreURL?: string,
   displayText?: string,
-  replacementPrefix?: string,
-  type?: ?string,
-  leftLabel?: ?string,
-  leftLabelHTML?: ?string,
-  rightLabel?: ?string,
-  rightLabelHTML?: ?string,
-  className?: ?string,
-  iconHTML?: ?string,
-  description?: ?string,
-  descriptionMoreURL?: ?string,
+  leftLabel?: string,
+  leftLabelHTML?: string,
+  rightLabel?: string,
+  rightLabelHTML?: string,
+  className?: string,
 };
 
 type atom$AutocompleteRequest = {
@@ -37,12 +44,15 @@ export type atom$AutocompleteProvider = {
   +getSuggestions: (
     request: atom$AutocompleteRequest,
   ) => Promise<?Array<atom$AutocompleteSuggestion>> | ?Array<atom$AutocompleteSuggestion>,
+  +getSuggestionDetailsOnSelect?: (
+    suggestion: atom$AutocompleteSuggestion
+  ) => ?Promise<?atom$AutocompleteSuggestion>,
   +disableForSelector?: string,
   +inclusionPriority?: number,
   +excludeLowerPriority?: boolean,
   +suggestionPriority?: number,
   +filterSuggestions?: boolean,
-  +disposable?: () => void,
+  +dispose?: () => void,
   +onDidInsertSuggestion?: (
     insertedSuggestion: atom$SuggestionInsertedRequest,
   ) => void,

@@ -156,6 +156,7 @@ type atom$ConfigSchema = {
 
   // Managing Settings
   // get method for special cases (@NOTE: This should be listed ABOVE the general case one)
+  get("Hydrogen.autocompleteSuggestionPriority"): number,
   get("Hydrogen.wrapOutput"): boolean,
   // get method for general cases
   get(
