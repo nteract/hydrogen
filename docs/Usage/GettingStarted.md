@@ -23,15 +23,14 @@ It's easiest to see these interactions visually:
 If your code starts getting cluttered up with results, run **"Hydrogen: Clear Results"** to remove them all at once.
 
 ## "Hydrogen: Run Cell"
-A "code cell" is a block of lines to be executed at once. You can define them using inline comments. Hydrogen supports a
-multitude of ways to define cells. Pick the one you like best.
-The following is an example for `python` but it will work in any language, just replace `#` with the comment symbol for your desired language:
+Cells are an easy way to separate your code. To learn more about them visit [Cells](Cells.md). 
 
+#### Example:
 <img width=280 src="https://cloud.githubusercontent.com/assets/13285808/17094174/e8ec17b8-524d-11e6-9140-60b43e073619.png">
 
 When you place the cursor inside a cell and hit **"Hydrogen: Run Cell"**, Hydrogen will execute this cell. The command **"Hydrogen: Run Cell And Move Down"** will move the cursor to the next cell after execution.
 
-The addition of these cell markers also allows you to export your text file as a Jupyter Notebook file. See [Notebook Export](NotebookFiles.md#notebook-export) for more detail.
+See [**Notebook Export**](NotebookFiles.md#notebook-export) for more details about exporting your Hydrogen Cells as a Jupyter Notebook.
 
 ## "Hydrogen: Run All" and "Hydrogen: Run All Above"
 These commands will run all code inside the editor or all code above the cursor.
