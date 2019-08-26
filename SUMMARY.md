@@ -4,6 +4,7 @@
 * [Installation](docs/Installation.md)
 * Usage
   * [Getting Started](docs/Usage/GettingStarted.md)
+  * [Cells](docs/Usage/Cells.md)
   * [Examples](docs/Usage/Examples.md)
   * [Notebook Import and Export](docs/Usage/NotebookFiles.md)
   * [Remote Kernels](docs/Usage/RemoteKernelConnection.md)
