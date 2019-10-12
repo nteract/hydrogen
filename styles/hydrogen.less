@@ -203,44 +203,6 @@ svg:first-child {
   20% { transform: scaleY(0.8); }
 }
 
-// -------------- Slider ------------------
-
-.slider {
-  @btn-size: @component-icon-size + @component-icon-padding;
-  @pad: 3px;
-  padding: @pad @btn-size + 1;
-  height: @btn-size + 2 * @pad;
-  position: relative;
-  display: flex;
-  .rangeslider {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    .rangeslider__handle {
-      cursor: pointer;
-      display: block;
-      position: absolute;
-      width: @btn-size;
-      height: @btn-size;
-      border-radius: @component-border-radius;
-      border: 1px solid @button-border-color;
-      margin-left: -(@btn-size / 2);
-      left: @btn-size / 2;
-      background: @button-background-color;
-      &:hover {
-        background: @button-background-color-hover;
-      }
-      &:focus {
-        border-color: @button-background-color-selected;
-      }
-    }
-
-    .rangeslider__labels {
-      display: none;
-    }
-  }
-}
-
 // -------------- Sidebar -----------------
 
 .sidebar {
@@ -269,6 +231,41 @@ svg:first-child {
   }
 }
 
+// ------------ History Component ---------
+
+.history {
+  
+  display: flex;
+  flex-direction: column;
+
+  .slider {
+    .current-output {
+      text-align: center;
+    }
+
+    .input-range {
+      cursor: pointer;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background: @background-color-selected;
+      }
+
+      &:focus {
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          background-color: @button-background-color-selected;
+          border: 1px solid @background-color-selected;
+        }
+        &::-webkit-slider-runnable-track {
+          -webkit-appearance: none;
+          background: @background-color-selected;
+        }
+      }
+    }
+  }
+}
+
 // ------------ Output Area ---------------
 
 .output-area {
@@ -276,13 +273,8 @@ svg:first-child {
   display: flex;
   flex-direction: column;
   height: 100%;
-  .history {
-    display: flex;
-    flex-direction: column;
-  }
-  .slider {
-    flex: 0 0 auto;
-  }
+
+
   .multiline-container {
     font-family: monospace;
     display: block;
@@ -299,8 +291,9 @@ svg:first-child {
       }
     }
   }
-
 }
+
+
 
 // ----------- Kernel Monitor -------------
 
