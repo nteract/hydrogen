@@ -78,7 +78,6 @@
     "mobx-react": "^6.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-rangeslider": "^2.1.0",
     "react-table": "^6.10.0",
     "spawnteract": "^5.1.0",
     "strip-indent": "^3.0.0",
@@ -114,8 +113,8 @@
   },
   "devDependencies": {
     "atom-jasmine3-test-runner": "^4.0.0",
-    "enzyme": "^3.1.1",
-    "enzyme-adapter-react-16": "^1.0.4",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
     "flow-bin": "^0.118.0",
     "husky": "^4.2.1",
     "lint-staged": "^10.0.7",
