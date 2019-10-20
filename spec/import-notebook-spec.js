@@ -19,11 +19,11 @@ describe("Import notebook", () => {
     const editor = atom.workspace.getActiveTextEditor();
     const code = editor.getText();
     expect(code.split(EOL)).toEqual([
-      "# %%",
+      "# %% codecell",
       "import pandas as pd",
-      "# %%",
+      "# %% codecell",
       "pd.util.testing.makeDataFrame()",
-      "# %%",
+      "# %% codecell",
       ""
     ]);
   });

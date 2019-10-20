@@ -6,9 +6,9 @@ Access the import and export commands by opening the [command palette](https://f
 
 ## Notebook Import
 
-Run **`Hydrogen: Import Notebook`** and select the desired notebook file in the file browser that opens. That's it! The file will be imported into a new Atom tab, using [Cell Markers](Cells.md#cell-markers) to delimit the individual code and markdown blocks.
+Run **`Hydrogen: Import Notebook`** and select the desired notebook file in the file browser that opens. That's it! The file will be imported into a new Atom tab as a new file, using [Cell Markers](Cells.md#cell-markers) to delimit the individual code and markdown blocks. If you also wish to view your previous cell results, then make sure **"Enable Import of Notebook Results"** is checked in Hydrogen's package settings.
 
-**Note:** The syntax highlighting package for the given programming language must be installed and active.
+**Note:** In order for Hydrogen to automatically find the corresponding syntax highlighting package for a given programming language, your notebook file must contain the proper metadata and your grammar package of choice must be installed and active.
 
 ## Notebook Export
 
@@ -19,5 +19,7 @@ print('Hello, world!')
 # %% markdown
 # A **Markdown** cell!
 ```
+
+**Note:** Exporting results is currently not supported.
 
 ##### To see how to define cells in Hydrogen visit [Cells](Cells.md)
