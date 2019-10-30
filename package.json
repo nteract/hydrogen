@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "2.13.2",
+  "version": "2.13.1",
   "description": "Run code interactively, inspect data, and plot. All the power of Jupyter kernels, inside your favorite text editor.",
   "author": "nteract contributors",
   "keywords": [
@@ -62,9 +62,9 @@
     "@babel/runtime-corejs2": "^7.0.0",
     "@jupyterlab/services": "^0.52.0",
     "@nteract/commutable": "^7.1.4",
-    "@nteract/markdown": "4.0.4",
+    "@nteract/markdown": "^4.0.0",
     "@nteract/mathjax": "^4.0.1",
-    "@nteract/outputs": "2.3.4",
+    "@nteract/outputs": "^2.1.5",
     "@nteract/plotly": "^1.48.3",
     "@nteract/transform-vega": "^6.0.0",
     "anser": "^1.4.8",
