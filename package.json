@@ -62,7 +62,7 @@
     "@babel/runtime-corejs2": "^7.0.0",
     "@jupyterlab/services": "^0.52.0",
     "@nteract/commutable": "^7.1.4",
-    "@nteract/markdown": "4.0.4",
+    "@nteract/markdown": "4.0.5",
     "@nteract/mathjax": "^4.0.1",
     "@nteract/outputs": "2.3.4",
     "@nteract/plotly": "^1.48.3",
