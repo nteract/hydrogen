@@ -54,8 +54,7 @@
   },
   "lint-staged": {
     "{lib,spec}/**/*.js": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "dependencies": {
@@ -118,8 +117,8 @@
     "enzyme": "^3.1.1",
     "enzyme-adapter-react-16": "^1.0.4",
     "flow-bin": "^0.118.0",
-    "husky": "^4.0.0",
-    "lint-staged": "^10.0.0",
+    "husky": "^4.2.1",
+    "lint-staged": "^10.0.7",
     "markdox": "^0.1.10",
     "mobx-react-devtools": "^6.0.0",
     "prettier": "^1.14.3",
