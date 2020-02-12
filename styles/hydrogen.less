@@ -234,11 +234,20 @@ svg:first-child {
 // ------------ History Component ---------
 
 .history {
-  
+
   display: flex;
   flex-direction: column;
 
   .slider {
+    .btn-xs.icon {
+      position: absolute;
+      &.icon-chevron-left {
+        left: @component-padding;
+      }
+      &.icon-chevron-right {
+        right: @component-padding;
+      }
+    }
     .current-output {
       text-align: center;
     }
