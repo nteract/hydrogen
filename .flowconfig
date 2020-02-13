@@ -10,6 +10,3 @@ types/
 [options]
 esproposal.decorators=ignore
 include_warnings=true
-
-[untyped]
-.*/node_modules/mobx/.*
