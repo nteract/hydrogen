@@ -63,7 +63,7 @@
     "@nteract/commutable": "^7.1.4",
     "@nteract/markdown": "4.2.0",
     "@nteract/mathjax": "^4.0.2",
-    "@nteract/outputs": "^2.1.5",
+    "@nteract/outputs": "^3.0.0",
     "@nteract/plotly": "^1.48.3",
     "@nteract/transform-vega": "^6.0.0",
     "anser": "^1.4.8",
