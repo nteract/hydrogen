@@ -1,0 +1,9 @@
+scopeName: 'hydrogen.breakpoints'
+name: 'Hydrogen breakpoints'
+injectionSelector: 'comment.line'
+patterns: [
+  {
+    match: ' ?%%(\\s*\\[?(md|markdown)\\]?)?| <(codecell|md|markdown)>| In\\[[0-9 ]*\\]:?'
+    name: 'entity.name.section.breakpoint'
+  }
+]

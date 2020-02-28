@@ -1,0 +1,12 @@
+[include]
+lib/
+
+[libs]
+types/
+
+[ignore]
+.*/test/*
+
+[options]
+esproposal.decorators=ignore
+include_warnings=true

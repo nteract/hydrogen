@@ -1,11 +1,6 @@
-# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
-# 'context-menu':
-#   'atom-text-editor': [
-#     {
-#       'label': 'Toggle atom-repl'
-#       'command': 'atom-repl:toggle'
-#     }
-#   ]
+'context-menu':
+  '.tree-view .file .name[data-name$=\\.ipynb]':
+    [{label: 'Import Notebook', command: 'hydrogen:import-notebook'}]
 'menu': [
   {
     'label': 'Packages'
@@ -15,6 +10,24 @@
         {
           'label': 'Run'
           'command': 'hydrogen:run'
+        }, {
+          'label': 'Run and Move Down'
+          'command': 'hydrogen:run-and-move-down'
+        }, {
+          'label': 'Run Cell'
+          'command': 'hydrogen:run-cell'
+        }, {
+          'label': 'Run Cell and Move Down'
+          'command': 'hydrogen:run-cell-and-move-down'
+        }, {
+          'label': 'Run All'
+          'command': 'hydrogen:run-all'
+        }, {
+          'label': 'Run All Above'
+          'command': 'hydrogen:run-all-above'
+        }, {
+          'label': 'Connect to Remote Kernel'
+          'command': 'hydrogen:connect-to-remote-kernel'
         }
       ]
     ]

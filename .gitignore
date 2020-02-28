@@ -4,3 +4,6 @@ node_modules
 .ipynb_checkpoints
 *.ipynb
 kernel-configs/
+_book/
+package-lock.json
+!spec/helpers/*.ipynb

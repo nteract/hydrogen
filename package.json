@@ -1,9 +1,9 @@
 {
   "name": "Hydrogen",
   "main": "./lib/main",
-  "version": "0.4.2",
-  "description": "Run code and get results inline using Jupyter kernels like IPython, IJulia, and iTorch",
-  "author": "Will Whitney <me@willwhitney.com>",
+  "version": "2.14.0",
+  "description": "Run code interactively, inspect data, and plot. All the power of Jupyter kernels, inside your favorite text editor.",
+  "author": "nteract contributors",
   "keywords": [
     "execute",
     "run",
@@ -13,26 +13,85 @@
     "python",
     "torch",
     "ijulia",
+    "irkernel",
     "itorch",
     "plot",
     "image"
   ],
   "activationCommands": {
-    "atom-text-editor": "hydrogen:run"
+    "atom-text-editor": [
+      "hydrogen:start-local-kernel",
+      "hydrogen:connect-to-remote-kernel",
+      "hydrogen:run",
+      "hydrogen:run-and-move-down",
+      "hydrogen:run-all",
+      "hydrogen:run-all-above",
+      "hydrogen:run-cell",
+      "hydrogen:run-cell-and-move-down",
+      "hydrogen:export-notebook"
+    ],
+    "atom-workspace": [
+      "hydrogen:import-notebook"
+    ]
   },
-  "repository": "https://github.com/willwhitney/hydrogen",
+  "scripts": {
+    "flow": "flow",
+    "prettier": "prettier --write \"lib/**/*.js\" \"spec/**/*.js\"",
+    "build:services-docs": "markdox lib/services/index.js -o lib/services/README.md",
+    "build:plugin-docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
+    "build:docs": "npm run build:plugin-docs && npm run build:services-docs"
+  },
+  "atomTestRunner": "atom-jasmine3-test-runner",
+  "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
-    "atom": ">=0.174.0 <2.0.0"
+    "atom": ">=1.28.0 <2.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "{lib,spec}/**/*.js": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.0.5",
-    "lodash": "^3.8.0",
-    "react": "^0.13.3",
-    "uuid": "^2.0.1",
-    "zmq": "^2.11.1"
+    "@babel/runtime-corejs2": "^7.0.0",
+    "@jupyterlab/services": "^4.0.0",
+    "@nteract/commutable": "^7.1.4",
+    "@nteract/markdown": "4.2.0",
+    "@nteract/mathjax": "^4.0.2",
+    "@nteract/outputs": "^2.1.5",
+    "@nteract/plotly": "^1.48.3",
+    "@nteract/transform-vega": "^6.0.0",
+    "anser": "^1.4.8",
+    "atom-select-list": "^0.7.0",
+    "escape-carriage": "^1.2.0",
+    "escape-string-regexp": "^2.0.0",
+    "jmp": "^2.0.0",
+    "kernelspecs": "^2.0.0",
+    "lodash": "^4.14.0",
+    "mathjax-electron": "^3.0.0",
+    "mobx": "^5.1.1",
+    "mobx-react": "^6.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-table": "^6.10.0",
+    "spawnteract": "^5.1.0",
+    "strip-indent": "^3.0.0",
+    "tildify": "^2.0.0",
+    "uuid": "^3.2.1",
+    "ws": "^3.3.1",
+    "xmlhttprequest": "^1.8.0"
   },
   "consumedServices": {
+    "autocomplete.watchEditor": {
+      "versions": {
+        "^1.0.0": "consumeAutocompleteWatchEditor"
+      }
+    },
     "status-bar": {
       "versions": {
         "^1.0.0": "consumeStatusBar"
@@ -42,8 +101,26 @@
   "providedServices": {
     "autocomplete.provider": {
       "versions": {
-        "2.0.0": "provide"
+        "4.0.0": "provideAutocompleteResults"
+      }
+    },
+    "hydrogen.provider": {
+      "versions": {
+        "1.1.0": "provideHydrogen",
+        "1.2.0": "provideHydrogen"
       }
     }
+  },
+  "devDependencies": {
+    "atom-jasmine3-test-runner": "^4.0.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
+    "flow-bin": "^0.118.0",
+    "husky": "^4.2.1",
+    "lint-staged": "^10.0.7",
+    "markdox": "^0.1.10",
+    "mobx-react-devtools": "^6.0.0",
+    "prettier": "^1.14.3",
+    "react-test-renderer": "^16.0.0"
   }
 }

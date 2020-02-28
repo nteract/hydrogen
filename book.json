@@ -1,0 +1,12 @@
+{
+  "plugins": ["edit-link", "github", "codetabs", "anchorjs"],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/nteract/hydrogen/tree/master/",
+      "label": "Edit This Page"
+    },
+    "github": {
+      "url": "https://github.com/nteract/hydrogen/"
+    }
+  }
+}

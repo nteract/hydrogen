@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "semanticCommits": false,
+  "pinVersions": false,
+  "devDependencies": {
+    "automerge": true
+  }
+}
