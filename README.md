@@ -56,6 +56,7 @@ Hydrogen has support for plugins. Feel free to add your own to the list:
 - [Hydrogen Launcher](https://github.com/lgeiger/hydrogen-launcher)
 - [hydrogen-python](https://github.com/nikitakit/hydrogen-python)
 - [Data Explorer](https://github.com/BenRussert/data-explorer)
+- [markdown-cell-highlight](https://github.com/aviatesk/atom-markdown-cell-highlight)
 - [Cell Navigation](https://github.com/hoishing/cell-navigation)
 - [Hydrogen Cell Separator](https://github.com/jhabriel/hydrogen-cell-separator)
 
