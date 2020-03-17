@@ -1,35 +1,203 @@
-'context-menu':
-  '.tree-view .file .name[data-name$=\\.ipynb]':
-    [{label: 'Import Notebook', command: 'hydrogen:import-notebook'}]
 'menu': [
   {
-    'label': 'Packages'
-    'submenu': [
-      'label': 'Hydrogen'
-      'submenu': [
+    label: 'Packages'
+    submenu: [
+      label: 'Hydrogen'
+      submenu: [
         {
-          'label': 'Run'
-          'command': 'hydrogen:run'
-        }, {
-          'label': 'Run and Move Down'
-          'command': 'hydrogen:run-and-move-down'
-        }, {
-          'label': 'Run Cell'
-          'command': 'hydrogen:run-cell'
-        }, {
-          'label': 'Run Cell and Move Down'
-          'command': 'hydrogen:run-cell-and-move-down'
-        }, {
-          'label': 'Run All'
-          'command': 'hydrogen:run-all'
-        }, {
-          'label': 'Run All Above'
-          'command': 'hydrogen:run-all-above'
-        }, {
-          'label': 'Connect to Remote Kernel'
-          'command': 'hydrogen:connect-to-remote-kernel'
+          label: 'Start Local Kernel'
+          command: 'hydrogen:start-local-kenel'
+        }
+        {
+          label: 'Connect to Remote Kernel'
+          command: 'hydrogen:connect-to-remote-kernel'
+        }
+        {
+          label: 'Connect to Existing Kernel'
+          command: 'hydrogen:connect-to-existing-kernel'
+        }
+        {
+          label: 'Interrupt Kernel'
+          command: 'hydrogen:interrupt-kernel'
+        }
+        {
+          label: 'Restart Kernel'
+          command: 'hydrogen:restart-kernel'
+        }
+        {
+          label: 'Shutdown Kernel'
+          command: 'hydrogen:shutdown-kernel'
+        }
+        {
+          label: 'Toggle Kernel Monitor'
+          command: 'hydrogen:toggle-kernel-monitor'
+        }
+        {
+          label: 'Update Kernels'
+          commands: 'hydrogen:update-kernels'
+        }
+        {type: 'separator'}
+        {
+          label: 'Run'
+          command: 'hydrogen:run'
+        }
+        {
+          label: 'Run and Move Down'
+          command: 'hydrogen:run-and-move-down'
+        }
+        {
+          label: 'Run Cell'
+          command: 'hydrogen:run-cell'
+        }
+        {
+          label: 'Run Cell and Move Down'
+          command: 'hydrogen:run-cell-and-move-down'
+        }
+        {
+          label: 'Run All'
+          command: 'hydrogen:run-all'
+        }
+        {
+          label: 'Run All Above'
+          command: 'hydrogen:run-all-above'
+        }
+        {type: 'separator'}
+        {
+          label: 'Clear Results'
+          commands: 'hydrogen:clear-results'
+        }
+        {type: 'separator'}
+        {
+          label: 'Toggle Insepctor'
+          command: 'hydrogen:toggle-inspector'
+        }
+        {
+          label: 'Toggle Output Area'
+          command: 'hydrogen:toggle-output-area'
+        }
+        {
+          label: 'Toggle Watches'
+          command: 'hydrogen:toggle-watches'
+        }
+        {type: 'separator'}
+        {
+          label: 'Import Notebook'
+          command: 'hydrogen:import-notebook'
+        }
+        {
+          label: 'Export Notebook'
+          command: 'hydrogen:export-notebook'
         }
       ]
     ]
   }
 ]
+
+'context-menu':
+  '.tree-view .file .name[data-name$=\\.ipynb]': [
+    {type: 'separator'}
+    {
+      label: 'Hydrogen'
+      submenu: [
+        {
+          label: 'Import Notebook'
+          command: 'hydrogen:import-notebook'
+        }
+      ]
+    }
+    {type: 'separator'}
+  ]
+
+  'atom-text-editor:not([mini])': [
+    {type: 'separator'}
+    {
+      label: 'Hydrogen'
+      submenu: [
+        {
+          label: 'Start Local Kernel'
+          command: 'hydrogen:start-local-kenel'
+        }
+        {
+          label: 'Connect to Remote Kernel'
+          command: 'hydrogen:connect-to-remote-kernel'
+        }
+        {
+          label: 'Connect to Existing Kernel'
+          command: 'hydrogen:connect-to-existing-kernel'
+        }
+        {
+          label: 'Interrupt Kernel'
+          command: 'hydrogen:interrupt-kernel'
+        }
+        {
+          label: 'Restart Kernel'
+          command: 'hydrogen:restart-kernel'
+        }
+        {
+          label: 'Shutdown Kernel'
+          command: 'hydrogen:shutdown-kernel'
+        }
+        {
+          label: 'Toggle Kernel Monitor'
+          command: 'hydrogen:toggle-kernel-monitor'
+        }
+        {type: 'separator'}
+        {
+          label: 'Run'
+          command: 'hydrogen:run'
+        }
+        {
+          label: 'Run and Move Down'
+          command: 'hydrogen:run-and-move-down'
+        }
+        {
+          label: 'Run Cell'
+          command: 'hydrogen:run-cell'
+        }
+        {
+          label: 'Run Cell and Move Down'
+          command: 'hydrogen:run-cell-and-move-down'
+        }
+        {
+          label: 'Run All'
+          command: 'hydrogen:run-all'
+        }
+        {
+          label: 'Run All Above'
+          command: 'hydrogen:run-all-above'
+        }
+        {type: 'separator'}
+        {
+          label: 'Clear Result'
+          commands: 'hydrogen:clear-result'
+        }
+        {
+          label: 'Clear Results'
+          commands: 'hydrogen:clear-results'
+        }
+        {type: 'separator'}
+        {
+          label: 'Toggle Insepctor'
+          command: 'hydrogen:toggle-inspector'
+        }
+        {
+          label: 'Toggle Output Area'
+          command: 'hydrogen:toggle-output-area'
+        }
+        {
+          label: 'Toggle Watches'
+          command: 'hydrogen:toggle-watches'
+        }
+        {type: 'separator'}
+        {
+          label: 'Import Notebook'
+          command: 'hydrogen:import-notebook'
+        }
+        {
+          label: 'Export Notebook'
+          command: 'hydrogen:export-notebook'
+        }
+      ]
+    }
+    {type: 'separator'}
+  ]
