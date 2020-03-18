@@ -62,13 +62,13 @@ If you are interested in building a plugin take a look at our [plugin API docume
 
 ## Useful external packages
 
-Here is a list of external packages that could be useful when using Hydrogen (without using Hydrogen plugin API, as such they're mostly related to only the UIs):
+Here is a list of external packages that could be useful when using Hydrogen (without using Hydrogen plugin API, as such they're mostly only related to the UIs):
 
 - [markdown-cell-highlight](https://github.com/aviatesk/atom-markdown-cell-highlight): highlights code cells in markdown files
 - [Cell Navigation](https://github.com/hoishing/cell-navigation): enables easy jumps between Hydrogen code cells
 - [Hydrogen Cell Separator](https://github.com/jhabriel/hydrogen-cell-separator): gives simple horizontal line decorations for Hydrogen code cells
 
-If you find/create a package that you think can be useful when used in combination with Hydrogen, make a PR and feel free to add it.
+If you find/create a package that you think can be useful when used in combination with Hydrogen, feel free to make a PR and add it.
 
 ## How it works
 
