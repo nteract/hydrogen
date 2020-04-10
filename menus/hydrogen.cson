@@ -68,7 +68,7 @@
         }
         {type: 'separator'}
         {
-          label: 'Toggle Insepctor'
+          label: 'Toggle Inspector'
           command: 'hydrogen:toggle-inspector'
         }
         {
@@ -177,7 +177,7 @@
         }
         {type: 'separator'}
         {
-          label: 'Toggle Insepctor'
+          label: 'Toggle Inspector'
           command: 'hydrogen:toggle-inspector'
         }
         {
