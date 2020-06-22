@@ -24,7 +24,7 @@ describe("Import notebook", () => {
       "# %% codecell",
       "pd.util.testing.makeDataFrame()",
       "# %% codecell",
-      ""
+      "",
     ]);
   });
 });

@@ -14,9 +14,9 @@ describe("History", () => {
       output_type: "display_data",
       data: {
         "text/html": "<p>This is some HTML that <b>WILL</b> render</p>",
-        "text/plain": "This is some plain text that WILL NOT render"
+        "text/plain": "This is some plain text that WILL NOT render",
       },
-      metadata: {}
+      metadata: {},
     };
     outputStore = new OutputStore();
     outputStore.index = 0;

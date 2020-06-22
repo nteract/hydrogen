@@ -11,7 +11,7 @@ import {
   isMultilanguageGrammar,
   getEmbeddedScope,
   getEditorDirectory,
-  msgSpecToNotebookFormat
+  msgSpecToNotebookFormat,
 } from "./../lib/utils";
 
 describe("utils", () => {
@@ -33,12 +33,12 @@ describe("utils", () => {
       );
       expect(
         grammarToLanguage({
-          name: "Grammar Language"
+          name: "Grammar Language",
         })
       ).toEqual("kernel language");
       expect(
         grammarToLanguage({
-          name: "Kernel Language"
+          name: "Kernel Language",
         })
       ).toEqual("kernel language");
       atom.config.set("Hydrogen.languageMappings", "");
@@ -92,10 +92,10 @@ describe("utils", () => {
           getScopesArray: () => [
             "text.md",
             "fenced.code.md",
-            "source.embedded.python"
-          ]
+            "source.embedded.python",
+          ],
         };
-      }
+      },
     };
     spyOn(editor, "scopeDescriptorForBufferPosition").and.callThrough();
     const scope = getEmbeddedScope(editor, "position");
@@ -109,7 +109,7 @@ describe("utils", () => {
     it("converts a message to the notebook format", () => {
       const msg = {
         content: { data: "test" },
-        header: { msg_type: "test_header" }
+        header: { msg_type: "test_header" },
       };
       const notebookSpecMsg = msgSpecToNotebookFormat(msg);
 

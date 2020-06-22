@@ -13,7 +13,7 @@ function deepFreeze(obj) {
   const propNames = Object.getOwnPropertyNames(obj);
 
   // Freeze properties before freezing self
-  propNames.forEach(name => {
+  propNames.forEach((name) => {
     const prop = obj[name];
 
     // Freeze prop if it is an object
@@ -29,14 +29,14 @@ function deepFreeze(obj) {
 const figure = deepFreeze({
   data: [
     { x: [1999, 2000, 2001, 2002], y: [10, 15, 13, 17], type: "scatter" },
-    { x: [1999, 2000, 2001, 2002], y: [16, 5, 11, 9], type: "scatter" }
+    { x: [1999, 2000, 2001, 2002], y: [16, 5, 11, 9], type: "scatter" },
   ],
   layout: {
     title: "Super Stuff",
     xaxis: { title: "Year", showgrid: false, zeroline: false },
     yaxis: { title: "Percent", showline: false },
-    height: "100px"
-  }
+    height: "100px",
+  },
 });
 
 describe("PlotlyTransform", () => {
@@ -51,13 +51,13 @@ describe("PlotlyTransform", () => {
       instance.plotDiv,
       [
         { x: [1999, 2000, 2001, 2002], y: [10, 15, 13, 17], type: "scatter" },
-        { x: [1999, 2000, 2001, 2002], y: [16, 5, 11, 9], type: "scatter" }
+        { x: [1999, 2000, 2001, 2002], y: [16, 5, 11, 9], type: "scatter" },
       ],
       {
         title: "Super Stuff",
         xaxis: { title: "Year", showgrid: false, zeroline: false },
         yaxis: { title: "Percent", showline: false },
-        height: "100px"
+        height: "100px",
       },
       {
         modeBarButtonsToRemove: ["toImage"],
@@ -65,9 +65,9 @@ describe("PlotlyTransform", () => {
           {
             name: "Download plot as a png",
             icon: plotly.Icons.camera,
-            click: instance.downloadImage
-          }
-        ]
+            click: instance.downloadImage,
+          },
+        ],
       }
     );
   });
@@ -85,13 +85,13 @@ describe("PlotlyTransform", () => {
       instance.plotDiv,
       [
         { x: [1999, 2000, 2001, 2002], y: [10, 15, 13, 17], type: "scatter" },
-        { x: [1999, 2000, 2001, 2002], y: [16, 5, 11, 9], type: "scatter" }
+        { x: [1999, 2000, 2001, 2002], y: [16, 5, 11, 9], type: "scatter" },
       ],
       {
         title: "Super Stuff",
         xaxis: { title: "Year", showgrid: false, zeroline: false },
         yaxis: { title: "Percent", showline: false },
-        height: "100px"
+        height: "100px",
       },
       {
         modeBarButtonsToRemove: ["toImage"],
@@ -99,9 +99,9 @@ describe("PlotlyTransform", () => {
           {
             name: "Download plot as a png",
             icon: plotly.Icons.camera,
-            click: instance.downloadImage
-          }
-        ]
+            click: instance.downloadImage,
+          },
+        ],
       }
     );
   });
@@ -113,7 +113,7 @@ describe("PlotlyTransform", () => {
     const instance = wrapper.instance();
 
     wrapper.setProps({
-      data: _.set(_.cloneDeep(figure), ["data", 0, "type"], "bar")
+      data: _.set(_.cloneDeep(figure), ["data", 0, "type"], "bar"),
     });
 
     expect(instance.plotDiv.data[0].type).toEqual("bar");

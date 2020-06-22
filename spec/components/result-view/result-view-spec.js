@@ -20,8 +20,8 @@ describe("ResultViewComponent", () => {
         lineHeight: 0,
         lineLength: 0,
         editorWidth: 0,
-        charWidth: 0
-      }
+        charWidth: 0,
+      },
     };
 
     const mockKernel = {};
@@ -50,8 +50,8 @@ describe("ResultViewComponent", () => {
         lineHeight: 0,
         lineLength: 0,
         editorWidth: 0,
-        charWidth: 0
-      }
+        charWidth: 0,
+      },
     };
 
     const mockKernel = {};
