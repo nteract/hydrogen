@@ -72,10 +72,10 @@ describe("Store", () => {
             getScopesArray: () => [
               "source.gfm",
               "markup.code.python.gfm",
-              "source.embedded.python"
-            ]
+              "source.embedded.python",
+            ],
           };
-        }
+        },
       };
 
       const pythonGrammar = { scopeName: "source.python", name: "Python" };
@@ -95,9 +95,9 @@ describe("Store", () => {
         getCursorBufferPosition: () => {},
         scopeDescriptorForBufferPosition: () => {
           return {
-            getScopesArray: () => ["source.gfm", "markup.code.python.gfm"]
+            getScopesArray: () => ["source.gfm", "markup.code.python.gfm"],
           };
-        }
+        },
       };
 
       store.setGrammar(editor);
@@ -143,7 +143,10 @@ describe("Store", () => {
       store.newKernel(kernel2, "foo.md", editor, { name: "javascript" });
       expect(store.kernelMapping.size).toBe(1);
       expect(store.kernelMapping.get("foo.md").toJS()).toEqual(
-        new Map([["python", kernel], ["javascript", kernel2]])
+        new Map([
+          ["python", kernel],
+          ["javascript", kernel2],
+        ])
       );
 
       expect(store.runningKernels).toEqual([kernel, kernel2]);
@@ -157,7 +160,7 @@ describe("Store", () => {
         new KernelTransport(
           {
             display_name: "Python 3",
-            language: "python"
+            language: "python",
           },
           { name: "python" }
         )
@@ -166,7 +169,7 @@ describe("Store", () => {
         new KernelTransport(
           {
             display_name: "Python 3",
-            language: "python"
+            language: "python",
           },
           { name: "python" }
         )
@@ -175,7 +178,7 @@ describe("Store", () => {
         new KernelTransport(
           {
             display_name: "JS",
-            language: "Javascript"
+            language: "Javascript",
           },
           { name: "javascript" }
         )
@@ -186,7 +189,13 @@ describe("Store", () => {
         ["foo.py", kernel1],
         ["bar.py", kernel1],
         ["baz.py", kernel2],
-        ["foo.md", new Map([["python", kernel1], ["javascript", kernel3]])]
+        [
+          "foo.md",
+          new Map([
+            ["python", kernel1],
+            ["javascript", kernel3],
+          ]),
+        ],
       ]);
 
       const kernelFiles = new Set(["foo.py", "bar.py", "foo.md"]);
@@ -205,7 +214,7 @@ describe("Store", () => {
   describe("getFilesForKernel", () => {
     const defaultGrammar = {
       scopeName: "text.plain.null",
-      name: "Null Grammar"
+      name: "Null Grammar",
     };
     function createMockEditor(grammar = defaultGrammar) {
       // const grammar = { scopeName: "source.python", name: "Python" };
@@ -219,7 +228,7 @@ describe("Store", () => {
         new KernelTransport(
           {
             display_name: "Julia 1.0.0",
-            language: "julia"
+            language: "julia",
           },
           grammar1
         )
@@ -232,7 +241,7 @@ describe("Store", () => {
         new KernelTransport(
           {
             display_name: "Julia 1.0.0",
-            language: "julia"
+            language: "julia",
           },
           grammar1
         )
@@ -243,7 +252,7 @@ describe("Store", () => {
         new KernelTransport(
           {
             display_name: "Python 3",
-            language: "python"
+            language: "python",
           },
           grammar2
         )
@@ -254,7 +263,7 @@ describe("Store", () => {
         new KernelTransport(
           {
             display_name: "JavaScript (node)",
-            language: "Javascript"
+            language: "Javascript",
           },
           grammar3
         )
@@ -391,7 +400,7 @@ describe("Store", () => {
       editor = atom.workspace.buildTextEditor();
       grammar = {
         scopeName: "source.js",
-        name: "JavaScript"
+        name: "JavaScript",
       };
       spyOn(editor, "getPath").and.returnValue("foo.js");
       spyOn(editor, "getGrammar").and.returnValue(grammar);
@@ -399,7 +408,7 @@ describe("Store", () => {
       kernel = new Kernel(
         new KernelTransport({
           display_name: "javascript (node)",
-          language: "javascript"
+          language: "javascript",
         })
       );
       store.newKernel(kernel, store.filePath, store.editor, store.grammar);
@@ -433,7 +442,7 @@ describe("Store", () => {
       const kernel = new Kernel(
         new KernelTransport({
           display_name: "Python 3",
-          language: "python"
+          language: "python",
         })
       );
       store.newKernel(kernel, store.filePath, store.editor, store.grammar);
@@ -450,7 +459,7 @@ describe("Store", () => {
       kernelSpec = { language: "python", display_name: "Python 3" };
       grammar = {
         scopeName: "source.python",
-        name: "Python"
+        name: "Python",
       };
 
       editor1 = atom.workspace.buildTextEditor();
@@ -478,7 +487,7 @@ describe("Store", () => {
       expect(mockStore.filePaths).toEqual(["foo.py", "bar.py"]);
       expect(mockStore.getFilesForKernel(mockStore.kernel)).toEqual([
         "foo.py",
-        "bar.py"
+        "bar.py",
       ]);
     });
   });

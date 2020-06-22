@@ -18,14 +18,14 @@ describe("Output area component", () => {
       "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
       "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
       '\u001b[0;32m<ipython-input-1-2f58efa4eb0f>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0;32mraise\u001b[0m \u001b[0mNameError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m"Test Error"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m',
-      "\u001b[0;31mNameError\u001b[0m: Test Error"
-    ]
+      "\u001b[0;31mNameError\u001b[0m: Test Error",
+    ],
   };
 
   let streamOutput = {
     name: "stdout",
     text: " hello",
-    output_type: "stream"
+    output_type: "stream",
   };
 
   let executeResultOutput = {
@@ -33,9 +33,9 @@ describe("Output area component", () => {
     metadata: {},
     data: {
       "text/plain": "This is a message",
-      "text/html": "<div>This <b>is</b> a message</div>"
+      "text/html": "<div>This <b>is</b> a message</div>",
     },
-    output_type: "execute_result"
+    output_type: "execute_result",
   };
 
   beforeAll(() => {
@@ -44,7 +44,7 @@ describe("Output area component", () => {
       new KernelTransport(
         {
           display_name: "Python 3",
-          language: "python"
+          language: "python",
         },
         { name: "python" }
       )
