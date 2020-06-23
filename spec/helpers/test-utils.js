@@ -15,7 +15,7 @@
  *
  */
 export function waitAsync(fn) {
-  return done => {
+  return (done) => {
     fn().then(done, function rejected(e) {
       fail(e);
       done();

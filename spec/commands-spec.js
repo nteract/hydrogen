@@ -18,7 +18,7 @@ describe("commands", () => {
     mockKernel = new Kernel(
       new KernelTransport({
         display_name: "Python 3",
-        language: "python"
+        language: "python",
       })
     );
 

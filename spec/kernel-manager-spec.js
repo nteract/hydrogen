@@ -9,9 +9,9 @@ const JAVASCRIPT_SPEC = {
     "node",
     "/home/user/node_modules/ijavascript/lib/kernel.js",
     "--protocol=5.0",
-    "{connection_file}"
+    "{connection_file}",
   ],
-  language: "javascript"
+  language: "javascript",
 };
 const PYTHON_SPEC = {
   language: "python",
@@ -22,18 +22,18 @@ const PYTHON_SPEC = {
     "-m",
     "ipykernel",
     "-f",
-    "{connection_file}"
-  ]
+    "{connection_file}",
+  ],
 };
 
 const PYTHON3_SPEC = Object.assign({}, PYTHON_SPEC, {
-  display_name: "Python 3"
+  display_name: "Python 3",
 });
 
 const KERNEL_SPECS = {
   ijavascript: { spec: JAVASCRIPT_SPEC },
   python2: { spec: PYTHON_SPEC },
-  python3: { spec: PYTHON3_SPEC }
+  python3: { spec: PYTHON3_SPEC },
 };
 const SPECS = [JAVASCRIPT_SPEC, PYTHON_SPEC, PYTHON3_SPEC];
 
@@ -94,7 +94,7 @@ describe("Kernel manager", () => {
 
     it("should return single kernelspec", async () => {
       spyOn(manager, "getAllKernelSpecsForGrammar").and.returnValue([
-        JAVASCRIPT_SPEC
+        JAVASCRIPT_SPEC,
       ]);
       expect(await manager.getKernelSpecForGrammar()).toEqual(JAVASCRIPT_SPEC);
     });
@@ -103,7 +103,7 @@ describe("Kernel manager", () => {
       const specs = [PYTHON_SPEC, PYTHON3_SPEC];
       spyOn(manager, "getAllKernelSpecsForGrammar").and.returnValue(specs);
       manager.kernelPicker = {
-        toggle: () => {}
+        toggle: () => {},
       };
       spyOn(manager.kernelPicker, "toggle");
       const spec = manager.getKernelSpecForGrammar();
@@ -136,7 +136,7 @@ describe("Kernel manager", () => {
   });
 
   describe("startKernelFor", () => {
-    it("should notify if no kernel specs are found", done => {
+    it("should notify if no kernel specs are found", (done) => {
       spyOn(atom.notifications, "addError");
       spyOn(manager, "getKernelSpecForGrammar").and.returnValue(
         Promise.resolve(null)

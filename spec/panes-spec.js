@@ -6,7 +6,7 @@ const PANES = ["inspector", "kernel-monitor", "output-area", "watches"];
 const utils = require("../lib/utils");
 
 describe("Panes", () => {
-  PANES.map(file => {
+  PANES.map((file) => {
     describe(file, () => {
       let pane;
       beforeEach(() => {

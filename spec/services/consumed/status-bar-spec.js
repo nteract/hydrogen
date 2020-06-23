@@ -15,7 +15,7 @@ describe("Status Bar Component", () => {
   it("should render status bar and call onClick if clicked", () => {
     const mockStore = {
       kernel: { displayName: "Foo Kernel", executionState: "idle" },
-      configMapping: new Map()
+      configMapping: new Map(),
     };
     const onClick = jasmine.createSpy("onClick");
     const component = shallow(
@@ -47,7 +47,7 @@ describe("Status Bar Component", () => {
       kernel = new Kernel(
         new KernelTransport({
           display_name: "Kernel Language Display Name",
-          language: "python"
+          language: "python",
         })
       );
       store.newKernel(kernel, store.filePath, store.editor, store.grammar);

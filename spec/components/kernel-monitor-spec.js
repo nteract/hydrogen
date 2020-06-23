@@ -27,8 +27,8 @@ describe("Kernel monitor", () => {
           debugName: "Kernel3-unsaved",
           unsaved: true,
           grammarName: "julia",
-          ext: ".jl"
-        }
+          ext: ".jl",
+        },
       ];
 
       spyOn(atom.notifications, "addInfo"); // Spied for 'Show kernel spec' link testing
@@ -51,7 +51,7 @@ describe("Kernel monitor", () => {
           new KernelTransport(
             {
               display_name: `Kernel Displayname: ${debugName}`,
-              language: grammarName
+              language: grammarName,
             },
             { name: grammarName }
           )
@@ -61,7 +61,7 @@ describe("Kernel monitor", () => {
         spyOn(kernel, "shutdown");
 
         store.newKernel(kernel, filename, newEditor, {
-          name: grammarName
+          name: grammarName,
         });
         kernel.setExecutionState("idle");
         mocks.push({
@@ -69,7 +69,7 @@ describe("Kernel monitor", () => {
           kernel,
           grammarName: grammarName,
           debugName,
-          filename
+          filename,
         });
       }
 
@@ -84,7 +84,7 @@ describe("Kernel monitor", () => {
   );
   afterEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeoutInterval;
-    filesToDelete.forEach(file => fs.unlinkSync(file));
+    filesToDelete.forEach((file) => fs.unlinkSync(file));
   });
 
   it("has an 'Show kernel spec' link to show kernel spec within `atom.notifications.addInfo({ detail })`", () => {
@@ -126,7 +126,7 @@ describe("Kernel monitor", () => {
     expect(store.runningKernels[0].shutdown).toHaveBeenCalledTimes(1);
   });
 
-  it("activates related editor when Jump to file clicked", done => {
+  it("activates related editor when Jump to file clicked", (done) => {
     const component = mount(<KernelMonitor store={store} />);
     // spyOn(atom.workspace, "open").and.callThrough();
     const [savedMock, savedMock1, unsavedMock] = mocks;
@@ -137,20 +137,22 @@ describe("Kernel monitor", () => {
     // When jump button clicked, the active editor will
     // change to the related editor and call done() to complete the test
     let timesClicked = 1;
-    let disposer = atom.workspace.onDidChangeActiveTextEditor(activeEditor => {
-      if (timesClicked === 1) {
-        expect(activeEditor.id).toEqual(unsavedMock.editor.id);
-        // increment and call the next click
-        timesClicked = 2;
-        jumpToEditorButtonSaved.simulate("click");
+    let disposer = atom.workspace.onDidChangeActiveTextEditor(
+      (activeEditor) => {
+        if (timesClicked === 1) {
+          expect(activeEditor.id).toEqual(unsavedMock.editor.id);
+          // increment and call the next click
+          timesClicked = 2;
+          jumpToEditorButtonSaved.simulate("click");
+        }
+        // if last call, done() to finish spec and dispose
+        else if (timesClicked === 2) {
+          expect(activeEditor.id).toEqual(savedMock.editor.id);
+          done();
+          disposer();
+        }
       }
-      // if last call, done() to finish spec and dispose
-      else if (timesClicked === 2) {
-        expect(activeEditor.id).toEqual(savedMock.editor.id);
-        done();
-        disposer();
-      }
-    });
+    );
     jumpToEditorButtonUnsaved.simulate("click");
   });
 });
