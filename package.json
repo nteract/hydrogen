@@ -78,7 +78,7 @@
     "mobx-react": "^6.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-table": "^6.10.0",
+    "react-table": "^7.0.0",
     "spawnteract": "^5.1.0",
     "strip-indent": "^3.0.0",
     "styled-components": "^5.0.1",
