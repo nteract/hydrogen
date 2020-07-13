@@ -84,7 +84,7 @@
     "styled-components": "^5.0.1",
     "tildify": "^2.0.0",
     "uuid": "^8.0.0",
-    "ws": "^3.3.1",
+    "ws": "^7.0.0",
     "xmlhttprequest": "^1.8.0"
   },
   "consumedServices": {
