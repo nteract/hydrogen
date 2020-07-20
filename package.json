@@ -113,7 +113,7 @@
     }
   },
   "devDependencies": {
-    "atom-jasmine3-test-runner": "^4.0.0",
+    "atom-jasmine3-test-runner": "^5.0.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "flow-bin": "^0.129.0",
