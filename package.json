@@ -75,7 +75,7 @@
     "lodash": "^4.14.0",
     "mathjax-electron": "^3.0.0",
     "mobx": "^5.1.1",
-    "mobx-react": "^6.0.0",
+    "mobx-react": "^7.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-table": "^6.10.0",
