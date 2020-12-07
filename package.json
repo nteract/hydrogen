@@ -116,7 +116,7 @@
     "atom-jasmine3-test-runner": "^5.0.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
-    "flow-bin": "^0.131.0",
+    "flow-bin": "^0.139.0",
     "husky": "^4.2.1",
     "lint-staged": "^10.0.7",
     "markdox": "^0.1.10",
