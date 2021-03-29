@@ -117,7 +117,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "flow-bin": "^0.131.0",
-    "husky": "^5.0.0",
+    "husky": "^6.0.0",
     "lint-staged": "^10.0.7",
     "markdox": "^0.1.10",
     "prettier": "^2.0.0",
