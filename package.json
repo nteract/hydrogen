@@ -39,9 +39,10 @@
     "prettier": "prettier --write \"lib/**/*.js\" \"spec/**/*.js\"",
     "build:services-docs": "markdox lib/services/index.js -o lib/services/README.md",
     "build:plugin-docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
-    "build:docs": "npm run build:plugin-docs && npm run build:services-docs"
+    "build:docs": "npm run build:plugin-docs && npm run build:services-docs",
+    "test": "atom --test spec"
   },
-  "atomTestRunner": "atom-jasmine3-test-runner",
+  "atomTestRunner": "./spec/runner",
   "repository": "https://github.com/nteract/hydrogen",
   "license": "MIT",
   "engines": {
