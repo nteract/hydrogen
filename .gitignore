@@ -7,3 +7,6 @@ kernel-configs/
 _book/
 package-lock.json
 !spec/helpers/*.ipynb
+
+# Build directories
+dist
