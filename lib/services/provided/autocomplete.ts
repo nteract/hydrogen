@@ -1,3 +1,4 @@
+import { AutocompleteProvider } from "atom/autocomplete-plus";
 import _ from "lodash";
 import { ansiToText } from "anser";
 import { log, char_idx_to_js_idx } from "../../utils";
@@ -67,9 +68,7 @@ function parseCompletions(results: CompleteReply, prefix: string) {
   });
 }
 
-export function provideAutocompleteResults(
-  store: Store
-): atom$AutocompleteProvider {
+export function provideAutocompleteResults(store: Store): AutocompleteProvider {
   const autocompleteProvider = {
     enabled: atom.config.get("Hydrogen.autocomplete"),
     selector: ".source",
