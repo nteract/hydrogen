@@ -12,7 +12,7 @@ export class AutocompleteWatchEditor {
 
   /** The `consumed autocompleteWatchEditor` */
   addAutocompleteToEditor = (editor: TextEditor, labels: Array<string>) => {
-    return;
+    return new Disposable(); // dummy disposable // TODO find a better way
   };
   isEnabeled: boolean = false;
 
@@ -56,7 +56,7 @@ export class AutocompleteWatchEditor {
       editor: TextEditor,
       labels: Array<string>
     ) => {
-      return;
+      return new Disposable(); // dummy disposable
     };
 
     /*
