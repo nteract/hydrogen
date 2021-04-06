@@ -9,7 +9,7 @@ type cb = (s: string) => void;
 export default class InputView {
   onConfirmed: cb;
   element: HTMLElement;
-  miniEditor: atom$TextEditor;
+  miniEditor: TextEditor;
   panel: atom$Panel | null | undefined;
   previouslyFocusedElement: HTMLElement | null | undefined;
 

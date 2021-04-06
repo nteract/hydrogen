@@ -1,4 +1,4 @@
-import { CompositeDisposable, Disposable } from "atom";
+import { TextEditor, CompositeDisposable, Disposable } from "atom";
 import type { Store } from "../../store";
 import type WatchesStore from "../../store/watches";
 import type WatchStore from "../../store/watch";
@@ -10,10 +10,7 @@ export class AutocompleteWatchEditor {
   disposables: atom$CompositeDisposable;
 
   /** The `consumed autocompleteWatchEditor` */
-  addAutocompleteToEditor = (
-    editor: atom$TextEditor,
-    labels: Array<string>
-  ) => {
+  addAutocompleteToEditor = (editor: TextEditor, labels: Array<string>) => {
     return;
   };
   isEnabeled: boolean = false;
@@ -55,7 +52,7 @@ export class AutocompleteWatchEditor {
   disable(store: Store) {
     // Removes the consumed function `watchEditor`
     this.addAutocompleteToEditor = (
-      editor: atom$TextEditor,
+      editor: TextEditor,
       labels: Array<string>
     ) => {
       return;

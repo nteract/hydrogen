@@ -1,4 +1,4 @@
-import { Emitter } from "atom";
+import { Emitter, TextEditor } from "atom";
 import { observable, action, computed } from "mobx";
 import { isEqual } from "lodash";
 import {
@@ -268,7 +268,7 @@ export default class Kernel {
   @action
   async setInspectorResult(
     bundle: Record<string, any>,
-    editor: atom$TextEditor | null | undefined
+    editor: TextEditor | null | undefined
   ) {
     if (isEqual(this.inspector.bundle, bundle)) {
       await atom.workspace.toggle(INSPECTOR_URI);

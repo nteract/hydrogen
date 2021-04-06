@@ -1,4 +1,4 @@
-import { Disposable, Point } from "atom";
+import { TextEditor, Disposable, Point } from "atom";
 import React from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
@@ -147,7 +147,7 @@ export function kernelSpecProvidesGrammar(
   return mappedLanguage.toLowerCase() === grammarLanguage;
 }
 export function getEmbeddedScope(
-  editor: atom$TextEditor,
+  editor: TextEditor,
   position: atom$Point
 ): string | null | undefined {
   const scopes = editor
@@ -155,7 +155,7 @@ export function getEmbeddedScope(
     .getScopesArray();
   return _.find(scopes, (s) => s.indexOf("source.embedded.") === 0);
 }
-export function getEditorDirectory(editor: atom$TextEditor | null | undefined) {
+export function getEditorDirectory(editor: TextEditor | null | undefined) {
   if (!editor) return os.homedir();
   const editorPath = editor.getPath();
   return editorPath ? path.dirname(editorPath) : os.homedir();
@@ -190,7 +190,7 @@ export function hotReloadPackage() {
   log(`activated ${packName}`);
 }
 export function rowRangeForCodeFoldAtBufferRow(
-  editor: atom$TextEditor,
+  editor: TextEditor,
   row: number
 ) {
   if (parseFloat(atom.getVersion()) < 1.22) {

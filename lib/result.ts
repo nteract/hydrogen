@@ -1,3 +1,4 @@
+import { TextEditor } from "atom";
 import { $ReadOnly } from "utility-types";
 import ResultView from "./components/result-view";
 import OutputPane from "./panes/output-area";
@@ -9,7 +10,7 @@ import type MarkerStore from "./store/markers";
  * Creates and renders a ResultView.
  *
  * @param {Object} store - Global Hydrogen Store
- * @param {atom$TextEditor} store.editor - TextEditor associated with the result.
+ * @param {TextEditor} store.editor - TextEditor associated with the result.
  * @param {Kernel} store.kernel - Kernel to run code and associate with the result.
  * @param {MarkerStore} store.markers - MarkerStore that belongs to `store.editor`.
  * @param {Object} codeBlock - A Hydrogen Cell.
@@ -23,7 +24,7 @@ export function createResult(
     kernel,
     markers,
   }: $ReadOnly<{
-    editor: atom$TextEditor | null | undefined;
+    editor: TextEditor | null | undefined;
     kernel: Kernel | null | undefined;
     markers: MarkerStore | null | undefined;
   }>,
@@ -89,7 +90,7 @@ export function createResult(
  * Creates inline results from Kernel Responses without a tie to a kernel.
  *
  * @param {Store} store - Hydrogen store
- * @param {atom$TextEditor} store.editor - The editor to display the results in.
+ * @param {TextEditor} store.editor - The editor to display the results in.
  * @param {MarkerStore} store.markers - Should almost always be the editor's `MarkerStore`
  * @param {Object} bundle - The bundle to display.
  * @param {Array<Object>} bundle.outputs - The Kernel Responses to display.
@@ -100,7 +101,7 @@ export function importResult(
     editor,
     markers,
   }: {
-    editor: atom$TextEditor | null | undefined;
+    editor: TextEditor | null | undefined;
     markers: MarkerStore | null | undefined;
   },
   {
@@ -134,14 +135,14 @@ export function importResult(
  * the last selection made*
  *
  * @param {Object} store - Global Hydrogen Store
- * @param {atom$TextEditor} store.editor - TextEditor associated with the ResultView.
+ * @param {TextEditor} store.editor - TextEditor associated with the ResultView.
  * @param {MarkerStore} store.markers - MarkerStore that belongs to `store.editor` and the ResultView.
  */
 export function clearResult({
   editor,
   markers,
 }: $ReadOnly<{
-  editor: atom$TextEditor | null | undefined;
+  editor: TextEditor | null | undefined;
   markers: MarkerStore | null | undefined;
 }>) {
   if (!editor || !markers) return;

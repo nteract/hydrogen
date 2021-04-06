@@ -1,10 +1,11 @@
+import { TextEditor } from "atom";
 import { action } from "mobx";
 import OutputStore from "./output";
 import { log } from "./../utils";
 import type Kernel from "./../kernel";
 export default class WatchStore {
   kernel: Kernel;
-  editor: atom$TextEditor;
+  editor: TextEditor;
   outputStore = new OutputStore();
   autocompleteDisposable: atom$Disposable | null | undefined;
 

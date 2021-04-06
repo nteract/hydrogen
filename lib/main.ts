@@ -372,11 +372,7 @@ const Hydrogen = {
     );
   },
 
-  _runAll(
-    editor: atom$TextEditor,
-    kernel: Kernel,
-    breakpoints?: Array<atom$Point>
-  ) {
+  _runAll(editor: TextEditor, kernel: Kernel, breakpoints?: Array<atom$Point>) {
     let cells = codeManager.getCells(editor, breakpoints);
 
     for (const cell of cells) {
@@ -430,7 +426,7 @@ const Hydrogen = {
     );
   },
 
-  _runAllAbove(editor: atom$TextEditor, kernel: Kernel) {
+  _runAllAbove(editor: TextEditor, kernel: Kernel) {
     const cursor = editor.getCursorBufferPosition();
     cursor.column = editor.getBuffer().lineLengthForRow(cursor.row);
     const breakpoints = codeManager.getBreakpoints(editor);
@@ -557,7 +553,7 @@ const Hydrogen = {
       filePath,
       kernel,
     }: {
-      editor: atom$TextEditor;
+      editor: TextEditor;
       grammar: atom$Grammar;
       filePath: string;
       kernel?: Kernel;

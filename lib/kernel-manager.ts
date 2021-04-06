@@ -1,3 +1,4 @@
+import { TextEditor } from "atom";
 import _ from "lodash";
 import * as kernelspecs from "kernelspecs";
 import { shell } from "electron";
@@ -14,7 +15,7 @@ export class KernelManager {
 
   startKernelFor(
     grammar: atom$Grammar,
-    editor: atom$TextEditor,
+    editor: TextEditor,
     filePath: string,
     onStarted: (kernel: Kernel) => void
   ) {
@@ -40,7 +41,7 @@ export class KernelManager {
   startKernel(
     kernelSpec: Kernelspec,
     grammar: atom$Grammar,
-    editor: atom$TextEditor,
+    editor: TextEditor,
     filePath: string,
     onStarted: ((kernel: Kernel) => void) | null | undefined
   ) {

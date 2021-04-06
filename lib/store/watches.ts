@@ -1,3 +1,4 @@
+import { TextEditor } from "atom";
 import { action, observable } from "mobx";
 import SelectListView from "atom-select-list";
 import { CompositeDisposable } from "atom";
@@ -43,7 +44,7 @@ export default class WatchesStore {
     this.createWatch().focus();
   };
   @action
-  addWatchFromEditor = (editor: atom$TextEditor) => {
+  addWatchFromEditor = (editor: TextEditor) => {
     if (!editor) return;
     const watchText = editor.getSelectedText();
 

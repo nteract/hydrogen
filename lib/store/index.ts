@@ -1,4 +1,4 @@
-import { CompositeDisposable, File } from "atom";
+import { TextEditor, CompositeDisposable, File } from "atom";
 import {
   observable,
   computed,
@@ -132,7 +132,7 @@ export class Store {
     this.startingKernels.set(kernelDisplayName, true);
   }
 
-  addFileDisposer(editor: atom$TextEditor, filePath: string) {
+  addFileDisposer(editor: TextEditor, filePath: string) {
     const fileDisposer = new CompositeDisposable();
 
     if (isUnsavedFilePath(filePath)) {
@@ -165,7 +165,7 @@ export class Store {
   newKernel(
     kernel: Kernel,
     filePath: string,
-    editor: atom$TextEditor,
+    editor: TextEditor,
     grammar: atom$Grammar
   ) {
     if (isMultilanguageGrammar(editor.getGrammar())) {
@@ -229,7 +229,7 @@ export class Store {
   }
 
   @action
-  updateEditor(editor: atom$TextEditor | null | undefined) {
+  updateEditor(editor: TextEditor | null | undefined) {
     this.editor = editor;
     this.setGrammar(editor);
 
@@ -241,7 +241,7 @@ export class Store {
   }
 
   // Returns the embedded grammar for multilanguage, normal grammar otherwise
-  getEmbeddedGrammar(editor: atom$TextEditor): atom$Grammar | null | undefined {
+  getEmbeddedGrammar(editor: TextEditor): atom$Grammar | null | undefined {
     const grammar = editor.getGrammar();
 
     if (!isMultilanguageGrammar(grammar)) {
@@ -258,7 +258,7 @@ export class Store {
   }
 
   @action
-  setGrammar(editor: atom$TextEditor | null | undefined) {
+  setGrammar(editor: TextEditor | null | undefined) {
     if (!editor) {
       this.grammar = null;
       return;

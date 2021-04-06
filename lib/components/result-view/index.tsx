@@ -1,4 +1,4 @@
-import { CompositeDisposable } from "atom";
+import { CompositeDisposable, TextEditor } from "atom";
 import React from "react";
 import { Provider } from "@nteract/mathjax";
 import { mathJaxPath } from "mathjax-electron";
@@ -25,7 +25,7 @@ export default class ResultView {
   constructor(
     markerStore: MarkerStore,
     kernel: Kernel | null | undefined,
-    editor: atom$TextEditor,
+    editor: TextEditor,
     row: number,
     showResult: boolean = true
   ) {

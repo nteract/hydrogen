@@ -1,3 +1,4 @@
+import { TextEditor } from "atom";
 import * as path from "path";
 import { readFile } from "fs";
 import _ from "lodash";
@@ -335,12 +336,12 @@ function getCellHeader(
  * Displays previous cell results inline of the provided editor.
  * nbCells and resultRows should be the same length.
  *
- * @param {atom$TextEditor} editor - The editor to display the results in.
+ * @param {TextEditor} editor - The editor to display the results in.
  * @param {Array<Cell>} nbCells - The original notebook cells.
  * @param {Array<Number>} resultRows - The rows to display the results on.
  */
 function importNotebookResults(
-  editor: atom$TextEditor,
+  editor: TextEditor,
   nbCells: Array<Cell>,
   resultRows: Array<number>
 ) {
