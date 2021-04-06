@@ -1,4 +1,4 @@
-import { CompositeDisposable, TextEditor } from "atom";
+import { CompositeDisposable, TextEditor, Marker } from "atom";
 import React from "react";
 import { Provider } from "@nteract/mathjax";
 import { mathJaxPath } from "mathjax-electron";
@@ -9,7 +9,7 @@ import type MarkerStore from "./../../store/markers";
 import type Kernel from "./../../kernel";
 export default class ResultView {
   disposer: CompositeDisposable;
-  marker: atom$Marker;
+  marker: Marker;
   outputStore: OutputStore;
   destroy = () => {
     const editor = atom.workspace.getActiveTextEditor();
