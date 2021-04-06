@@ -12,6 +12,8 @@ import os from "os";
 import path from "path";
 import Config from "./config";
 import store from "./store";
+import type { Message, Kernelspec } from "./hydrogen";
+
 export const INSPECTOR_URI = "atom://hydrogen/inspector";
 export const WATCHES_URI = "atom://hydrogen/watch-sidebar";
 export const OUTPUT_AREA_URI = "atom://hydrogen/output-area";

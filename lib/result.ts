@@ -5,6 +5,7 @@ import OutputPane from "./panes/output-area";
 import WatchesPane from "./panes/watches";
 import { OUTPUT_AREA_URI, openOrShowDock } from "./utils";
 import type MarkerStore from "./store/markers";
+import type Kernel from "./kernel";
 
 /**
  * Creates and renders a ResultView.

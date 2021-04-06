@@ -18,6 +18,7 @@ import * as codeManager from "./../code-manager";
 import MarkerStore from "./markers";
 import kernelManager from "./../kernel-manager";
 import Kernel from "./../kernel";
+import type { KernelMapping } from "../hydrogen";
 
 const commutable = require("@nteract/commutable");
 

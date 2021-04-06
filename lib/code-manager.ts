@@ -9,6 +9,8 @@ import {
   rowRangeForCodeFoldAtBufferRow,
   js_idx_to_char_idx,
 } from "./utils";
+import type { HydrogenCellType } from "./hydrogen";
+
 export function normalizeString(code: string | null | undefined) {
   if (code) {
     return code.replace(/\r\n|\r/g, "\n");

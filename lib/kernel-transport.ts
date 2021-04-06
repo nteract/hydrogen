@@ -1,6 +1,8 @@
 import { Grammar } from "atom";
 import { observable, action } from "mobx";
 import { log } from "./utils";
+import type { Kernelspec } from "./hydrogen";
+
 export type ResultsCallback = (
   message: any,
   channel: "shell" | "iopub" | "stdin"

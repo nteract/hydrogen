@@ -43,6 +43,8 @@ import {
 } from "./utils";
 import exportNotebook from "./export-notebook";
 import { importNotebook, ipynbOpener } from "./import-notebook";
+import type { Kernelspec } from "./hydrogen";
+
 const Hydrogen = {
   config: Config.schema,
 

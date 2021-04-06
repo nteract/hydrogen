@@ -8,6 +8,8 @@ import KernelPicker from "./kernel-picker";
 import store from "./store";
 import { getEditorDirectory, kernelSpecProvidesGrammar, log } from "./utils";
 import type { Connection } from "./zmq-kernel";
+import type { Kernelspec } from "./hydrogen";
+
 export const ks = kernelspecs;
 export class KernelManager {
   kernelSpecs: Array<Kernelspec> | null | undefined = null;

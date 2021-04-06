@@ -8,6 +8,8 @@ import Config from "./config";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
 import { log, js_idx_to_char_idx } from "./utils";
+import type { Kernelspec } from "./hydrogen";
+
 export type Connection = {
   control_port: number;
   hb_port: number;

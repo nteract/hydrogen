@@ -11,6 +11,7 @@ import Config from "./config";
 import WSKernel from "./ws-kernel";
 import InputView from "./input-view";
 import store from "./store";
+import type { Kernelspec } from "./hydrogen";
 
 class CustomListView {
   onConfirmed: ((...args: Array<any>) => any) | null | undefined = null;

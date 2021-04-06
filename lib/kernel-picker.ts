@@ -2,6 +2,8 @@ import { Panel } from "atom";
 import SelectListView from "atom-select-list";
 import _ from "lodash";
 import { log } from "./utils";
+import type { Kernelspec } from "./hydrogen";
+
 export default class KernelPicker {
   kernelSpecs: Array<Kernelspec>;
   onConfirmed: ((kernelSpecs: Kernelspec) => void) | null | undefined;

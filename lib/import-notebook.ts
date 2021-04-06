@@ -3,6 +3,7 @@ import * as path from "path";
 import { readFile } from "fs";
 import _ from "lodash";
 import { promisify } from "util";
+import type { HydrogenCellType } from "./hydrogen";
 
 const { dialog } = require("electron").remote;
 

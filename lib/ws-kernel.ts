@@ -4,6 +4,8 @@ import type { ResultsCallback } from "./kernel-transport";
 import InputView from "./input-view";
 import { log, js_idx_to_char_idx } from "./utils";
 import type { Session } from "@jupyterlab/services";
+import type { Message, Kernelspec } from "./hydrogen";
+
 export default class WSKernel extends KernelTransport {
   session: Session;
 

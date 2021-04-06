@@ -5,6 +5,7 @@ import _ from "lodash";
 import tildify from "tildify";
 import { kernelSpecProvidesGrammar } from "./utils";
 import type Kernel from "./kernel";
+import type { Kernelspec } from "./hydrogen";
 
 function getName(kernel: Kernel) {
   const prefix = kernel.transport.gatewayName
