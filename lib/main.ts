@@ -6,6 +6,7 @@ import {
   TextEditor,
   Grammar,
 } from "atom";
+import { StatusBar } from "atom/status-bar";
 import _ from "lodash";
 import { autorun } from "mobx";
 import React from "react";
@@ -252,7 +253,7 @@ const Hydrogen = {
     return services.consumed.autocomplete.consume(store, watchEditor);
   },
 
-  consumeStatusBar(statusBar: atom$StatusBar) {
+  consumeStatusBar(statusBar: StatusBar) {
     return services.consumed.statusBar.addStatusBar(
       store,
       statusBar,
