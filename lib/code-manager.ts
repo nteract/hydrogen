@@ -302,7 +302,7 @@ export function getCells(editor: TextEditor, breakpoints: Array<Point> = []) {
 export function getCellsForBreakPoints(
   editor: TextEditor,
   breakpoints: Array<Point>
-): Array<atom$Range> {
+): Array<Range> {
   let start = new Point(0, 0);
   // Let start be earliest row with text
   editor.scan(/\S/, (match) => {
@@ -469,7 +469,7 @@ export function foldAllButCurrentCell(editor: TextEditor) {
   editor.setSelectedBufferRanges(initialSelections);
 }
 
-function adjustCellFoldRange(editor: TextEditor, range: atom$Range) {
+function adjustCellFoldRange(editor: TextEditor, range: Range) {
   const startRow = range.start.row > 0 ? range.start.row - 1 : 0;
   const startWidth = editor.lineTextForBufferRow(startRow).length;
   const endRow =

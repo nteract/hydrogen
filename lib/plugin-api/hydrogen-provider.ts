@@ -1,4 +1,4 @@
-import { TextEditor } from "atom";
+import { TextEditor, Range } from "atom";
 import store from "./../store";
 import type Kernel from "./../kernel";
 import type ZMQKernel from "./../zmq-kernel";
@@ -56,9 +56,9 @@ export default class HydrogenProvider {
   }
 
   /*
-   * Get the `atom$Range` that will run if `hydrogen:run-cell` is called.
+   * Get the `Range` that will run if `hydrogen:run-cell` is called.
    * `null` is returned if no active text editor.
-   * @return {Class} `atom$Range`
+   * @return {Class} `Range`
    */
   getCellRange(editor: TextEditor | null | undefined) {
     if (!store.editor) return null;
