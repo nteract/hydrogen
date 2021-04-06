@@ -149,7 +149,7 @@ export class Store {
         })
       );
     } else {
-      const file: atom$File = new File(filePath);
+      const file: File = new File(filePath);
       fileDisposer.add(
         file.onDidDelete(() => {
           this.kernelMapping.delete(filePath);
