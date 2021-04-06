@@ -1,4 +1,4 @@
-import { TextEditor, Grammar } from "atom";
+import { TextEditor, Grammar, CustomEvent } from "atom";
 import * as path from "path";
 import { readFile } from "fs";
 import _ from "lodash";
@@ -41,7 +41,7 @@ export function ipynbOpener(uri: string) {
  *
  * @param {Event} event - Atom Event from clicking in a treeview.
  */
-export function importNotebook(event?: atom$CustomEvent) {
+export function importNotebook(event?: CustomEvent) {
   // Use selected filepath if called from tree-view context menu
   const filenameFromTreeView = _.get(event, "target.dataset.path");
 
