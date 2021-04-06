@@ -1,4 +1,4 @@
-import { TextEditor } from "atom";
+import { TextEditor, Panel } from "atom";
 type opts = {
   prompt: string;
   defaultText?: string;
@@ -10,7 +10,7 @@ export default class InputView {
   onConfirmed: cb;
   element: HTMLElement;
   miniEditor: TextEditor;
-  panel: atom$Panel | null | undefined;
+  panel: Panel | null | undefined;
   previouslyFocusedElement: HTMLElement | null | undefined;
 
   constructor(

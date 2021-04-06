@@ -1,3 +1,4 @@
+import { Panel } from "atom";
 import SelectListView from "atom-select-list";
 import WSKernel from "../../../ws-kernel";
 import { log } from "../../../utils";
@@ -27,7 +28,7 @@ const wsKernelCommands = [
   },
 ];
 export default class SignalListView {
-  panel: atom$Panel | null | undefined;
+  panel: Panel | null | undefined;
   previouslyFocusedElement: HTMLElement | null | undefined;
   selectListView: SelectListView;
   store: Store | null | undefined;

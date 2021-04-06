@@ -1,3 +1,4 @@
+import { Panel } from "atom";
 import SelectListView from "atom-select-list";
 import _ from "lodash";
 import { log } from "./utils";
@@ -5,7 +6,7 @@ export default class KernelPicker {
   kernelSpecs: Array<Kernelspec>;
   onConfirmed: ((kernelSpecs: Kernelspec) => void) | null | undefined;
   selectListView: SelectListView;
-  panel: atom$Panel | null | undefined;
+  panel: Panel | null | undefined;
   previouslyFocusedElement: HTMLElement | null | undefined;
 
   constructor(kernelSpecs: Array<Kernelspec>) {

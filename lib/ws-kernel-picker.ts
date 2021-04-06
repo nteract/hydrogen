@@ -1,3 +1,4 @@
+import { Panel } from "atom";
 import SelectListView from "atom-select-list";
 import _ from "lodash";
 import tildify from "tildify";
@@ -16,7 +17,7 @@ class CustomListView {
   onCancelled: ((...args: Array<any>) => any) | null | undefined = null;
   previouslyFocusedElement: HTMLElement | null | undefined;
   selectListView: SelectListView;
-  panel: atom$Panel | null | undefined;
+  panel: Panel | null | undefined;
 
   constructor() {
     this.previouslyFocusedElement = document.activeElement;
