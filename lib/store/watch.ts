@@ -1,4 +1,4 @@
-import { TextEditor } from "atom";
+import { TextEditor, Disposable } from "atom";
 import { action } from "mobx";
 import OutputStore from "./output";
 import { log } from "./../utils";
@@ -7,7 +7,7 @@ export default class WatchStore {
   kernel: Kernel;
   editor: TextEditor;
   outputStore = new OutputStore();
-  autocompleteDisposable: atom$Disposable | null | undefined;
+  autocompleteDisposable: Disposable | null | undefined;
 
   constructor(kernel: Kernel) {
     this.kernel = kernel;
