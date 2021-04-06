@@ -1,4 +1,5 @@
 import { Grammar } from "atom";
+import { ChildProcess } from "child_process"
 import fs from "fs";
 import { Message, Socket } from "jmp";
 import { v4 } from "uuid";
@@ -23,7 +24,7 @@ export default class ZMQKernel extends KernelTransport {
   executionCallbacks: Record<string, any> = {};
   connection: Connection;
   connectionFile: string;
-  kernelProcess: child_process$ChildProcess;
+  kernelProcess: ChildProcess;
   options: Record<string, any>;
   shellSocket: Socket;
   stdinSocket: Socket;
@@ -75,7 +76,7 @@ export default class ZMQKernel extends KernelTransport {
     this.monitor(done);
   }
 
-  monitorNotifications(childProcess: child_process$ChildProcess) {
+  monitorNotifications(childProcess: ChildProcess) {
     childProcess.stdout.on("data", (data: string | Buffer) => {
       data = data.toString();
 
