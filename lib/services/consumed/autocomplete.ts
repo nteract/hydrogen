@@ -1,4 +1,5 @@
 import { TextEditor, CompositeDisposable, Disposable } from "atom";
+import { AutocompleteWatchEditor as AtomAutocompleteWatchEditor } from "atom/autocomplete-plus";
 import type { Store } from "../../store";
 import type WatchesStore from "../../store/watches";
 import type WatchStore from "../../store/watch";
@@ -23,7 +24,7 @@ export class AutocompleteWatchEditor {
    * @param {Function} watchEditor - The function provided by `autocomplete.watchEditor`.
    * @returns {Disposable} - This is for clean up when autocomplete or hydrogen deactivate.
    */
-  consume(store: Store, watchEditor: atom$AutocompleteWatchEditor) {
+  consume(store: Store, watchEditor: AtomAutocompleteWatchEditor) {
     this.disposables = new CompositeDisposable();
     this.addAutocompleteToEditor = watchEditor;
 
