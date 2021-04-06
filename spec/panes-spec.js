@@ -11,7 +11,7 @@ describe("Panes", () => {
       let pane;
       beforeEach(() => {
         spyOn(utils, "reactFactory");
-        const Pane = require("../dist/panes/" + file);
+        const Pane = require("../dist/panes/" + file).default;
         pane = new Pane();
       });
       it("should correctly initialize", () => {
