@@ -1,6 +1,6 @@
 import { AutocompleteProvider } from "atom/autocomplete-plus";
 import _ from "lodash";
-import { ansiToText } from "anser";
+import Anser from "anser";
 import { log, char_idx_to_js_idx } from "../../utils";
 import type { Store } from "../../store";
 type CompleteReply = {
@@ -139,7 +139,7 @@ export function provideAutocompleteResults(store: Store): AutocompleteProvider {
             return;
           }
 
-          const description = ansiToText(data["text/plain"]);
+          const description = Anser.ansiToText(data["text/plain"]);
           resolve({
             text,
             replacementPrefix,
