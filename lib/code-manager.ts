@@ -21,8 +21,8 @@ export function getRow(editor: TextEditor, row: number) {
 }
 export function getTextInRange(
   editor: TextEditor,
-  start: atom$Point,
-  end: atom$Point
+  start: Point,
+  end: Point
 ) {
   const code = editor.getTextInBufferRange([start, end]);
   return normalizeString(code);
@@ -42,7 +42,7 @@ export function getRows(editor: TextEditor, startRow: number, endRow: number) {
 }
 export function getMetadataForRow(
   editor: TextEditor,
-  anyPointInCell: atom$Point
+  anyPointInCell: Point
 ): HydrogenCellType {
   if (isMultilanguageGrammar(editor.getGrammar())) {
     return "codecell";
@@ -106,7 +106,7 @@ export function removeCommentsMarkdownCell(
 export function getSelectedText(editor: TextEditor) {
   return normalizeString(editor.getSelectedText());
 }
-export function isComment(editor: TextEditor, position: atom$Point) {
+export function isComment(editor: TextEditor, position: Point) {
   const scope = editor.scopeDescriptorForBufferPosition(position);
   const scopeString = scope.getScopeChain();
   return _.includes(scopeString, "comment.line");
@@ -214,7 +214,7 @@ export function getBreakpoints(editor: TextEditor) {
   return breakpoints;
 }
 
-function getCell(editor: TextEditor, anyPointInCell?: atom$Point) {
+function getCell(editor: TextEditor, anyPointInCell?: Point) {
   if (!anyPointInCell) {
     anyPointInCell = editor.getCursorBufferPosition();
   }
@@ -296,7 +296,7 @@ export function getCurrentCell(editor: TextEditor) {
 }
 export function getCells(
   editor: TextEditor,
-  breakpoints: Array<atom$Point> = []
+  breakpoints: Array<Point> = []
 ) {
   if (breakpoints.length !== 0) {
     breakpoints.sort((a, b) => a.compare(b));
@@ -308,7 +308,7 @@ export function getCells(
 }
 export function getCellsForBreakPoints(
   editor: TextEditor,
-  breakpoints: Array<atom$Point>
+  breakpoints: Array<Point>
 ): Array<atom$Range> {
   let start = new Point(0, 0);
   // Let start be earliest row with text

@@ -346,7 +346,7 @@ const Hydrogen = {
     });
   },
 
-  runAll(breakpoints: Array<atom$Point> | null | undefined) {
+  runAll(breakpoints: Array<Point> | null | undefined) {
     const { editor, kernel, grammar, filePath } = store;
     if (!editor || !grammar || !filePath) return;
 
@@ -373,7 +373,7 @@ const Hydrogen = {
     );
   },
 
-  _runAll(editor: TextEditor, kernel: Kernel, breakpoints?: Array<atom$Point>) {
+  _runAll(editor: TextEditor, kernel: Kernel, breakpoints?: Array<Point>) {
     let cells = codeManager.getCells(editor, breakpoints);
 
     for (const cell of cells) {

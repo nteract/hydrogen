@@ -148,7 +148,7 @@ export function kernelSpecProvidesGrammar(
 }
 export function getEmbeddedScope(
   editor: TextEditor,
-  position: atom$Point
+  position: Point
 ): string | null | undefined {
   const scopes = editor
     .scopeDescriptorForBufferPosition(position)
