@@ -19,11 +19,7 @@ export function normalizeString(code: string | null | undefined) {
 export function getRow(editor: TextEditor, row: number) {
   return normalizeString(editor.lineTextForBufferRow(row));
 }
-export function getTextInRange(
-  editor: TextEditor,
-  start: Point,
-  end: Point
-) {
+export function getTextInRange(editor: TextEditor, start: Point, end: Point) {
   const code = editor.getTextInBufferRange([start, end]);
   return normalizeString(code);
 }
@@ -294,10 +290,7 @@ export function getCurrentCell(editor: TextEditor) {
 
   return getCell(editor);
 }
-export function getCells(
-  editor: TextEditor,
-  breakpoints: Array<Point> = []
-) {
+export function getCells(editor: TextEditor, breakpoints: Array<Point> = []) {
   if (breakpoints.length !== 0) {
     breakpoints.sort((a, b) => a.compare(b));
   } else {

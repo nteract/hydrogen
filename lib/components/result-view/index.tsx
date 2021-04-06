@@ -8,7 +8,7 @@ import ResultViewComponent from "./result-view";
 import type MarkerStore from "./../../store/markers";
 import type Kernel from "./../../kernel";
 export default class ResultView {
-  disposer: atom$CompositeDisposable;
+  disposer: CompositeDisposable;
   marker: atom$Marker;
   outputStore: OutputStore;
   destroy = () => {

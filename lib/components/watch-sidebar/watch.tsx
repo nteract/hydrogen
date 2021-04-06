@@ -6,7 +6,7 @@ export default class Watch extends React.Component<{
   store: WatchStore;
 }> {
   container: HTMLElement | null | undefined;
-  subscriptions: atom$CompositeDisposable = new CompositeDisposable();
+  subscriptions: CompositeDisposable = new CompositeDisposable();
 
   componentDidMount() {
     if (!this.container) return;

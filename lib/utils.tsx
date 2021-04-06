@@ -1,4 +1,10 @@
-import { TextEditor, Disposable, Point, Grammar } from "atom";
+import {
+  TextEditor,
+  CompositeDisposable,
+  Disposable,
+  Point,
+  Grammar,
+} from "atom";
 import React from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
@@ -15,7 +21,7 @@ export function reactFactory(
   reactElement: React.ReactElement<React.ComponentProps<any>, any>,
   domElement: HTMLElement,
   additionalTeardown: ((...args: Array<any>) => any) | null | undefined,
-  disposer: atom$CompositeDisposable = store.subscriptions
+  disposer: CompositeDisposable = store.subscriptions
 ) {
   ReactDOM.render(reactElement, domElement);
   const disposable = new Disposable(() => {

@@ -1,5 +1,5 @@
 import { Grammar } from "atom";
-import { ChildProcess } from "child_process"
+import { ChildProcess } from "child_process";
 import fs from "fs";
 import { Message, Socket } from "jmp";
 import { v4 } from "uuid";

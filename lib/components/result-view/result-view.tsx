@@ -53,7 +53,7 @@ class ResultViewComponent extends React.Component<Props> {
   };
   addCopyTooltip = (
     element: HTMLElement | null | undefined,
-    comp: atom$CompositeDisposable
+    comp: CompositeDisposable
   ) => {
     if (!element || !comp.disposables || comp.disposables.size > 0) return;
     comp.add(
@@ -67,7 +67,7 @@ class ResultViewComponent extends React.Component<Props> {
   };
   addCloseButtonTooltip = (
     element: HTMLElement | null | undefined,
-    comp: atom$CompositeDisposable
+    comp: CompositeDisposable
   ) => {
     if (!element || !comp.disposables || comp.disposables.size > 0) return;
     comp.add(

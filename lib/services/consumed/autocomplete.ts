@@ -7,7 +7,7 @@ import type WatchStore from "../../store/watch";
  * This acts as a global storage for the consumed service.
  */
 export class AutocompleteWatchEditor {
-  disposables: atom$CompositeDisposable;
+  disposables: CompositeDisposable;
 
   /** The `consumed autocompleteWatchEditor` */
   addAutocompleteToEditor = (editor: TextEditor, labels: Array<string>) => {

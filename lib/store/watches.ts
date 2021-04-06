@@ -1,7 +1,6 @@
-import { TextEditor } from "atom";
+import { TextEditor, CompositeDisposable } from "atom";
 import { action, observable } from "mobx";
 import SelectListView from "atom-select-list";
-import { CompositeDisposable } from "atom";
 import WatchStore from "./watch";
 import AutocompleteConsumer from "../services/consumed/autocomplete";
 import type Kernel from "./../kernel";
@@ -10,7 +9,7 @@ export default class WatchesStore {
   kernel: Kernel;
   @observable
   watches: Array<WatchStore> = [];
-  autocompleteDisposables: atom$CompositeDisposable | null | undefined;
+  autocompleteDisposables: CompositeDisposable | null | undefined;
 
   constructor(kernel: Kernel) {
     this.kernel = kernel;
