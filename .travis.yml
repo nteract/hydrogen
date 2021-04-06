@@ -9,10 +9,10 @@ script:
   - curl -s -O https://raw.githubusercontent.com/atom/ci/master/build-package.sh
   - chmod u+x build-package.sh
   - ./build-package.sh
-  - npm run flow
+  - npm run build
 
 sudo: false
-dist: xenial
+dist: bionic
 addons:
   apt:
     packages:
