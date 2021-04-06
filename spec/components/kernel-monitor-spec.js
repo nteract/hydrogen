@@ -7,10 +7,10 @@ const fs = require("fs");
 
 Enzyme.configure({ adapter: new Adapter() });
 
-import { Store } from "../../lib/store";
-import KernelTransport from "../../lib/kernel-transport";
-import Kernel from "../../lib/kernel";
-import KernelMonitor from "../../lib/components/kernel-monitor";
+import { Store } from "../../dist/store";
+import KernelTransport from "../../dist/kernel-transport";
+import Kernel from "../../dist/kernel";
+import KernelMonitor from "../../dist/components/kernel-monitor";
 import { waitAsync } from "../helpers/test-utils";
 
 describe("Kernel monitor", () => {

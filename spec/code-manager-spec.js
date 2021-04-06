@@ -2,7 +2,7 @@
 
 import { waitAsync } from "./helpers/test-utils";
 
-import * as CM from "../lib/code-manager";
+import * as CM from "../dist/code-manager";
 import { Point, Range } from "atom";
 
 describe("CodeManager", () => {

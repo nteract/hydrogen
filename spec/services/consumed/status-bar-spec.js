@@ -6,10 +6,10 @@ import Adapter from "enzyme-adapter-react-16";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-import { Store } from "../../../lib/store";
-import KernelTransport from "../../../lib/kernel-transport";
-import Kernel from "../../../lib/kernel";
-import { StatusBar } from "../../../lib/services/consumed/status-bar";
+import { Store } from "../../../dist/store";
+import KernelTransport from "../../../dist/kernel-transport";
+import Kernel from "../../../dist/kernel";
+import { StatusBar } from "../../../dist/services/consumed/status-bar";
 
 describe("Status Bar Component", () => {
   it("should render status bar and call onClick if clicked", () => {

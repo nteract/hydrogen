@@ -3,8 +3,8 @@
 import React from "react";
 import Enzyme, { shallow, mount } from "enzyme";
 
-import History from "../../../lib/components/result-view/history";
-import OutputStore from "../../../lib/store/output";
+import History from "../../../dist/components/result-view/history";
+import OutputStore from "../../../dist/store/output";
 
 describe("History", () => {
   let fakeOutput, outputStore, component;
