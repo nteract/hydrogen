@@ -5,3 +5,9 @@ declare module "atom/src/text-editor" {
     element: TextEditorElement;
   }
 }
+
+declare module "atom/src/package-manager" {
+  interface PackageManager {
+    unloadPackage(packageName: string): void;
+  }
+}
