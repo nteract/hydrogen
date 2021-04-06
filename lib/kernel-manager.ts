@@ -1,4 +1,4 @@
-import { TextEditor } from "atom";
+import { TextEditor, Grammar } from "atom";
 import _ from "lodash";
 import * as kernelspecs from "kernelspecs";
 import { shell } from "electron";
@@ -14,7 +14,7 @@ export class KernelManager {
   kernelPicker: KernelPicker | null | undefined;
 
   startKernelFor(
-    grammar: atom$Grammar,
+    grammar: Grammar,
     editor: TextEditor,
     filePath: string,
     onStarted: (kernel: Kernel) => void
@@ -40,7 +40,7 @@ export class KernelManager {
 
   startKernel(
     kernelSpec: Kernelspec,
-    grammar: atom$Grammar,
+    grammar: Grammar,
     editor: TextEditor,
     filePath: string,
     onStarted: ((kernel: Kernel) => void) | null | undefined
@@ -89,13 +89,13 @@ export class KernelManager {
     return this.kernelSpecs;
   }
 
-  async getAllKernelSpecs(grammar: atom$Grammar | null | undefined) {
+  async getAllKernelSpecs(grammar: Grammar | null | undefined) {
     if (this.kernelSpecs) return this.kernelSpecs;
     return this.updateKernelSpecs(grammar);
   }
 
   async getAllKernelSpecsForGrammar(
-    grammar: atom$Grammar | null | undefined
+    grammar: Grammar | null | undefined
   ): Promise<Kernelspec[]> {
     if (!grammar) return [];
     const kernelSpecs = await this.getAllKernelSpecs(grammar);
@@ -104,7 +104,7 @@ export class KernelManager {
     );
   }
 
-  async getKernelSpecForGrammar(grammar: atom$Grammar) {
+  async getKernelSpecForGrammar(grammar: Grammar) {
     const kernelSpecs = await this.getAllKernelSpecsForGrammar(grammar);
 
     if (kernelSpecs.length <= 1) {
@@ -126,7 +126,7 @@ export class KernelManager {
     });
   }
 
-  async updateKernelSpecs(grammar: atom$Grammar | null | undefined) {
+  async updateKernelSpecs(grammar: Grammar | null | undefined) {
     const kernelSpecs = await this.update();
 
     if (kernelSpecs.length === 0) {

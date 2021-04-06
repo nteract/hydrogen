@@ -1,3 +1,4 @@
+import { Grammar } from "atom";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
 import InputView from "./input-view";
@@ -9,7 +10,7 @@ export default class WSKernel extends KernelTransport {
   constructor(
     gatewayName: string,
     kernelSpec: Kernelspec,
-    grammar: atom$Grammar,
+    grammar: Grammar,
     session: Session
   ) {
     super(kernelSpec, grammar);

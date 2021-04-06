@@ -1,3 +1,4 @@
+import { Grammar } from "atom";
 import { observable, action } from "mobx";
 import { log } from "./utils";
 export type ResultsCallback = (
@@ -16,14 +17,14 @@ export default class KernelTransport {
     bundle: {},
   };
   kernelSpec: Kernelspec;
-  grammar: atom$Grammar;
+  grammar: Grammar;
   language: string;
   displayName: string;
   // Only `WSKernel` would have `gatewayName` property and thus not initialize it here,
   // still `KernelTransport` is better to have `gatewayName` property for code simplicity in the other parts of code
   gatewayName: string | null | undefined;
 
-  constructor(kernelSpec: Kernelspec, grammar: atom$Grammar) {
+  constructor(kernelSpec: Kernelspec, grammar: Grammar) {
     this.kernelSpec = kernelSpec;
     this.grammar = grammar;
     this.language = kernelSpec.language.toLowerCase();

@@ -1,4 +1,4 @@
-import { TextEditor } from "atom";
+import { TextEditor, Grammar } from "atom";
 import * as path from "path";
 import { readFile } from "fs";
 import _ from "lodash";
@@ -156,7 +156,7 @@ export async function _loadNotebook(
  * Tries to determine the Atom Grammar of a notebook. Default is Python.
  *
  * @param {Notebook} nb - The Notebook to determine the Atom Grammar of.
- * @return {atom$Grammar} - The grammar of the notebook.
+ * @return {Grammar} - The grammar of the notebook.
  */
 function getGrammarForNotebook(nb: Notebook) {
   const {
@@ -218,7 +218,7 @@ function getGrammarForNotebook(nb: Notebook) {
  * Tries to find a matching Atom Grammar from a language name
  *
  * @param {String} name - The language name to find a grammar for.
- * @return {atom$Grammar} - The matching Atom Grammar.
+ * @return {Grammar} - The matching Atom Grammar.
  */
 function getGrammarForLanguageName(name: string) {
   if (!name) return null;
@@ -242,11 +242,9 @@ function getGrammarForLanguageName(name: string) {
  * Tries to find a matching Atom Grammar from a file extensions
  *
  * @param {String} ext - The file extension to find a grammar for.
- * @return {atom$Grammar} - The matching Atom Grammar.
+ * @return {Grammar} - The matching Atom Grammar.
  */
-function getGrammarForFileExtension(
-  ext: string
-): atom$Grammar | null | undefined {
+function getGrammarForFileExtension(ext: string): Grammar | null | undefined {
   if (!ext) return null;
   ext = ext.startsWith(".") ? ext.slice(1) : ext;
   const grammars = atom.grammars.getGrammars();
@@ -259,11 +257,9 @@ function getGrammarForFileExtension(
  * Tries to find a matching Atom Grammar from Kernelspec name
  *
  * @param {String} name - The Kernelspec name to find a grammar for.
- * @return {atom$Grammar} - The matching Atom Grammar.
+ * @return {Grammar} - The matching Atom Grammar.
  */
-function getGrammarForKernelspecName(
-  name: string
-): atom$Grammar | null | undefined {
+function getGrammarForKernelspecName(name: string): Grammar | null | undefined {
   // Check if there exists an Atom grammar named source.${name}
   const grammar = getGrammarForLanguageName(name);
   if (grammar) return grammar;

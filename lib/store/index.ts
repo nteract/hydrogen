@@ -1,4 +1,4 @@
-import { TextEditor, CompositeDisposable, File } from "atom";
+import { TextEditor, CompositeDisposable, File, Grammar } from "atom";
 import {
   observable,
   computed,
@@ -34,7 +34,7 @@ export class Store {
   @observable
   editor = atom.workspace.getActiveTextEditor();
   @observable
-  grammar: atom$Grammar | null | undefined;
+  grammar: Grammar | null | undefined;
   @observable
   configMapping: Map<string, unknown | null | undefined> = new Map();
   globalMode: boolean = Boolean(atom.config.get("Hydrogen.globalMode"));
@@ -166,7 +166,7 @@ export class Store {
     kernel: Kernel,
     filePath: string,
     editor: TextEditor,
-    grammar: atom$Grammar
+    grammar: Grammar
   ) {
     if (isMultilanguageGrammar(editor.getGrammar())) {
       if (!this.kernelMapping.has(filePath)) {
@@ -241,7 +241,7 @@ export class Store {
   }
 
   // Returns the embedded grammar for multilanguage, normal grammar otherwise
-  getEmbeddedGrammar(editor: TextEditor): atom$Grammar | null | undefined {
+  getEmbeddedGrammar(editor: TextEditor): Grammar | null | undefined {
     const grammar = editor.getGrammar();
 
     if (!isMultilanguageGrammar(grammar)) {

@@ -4,6 +4,7 @@ import {
   Disposable,
   Point,
   TextEditor,
+  Grammar,
 } from "atom";
 import _ from "lodash";
 import { autorun } from "mobx";
@@ -554,7 +555,7 @@ const Hydrogen = {
       kernel,
     }: {
       editor: TextEditor;
-      grammar: atom$Grammar;
+      grammar: Grammar;
       filePath: string;
       kernel?: Kernel;
     },

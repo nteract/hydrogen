@@ -1,4 +1,4 @@
-import { TextEditor, Disposable, Point } from "atom";
+import { TextEditor, Disposable, Point, Grammar } from "atom";
 import React from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
@@ -53,7 +53,7 @@ export async function openOrShowDock(
   dock = atom.workspace.paneContainerForURI(URI);
   return dock ? dock.show() : null;
 }
-export function grammarToLanguage(grammar: atom$Grammar | null | undefined) {
+export function grammarToLanguage(grammar: Grammar | null | undefined) {
   if (!grammar) return null;
   const grammarLanguage = grammar.name.toLowerCase();
   const mappings = Config.getJson("languageMappings");
@@ -117,7 +117,7 @@ const markupGrammars = new Set([
   "source.dyndoc.md.stata",
   "source.dyndoc.latex.stata",
 ]);
-export function isMultilanguageGrammar(grammar: atom$Grammar) {
+export function isMultilanguageGrammar(grammar: Grammar) {
   return markupGrammars.has(grammar.scopeName);
 }
 export const isUnsavedFilePath = (filePath: string): boolean => {
@@ -125,7 +125,7 @@ export const isUnsavedFilePath = (filePath: string): boolean => {
 };
 export function kernelSpecProvidesGrammar(
   kernelSpec: Kernelspec,
-  grammar: atom$Grammar | null | undefined
+  grammar: Grammar | null | undefined
 ) {
   if (!grammar || !grammar.name || !kernelSpec || !kernelSpec.language) {
     return false;

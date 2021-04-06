@@ -1,3 +1,4 @@
+import { Grammar } from "atom";
 import fs from "fs";
 import { Message, Socket } from "jmp";
 import { v4 } from "uuid";
@@ -30,7 +31,7 @@ export default class ZMQKernel extends KernelTransport {
 
   constructor(
     kernelSpec: Kernelspec,
-    grammar: atom$Grammar,
+    grammar: Grammar,
     options: Record<string, any>,
     onStarted: ((...args: Array<any>) => any) | null | undefined
   ) {

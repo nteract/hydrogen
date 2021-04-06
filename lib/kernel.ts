@@ -1,4 +1,4 @@
-import { Emitter, TextEditor } from "atom";
+import { Emitter, TextEditor, Grammar } from "atom";
 import { observable, action, computed } from "mobx";
 import { isEqual } from "lodash";
 import {
@@ -216,7 +216,7 @@ export default class Kernel {
     return this.transport.kernelSpec;
   }
 
-  get grammar(): atom$Grammar {
+  get grammar(): Grammar {
     return this.transport.grammar;
   }
 
