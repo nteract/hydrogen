@@ -1,0 +1,40 @@
+name: CI
+on:
+  pull_request:
+  push:
+    # branches:
+    #   - master
+
+jobs:
+  Test:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    name: ${{ matrix.os }} - Atom ${{ matrix.atom_channel }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        atom_channel: [stable, beta]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: atom-community/action-setup-atom@v1
+        with:
+          channel: ${{ matrix.atom_channel }}
+
+      - name: Install dependencies and build
+        run: |
+          apm install
+          npm run build
+
+      - name: Run tests 👩🏾‍💻
+        run: npm run test
+
+  Skip:
+    if: contains(github.event.head_commit.message, '[skip ci]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip CI 🚫
+        run: echo skip ci
