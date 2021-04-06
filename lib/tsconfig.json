@@ -26,5 +26,6 @@
     "importHelpers": false,
     "outDir": "../dist"
   },
-  "compileOnSave": false
+  "compileOnSave": false,
+  "exclude": ["./module_types/need-to-upstream-to-flow-lib.d.ts"]
 }
