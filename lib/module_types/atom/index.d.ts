@@ -8,6 +8,7 @@ declare module "atom/src/text-editor" {
 
 declare module "atom/src/package-manager" {
   interface PackageManager {
+    loadPackage(packageName: string): void;
     unloadPackage(packageName: string): void;
   }
 }
