@@ -73,12 +73,12 @@ class CustomListView {
 }
 
 export default class WSKernelPicker {
-  _onChosen: (kernel: Kernel) => void;
+  _onChosen: (kernel: WSKernel) => void;
   _kernelSpecFilter: (kernelSpec: Kernelspec) => boolean;
   _path: string;
   listView: CustomListView;
 
-  constructor(onChosen: (kernel: Kernel) => void) {
+  constructor(onChosen: (kernel: WSKernel) => void) {
     this._onChosen = onChosen;
     this.listView = new CustomListView();
   }
