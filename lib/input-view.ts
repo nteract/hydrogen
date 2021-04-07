@@ -1,4 +1,6 @@
 import { TextEditor, Panel } from "atom";
+import { setPreviouslyFocusedElement } from "./utils";
+
 type opts = {
   prompt: string;
   defaultText?: string;
@@ -60,7 +62,7 @@ export default class InputView {
   }
 
   attach() {
-    this.previouslyFocusedElement = document.activeElement;
+    setPreviouslyFocusedElement(this);
     this.panel = atom.workspace.addModalPanel({
       item: this.element,
     });

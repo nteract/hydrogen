@@ -283,3 +283,13 @@ export function char_idx_to_js_idx(char_idx: number, text: string | null) {
 
   return js_idx;
 }
+
+/** Sets the `previouslyFocusedElement` property of the given object to activeElement if it is an HTMLElement */
+export function setPreviouslyFocusedElement(obj: {
+  previouslyFocusedElement: HTMLElement | null | undefined;
+}) {
+  const activeElement = document.activeElement;
+  if (activeElement instanceof HTMLElement) {
+    obj.previouslyFocusedElement = activeElement;
+  }
+}

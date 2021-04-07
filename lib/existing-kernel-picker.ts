@@ -3,7 +3,10 @@ import SelectListView from "atom-select-list";
 import store from "./store";
 import _ from "lodash";
 import tildify from "tildify";
-import { kernelSpecProvidesGrammar } from "./utils";
+import {
+  kernelSpecProvidesGrammar,
+  setPreviouslyFocusedElement,
+} from "./utils";
 import type Kernel from "./kernel";
 import type { Kernelspec } from "./hydrogen";
 
@@ -65,7 +68,7 @@ export default class ExistingKernelPicker {
   }
 
   attach() {
-    this.previouslyFocusedElement = document.activeElement;
+    setPreviouslyFocusedElement(this);
     if (this.panel == null)
       this.panel = atom.workspace.addModalPanel({
         item: this.selectListView,

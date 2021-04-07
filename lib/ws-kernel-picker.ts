@@ -12,6 +12,7 @@ import WSKernel from "./ws-kernel";
 import InputView from "./input-view";
 import store from "./store";
 import type { Kernelspec } from "./hydrogen";
+import { setPreviouslyFocusedElement } from "./utils";
 
 class CustomListView {
   onConfirmed: ((...args: Array<any>) => any) | null | undefined = null;
@@ -21,7 +22,7 @@ class CustomListView {
   panel: Panel | null | undefined;
 
   constructor() {
-    this.previouslyFocusedElement = document.activeElement;
+    setPreviouslyFocusedElement(this);
     this.selectListView = new SelectListView({
       itemsClassList: ["mark-active"],
       items: [],
@@ -83,7 +84,7 @@ export default class WSKernelPicker {
   }
 
   async toggle(_kernelSpecFilter: (kernelSpec: Kernelspec) => boolean) {
-    this.listView.previouslyFocusedElement = document.activeElement;
+    setPreviouslyFocusedElement(this.listView);
     this._kernelSpecFilter = _kernelSpecFilter;
     const gateways = Config.getJson("gateways") || [];
 

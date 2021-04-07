@@ -1,7 +1,7 @@
 import { Panel } from "atom";
 import SelectListView from "atom-select-list";
 import _ from "lodash";
-import { log } from "./utils";
+import { log, setPreviouslyFocusedElement } from "./utils";
 import type { Kernelspec } from "./hydrogen";
 
 export default class KernelPicker {
@@ -52,7 +52,7 @@ export default class KernelPicker {
   }
 
   attach() {
-    this.previouslyFocusedElement = document.activeElement;
+    setPreviouslyFocusedElement(this);
     if (this.panel == null)
       this.panel = atom.workspace.addModalPanel({
         item: this.selectListView,

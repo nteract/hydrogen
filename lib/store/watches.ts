@@ -3,13 +3,16 @@ import { action, observable } from "mobx";
 import SelectListView from "atom-select-list";
 import WatchStore from "./watch";
 import AutocompleteConsumer from "../services/consumed/autocomplete";
+import { setPreviouslyFocusedElement } from "../utils";
 import type Kernel from "./../kernel";
 type store = typeof import("./index").default;
+
 export default class WatchesStore {
   kernel: Kernel;
   @observable
   watches: Array<WatchStore> = [];
   autocompleteDisposables: CompositeDisposable | null | undefined;
+  previouslyFocusedElement: HTMLElement | null | undefined;
 
   constructor(kernel: Kernel) {
     this.kernel = kernel;
@@ -79,17 +82,19 @@ export default class WatchesStore {
         modalPanel.destroy();
         watchesPicker.destroy();
         if (this.watches.length === 0) this.addWatch();
-        else if (previouslyFocusedElement) previouslyFocusedElement.focus();
+        else if (this.previouslyFocusedElement)
+          this.previouslyFocusedElement.focus();
       },
       filterKeyForItem: (watch) => watch.name,
       didCancelSelection: () => {
         modalPanel.destroy();
-        if (previouslyFocusedElement) previouslyFocusedElement.focus();
+        if (this.previouslyFocusedElement)
+          this.previouslyFocusedElement.focus();
         watchesPicker.destroy();
       },
       emptyMessage: "There are no watches to remove!",
     });
-    const previouslyFocusedElement = document.activeElement;
+    setPreviouslyFocusedElement(this);
     const modalPanel = atom.workspace.addModalPanel({
       item: watchesPicker,
     });

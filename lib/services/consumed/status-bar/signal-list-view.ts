@@ -1,8 +1,9 @@
 import { Panel } from "atom";
 import SelectListView from "atom-select-list";
 import WSKernel from "../../../ws-kernel";
-import { log } from "../../../utils";
+import { log, setPreviouslyFocusedElement } from "../../../utils";
 import type { Store } from "../../../store";
+
 const basicCommands = [
   {
     name: "Interrupt",
@@ -85,7 +86,7 @@ export default class SignalListView {
   }
 
   attach() {
-    this.previouslyFocusedElement = document.activeElement;
+    setPreviouslyFocusedElement(this);
     if (this.panel == null)
       this.panel = atom.workspace.addModalPanel({
         item: this.selectListView,
