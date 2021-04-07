@@ -7,13 +7,13 @@ import type { Session } from "@jupyterlab/services";
 import type { Message, Kernelspec } from "./hydrogen";
 
 export default class WSKernel extends KernelTransport {
-  session: Session;
+  session: Session.ISession;
 
   constructor(
     gatewayName: string,
     kernelSpec: Kernelspec,
     grammar: Grammar,
-    session: Session
+    session: Session.ISession
   ) {
     super(kernelSpec, grammar);
     this.session = session;
@@ -28,8 +28,9 @@ export default class WSKernel extends KernelTransport {
     this.session.kernel.interrupt();
   }
 
-  shutdown() {
-    this.session.kernel.shutdown();
+  async shutdown() {
+    // TODO 'shutdown' does not exist on type 'IKernelConnection'
+    await (this.session?.shutdown() ?? this.session.kernel?.shutdown());
   }
 
   restart(onRestarted: ((...args: Array<any>) => any) | null | undefined) {
