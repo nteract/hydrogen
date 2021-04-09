@@ -13,7 +13,7 @@ import path from "path";
 import Config from "./config";
 import store from "./store";
 import type { Message } from "./hydrogen";
-import type { KernelSpec } from "kernelspecs";
+import type { KernelspecMetadata } from "@nteract/types";
 
 export const INSPECTOR_URI = "atom://hydrogen/inspector";
 export const WATCHES_URI = "atom://hydrogen/watch-sidebar";
@@ -133,7 +133,7 @@ export const isUnsavedFilePath = (filePath: string): boolean => {
   return filePath.match(/Unsaved\sEditor\s\d+/) ? true : false;
 };
 export function kernelSpecProvidesGrammar(
-  kernelSpec: KernelSpec,
+  kernelSpec: KernelspecMetadata,
   grammar: Grammar | null | undefined
 ) {
   if (!grammar || !grammar.name || !kernelSpec || !kernelSpec.language) {

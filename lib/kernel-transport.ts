@@ -1,7 +1,7 @@
 import { Grammar } from "atom";
 import { observable, action } from "mobx";
 import { log } from "./utils";
-import type { KernelSpec } from "kernelspecs";
+import type { KernelspecMetadata } from "@nteract/types";
 
 export type ResultsCallback = (
   message: any,
@@ -18,7 +18,7 @@ export default class KernelTransport {
   inspector = {
     bundle: {},
   };
-  kernelSpec: KernelSpec;
+  kernelSpec: KernelspecMetadata;
   grammar: Grammar;
   language: string;
   displayName: string;
@@ -26,7 +26,7 @@ export default class KernelTransport {
   // still `KernelTransport` is better to have `gatewayName` property for code simplicity in the other parts of code
   gatewayName: string | null | undefined;
 
-  constructor(kernelSpec: KernelSpec, grammar: Grammar) {
+  constructor(kernelSpec: KernelspecMetadata, grammar: Grammar) {
     this.kernelSpec = kernelSpec;
     this.grammar = grammar;
     this.language = kernelSpec.language.toLowerCase();

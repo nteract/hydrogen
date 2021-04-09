@@ -2,16 +2,16 @@ import { Panel } from "atom";
 import SelectListView from "atom-select-list";
 import _ from "lodash";
 import { log, setPreviouslyFocusedElement } from "./utils";
-import type { KernelSpec } from "kernelspecs";
+import type { KernelspecMetadata } from "@nteract/types";
 
 export default class KernelPicker {
-  kernelSpecs: Array<KernelSpec>;
-  onConfirmed: ((kernelSpecs: KernelSpec) => void) | null | undefined;
+  kernelSpecs: Array<KernelspecMetadata>;
+  onConfirmed: ((kernelSpecs: KernelspecMetadata) => void) | null | undefined;
   selectListView: SelectListView;
   panel: Panel | null | undefined;
   previouslyFocusedElement: HTMLElement | null | undefined;
 
-  constructor(kernelSpecs: Array<KernelSpec>) {
+  constructor(kernelSpecs: Array<KernelspecMetadata>) {
     this.kernelSpecs = kernelSpecs;
     this.onConfirmed = null;
     this.selectListView = new SelectListView({

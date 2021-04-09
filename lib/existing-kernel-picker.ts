@@ -8,7 +8,7 @@ import {
   setPreviouslyFocusedElement,
 } from "./utils";
 import type Kernel from "./kernel";
-import type { KernelSpec } from "kernelspecs";
+import type { KernelspecMetadata } from "@nteract/types";
 
 function getName(kernel: Kernel) {
   const prefix = kernel.transport.gatewayName
@@ -23,7 +23,7 @@ function getName(kernel: Kernel) {
 }
 
 export default class ExistingKernelPicker {
-  kernelSpecs: Array<KernelSpec>;
+  kernelSpecs: Array<KernelspecMetadata>;
   selectListView: SelectListView;
   panel: Panel | null | undefined;
   previouslyFocusedElement: HTMLElement | null | undefined;

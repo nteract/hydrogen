@@ -7,7 +7,7 @@ import tildify from "tildify";
 type store = typeof import("../store").default;
 import Kernel from "../kernel";
 import { isUnsavedFilePath } from "../utils";
-import type { KernelSpec } from "kernelspecs";
+import type { KernelspecMetadata } from "@nteract/types";
 
 const showKernelSpec = (kernelSpec: {}) => {
   atom.notifications.addInfo("Hydrogen: Kernel Spec", {
@@ -64,7 +64,7 @@ const openEditor = (filePath: string) => {
 type KernelInfo = {
   value: {
     displayName: string;
-    kernelSpec: KernelSpec;
+    kernelSpec: KernelspecMetadata;
   };
 };
 

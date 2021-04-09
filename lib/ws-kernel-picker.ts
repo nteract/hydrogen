@@ -11,7 +11,7 @@ import Config from "./config";
 import WSKernel from "./ws-kernel";
 import InputView from "./input-view";
 import store from "./store";
-import type { KernelSpec } from "kernelspecs";
+import type { KernelspecMetadata } from "@nteract/types";
 import { setPreviouslyFocusedElement } from "./utils";
 
 class CustomListView {
@@ -74,7 +74,7 @@ class CustomListView {
 
 export default class WSKernelPicker {
   _onChosen: (kernel: WSKernel) => void;
-  _kernelSpecFilter: (kernelSpec: KernelSpec) => boolean;
+  _kernelSpecFilter: (kernelSpec: KernelspecMetadata) => boolean;
   _path: string;
   listView: CustomListView;
 
@@ -83,7 +83,7 @@ export default class WSKernelPicker {
     this.listView = new CustomListView();
   }
 
-  async toggle(_kernelSpecFilter: (kernelSpec: KernelSpec) => boolean) {
+  async toggle(_kernelSpecFilter: (kernelSpec: KernelspecMetadata) => boolean) {
     setPreviouslyFocusedElement(this.listView);
     this._kernelSpecFilter = _kernelSpecFilter;
     const gateways = Config.getJson("gateways") || [];

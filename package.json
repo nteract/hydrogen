@@ -119,6 +119,7 @@
     }
   },
   "devDependencies": {
+    "@nteract/types": "^7.1.7",
     "@types/atom": "^1.40.10",
     "@types/enzyme": "^3.10.8",
     "@types/enzyme-adapter-react-16": "^1.0.6",

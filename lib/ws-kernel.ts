@@ -5,14 +5,14 @@ import InputView from "./input-view";
 import { log, js_idx_to_char_idx } from "./utils";
 import type { Session } from "@jupyterlab/services";
 import type { Message } from "./hydrogen";
-import type { KernelSpec } from "kernelspecs";
+import type { KernelspecMetadata } from "@nteract/types";
 
 export default class WSKernel extends KernelTransport {
   session: Session.ISession;
 
   constructor(
     gatewayName: string,
-    kernelSpec: KernelSpec,
+    kernelSpec: KernelspecMetadata,
     grammar: Grammar,
     session: Session.ISession
   ) {

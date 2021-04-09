@@ -21,7 +21,7 @@ import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
 import { executionTime } from "./utils";
 import type { Message } from "./hydrogen";
-import type { KernelSpec } from "kernelspecs";
+import type { KernelspecMetadata } from "@nteract/types";
 
 function protectFromInvalidMessages(
   onResults: ResultsCallback
@@ -214,7 +214,7 @@ export default class Kernel {
     this.middleware = [delegateToTransport];
   }
 
-  get kernelSpec(): KernelSpec {
+  get kernelSpec(): KernelspecMetadata {
     return this.transport.kernelSpec;
   }
 
