@@ -23,7 +23,7 @@ export const NO_EXECTIME_STRING = "Not available";
 export function reactFactory(
   reactElement: React.ReactElement<React.ComponentProps<any>, any>,
   domElement: HTMLElement,
-  additionalTeardown: ((...args: Array<any>) => any) | null | undefined,
+  additionalTeardown?: ((...args: Array<any>) => any) | null | undefined,
   disposer: CompositeDisposable = store.subscriptions
 ) {
   ReactDOM.render(reactElement, domElement);
