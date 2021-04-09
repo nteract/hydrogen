@@ -13,7 +13,7 @@ function RangeSlider({ outputStore }) {
     outputs,
   } = outputStore;
   const sliderRef: {
-    current: HTMLElement | null | undefined;
+    current: HTMLDivElement | null | undefined;
   } = useRef();
   useEffect(() => {
     const disposer = new CompositeDisposable();
