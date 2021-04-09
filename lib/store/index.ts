@@ -70,6 +70,7 @@ export class Store {
     return savedFilePath ? savedFilePath : `Unsaved Editor ${editor.id}`;
   }
 
+  // TODO fix the types using mobx types
   @computed
   get filePaths(): Array<string> {
     return keys(this.kernelMapping);
@@ -174,9 +175,11 @@ export class Store {
       if (!this.kernelMapping.has(filePath)) {
         this.kernelMapping.set(filePath, new Map());
       }
-
+      // TODO when will this be a Kernel?
       const multiLanguageMap = this.kernelMapping.get(filePath);
-      if (multiLanguageMap) multiLanguageMap.set(grammar.name, kernel);
+      if (multiLanguageMap && typeof multiLanguageMap["set"] === "function") {
+        (multiLanguageMap as KernelMap).set(grammar.name, kernel);
+      }
     } else {
       this.kernelMapping.set(filePath, kernel);
     }
