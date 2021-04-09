@@ -15,7 +15,7 @@ export default function exportNotebook() {
 
     const ext = path.extname(filename) === "" ? ".ipynb" : "";
     const fname = `${filename}${ext}`;
-    writeFile(fname, stringifyNotebook(store.notebook), function (err, data) {
+    writeFile(fname, stringifyNotebook(store.notebook), (err) => {
       if (err) {
         atom.notifications.addError("Error saving file", {
           detail: err.message,
