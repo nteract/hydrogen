@@ -4,14 +4,15 @@ import type { ResultsCallback } from "./kernel-transport";
 import InputView from "./input-view";
 import { log, js_idx_to_char_idx } from "./utils";
 import type { Session } from "@jupyterlab/services";
-import type { Message, Kernelspec } from "./hydrogen";
+import type { Message } from "./hydrogen";
+import type { KernelSpec } from "kernelspecs";
 
 export default class WSKernel extends KernelTransport {
   session: Session.ISession;
 
   constructor(
     gatewayName: string,
-    kernelSpec: Kernelspec,
+    kernelSpec: KernelSpec,
     grammar: Grammar,
     session: Session.ISession
   ) {

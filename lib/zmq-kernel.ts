@@ -8,7 +8,7 @@ import Config from "./config";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
 import { log, js_idx_to_char_idx } from "./utils";
-import type { Kernelspec } from "./hydrogen";
+import type { KernelSpec } from "kernelspecs";
 
 export type Connection = {
   control_port: number;
@@ -33,7 +33,7 @@ export default class ZMQKernel extends KernelTransport {
   ioSocket: Socket;
 
   constructor(
-    kernelSpec: Kernelspec,
+    kernelSpec: KernelSpec,
     grammar: Grammar,
     options: Record<string, any>,
     onStarted: ((...args: Array<any>) => any) | null | undefined

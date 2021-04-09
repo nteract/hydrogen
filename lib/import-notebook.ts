@@ -255,9 +255,9 @@ function getGrammarForFileExtension(ext: string): Grammar | null | undefined {
 }
 
 /**
- * Tries to find a matching Atom Grammar from Kernelspec name
+ * Tries to find a matching Atom Grammar from KernelSpec name
  *
- * @param {String} name - The Kernelspec name to find a grammar for.
+ * @param {String} name - The KernelSpec name to find a grammar for.
  * @return {Grammar} - The matching Atom Grammar.
  */
 function getGrammarForKernelspecName(name: string): Grammar | null | undefined {

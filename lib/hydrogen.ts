@@ -1,11 +1,5 @@
 import Kernel from "./kernel";
 export type HydrogenCellType = "codecell" | "markdown";
-export type Kernelspec = {
-  env: Record<string, any>;
-  argv: Array<string>;
-  display_name: string;
-  language: string;
-};
 // Be more specific
 export type Message = {
   header: Record<string, any>;

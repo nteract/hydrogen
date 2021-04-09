@@ -43,7 +43,7 @@ import {
 } from "./utils";
 import exportNotebook from "./export-notebook";
 import { importNotebook, ipynbOpener } from "./import-notebook";
-import type { Kernelspec } from "./hydrogen";
+import type { KernelSpec } from "kernelspecs";
 
 const Hydrogen = {
   config: Config.schema,
@@ -278,7 +278,7 @@ const Hydrogen = {
       payload,
     }: {
       command: string;
-      payload: Kernelspec | null | undefined;
+      payload: KernelSpec | null | undefined;
     },
     {
       kernel,
@@ -520,7 +520,7 @@ const Hydrogen = {
         } else {
           this.kernelPicker = new KernelPicker(kernelSpecs);
 
-          this.kernelPicker.onConfirmed = (kernelSpec: Kernelspec) => {
+          this.kernelPicker.onConfirmed = (kernelSpec: KernelSpec) => {
             const { editor, grammar, filePath, markers } = store;
             if (!editor || !grammar || !filePath || !markers) return;
             markers.clear();
@@ -544,7 +544,7 @@ const Hydrogen = {
       });
     }
 
-    this.wsKernelPicker.toggle((kernelSpec: Kernelspec) =>
+    this.wsKernelPicker.toggle((kernelSpec: KernelSpec) =>
       kernelSpecProvidesGrammar(kernelSpec, store.grammar)
     );
   },

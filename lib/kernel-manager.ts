@@ -8,11 +8,11 @@ import KernelPicker from "./kernel-picker";
 import store from "./store";
 import { getEditorDirectory, kernelSpecProvidesGrammar, log } from "./utils";
 import type { Connection } from "./zmq-kernel";
-import type { Kernelspec } from "./hydrogen";
+import type { KernelSpec } from "kernelspecs";
 
 export const ks = kernelspecs;
 export class KernelManager {
-  kernelSpecs: Array<Kernelspec> | null | undefined = null;
+  kernelSpecs: Array<KernelSpec> | null | undefined = null;
   kernelPicker: KernelPicker | null | undefined;
 
   startKernelFor(
@@ -41,7 +41,7 @@ export class KernelManager {
   }
 
   startKernel(
-    kernelSpec: Kernelspec,
+    kernelSpec: KernelSpec,
     grammar: Grammar,
     editor: TextEditor,
     filePath: string,
@@ -77,7 +77,7 @@ export class KernelManager {
     });
   }
 
-  async update(): Promise<Kernelspec[]> {
+  async update(): Promise<KernelSpec[]> {
     const kernelSpecs = await ks.findAll();
     this.kernelSpecs = _.sortBy(
       _.map(
@@ -98,7 +98,7 @@ export class KernelManager {
 
   async getAllKernelSpecsForGrammar(
     grammar: Grammar | null | undefined
-  ): Promise<Kernelspec[]> {
+  ): Promise<KernelSpec[]> {
     if (!grammar) return [];
     const kernelSpecs = await this.getAllKernelSpecs(grammar);
     return kernelSpecs.filter((spec) =>

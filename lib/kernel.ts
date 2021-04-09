@@ -20,7 +20,8 @@ import InputView from "./input-view";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
 import { executionTime } from "./utils";
-import type { Kernelspec, Message } from "./hydrogen";
+import type { Message } from "./hydrogen";
+import type { KernelSpec } from "kernelspecs";
 
 function protectFromInvalidMessages(
   onResults: ResultsCallback
@@ -213,7 +214,7 @@ export default class Kernel {
     this.middleware = [delegateToTransport];
   }
 
-  get kernelSpec(): Kernelspec {
+  get kernelSpec(): KernelSpec {
     return this.transport.kernelSpec;
   }
 
