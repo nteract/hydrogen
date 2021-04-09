@@ -1,4 +1,4 @@
-import { TextEditor, Grammar, CustomEvent } from "atom";
+import { TextEditor, Grammar } from "atom";
 import * as path from "path";
 import { readFile } from "fs";
 import _ from "lodash";
