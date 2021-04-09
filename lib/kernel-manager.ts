@@ -1,6 +1,6 @@
 import { TextEditor, Grammar } from "atom";
 import _ from "lodash";
-import * as kernelspecs from "kernelspecs";
+import { findAll as kernelSpecsFindAll } from "kernelspecs";
 import { shell } from "electron";
 import ZMQKernel from "./zmq-kernel";
 import Kernel from "./kernel";
@@ -10,7 +10,6 @@ import { getEditorDirectory, kernelSpecProvidesGrammar, log } from "./utils";
 import type { Connection } from "./zmq-kernel";
 import type { KernelspecMetadata } from "@nteract/types";
 
-export const ks = kernelspecs;
 export class KernelManager {
   kernelSpecs: Array<KernelspecMetadata> | null | undefined = null;
   kernelPicker: KernelPicker | null | undefined;
@@ -78,7 +77,7 @@ export class KernelManager {
   }
 
   async update(): Promise<KernelspecMetadata[]> {
-    const kernelSpecs = await ks.findAll();
+    const kernelSpecs = await kernelSpecsFindAll();
     this.kernelSpecs = _.sortBy(
       _.map(
         _.mapKeys(kernelSpecs, function (value, key) {
