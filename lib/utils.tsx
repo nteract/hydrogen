@@ -34,7 +34,7 @@ export function reactFactory(
   disposer.add(disposable);
 }
 export function focus(item: unknown | null | undefined) {
-  if (item) {
+  if (item && typeof item === "object") {
     const editorPane = atom.workspace.paneForItem(item);
     if (editorPane) editorPane.activate();
   }
