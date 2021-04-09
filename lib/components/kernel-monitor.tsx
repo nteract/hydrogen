@@ -26,7 +26,7 @@ const shutdown = (kernel: Kernel) => {
 };
 
 const restart = (kernel: Kernel) => {
-  kernel.restart();
+  kernel.restart(undefined);
 };
 
 // @TODO If our store holds editor IDs instead of file paths, these messy matching stuff below would
