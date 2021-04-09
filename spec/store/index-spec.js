@@ -6,7 +6,7 @@ import globalStore, { Store } from "./../../dist/store";
 import KernelTransport from "./../../dist/kernel-transport";
 import Kernel from "./../../dist/kernel";
 import MarkerStore from "./../../dist/store/markers";
-const commutable = require("@nteract/commutable");
+import * as commutable from "@nteract/commutable";
 import { waitAsync } from "../helpers/test-utils";
 
 describe("Store initialize", () => {

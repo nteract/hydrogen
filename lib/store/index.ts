@@ -18,7 +18,7 @@ import * as codeManager from "./../code-manager";
 import MarkerStore from "./markers";
 import kernelManager from "./../kernel-manager";
 import Kernel from "./../kernel";
-import commutable from "@nteract/commutable";
+import * as commutable from "@nteract/commutable";
 
 export type KernelMap = Map<string, Kernel>;
 export type KernelMapping = Map<string, Kernel | KernelMap>;
