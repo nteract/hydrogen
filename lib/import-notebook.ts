@@ -5,7 +5,8 @@ import _ from "lodash";
 import { promisify } from "util";
 import type { HydrogenCellType } from "./hydrogen";
 
-const { dialog } = require("electron").remote;
+import { remote } from "electron";
+const { dialog } = remote;
 
 import { fromJS } from "@nteract/commutable";
 import type { Notebook, Cell } from "@nteract/commutable";

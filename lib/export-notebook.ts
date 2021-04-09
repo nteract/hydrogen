@@ -1,7 +1,7 @@
 import * as path from "path";
 import { writeFile } from "fs";
-
-const { dialog } = require("electron").remote;
+import { remote } from "electron";
+const { dialog } = remote;
 
 import { stringifyNotebook } from "@nteract/commutable";
 

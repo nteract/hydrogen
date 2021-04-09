@@ -110,7 +110,7 @@ export class PlotlyTransform extends React.Component<Props> {
   };
   downloadImage = (gd: any) => {
     this.Plotly.toImage(gd).then(function (dataUrl) {
-      const electron = require("electron");
+      const electron = require("electron") as typeof import("electron");
 
       electron.remote.getCurrentWebContents().downloadURL(dataUrl);
     });

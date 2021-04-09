@@ -23,7 +23,6 @@ import commutable from "@nteract/commutable";
 export type KernelMap = Map<string, Kernel>;
 export type KernelMapping = Map<string, Kernel | KernelMap>;
 
-
 export class Store {
   subscriptions = new CompositeDisposable();
   @observable
