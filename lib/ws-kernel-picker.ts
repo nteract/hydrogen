@@ -74,7 +74,7 @@ class CustomListView {
 
 export default class WSKernelPicker {
   _onChosen: (kernel: WSKernel) => void;
-  _kernelSpecFilter: (kernelSpec: KernelspecMetadata) => boolean;
+  _kernelSpecFilter: (kernelSpec: Kernel.ISpecModel) => boolean;
   _path: string;
   listView: CustomListView;
 
@@ -83,7 +83,7 @@ export default class WSKernelPicker {
     this.listView = new CustomListView();
   }
 
-  async toggle(_kernelSpecFilter: (kernelSpec: KernelspecMetadata) => boolean) {
+  async toggle(_kernelSpecFilter: (kernelSpec: Kernel.ISpecModel) => boolean) {
     setPreviouslyFocusedElement(this.listView);
     this._kernelSpecFilter = _kernelSpecFilter;
     const gateways = Config.getJson("gateways") || [];
@@ -256,8 +256,7 @@ export default class WSKernelPicker {
       gatewayInfo.options
     );
     let serverSettings = ServerConnection.makeSettings(gatewayOptions);
-    let specModels;
-
+    let specModels: Kernel.ISpecModels | undefined;
     try {
       specModels = await Kernel.getSpecs(serverSettings);
     } catch (error) {
