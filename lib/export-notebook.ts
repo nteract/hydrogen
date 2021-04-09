@@ -3,7 +3,7 @@ import { writeFile } from "fs";
 
 const { dialog } = require("electron").remote;
 
-const { stringifyNotebook } = require("@nteract/commutable");
+import { stringifyNotebook } from "@nteract/commutable";
 
 import store from "./store";
 export default function exportNotebook() {
