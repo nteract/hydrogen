@@ -26,14 +26,14 @@ class ResultViewComponent extends React.Component<Props> {
     if (!this.el) return "";
     return this.el.innerText ? this.el.innerText : "";
   };
-  handleClick = (event: MouseEvent) => {
+  handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.ctrlKey || event.metaKey) {
       this.openInEditor();
     } else {
       this.copyToClipboard();
     }
   };
-  checkForSelection = (event: MouseEvent) => {
+  checkForSelection = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const selection = document.getSelection();
 
     if (selection && selection.toString()) {
