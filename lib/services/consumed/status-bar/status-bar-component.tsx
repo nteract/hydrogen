@@ -9,7 +9,7 @@ type Props = {
 };
 
 @observer
-export default class StatusBar extends React.Component<Props> {
+class StatusBar extends React.Component<Props> {
   render() {
     const { kernel, markers, configMapping } = this.props.store;
     if (!kernel || configMapping.get("Hydrogen.statusBarDisable")) return null;
@@ -55,3 +55,4 @@ export default class StatusBar extends React.Component<Props> {
     return view;
   }
 }
+export default StatusBar;
