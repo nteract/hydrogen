@@ -69,7 +69,7 @@ const History = observer(({ store }: { store: OutputStore }) => {
       <RangeSlider outputStore={store} />
       <div
         className="multiline-container native-key-bindings"
-        tabIndex="-1"
+        tabIndex={-1}
         style={{
           fontSize: atom.config.get(`Hydrogen.outputAreaFontSize`) || "inherit",
         }}

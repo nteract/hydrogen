@@ -30,7 +30,7 @@ class ScrollList extends React.Component<Props> {
     return (
       <div
         className="scroll-list multiline-container native-key-bindings"
-        tabIndex="-1"
+        tabIndex={-1}
         style={{
           fontSize: atom.config.get(`Hydrogen.outputAreaFontSize`) || "inherit",
         }}

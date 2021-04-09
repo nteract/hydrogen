@@ -30,7 +30,7 @@ const Inspector = observer(({ store: { kernel } }: Props) => {
   return (
     <div
       className="native-key-bindings"
-      tabIndex="-1"
+      tabIndex={-1}
       style={{
         fontSize: atom.config.get(`Hydrogen.outputAreaFontSize`) || "inherit",
       }}

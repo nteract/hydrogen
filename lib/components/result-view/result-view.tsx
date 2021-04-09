@@ -136,7 +136,7 @@ class ResultViewComponent extends React.Component<Props> {
           (isPlain ? "inline-container" : "multiline-container") +
           " native-key-bindings"
         }
-        tabIndex={"-1"}
+        tabIndex={-1}
         onClick={isPlain ? this.checkForSelection : undefined}
         style={
           isPlain
