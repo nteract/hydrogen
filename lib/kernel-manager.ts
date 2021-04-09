@@ -45,7 +45,7 @@ export class KernelManager {
     grammar: Grammar,
     editor: TextEditor,
     filePath: string,
-    onStarted: ((kernel: Kernel) => void) | null | undefined
+    onStarted?: ((kernel: Kernel) => void) | null | undefined
   ) {
     const displayName = kernelSpec.display_name;
     // if kernel startup already in progress don't start additional kernel
