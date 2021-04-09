@@ -170,3 +170,8 @@ export class KernelManager {
   }
 }
 export default new KernelManager();
+
+// used in the tests
+if (atom.inSpecMode()) {
+  exports.ks = require("kernelspecs");
+}

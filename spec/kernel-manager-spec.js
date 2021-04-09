@@ -1,7 +1,6 @@
 "use babel";
 
-import { KernelManager } from "../dist/kernel-manager";
-import * as ks from "kernelspecs"; // Spied on
+import { KernelManager, ks } from "../dist/kernel-manager";
 
 const JAVASCRIPT_SPEC = {
   display_name: "IJavascript",
