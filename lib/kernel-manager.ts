@@ -119,7 +119,7 @@ export class KernelManager {
       this.kernelPicker = new KernelPicker(kernelSpecs);
     }
 
-    return new Promise((resolve) => {
+    return new Promise<KernelspecMetadata>((resolve) => {
       if (!this.kernelPicker) return resolve(null);
 
       this.kernelPicker.onConfirmed = (kernelSpec) => resolve(kernelSpec);
