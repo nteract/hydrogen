@@ -17,7 +17,10 @@ export default class WatchStore {
     });
     const grammar = this.kernel.grammar;
     if (grammar)
-      atom.grammars.assignLanguageMode(this.editor, grammar.scopeName);
+      atom.grammars.assignLanguageMode(
+        this.editor.getBuffer(),
+        grammar.scopeName
+      );
     this.editor.moveToTop();
     this.editor.element.classList.add("watch-input");
   }
