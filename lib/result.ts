@@ -1,5 +1,4 @@
 import { TextEditor } from "atom";
-import { $ReadOnly } from "utility-types";
 import ResultView from "./components/result-view";
 import OutputPane from "./panes/output-area";
 import WatchesPane from "./panes/watches";
@@ -24,7 +23,7 @@ export function createResult(
     editor,
     kernel,
     markers,
-  }: $ReadOnly<{
+  }: Readonly<{
     editor: TextEditor | null | undefined;
     kernel: Kernel | null | undefined;
     markers: MarkerStore | null | undefined;
@@ -142,7 +141,7 @@ export function importResult(
 export function clearResult({
   editor,
   markers,
-}: $ReadOnly<{
+}: Readonly<{
   editor: TextEditor | null | undefined;
   markers: MarkerStore | null | undefined;
 }>) {
@@ -165,7 +164,7 @@ export function clearResult({
 export function clearResults({
   kernel,
   markers,
-}: $ReadOnly<{
+}: Readonly<{
   kernel: Kernel | null | undefined;
   markers: MarkerStore | null | undefined;
 }>) {
