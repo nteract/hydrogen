@@ -9,7 +9,7 @@ import { remote } from "electron";
 const { dialog } = remote;
 
 import { fromJS } from "@nteract/commutable";
-import type { Notebook, Cell } from "@nteract/commutable";
+import type { Notebook, JSONObject, Cell } from "@nteract/commutable";
 import store from "./store";
 import { getCommentStartString } from "./code-manager";
 import { importResult, convertMarkdownToOutput } from "./result";
@@ -160,6 +160,7 @@ export async function _loadNotebook(
  * @return {Grammar} - The grammar of the notebook.
  */
 function getGrammarForNotebook(nb: Notebook) {
+  const metaData = nb.metadata;
   const {
     kernelspec,
     // Offical nbformat v4
@@ -168,7 +169,7 @@ function getGrammarForNotebook(nb: Notebook) {
     kernel_info,
     // Sometimes used in nbformat v3
     language, // Sometimes used in nbformat v3
-  } = nb.metadata.toJS();
+  } = typeof metaData["toJS"] === "function" ? metaData.toJS() : metaData; // TODO fix toJS
   const kernel = kernelspec ? kernelspec : kernel_info;
   const lang = language_info
     ? language_info
