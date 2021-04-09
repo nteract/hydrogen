@@ -247,7 +247,7 @@ export function executionTime(message: Message): string {
   }
 
   let min = (sec - (sec % 60)) / 60;
-  sec = (sec % 60).toFixed(0);
+  sec = Math.round(sec % 60);
 
   if (min < 60) {
     return min + " min " + sec + " sec";
