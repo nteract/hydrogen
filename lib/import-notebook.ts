@@ -1,8 +1,8 @@
 import { TextEditor, Grammar } from "atom";
 import * as path from "path";
-import { readFile } from "fs";
+import { promises } from "fs";
+const { readFile } = promises;
 import _ from "lodash";
-import { promisify } from "util";
 import type { HydrogenCellType } from "./hydrogen";
 
 import { remote } from "electron";
@@ -13,7 +13,6 @@ import type { Notebook, Cell } from "@nteract/commutable";
 import store from "./store";
 import { getCommentStartString } from "./code-manager";
 import { importResult, convertMarkdownToOutput } from "./result";
-const readFileP = promisify(readFile);
 const linesep = process.platform === "win32" ? "\r\n" : "\n";
 
 /**
@@ -101,7 +100,7 @@ export async function _loadNotebook(
   let nb;
 
   try {
-    data = JSON.parse(await readFileP(filename));
+    data = JSON.parse(await readFile(filename, { encoding: "utf-8" }));
 
     if (data.nbformat < 3) {
       atom.notifications.addError("Only notebook version 4 is fully supported");
