@@ -129,7 +129,7 @@ export async function _loadNotebook(
   const editor = await atom.workspace.open();
   const grammar = getGrammarForNotebook(nb);
   if (!grammar) return;
-  atom.grammars.assignLanguageMode(editor, grammar.scopeName);
+  atom.grammars.assignLanguageMode(editor.getBuffer(), grammar.scopeName);
   const commentStartString = getCommentStartString(editor);
 
   if (!commentStartString) {
