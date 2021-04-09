@@ -4,6 +4,7 @@ import {
   Disposable,
   Point,
   Grammar,
+  Dock,
 } from "atom";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -48,11 +49,11 @@ export async function openOrShowDock(
   // will not focus the newly opened pane
   let dock = atom.workspace.paneContainerForURI(URI);
 
-  if (dock) {
+  if (dock && typeof dock["show"] === "function") {
     // If the target item already exist, activate it and show dock
     const pane = atom.workspace.paneForURI(URI);
     if (pane) pane.activateItemForURI(URI);
-    return dock.show();
+    return (dock as Dock).show();
   }
 
   await atom.workspace.open(URI, {
@@ -60,7 +61,9 @@ export async function openOrShowDock(
     activatePane: false,
   });
   dock = atom.workspace.paneContainerForURI(URI);
-  return dock ? dock.show() : null;
+  return dock && typeof dock["show"] === "function"
+    ? (dock as Dock).show()
+    : null;
 }
 export function grammarToLanguage(grammar: Grammar | null | undefined) {
   if (!grammar) return null;
