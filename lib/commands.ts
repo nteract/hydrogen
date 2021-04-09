@@ -43,7 +43,7 @@ export function toggleOutputMode(): void {
   // There should never be more than one instance of OutputArea
   const outputArea = atom.workspace
     .getPaneItems()
-    .find((paneItem) => paneItem instanceof OutputPane);
+    .find((paneItem) => paneItem instanceof OutputPane) as OutputPane;
 
   if (outputArea) {
     return outputArea.destroy();
