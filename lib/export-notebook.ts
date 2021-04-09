@@ -27,6 +27,6 @@ export default function exportNotebook() {
       }
     });
   };
-
+  // TODO this API is promisified -> should be fixed
   dialog.showSaveDialog(saveNotebook);
 }
