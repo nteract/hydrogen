@@ -5,7 +5,7 @@ import WatchesPane from "./panes/watches";
 import { OUTPUT_AREA_URI, openOrShowDock } from "./utils";
 import type MarkerStore from "./store/markers";
 import type Kernel from "./kernel";
-import type { HydrogenCellType } from "./hydrogen"
+import type { HydrogenCellType } from "./hydrogen";
 
 /**
  * Creates and renders a ResultView.

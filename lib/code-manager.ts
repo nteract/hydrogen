@@ -46,7 +46,7 @@ export function getMetadataForRow(
     return "codecell";
   }
 
-  let cellType = "codecell";
+  let cellType: HydrogenCellType = "codecell";
   const buffer = editor.getBuffer();
   anyPointInCell = new Point(
     anyPointInCell.row,
