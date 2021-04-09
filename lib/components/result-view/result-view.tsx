@@ -110,7 +110,7 @@ class ResultViewComponent extends React.Component<Props> {
 
   render() {
     const { outputs, status, isPlain, position } = this.props.store;
-    const inlineStyle = {
+    const inlineStyle: React.CSSProperties = {
       marginLeft: `${position.lineLength + position.charWidth}px`,
       marginTop: `-${position.lineHeight}px`,
       userSelect: "text",
