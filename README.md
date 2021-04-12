@@ -1,8 +1,6 @@
-> :warning: Hydrogen is seeking maintainers! If you're a fan of the project and would like to help out, please see https://github.com/nteract/hydrogen/issues/2040.
-
 # Hydrogen <img src="https://cdn.rawgit.com/nteract/hydrogen/17eda245/static/animate-logo.svg" alt="hydrogen animated logo" height="50px" align="right" />
 
-[![Build Status](https://travis-ci.org/nteract/hydrogen.svg?branch=master)](https://travis-ci.org/nteract/hydrogen)
+[![CI](https://github.com/nteract/hydrogen/actions/workflows/CI.yml/badge.svg)](https://github.com/nteract/hydrogen/actions/workflows/CI.yml)
 
 Hydrogen is an interactive coding environment that supports Python, R, JavaScript and [other Jupyter kernels](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels).
 
