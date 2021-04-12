@@ -2,11 +2,11 @@
 
 import { CompositeDisposable } from "atom";
 import { isObservableMap, isObservableProp, isComputedProp } from "mobx";
-import globalStore, { Store } from "./../../lib/store";
-import KernelTransport from "./../../lib/kernel-transport";
-import Kernel from "./../../lib/kernel";
-import MarkerStore from "./../../lib/store/markers";
-const commutable = require("@nteract/commutable");
+import globalStore, { Store } from "./../../dist/store";
+import KernelTransport from "./../../dist/kernel-transport";
+import Kernel from "./../../dist/kernel";
+import MarkerStore from "./../../dist/store/markers";
+import * as commutable from "@nteract/commutable";
 import { waitAsync } from "../helpers/test-utils";
 
 describe("Store initialize", () => {

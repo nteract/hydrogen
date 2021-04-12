@@ -4,7 +4,7 @@ import { mount } from "enzyme";
 import _ from "lodash";
 import React from "react";
 
-import PlotlyTransform from "../../../lib/components/result-view/plotly";
+import PlotlyTransform from "../../../dist/components/result-view/plotly";
 
 import plotly from "@nteract/plotly";
 

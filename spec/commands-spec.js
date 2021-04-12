@@ -1,11 +1,11 @@
 "use babel";
 
-import { Store } from "../lib/store";
-import { toggleInspector, toggleOutputMode } from "../lib/commands";
-import KernelTransport from "../lib/kernel-transport";
-import Kernel from "../lib/kernel";
-import { OUTPUT_AREA_URI } from "../lib/utils";
-import OutputPane from "../lib/panes/output-area";
+import { Store } from "../dist/store";
+import { toggleInspector, toggleOutputMode } from "../dist/commands";
+import KernelTransport from "../dist/kernel-transport";
+import Kernel from "../dist/kernel";
+import { OUTPUT_AREA_URI } from "../dist/utils";
+import OutputPane from "../dist/panes/output-area";
 
 describe("commands", () => {
   let storeMock, mockKernel, filePath, grammar, editor;

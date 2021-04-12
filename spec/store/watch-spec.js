@@ -1,6 +1,6 @@
 "use babel";
 
-import WatchStore from "../../lib/store/watch";
+import WatchStore from "../../dist/store/watch";
 
 describe("WatchStore", () => {
   let store;

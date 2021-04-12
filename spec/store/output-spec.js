@@ -3,7 +3,7 @@
 import OutputStore, {
   reduceOutputs,
   isSingleLine,
-} from "../../lib/store/output";
+} from "../../dist/store/output";
 
 // Adapted from https://github.com/nteract/nteract/blob/master/test/renderer/reducers/document-spec.js#L33
 describe("reduceOutputs", () => {

@@ -1,6 +1,6 @@
 {
   "name": "Hydrogen",
-  "main": "./lib/main",
+  "main": "./dist/main",
   "version": "2.14.7",
   "description": "Run code interactively, inspect data, and plot. All the power of Jupyter kernels, inside your favorite text editor.",
   "author": "nteract contributors",
@@ -35,11 +35,17 @@
     ]
   },
   "scripts": {
-    "flow": "flow",
-    "prettier": "prettier --write \"lib/**/*.js\" \"spec/**/*.js\"",
+    "prettier": "prettier --write ./lib ./spec",
+    "build.test": "npm run build && npm run test",
+    "test": "echo 'test without rebuilding' && atom --test spec",
+    "clean": "shx rm -rf dist",
+    "dev": "npm run clean && npm run build -- --watch",
+    "build": "npm run clean && tsc -p lib/tsconfig.json || echo done",
     "build:services-docs": "markdox lib/services/index.js -o lib/services/README.md",
     "build:plugin-docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
-    "build:docs": "npm run build:plugin-docs && npm run build:services-docs"
+    "build:docs": "npm run build:plugin-docs && npm run build:services-docs",
+    "build-commit": "build-commit -o dist",
+    "prepare": "npm run build"
   },
   "atomTestRunner": "atom-jasmine3-test-runner",
   "repository": "https://github.com/nteract/hydrogen",
@@ -53,8 +59,8 @@
     }
   },
   "lint-staged": {
-    "{lib,spec}/**/*.js": [
-      "prettier --write"
+    "{lib,spec}/**/*": [
+      "npm run prettier"
     ]
   },
   "dependencies": {
@@ -66,7 +72,7 @@
     "@nteract/outputs": "^3.0.0",
     "@nteract/plotly": "^1.48.3",
     "@nteract/transform-vega": "^7.0.0",
-    "anser": "^1.4.8",
+    "anser": "^2.0.1",
     "atom-select-list": "^0.7.0",
     "escape-carriage": "^1.2.0",
     "escape-string-regexp": "^4.0.0",
@@ -113,14 +119,30 @@
     }
   },
   "devDependencies": {
+    "@nteract/types": "^7.1.7",
+    "@types/atom": "^1.40.10",
+    "@types/enzyme": "^3.10.8",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/lodash": "^4.14.168",
+    "@types/node": "^14.14.37",
+    "@types/react": "^16.8.6",
+    "@types/react-dom": "^16.8.6",
+    "@types/react-table": "^6",
+    "@types/react-test-renderer": "^16.0.0",
+    "@types/styled-components": "^5.1.9",
+    "@types/uuid": "^8.3.0",
+    "@types/ws": "^7.4.1",
     "atom-jasmine3-test-runner": "^5.0.0",
+    "build-commit": "^0.1.4",
+    "electron": "^6",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
-    "flow-bin": "^0.131.0",
     "husky": "^6.0.0",
     "lint-staged": "^10.0.7",
     "markdox": "^0.1.10",
-    "prettier": "^2.0.0",
-    "react-test-renderer": "^16.0.0"
+    "prettier-config-atomic": "^1.0.1",
+    "react-test-renderer": "^16.0.0",
+    "shx": "^0.3.3",
+    "typescript": "^4.2.3"
   }
 }

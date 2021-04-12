@@ -56,3 +56,11 @@ gitbook serve
 Open up `http://localhost:4000` in your browser to live preview changes in the `./docs/` directory. If you want to add or remove a page in the docs, be sure to edit `SUMMARY.md`.
 
 For more information take a look at https://toolchain.gitbook.com/setup.html.
+
+### Releasing
+
+```
+npm install
+npm run build-commit
+apm publish patch
+```

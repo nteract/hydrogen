@@ -1,13 +1,13 @@
 "use babel";
 
-import { KernelManager, ks } from "../lib/kernel-manager";
+import { KernelManager, ks } from "../dist/kernel-manager";
 
 const JAVASCRIPT_SPEC = {
   display_name: "IJavascript",
   env: {},
   argv: [
     "node",
-    "/home/user/node_modules/ijavascript/lib/kernel.js",
+    "/home/user/node_modules/ijavascript/dist/kernel.js",
     "--protocol=5.0",
     "{connection_file}",
   ],
