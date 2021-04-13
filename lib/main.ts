@@ -22,7 +22,7 @@ import KernelPicker from "./kernel-picker";
 import WSKernelPicker from "./ws-kernel-picker";
 import ExistingKernelPicker from "./existing-kernel-picker";
 import HydrogenProvider from "./plugin-api/hydrogen-provider";
-import store from "./store";
+import store, { Store, StoreLike } from "./store";
 import kernelManager from "./kernel-manager";
 import services from "./services";
 import * as commands from "./commands";
@@ -280,23 +280,19 @@ function connectToExistingKernel() {
   existingKernelPicker.toggle();
 }
 
+interface KernelCommand {
+  command: string;
+  payload?: KernelspecMetadata | null | undefined;
+}
+
 function handleKernelCommand(
-  {
-    command,
-    payload,
-  }: {
-    command: string;
-    payload: KernelspecMetadata | null | undefined;
-  },
-  {
-    kernel,
-    markers,
-  }: {
-    kernel: Kernel | null | undefined;
-    markers: MarkerStore | null | undefined;
-  }
+  { command, payload }: KernelCommand, // TODO payload is not used!
+  { kernel, markers }: Store | StoreLike
 ) {
-  log("handleKernelCommand:", arguments);
+  log("handleKernelCommand:", [
+    { command, payload },
+    { kernel, markers },
+  ]);
 
   if (!kernel) {
     const message = "No running kernel for grammar or editor found";
