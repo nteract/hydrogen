@@ -14,9 +14,11 @@ import store from "./store";
 import type { KernelspecMetadata } from "@nteract/types";
 import { setPreviouslyFocusedElement } from "./utils";
 
+type SelectListItem = any;
+
 class CustomListView {
-  onConfirmed: ((...args: Array<any>) => any) | null | undefined = null;
-  onCancelled: ((...args: Array<any>) => any) | null | undefined = null;
+  onConfirmed: (item: SelectListItem) => void | null | undefined = null;
+  onCancelled: () => void | null | undefined = null;
   previouslyFocusedElement: HTMLElement | null | undefined;
   selectListView: SelectListView;
   panel: Panel | null | undefined;
@@ -26,13 +28,13 @@ class CustomListView {
     this.selectListView = new SelectListView({
       itemsClassList: ["mark-active"],
       items: [],
-      filterKeyForItem: (item) => item.name,
-      elementForItem: (item) => {
+      filterKeyForItem: (item: SelectListItem) => item.name,
+      elementForItem: (item: SelectListItem) => {
         const element = document.createElement("li");
         element.textContent = item.name;
         return element;
       },
-      didConfirmSelection: (item) => {
+      didConfirmSelection: (item: SelectListItem) => {
         if (this.onConfirmed) {
           this.onConfirmed(item);
         }
