@@ -98,7 +98,9 @@ export function activate() {
         const lastItem = atom.workspace.getActivePaneItem();
         const lastPane = atom.workspace.paneForItem(lastItem);
         await atom.workspace.toggle(KERNEL_MONITOR_URI);
-        if (lastPane) lastPane.activate();
+        if (lastPane) {
+          lastPane.activate();
+        }
       },
       "hydrogen:start-local-kernel": () => startZMQKernel(),
       "hydrogen:connect-to-remote-kernel": () => connectToWSKernel(),
@@ -305,7 +307,9 @@ function handleKernelCommand(
   } else if (command === "restart-kernel") {
     kernel.restart();
   } else if (command === "shutdown-kernel") {
-    if (markers) markers.clear();
+    if (markers) {
+      markers.clear();
+    }
     // Note that destroy alone does not shut down a WSKernel
     kernel.shutdown();
     kernel.destroy();
@@ -315,14 +319,18 @@ function handleKernelCommand(
   ) {
     kernel.transport.promptRename();
   } else if (command === "disconnect-kernel") {
-    if (markers) markers.clear();
+    if (markers) {
+      markers.clear();
+    }
     kernel.destroy();
   }
 }
 
 function run(moveDown: boolean = false) {
   const editor = store.editor;
-  if (!editor) return;
+  if (!editor) {
+    return;
+  }
   // https://github.com/nteract/hydrogen/issues/1452
   atom.commands.dispatch(editor.element, "autocomplete-plus:cancel");
   const codeBlock = codeManager.findCodeBlock(editor);
@@ -332,7 +340,9 @@ function run(moveDown: boolean = false) {
   }
 
   const codeNullable = codeBlock.code;
-  if (codeNullable === null) return;
+  if (codeNullable === null) {
+    return;
+  }
   const { row } = codeBlock;
   const cellType = codeManager.getMetadataForRow(editor, new Point(row, 0));
   const code =
@@ -355,7 +365,9 @@ function run(moveDown: boolean = false) {
 
 function runAll(breakpoints?: Array<Point> | null | undefined) {
   const { editor, kernel, grammar, filePath } = store;
-  if (!editor || !grammar || !filePath) return;
+  if (!editor || !grammar || !filePath) {
+    return;
+  }
 
   if (isMultilanguageGrammar(editor.getGrammar())) {
     atom.notifications.addError(
@@ -380,12 +392,14 @@ function _runAll(
   kernel: Kernel,
   breakpoints?: Array<Point>
 ) {
-  let cells = codeManager.getCells(editor, breakpoints);
+  const cells = codeManager.getCells(editor, breakpoints);
 
   for (const cell of cells) {
     const { start, end } = cell;
     const codeNullable = codeManager.getTextInRange(editor, start, end);
-    if (codeNullable === null) continue;
+    if (codeNullable === null) {
+      continue;
+    }
     const row = codeManager.escapeBlankRows(
       editor,
       start.row,
@@ -408,7 +422,9 @@ function _runAll(
 
 function runAllAbove() {
   const { editor, kernel, grammar, filePath } = store;
-  if (!editor || !grammar || !filePath) return;
+  if (!editor || !grammar || !filePath) {
+    return;
+  }
 
   if (isMultilanguageGrammar(editor.getGrammar())) {
     atom.notifications.addError(
@@ -467,12 +483,16 @@ function _runAllAbove(editor: TextEditor, kernel: Kernel) {
 
 function runCell(moveDown: boolean = false) {
   const editor = store.editor;
-  if (!editor) return;
+  if (!editor) {
+    return;
+  }
   // https://github.com/nteract/hydrogen/issues/1452
   atom.commands.dispatch(editor.element, "autocomplete-plus:cancel");
   const { start, end } = codeManager.getCurrentCell(editor);
   const codeNullable = codeManager.getTextInRange(editor, start, end);
-  if (codeNullable === null) return;
+  if (codeNullable === null) {
+    return;
+  }
   const row = codeManager.escapeBlankRows(
     editor,
     start.row,
@@ -499,13 +519,17 @@ function runCell(moveDown: boolean = false) {
 
 function foldCurrentCell() {
   const editor = store.editor;
-  if (!editor) return;
+  if (!editor) {
+    return;
+  }
   codeManager.foldCurrentCell(editor);
 }
 
 function foldAllButCurrentCell() {
   const editor = store.editor;
-  if (!editor) return;
+  if (!editor) {
+    return;
+  }
   codeManager.foldAllButCurrentCell(editor);
 }
 
@@ -520,7 +544,9 @@ function startZMQKernel() {
 
         kernelPicker.onConfirmed = (kernelSpec: KernelspecMetadata) => {
           const { editor, grammar, filePath, markers } = store;
-          if (!editor || !grammar || !filePath || !markers) return;
+          if (!editor || !grammar || !filePath || !markers) {
+            return;
+          }
           markers.clear();
           kernelManager.startKernel(kernelSpec, grammar, editor, filePath);
         };
@@ -535,9 +561,13 @@ function connectToWSKernel() {
     wsKernelPicker = new WSKernelPicker((transport: WSKernel) => {
       const kernel = new Kernel(transport);
       const { editor, grammar, filePath, markers } = store;
-      if (!editor || !grammar || !filePath || !markers) return;
+      if (!editor || !grammar || !filePath || !markers) {
+        return;
+      }
       markers.clear();
-      if (kernel.transport instanceof ZMQKernel) kernel.destroy();
+      if (kernel.transport instanceof ZMQKernel) {
+        kernel.destroy();
+      }
       store.newKernel(kernel, filePath, editor, grammar);
     });
   }

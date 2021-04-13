@@ -1,22 +1,22 @@
 /** The data returned by `jupyter --paths --json` */
 export interface JupyterPaths {
   /** Paths: all the Jupyter Data Dirs */
-  data: Array<string>
+  data: Array<string>;
 
   /** RuntimeDir */
-  runtime: Array<string>
+  runtime: Array<string>;
 
-  config: Array<string>
+  config: Array<string>;
 }
 
 /** Ask Jupyter where the paths are using `jupyter --paths --json` */
-export declare function askJupyter(): Promise<JupyterPaths>
+export declare function askJupyter(): Promise<JupyterPaths>;
 
 interface Options {
   /** Ask Jupyter where the paths are */
-  askJupyter: boolean
+  askJupyter: boolean;
   /** Include the sys.prefix paths When {options.withSysPrefix} is set, `dataDirs` returns a promise of directories */
-  withSysPrefix: boolean
+  withSysPrefix: boolean;
 }
 
 /**
@@ -49,14 +49,14 @@ interface Options {
  *
  * @returns All the Jupyter Data Dirs
  */
-export declare function dataDirs(options?: Options): Promise<Array<string>>
+export declare function dataDirs(options?: Options): Promise<Array<string>>;
 
 /**
  * Returns immediately with the path to running kernels
  *
  * @example Jp.runtimeDir() //-> '/Users/rgbkrk/Library/Jupyter/runtime'
  */
-export declare function runtimeDir(): string
+export declare function runtimeDir(): string;
 
 /**
  * Like `dataDirs`, an optional `options` parameter is accepted with key `withSysPrefix` as an argument.
@@ -70,4 +70,4 @@ export declare function runtimeDir(): string
  *   '/etc/jupyter' ]
  * ```
  */
-export declare function configDirs(options?: Options): Promise<Array<string>>
+export declare function configDirs(options?: Options): Promise<Array<string>>;

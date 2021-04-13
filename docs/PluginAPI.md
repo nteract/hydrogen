@@ -1,10 +1,8 @@
-
-
 <!-- Start lib/plugin-api/hydrogen-provider.js -->
 
 ## HydrogenProvider
 
-Version: 1.0.0 
+Version: 1.0.0
 
 The Plugin API allows you to make Hydrogen awesome.
 You will be able to interact with this class in your Hydrogen Plugin using
@@ -20,7 +18,7 @@ Calls your callback when the kernel has changed.
 
 ### Params:
 
-* **Function** *Callback* 
+- **Function** _Callback_
 
 ## getActiveKernel()
 
@@ -28,7 +26,7 @@ Get the `HydrogenKernel` of the currently active text editor.
 
 ### Return:
 
-* **Class** `HydrogenKernel`
+- **Class** `HydrogenKernel`
 
 ## getCellRange()
 
@@ -37,9 +35,9 @@ Get the `atom$Range` that will run if `hydrogen:run-cell` is called.
 
 ### Return:
 
-* **Class** `atom$Range`
+- **Class** `atom$Range`
 
---------
+---
 
 <!-- End lib/plugin-api/hydrogen-provider.js -->
 
@@ -68,7 +66,7 @@ If the methods of a `middleware` object are added/modified/deleted after
 
 ### Params:
 
-* **HydrogenKernelMiddleware** *middleware* 
+- **HydrogenKernelMiddleware** _middleware_
 
 ## onDidDestroy(Callback)
 
@@ -76,7 +74,7 @@ Calls your callback when the kernel has been destroyed.
 
 ### Params:
 
-* **Function** *Callback* 
+- **Function** _Callback_
 
 ## getConnectionFile()
 
@@ -84,7 +82,6 @@ Get the [connection file](http://jupyter-notebook.readthedocs.io/en/latest/examp
 
 ### Return:
 
-* **String** Path to connection file.
+- **String** Path to connection file.
 
 <!-- End lib/plugin-api/hydrogen-kernel.js -->
-

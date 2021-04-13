@@ -1,4 +1,4 @@
-import type Kernel from "./../kernel";
+import type Kernel from "../kernel";
 import type { HydrogenKernelMiddleware } from "./hydrogen-types";
 /*
  * The `HydrogenKernel` class wraps Hydrogen's internal representation of kernels

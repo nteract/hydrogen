@@ -11,13 +11,13 @@ import {
   isMultilanguageGrammar,
   getEmbeddedScope,
   isUnsavedFilePath,
-} from "./../utils";
+} from "../utils";
 import _ from "lodash";
-import Config from "./../config";
-import * as codeManager from "./../code-manager";
+import Config from "../config";
+import * as codeManager from "../code-manager";
 import MarkerStore from "./markers";
-import kernelManager from "./../kernel-manager";
-import Kernel from "./../kernel";
+import kernelManager from "../kernel-manager";
+import Kernel from "../kernel";
 import * as commutable from "@nteract/commutable";
 
 export type KernelMap = Map<string, Kernel>;
@@ -43,7 +43,9 @@ export class Store {
 
   @computed
   get kernel(): Kernel | null | undefined {
-    if (!this.grammar || !this.editor) return null;
+    if (!this.grammar || !this.editor) {
+      return null;
+    }
 
     if (this.globalMode) {
       const currentScopeName = this.grammar.scopeName;
@@ -53,10 +55,16 @@ export class Store {
     }
 
     const file = this.filePath;
-    if (!file) return null;
+    if (!file) {
+      return null;
+    }
     const kernelOrMap = this.kernelMapping.get(file);
-    if (!kernelOrMap) return null;
-    if (kernelOrMap instanceof Kernel) return kernelOrMap;
+    if (!kernelOrMap) {
+      return null;
+    }
+    if (kernelOrMap instanceof Kernel) {
+      return kernelOrMap;
+    }
     return this.grammar && this.grammar.name
       ? kernelOrMap.get(this.grammar.name)
       : null;
@@ -65,7 +73,9 @@ export class Store {
   @computed
   get filePath(): string | null | undefined {
     const editor = this.editor;
-    if (!editor) return null;
+    if (!editor) {
+      return null;
+    }
     const savedFilePath = editor.getPath();
     return savedFilePath ? savedFilePath : `Unsaved Editor ${editor.id}`;
   }
@@ -79,7 +89,9 @@ export class Store {
   @computed
   get notebook() {
     const editor = this.editor;
-    if (!editor) return null;
+    if (!editor) {
+      return null;
+    }
     let notebook = commutable.emptyNotebook;
 
     if (this.kernel) {
@@ -98,7 +110,9 @@ export class Store {
       // When the cell marker following a given cell range is on its own line,
       // the newline immediately preceding that cell marker is included in
       // `source`. We remove that here. See #1512 for more details.
-      if (source.slice(-1) === "\n") source = source.slice(0, -1);
+      if (source.slice(-1) === "\n") {
+        source = source.slice(0, -1);
+      }
       const cellType = codeManager.getMetadataForRow(editor, start);
       let newCell;
 
@@ -118,7 +132,9 @@ export class Store {
   @computed
   get markers(): MarkerStore | null | undefined {
     const editor = this.editor;
-    if (!editor) return null;
+    if (!editor) {
+      return null;
+    }
     const markerStore = this.markersMapping.get(editor.id);
     return markerStore ? markerStore : this.newMarkerStore(editor.id);
   }
@@ -177,7 +193,7 @@ export class Store {
       }
       // TODO when will this be a Kernel?
       const multiLanguageMap = this.kernelMapping.get(filePath);
-      if (multiLanguageMap && typeof multiLanguageMap["set"] === "function") {
+      if (multiLanguageMap && typeof multiLanguageMap.set === "function") {
         (multiLanguageMap as KernelMap).set(grammar.name, kernel);
       }
     } else {
@@ -201,7 +217,9 @@ export class Store {
     const files = this.getFilesForKernel(kernel);
     files.forEach((file) => {
       const kernelOrMap = this.kernelMapping.get(file);
-      if (!kernelOrMap) return;
+      if (!kernelOrMap) {
+        return;
+      }
 
       if (kernelOrMap instanceof Kernel) {
         this.kernelMapping.delete(file);
@@ -216,7 +234,9 @@ export class Store {
     const grammar = kernel.grammar.name;
     return this.filePaths.filter((file) => {
       const kernelOrMap = this.kernelMapping.get(file);
-      if (!kernelOrMap) return false;
+      if (!kernelOrMap) {
+        return false;
+      }
       return kernelOrMap instanceof Kernel
         ? kernelOrMap === kernel
         : kernelOrMap.get(grammar) === kernel;
@@ -240,7 +260,9 @@ export class Store {
 
     if (this.globalMode && this.kernel && editor) {
       const fileName = editor.getPath();
-      if (!fileName) return;
+      if (!fileName) {
+        return;
+      }
       this.kernelMapping.set(fileName, this.kernel);
     }
   }
@@ -257,7 +279,9 @@ export class Store {
       editor,
       editor.getCursorBufferPosition()
     );
-    if (!embeddedScope) return grammar;
+    if (!embeddedScope) {
+      return grammar;
+    }
     const scope = embeddedScope.replace(".embedded", "");
     return atom.grammars.grammarForScopeName(scope);
   }
@@ -286,14 +310,20 @@ export class Store {
    */
   forceEditorUpdate() {
     const currentEditor = this.editor;
-    if (!currentEditor) return;
+    if (!currentEditor) {
+      return;
+    }
     const oldKey = this.filePath;
     // Return back if the kernel for this editor is already disposed.
-    if (!oldKey || !this.kernelMapping.has(oldKey)) return;
+    if (!oldKey || !this.kernelMapping.has(oldKey)) {
+      return;
+    }
     this.updateEditor(null);
     this.updateEditor(currentEditor);
     const newKey = this.filePath;
-    if (!newKey) return;
+    if (!newKey) {
+      return;
+    }
     // Change key of kernelMapping from editor ID to file path
     this.kernelMapping.set(newKey, this.kernelMapping.get(oldKey));
     this.kernelMapping.delete(oldKey);

@@ -4,8 +4,8 @@ import { observer } from "mobx-react";
 import { action, observable } from "mobx";
 import Display from "./display";
 import Status from "./status";
-import type OutputStore from "./../../store/output";
-import type Kernel from "./../../kernel";
+import type OutputStore from "../../store/output";
+import type Kernel from "../../kernel";
 const SCROLL_HEIGHT = 600;
 type Props = {
   store: OutputStore;
@@ -23,7 +23,9 @@ class ResultViewComponent extends React.Component<Props> {
   @observable
   expanded: boolean = false;
   getAllText = () => {
-    if (!this.el) return "";
+    if (!this.el) {
+      return "";
+    }
     return this.el.innerText ? this.el.innerText : "";
   };
   handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -55,7 +57,9 @@ class ResultViewComponent extends React.Component<Props> {
     element: HTMLElement | null | undefined,
     comp: CompositeDisposable
   ) => {
-    if (!element || !comp.disposables || comp.disposables.size > 0) return;
+    if (!element || !comp.disposables || comp.disposables.size > 0) {
+      return;
+    }
     comp.add(
       atom.tooltips.add(element, {
         title: `Click to copy,
@@ -69,7 +73,9 @@ class ResultViewComponent extends React.Component<Props> {
     element: HTMLElement | null | undefined,
     comp: CompositeDisposable
   ) => {
-    if (!element || !comp.disposables || comp.disposables.size > 0) return;
+    if (!element || !comp.disposables || comp.disposables.size > 0) {
+      return;
+    }
     comp.add(
       atom.tooltips.add(element, {
         title: this.props.store.executionCount
@@ -132,10 +138,9 @@ class ResultViewComponent extends React.Component<Props> {
 
     return (
       <div
-        className={
-          (isPlain ? "inline-container" : "multiline-container") +
-          " native-key-bindings"
-        }
+        className={`${
+          isPlain ? "inline-container" : "multiline-container"
+        } native-key-bindings`}
         tabIndex={-1}
         onClick={isPlain ? this.checkForSelection : undefined}
         style={
@@ -152,7 +157,9 @@ class ResultViewComponent extends React.Component<Props> {
         <div
           className="hydrogen_cell_display"
           ref={(ref) => {
-            if (!ref) return;
+            if (!ref) {
+              return;
+            }
             this.el = ref;
             isPlain
               ? this.addCopyTooltip(ref, this.containerTooltip)
@@ -216,8 +223,9 @@ class ResultViewComponent extends React.Component<Props> {
       this.expanded === true ||
       this.props.store.isPlain === true ||
       atom.config.get(`Hydrogen.autoScroll`) === false
-    )
+    ) {
       return;
+    }
     const scrollHeight = this.el.scrollHeight;
     const height = this.el.clientHeight;
     const maxScrollTop = scrollHeight - height;

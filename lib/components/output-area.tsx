@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import Anser from "anser";
 import History from "./result-view/history";
 import ScrollList from "./result-view/list";
-import { OUTPUT_AREA_URI, EmptyMessage } from "./../utils";
+import { OUTPUT_AREA_URI, EmptyMessage } from "../utils";
 type store = typeof import("../store").default;
 
 @observer
@@ -39,7 +39,9 @@ class OutputArea extends React.Component<{
 
   handleClick = () => {
     const kernel = this.props.store.kernel;
-    if (!kernel || !kernel.outputStore) return;
+    if (!kernel || !kernel.outputStore) {
+      return;
+    }
     const output = kernel.outputStore.outputs[kernel.outputStore.index];
     const copyOutput = this.getOutputText(output);
 

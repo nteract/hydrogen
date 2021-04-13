@@ -39,7 +39,9 @@ export function createResult(
     cellType: HydrogenCellType;
   }
 ) {
-  if (!editor || !kernel || !markers) return;
+  if (!editor || !kernel || !markers) {
+    return;
+  }
 
   if (atom.workspace.getActivePaneItem() instanceof WatchesPane) {
     kernel.watchesStore.run();
@@ -51,7 +53,9 @@ export function createResult(
     atom.workspace.getPaneItems().find((item) => item instanceof OutputPane)
       ? kernel.outputStore
       : null;
-  if (globalOutputStore) openOrShowDock(OUTPUT_AREA_URI);
+  if (globalOutputStore) {
+    openOrShowDock(OUTPUT_AREA_URI);
+  }
   const { outputStore } = new ResultView(
     markers,
     kernel,
@@ -60,12 +64,14 @@ export function createResult(
     !globalOutputStore || cellType == "markdown"
   );
 
-  if (code.search(/[\S]/) != -1) {
+  if (code.search(/\S/) != -1) {
     switch (cellType) {
       case "markdown":
-        if (globalOutputStore)
+        if (globalOutputStore) {
           globalOutputStore.appendOutput(convertMarkdownToOutput(code));
-        else outputStore.appendOutput(convertMarkdownToOutput(code));
+        } else {
+          outputStore.appendOutput(convertMarkdownToOutput(code));
+        }
         outputStore.appendOutput({
           data: "ok",
           stream: "status",
@@ -75,7 +81,9 @@ export function createResult(
       case "codecell":
         kernel.execute(code, (result) => {
           outputStore.appendOutput(result);
-          if (globalOutputStore) globalOutputStore.appendOutput(result);
+          if (globalOutputStore) {
+            globalOutputStore.appendOutput(result);
+          }
         });
         break;
     }
@@ -113,7 +121,9 @@ export function importResult(
     row: number;
   }
 ) {
-  if (!editor || !markers) return;
+  if (!editor || !markers) {
+    return;
+  }
   const { outputStore } = new ResultView(
     markers,
     null,
@@ -122,7 +132,7 @@ export function importResult(
     true // Always show inline
   );
 
-  for (let output of outputs) {
+  for (const output of outputs) {
     outputStore.appendOutput(output);
   }
 }
@@ -146,7 +156,9 @@ export function clearResult({
   editor: TextEditor | null | undefined;
   markers: MarkerStore | null | undefined;
 }>) {
-  if (!editor || !markers) return;
+  if (!editor || !markers) {
+    return;
+  }
   const [startRow, endRow] = editor.getLastSelection().getBufferRowRange();
 
   for (let row = startRow; row <= endRow; row++) {
@@ -169,8 +181,12 @@ export function clearResults({
   kernel: Kernel | null | undefined;
   markers: MarkerStore | null | undefined;
 }>) {
-  if (markers) markers.clear();
-  if (!kernel) return;
+  if (markers) {
+    markers.clear();
+  }
+  if (!kernel) {
+    return;
+  }
   kernel.outputStore.clear();
 }
 

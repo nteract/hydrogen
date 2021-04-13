@@ -1,8 +1,8 @@
 import { TextEditor, Range, Emitter } from "atom";
-import store from "./../store";
-import type Kernel from "./../kernel";
-import type ZMQKernel from "./../zmq-kernel";
-import { getCurrentCell } from "./../code-manager";
+import store from "../store";
+import type Kernel from "../kernel";
+import type ZMQKernel from "../zmq-kernel";
+import { getCurrentCell } from "../code-manager";
 /**
  * @version 1.0.0
  *
@@ -60,7 +60,9 @@ export default class HydrogenProvider {
    * @return {Class} `Range`
    */
   getCellRange(editor: TextEditor | null | undefined) {
-    if (!store.editor) return null;
+    if (!store.editor) {
+      return null;
+    }
     return getCurrentCell(store.editor);
   }
   /*

@@ -1,7 +1,7 @@
 import React from "react";
 import { CompositeDisposable } from "atom";
-import History from "./../result-view/history";
-import type WatchStore from "./../../store/watch";
+import History from "../result-view/history";
+import type WatchStore from "../../store/watch";
 export default class Watch extends React.Component<{
   store: WatchStore;
 }> {
@@ -9,7 +9,9 @@ export default class Watch extends React.Component<{
   subscriptions: CompositeDisposable = new CompositeDisposable();
 
   componentDidMount() {
-    if (!this.container) return;
+    if (!this.container) {
+      return;
+    }
     const container = this.container;
     container.insertBefore(
       this.props.store.editor.element,

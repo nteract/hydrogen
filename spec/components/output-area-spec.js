@@ -10,7 +10,7 @@ import Kernel from "../../dist/kernel";
 
 describe("Output area component", () => {
   let storeMock, mockKernel, filePath, grammar, editor, component;
-  let errorOutput = {
+  const errorOutput = {
     ename: "NameError",
     evalue: "error message",
     output_type: "error",
@@ -22,13 +22,13 @@ describe("Output area component", () => {
     ],
   };
 
-  let streamOutput = {
+  const streamOutput = {
     name: "stdout",
     text: " hello",
     output_type: "stream",
   };
 
-  let executeResultOutput = {
+  const executeResultOutput = {
     execution_count: 1,
     metadata: {},
     data: {

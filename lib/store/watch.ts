@@ -1,8 +1,8 @@
 import { TextEditor, Disposable } from "atom";
 import { action } from "mobx";
 import OutputStore from "./output";
-import { log } from "./../utils";
-import type Kernel from "./../kernel";
+import { log } from "../utils";
+import type Kernel from "../kernel";
 export default class WatchStore {
   kernel: Kernel;
   editor: TextEditor;
@@ -16,11 +16,12 @@ export default class WatchStore {
       lineNumberGutterVisible: false,
     });
     const grammar = this.kernel.grammar;
-    if (grammar)
+    if (grammar) {
       atom.grammars.assignLanguageMode(
         this.editor.getBuffer(),
         grammar.scopeName
       );
+    }
     this.editor.moveToTop();
     this.editor.element.classList.add("watch-input");
   }

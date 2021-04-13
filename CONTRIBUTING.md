@@ -2,7 +2,7 @@
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
-**Working on your first Pull Request?** You can learn how from this *free* series
+**Working on your first Pull Request?** You can learn how from this _free_ series
 [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
 
 Please join our [Slack channel](https://slackin-nteract.now.sh/) if you have any questions or just want to say hi.
@@ -47,6 +47,7 @@ to see if there are any errors. If you have an error you can't fix after taking 
 ### Build Documentation
 
 To build the website locally run:
+
 ```bash
 npm install gitbook-cli -g
 gitbook install

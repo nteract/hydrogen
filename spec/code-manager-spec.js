@@ -100,7 +100,7 @@ describe("CodeManager", () => {
           await atom.packages.activatePackage("language-python");
           editor.setGrammar(atom.grammars.grammarForScopeName("source.python"));
           const code = ["v0 = 0 #   %%", "v1 = 1", "v2 = 2 #%%", "v3 = 3"]; // row0:bp // row1 // row2:bp // row3
-          editor.setText(code.join("\n") + "\n");
+          editor.setText(`${code.join("\n")}\n`);
         })
       );
       describe("no arg", () => {
@@ -130,7 +130,7 @@ describe("CodeManager", () => {
             "# %%",
             "print('foo bar')",
           ];
-          editor.setText(code.join("\n") + "\n");
+          editor.setText(`${code.join("\n")}\n`);
           const cellsExpected = [
             [
               [2, 0],
@@ -151,7 +151,7 @@ describe("CodeManager", () => {
             "# %%",
             "print('foo bar')",
           ];
-          editor.setText(code.join("\n") + "\n");
+          editor.setText(`${code.join("\n")}\n`);
           const cellsExpected = [
             [
               [2, 0],
@@ -166,7 +166,7 @@ describe("CodeManager", () => {
         });
         it("doesn't create initial empty cell with no whitespace", () => {
           const code = ["print('hello world')", "# %%", "print('foo bar')"];
-          editor.setText(code.join("\n") + "\n");
+          editor.setText(`${code.join("\n")}\n`);
           const cellsExpected = [
             [
               [0, 0],
@@ -181,7 +181,7 @@ describe("CodeManager", () => {
         });
         it("doesn't start a cell outside of a line comment scope", () => {
           const code = ["# %%", "print('# %%')"];
-          editor.setText(code.join("\n") + "\n");
+          editor.setText(`${code.join("\n")}\n`);
           const cellsExpected = [
             [
               [1, 0],
@@ -228,7 +228,7 @@ describe("CodeManager", () => {
             "# <markdown> Block 3",
             "#*Italics*",
           ];
-          editor.setText(code.join("\n") + "\n");
+          editor.setText(`${code.join("\n")}\n`);
         });
         it("returns correct cellType", () => {
           expect(CM.getMetadataForRow(editor, new Point(1, 0))).toBe(
@@ -254,7 +254,7 @@ describe("CodeManager", () => {
             "# ln[0] Block 3",
             "#comment",
           ];
-          editor.setText(code.join("\n") + "\n");
+          editor.setText(`${code.join("\n")}\n`);
         });
         it("returns correct cellType", () => {
           expect(CM.getMetadataForRow(editor, new Point(2, 0))).toBe(
@@ -285,7 +285,7 @@ describe("CodeManager", () => {
             "# %% Block 3",
             "print('hi')",
           ];
-          editor.setText(code.join("\n") + "\n");
+          editor.setText(`${code.join("\n")}\n`);
           // # %% Block 1
           // print('hi')
           //
@@ -313,7 +313,7 @@ describe("CodeManager", () => {
           expect(editor.getScreenLineCount()).toEqual(
             screenRowsExpected.length
           );
-          for (var i = 0; i < screenRowsExpected.length; i++) {
+          for (let i = 0; i < screenRowsExpected.length; i++) {
             expect(editor.lineTextForScreenRow(i).trim()).toEqual(
               screenRowsExpected[i]
             );
@@ -334,7 +334,7 @@ describe("CodeManager", () => {
           expect(editor.getScreenLineCount()).toEqual(
             screenRowsExpected.length
           );
-          for (var i = 0; i < screenRowsExpected.length; i++) {
+          for (let i = 0; i < screenRowsExpected.length; i++) {
             expect(editor.lineTextForScreenRow(i).trim()).toEqual(
               screenRowsExpected[i]
             );
@@ -355,7 +355,7 @@ describe("CodeManager", () => {
           expect(editor.getScreenLineCount()).toEqual(
             screenRowsExpected.length
           );
-          for (var i = 0; i < screenRowsExpected.length; i++) {
+          for (let i = 0; i < screenRowsExpected.length; i++) {
             expect(editor.lineTextForScreenRow(i).trim()).toEqual(
               screenRowsExpected[i]
             );

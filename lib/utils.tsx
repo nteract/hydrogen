@@ -30,14 +30,18 @@ export function reactFactory(
   ReactDOM.render(reactElement, domElement);
   const disposable = new Disposable(() => {
     ReactDOM.unmountComponentAtNode(domElement);
-    if (typeof additionalTeardown === "function") additionalTeardown();
+    if (typeof additionalTeardown === "function") {
+      additionalTeardown();
+    }
   });
   disposer.add(disposable);
 }
 export function focus(item: unknown | null | undefined) {
   if (item && typeof item === "object") {
     const editorPane = atom.workspace.paneForItem(item);
-    if (editorPane) editorPane.activate();
+    if (editorPane) {
+      editorPane.activate();
+    }
   }
 }
 export async function openOrShowDock(
@@ -49,10 +53,12 @@ export async function openOrShowDock(
   // will not focus the newly opened pane
   let dock = atom.workspace.paneContainerForURI(URI);
 
-  if (dock && typeof dock["show"] === "function") {
+  if (dock && typeof dock.show === "function") {
     // If the target item already exist, activate it and show dock
     const pane = atom.workspace.paneForURI(URI);
-    if (pane) pane.activateItemForURI(URI);
+    if (pane) {
+      pane.activateItemForURI(URI);
+    }
     return (dock as Dock).show();
   }
 
@@ -61,12 +67,12 @@ export async function openOrShowDock(
     activatePane: false,
   });
   dock = atom.workspace.paneContainerForURI(URI);
-  return dock && typeof dock["show"] === "function"
-    ? (dock as Dock).show()
-    : null;
+  return dock && typeof dock.show === "function" ? (dock as Dock).show() : null;
 }
 export function grammarToLanguage(grammar: Grammar | null | undefined) {
-  if (!grammar) return null;
+  if (!grammar) {
+    return null;
+  }
   const grammarLanguage = grammar.name.toLowerCase();
   const mappings = Config.getJson("languageMappings");
 
@@ -106,7 +112,9 @@ export function msgSpecV4toV5(message: Message) {
       break;
 
     case "stream":
-      if (!message.content.text) message.content.text = message.content.data;
+      if (!message.content.text) {
+        message.content.text = message.content.data;
+      }
       break;
   }
 
@@ -168,7 +176,9 @@ export function getEmbeddedScope(
   return _.find(scopes, (s) => s.indexOf("source.embedded.") === 0);
 }
 export function getEditorDirectory(editor: TextEditor | null | undefined) {
-  if (!editor) return os.homedir();
+  if (!editor) {
+    return os.homedir();
+  }
   const editorPath = editor.getPath();
   return editorPath ? path.dirname(editorPath) : os.homedir();
 }
@@ -180,7 +190,9 @@ export function log(...message: Array<any>) {
 export function hotReloadPackage() {
   const packName = "Hydrogen";
   const packPath = atom.packages.resolvePackagePath(packName);
-  if (!packPath) return;
+  if (!packPath) {
+    return;
+  }
   const packPathPrefix = packPath + path.sep;
   const zeromqPathPrefix =
     path.join(packPath, "node_modules", "zeromq") + path.sep;
@@ -238,31 +250,33 @@ export function executionTime(message: Message): string {
 
   const start = Date.parse(message.parent_header.date);
   const end = Date.parse(message.header.date);
-  let time = end - start; // milliseconds
+  const time = end - start; // milliseconds
 
   let sec = time / 1000; // seconds
 
   if (sec < 60) {
-    return sec.toFixed(3) + " sec";
+    return `${sec.toFixed(3)} sec`;
   }
 
   let min = (sec - (sec % 60)) / 60;
   sec = Math.round(sec % 60);
 
   if (min < 60) {
-    return min + " min " + sec + " sec";
+    return `${min} min ${sec} sec`;
   }
 
-  let hour = (min - (min % 60)) / 60;
+  const hour = (min - (min % 60)) / 60;
   min %= 60;
-  return hour + " h " + min + " m " + sec + " s";
+  return `${hour} h ${min} m ${sec} s`;
 }
 export function js_idx_to_char_idx(js_idx: number, text: string | null) {
-  if (text === null) return -1;
-  var char_idx = js_idx;
+  if (text === null) {
+    return -1;
+  }
+  let char_idx = js_idx;
 
-  for (var i = 0; i < text.length && i < js_idx; i++) {
-    var char_code = text.charCodeAt(i);
+  for (let i = 0; i < text.length && i < js_idx; i++) {
+    const char_code = text.charCodeAt(i);
 
     // check for the first half of a surrogate pair
     if (char_code >= 0xd800 && char_code < 0xdc00) {
@@ -273,11 +287,13 @@ export function js_idx_to_char_idx(js_idx: number, text: string | null) {
   return char_idx;
 }
 export function char_idx_to_js_idx(char_idx: number, text: string | null) {
-  if (text === null) return -1;
-  var js_idx = char_idx;
+  if (text === null) {
+    return -1;
+  }
+  let js_idx = char_idx;
 
-  for (var i = 0; i < text.length && i < js_idx; i++) {
-    var char_code = text.charCodeAt(i);
+  for (let i = 0; i < text.length && i < js_idx; i++) {
+    const char_code = text.charCodeAt(i);
 
     // check for the first half of a surrogate pair
     if (char_code >= 0xd800 && char_code < 0xdc00) {

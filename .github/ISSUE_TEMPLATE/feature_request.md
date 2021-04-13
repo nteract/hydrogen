@@ -1,10 +1,9 @@
 ---
 name: Feature Request
 about: Suggest an idea for Hydrogen
-title: ''
-labels: 'enhancement :star2:'
-assignees: ''
-
+title: ""
+labels: "enhancement :star2:"
+assignees: ""
 ---
 
 <!--
@@ -22,7 +21,6 @@ One paragraph explanation of the feature.
 ### :checkered_flag: Motivation
 
 Why are we doing this ? What use cases does it support ? What is the expected outcome ?
-
 
 <!-- Part 2 - Additional information -->
 

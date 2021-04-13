@@ -2,13 +2,14 @@
 
 Hydrogen requires **[Atom](https://atom.io/)** `1.20.0+` and **[kernels](#kernels)** for the languages you intend to use Hydrogen with.
 
-To install Hydrogen run `apm install hydrogen` or search for *Hydrogen* in the Install pane of the Atom settings.
+To install Hydrogen run `apm install hydrogen` or search for _Hydrogen_ in the Install pane of the Atom settings.
 
 If you are using Linux 32-bit follow the installation instructions [here](Troubleshooting.md).
 
 **NOTE:**
 
 `apm` seems to have a bit of issue in the latest version `1.23.0-beta1`. If you get an error that starts with:
+
 ```
 fs.js:640
   return binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);
@@ -16,6 +17,7 @@ fs.js:640
 
 Error: ENOENT: no such file or directory
 ```
+
 we recommend you to install `Hydrogen` via console command: `apm install hydrogen`.
 
 ## Kernels

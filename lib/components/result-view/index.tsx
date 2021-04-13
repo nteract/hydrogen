@@ -2,11 +2,11 @@ import { CompositeDisposable, TextEditor, DisplayMarker } from "atom";
 import React from "react";
 import { Provider } from "@nteract/mathjax";
 import { mathJaxPath } from "mathjax-electron";
-import { reactFactory } from "./../../utils";
-import OutputStore from "./../../store/output";
+import { reactFactory } from "../../utils";
+import OutputStore from "../../store/output";
 import ResultViewComponent from "./result-view";
-import type MarkerStore from "./../../store/markers";
-import type Kernel from "./../../kernel";
+import type MarkerStore from "../../store/markers";
+import type Kernel from "../../kernel";
 export default class ResultView {
   disposer: CompositeDisposable;
   marker: DisplayMarker;

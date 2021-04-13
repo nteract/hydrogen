@@ -4,7 +4,7 @@ import SelectListView from "atom-select-list";
 import WatchStore from "./watch";
 import AutocompleteConsumer from "../services/consumed/autocomplete";
 import { setPreviouslyFocusedElement } from "../utils";
-import type Kernel from "./../kernel";
+import type Kernel from "../kernel";
 type store = typeof import("./index").default;
 
 export default class WatchesStore {
@@ -34,8 +34,9 @@ export default class WatchesStore {
     if (!lastWatch || lastWatch.getCode().trim() !== "") {
       const watch = new WatchStore(this.kernel);
       this.watches.push(watch);
-      if (AutocompleteConsumer.isEnabeled)
+      if (AutocompleteConsumer.isEnabeled) {
         AutocompleteConsumer.addAutocompleteToWatch(this, watch);
+      }
       return watch;
     }
 
@@ -47,7 +48,9 @@ export default class WatchesStore {
   };
   @action
   addWatchFromEditor = (editor: TextEditor) => {
-    if (!editor) return;
+    if (!editor) {
+      return;
+    }
     const watchText = editor.getSelectedText();
 
     if (!watchText) {
@@ -76,20 +79,24 @@ export default class WatchesStore {
       didConfirmSelection: (watch) => {
         const selectedWatch = this.watches[watch.value];
         // This is for cleanup to improve performance
-        if (AutocompleteConsumer.isEnabeled)
+        if (AutocompleteConsumer.isEnabeled) {
           AutocompleteConsumer.removeAutocompleteFromWatch(this, selectedWatch);
+        }
         this.watches.splice(watch.value, 1);
         modalPanel.destroy();
         watchesPicker.destroy();
-        if (this.watches.length === 0) this.addWatch();
-        else if (this.previouslyFocusedElement)
+        if (this.watches.length === 0) {
+          this.addWatch();
+        } else if (this.previouslyFocusedElement) {
           this.previouslyFocusedElement.focus();
+        }
       },
       filterKeyForItem: (watch) => watch.name,
       didCancelSelection: () => {
         modalPanel.destroy();
-        if (this.previouslyFocusedElement)
+        if (this.previouslyFocusedElement) {
           this.previouslyFocusedElement.focus();
+        }
         watchesPicker.destroy();
       },
       emptyMessage: "There are no watches to remove!",
@@ -106,7 +113,8 @@ export default class WatchesStore {
   };
 
   destroy() {
-    if (AutocompleteConsumer.isEnabeled && this.autocompleteDisposables)
+    if (AutocompleteConsumer.isEnabeled && this.autocompleteDisposables) {
       AutocompleteConsumer.dispose(this.autocompleteDisposables);
+    }
   }
 }

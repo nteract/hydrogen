@@ -10,7 +10,9 @@ class ScrollList extends React.Component<Props> {
   el: HTMLElement | null | undefined;
 
   scrollToBottom() {
-    if (!this.el) return;
+    if (!this.el) {
+      return;
+    }
     const scrollHeight = this.el.scrollHeight;
     const height = this.el.clientHeight;
     const maxScrollTop = scrollHeight - height;
@@ -26,7 +28,9 @@ class ScrollList extends React.Component<Props> {
   }
 
   render() {
-    if (this.props.outputs.length === 0) return null;
+    if (this.props.outputs.length === 0) {
+      return null;
+    }
     return (
       <div
         className="scroll-list multiline-container native-key-bindings"

@@ -86,7 +86,9 @@ export function removeCommentsMarkdownCell(
   text: string
 ): string {
   const commentStartString = getCommentStartString(editor);
-  if (!commentStartString) return text;
+  if (!commentStartString) {
+    return text;
+  }
   const lines = text.split("\n");
   const editedLines = [];
 
@@ -118,7 +120,9 @@ export function escapeBlankRows(
   endRow: number
 ) {
   while (endRow > startRow) {
-    if (!isBlank(editor, endRow)) break;
+    if (!isBlank(editor, endRow)) {
+      break;
+    }
     endRow -= 1;
   }
 
@@ -126,7 +130,9 @@ export function escapeBlankRows(
 }
 export function getFoldRange(editor: TextEditor, row: number) {
   const range = rowRangeForCodeFoldAtBufferRow(editor, row);
-  if (!range) return;
+  if (!range) {
+    return;
+  }
 
   if (
     range[1] < editor.getLastBufferRow() &&
@@ -140,7 +146,9 @@ export function getFoldRange(editor: TextEditor, row: number) {
 }
 export function getFoldContents(editor: TextEditor, row: number) {
   const range = getFoldRange(editor, row);
-  if (!range) return;
+  if (!range) {
+    return;
+  }
   return {
     code: getRows(editor, range[0], range[1]),
     row: range[1],
@@ -188,7 +196,9 @@ export function getCommentStartString(
 }
 export function getRegexString(editor: TextEditor) {
   const commentStartString = getCommentStartString(editor);
-  if (!commentStartString) return null;
+  if (!commentStartString) {
+    return null;
+  }
   const escapedCommentStartString = escapeStringRegexp(commentStartString);
   const regexString = `${escapedCommentStartString} *%% *(md|markdown)?| *<(codecell|md|markdown)>| *(In\[[0-9 ]*\])`;
   return regexString;
@@ -272,7 +282,9 @@ function getCurrentFencedCodeBlock(editor: TextEditor) {
   let start = cursor.row;
   let end = cursor.row;
   const scope = getEmbeddedScope(editor, cursor);
-  if (!scope) return getCell(editor);
+  if (!scope) {
+    return getCell(editor);
+  }
 
   while (start > 0 && isEmbeddedCode(editor, scope, start - 1)) {
     start -= 1;
@@ -339,7 +351,9 @@ export function moveDown(editor: TextEditor, row: number) {
 
   while (row < lastRow) {
     row += 1;
-    if (!isBlank(editor, row)) break;
+    if (!isBlank(editor, row)) {
+      break;
+    }
   }
 
   editor.setCursorBufferPosition({

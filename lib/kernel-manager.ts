@@ -48,9 +48,11 @@ export class KernelManager {
   ) {
     const displayName = kernelSpec.display_name;
     // if kernel startup already in progress don't start additional kernel
-    if (store.startingKernels.get(displayName)) return;
+    if (store.startingKernels.get(displayName)) {
+      return;
+    }
     store.startKernel(displayName);
-    let currentPath = getEditorDirectory(editor);
+    const currentPath = getEditorDirectory(editor);
     let projectPath;
     log("KernelManager: startKernel:", displayName);
 
@@ -72,7 +74,9 @@ export class KernelManager {
     const transport = new ZMQKernel(kernelSpec, grammar, options, () => {
       const kernel = new Kernel(transport);
       store.newKernel(kernel, filePath, editor, grammar);
-      if (onStarted) onStarted(kernel);
+      if (onStarted) {
+        onStarted(kernel);
+      }
     });
   }
 
@@ -91,14 +95,18 @@ export class KernelManager {
   }
 
   async getAllKernelSpecs(grammar: Grammar | null | undefined) {
-    if (this.kernelSpecs) return this.kernelSpecs;
+    if (this.kernelSpecs) {
+      return this.kernelSpecs;
+    }
     return this.updateKernelSpecs(grammar);
   }
 
   async getAllKernelSpecsForGrammar(
     grammar: Grammar | null | undefined
   ): Promise<KernelspecMetadata[]> {
-    if (!grammar) return [];
+    if (!grammar) {
+      return [];
+    }
     const kernelSpecs = await this.getAllKernelSpecs(grammar);
     return kernelSpecs.filter((spec) =>
       kernelSpecProvidesGrammar(spec, grammar)
@@ -119,7 +127,9 @@ export class KernelManager {
     }
 
     return new Promise<KernelspecMetadata>((resolve) => {
-      if (!this.kernelPicker) return resolve(null);
+      if (!this.kernelPicker) {
+        return resolve(null);
+      }
 
       this.kernelPicker.onConfirmed = (kernelSpec) => resolve(kernelSpec);
 

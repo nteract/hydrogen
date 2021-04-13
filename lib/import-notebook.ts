@@ -128,7 +128,9 @@ export async function _loadNotebook(
 
   const editor = await atom.workspace.open();
   const grammar = getGrammarForNotebook(nb);
-  if (!grammar) return;
+  if (!grammar) {
+    return;
+  }
   atom.grammars.assignLanguageMode(editor.getBuffer(), grammar.scopeName);
   const commentStartString = getCommentStartString(editor);
 
@@ -144,13 +146,15 @@ export async function _loadNotebook(
   nb.cellOrder.forEach((value) => {
     const cell = nb.cellMap.get(value).toJS();
     nbCells.push(cell);
-    const hyCell = toHydrogenCodeBlock(cell, commentStartString + " ");
+    const hyCell = toHydrogenCodeBlock(cell, `${commentStartString} `);
     resultRows.push(previousBreakpoint + hyCell.code.trim().split("\n").length);
     previousBreakpoint += hyCell.row;
     sources.push(hyCell.code);
   });
   editor.setText(sources.join(linesep));
-  if (importResults) importNotebookResults(editor, nbCells, resultRows);
+  if (importResults) {
+    importNotebookResults(editor, nbCells, resultRows);
+  }
 }
 
 /**
@@ -169,7 +173,7 @@ function getGrammarForNotebook(nb: Notebook) {
     kernel_info,
     // Sometimes used in nbformat v3
     language, // Sometimes used in nbformat v3
-  } = typeof metaData["toJS"] === "function" ? metaData.toJS() : metaData; // TODO fix toJS
+  } = typeof metaData.toJS === "function" ? metaData.toJS() : metaData; // TODO fix toJS
   const kernel = kernelspec ? kernelspec : kernel_info;
   const lang = language_info
     ? language_info
@@ -191,7 +195,9 @@ function getGrammarForNotebook(nb: Notebook) {
   if (lang) {
     // lang.name should be required
     matchedGrammar = getGrammarForLanguageName(lang.name);
-    if (matchedGrammar) return matchedGrammar;
+    if (matchedGrammar) {
+      return matchedGrammar;
+    }
 
     // lang.file_extension is not required, but if lang.name retrieves no match,
     // this is the next best thing.
@@ -199,17 +205,23 @@ function getGrammarForNotebook(nb: Notebook) {
       matchedGrammar = getGrammarForFileExtension(lang.file_extension);
     }
 
-    if (matchedGrammar) return matchedGrammar;
+    if (matchedGrammar) {
+      return matchedGrammar;
+    }
   }
 
   if (kernel) {
     // kernel.language is not required, but its often more accurate than name
     matchedGrammar = getGrammarForLanguageName(kernel.language);
-    if (matchedGrammar) return matchedGrammar;
+    if (matchedGrammar) {
+      return matchedGrammar;
+    }
     // kernel.name should be required, but is often a kernel name, so its hard
     // to match effciently
     matchedGrammar = getGrammarForKernelspecName(kernel.name);
-    if (matchedGrammar) return matchedGrammar;
+    if (matchedGrammar) {
+      return matchedGrammar;
+    }
   }
 
   atom.notifications.addWarning("Unable to determine correct language grammar");
@@ -223,18 +235,21 @@ function getGrammarForNotebook(nb: Notebook) {
  * @return {Grammar} - The matching Atom Grammar.
  */
 function getGrammarForLanguageName(name: string) {
-  if (!name) return null;
+  if (!name) {
+    return null;
+  }
   const formattedName = name.toLowerCase().replace(" ", "-");
   const scopeName = `source.${formattedName}`;
   const grammars = atom.grammars.getGrammars();
 
-  for (let g of grammars) {
+  for (const g of grammars) {
     if (
       g &&
       ((g.name && g.name.toLowerCase() == name.toLowerCase()) ||
         g.scopeName == scopeName)
-    )
+    ) {
       return g;
+    }
   }
 
   return null;
@@ -247,7 +262,9 @@ function getGrammarForLanguageName(name: string) {
  * @return {Grammar} - The matching Atom Grammar.
  */
 function getGrammarForFileExtension(ext: string): Grammar | null | undefined {
-  if (!ext) return null;
+  if (!ext) {
+    return null;
+  }
   ext = ext.startsWith(".") ? ext.slice(1) : ext;
   const grammars = atom.grammars.getGrammars();
   return _.find(grammars, (grammar) => {
@@ -264,7 +281,9 @@ function getGrammarForFileExtension(ext: string): Grammar | null | undefined {
 function getGrammarForKernelspecName(name: string): Grammar | null | undefined {
   // Check if there exists an Atom grammar named source.${name}
   const grammar = getGrammarForLanguageName(name);
-  if (grammar) return grammar;
+  if (grammar) {
+    return grammar;
+  }
   // Otherwise attempt manual matching from kernelspec name to Atom scope
   const crosswalk = {
     python2: "source.python",
@@ -326,7 +345,7 @@ function getCellHeader(
   commentStartString: string,
   keyword: string | null | undefined
 ) {
-  const marker = commentStartString + "%% ";
+  const marker = `${commentStartString}%% `;
   return keyword ? marker + keyword : marker;
 }
 
@@ -343,12 +362,14 @@ function importNotebookResults(
   nbCells: Array<Cell>,
   resultRows: Array<number>
 ) {
-  if (nbCells.length != resultRows.length) return;
+  if (nbCells.length != resultRows.length) {
+    return;
+  }
   let markers = store.markersMapping.get(editor.id);
   markers = markers ? markers : store.newMarkerStore(editor.id);
   let cellNumber = 0;
 
-  for (let cell of nbCells) {
+  for (const cell of nbCells) {
     const row = resultRows[cellNumber];
 
     switch (cell.cell_type) {

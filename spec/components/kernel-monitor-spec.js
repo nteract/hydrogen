@@ -33,8 +33,8 @@ describe("Kernel monitor", () => {
 
       spyOn(atom.notifications, "addInfo"); // Spied for 'Show kernel spec' link testing
 
-      for (let mockSetting of mockSettings) {
-        let { ext, unsaved, debugName, grammarName } = mockSetting;
+      for (const mockSetting of mockSettings) {
+        const { ext, unsaved, debugName, grammarName } = mockSetting;
         const newEditor = await atom.workspace.open();
 
         const filename = unsaved
@@ -67,7 +67,7 @@ describe("Kernel monitor", () => {
         mocks.push({
           editor: newEditor,
           kernel,
-          grammarName: grammarName,
+          grammarName,
           debugName,
           filename,
         });
@@ -137,7 +137,7 @@ describe("Kernel monitor", () => {
     // When jump button clicked, the active editor will
     // change to the related editor and call done() to complete the test
     let timesClicked = 1;
-    let disposer = atom.workspace.onDidChangeActiveTextEditor(
+    const disposer = atom.workspace.onDidChangeActiveTextEditor(
       (activeEditor) => {
         if (timesClicked === 1) {
           expect(activeEditor.id).toEqual(unsavedMock.editor.id);

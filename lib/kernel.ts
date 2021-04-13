@@ -7,6 +7,7 @@ import {
   msgSpecToNotebookFormat,
   msgSpecV4toV5,
   INSPECTOR_URI,
+  executionTime,
 } from "./utils";
 import store from "./store";
 import WatchesStore from "./store/watches";
@@ -19,7 +20,7 @@ import type {
 import InputView from "./input-view";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
-import { executionTime } from "./utils";
+
 import type { Message } from "./hydrogen";
 import type { KernelspecMetadata } from "@nteract/types";
 
@@ -143,7 +144,7 @@ class MiddlewareAdapter implements HydrogenKernelMiddlewareThunk {
     // We don't want to repeatedly wrap the onResults callback every time we
     // fall through, but we need to do it at least once before delegating to
     // the KernelTransport.
-    let safeOnResults =
+    const safeOnResults =
       this._middleware.execute || this._next instanceof KernelTransport
         ? protectFromInvalidMessages(onResults)
         : onResults;
@@ -156,7 +157,7 @@ class MiddlewareAdapter implements HydrogenKernelMiddlewareThunk {
   }
 
   complete(code: string, onResults: ResultsCallback): void {
-    let safeOnResults =
+    const safeOnResults =
       this._middleware.complete || this._next instanceof KernelTransport
         ? protectFromInvalidMessages(onResults)
         : onResults;
@@ -169,7 +170,7 @@ class MiddlewareAdapter implements HydrogenKernelMiddlewareThunk {
   }
 
   inspect(code: string, cursorPos: number, onResults: ResultsCallback): void {
-    let safeOnResults =
+    const safeOnResults =
       this._middleware.inspect || this._next instanceof KernelTransport
         ? protectFromInvalidMessages(onResults)
         : onResults;

@@ -5,13 +5,15 @@ In addition to managing local kernels and connecting to them over ZeroMQ, Hydrog
 To connect to a server, add the connection information to the Hydrogen `gateways` setting. For example:
 
 ```json
-[{
-  "name": "Remote server",
-  "options": {
-    "baseUrl": "http://example.com:8888",
-    "token": "my_secret_token"
+[
+  {
+    "name": "Remote server",
+    "options": {
+      "baseUrl": "http://example.com:8888",
+      "token": "my_secret_token"
+    }
   }
-}]
+]
 ```
 
 Each entry in the gateways list needs at minimum a `name` (for displaying in the UI), and a value for `options.baseUrl`. The `options.token` should only be present if your server requires token authentication, in which case it should contain the specific token issued by your server. (Token authentication is enabled by default for Jupyter Notebook 4.3 or later). The `options` are passed directly to the [`@jupyterlab/services`](https://github.com/jupyterlab/services) npm package, which includes documentation for additional fields.
@@ -52,7 +54,6 @@ You can use the same technique to create a notebook server in a Docker container
 
 **Note**: due to the way that the notebook creates sub-processes for each kernel, you have to use it in a special way, you can't run the `jupyter notebook` directly in your `Dockerfile` `CMD` section. You need to call it with an init manager such as [**tini**](https://github.com/krallin/tini) or run it from an interactive console.
 
-
 ### Dockerfile
 
 - Create a `Dockerfile` based on either one of the [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks) (recommended), or your own
@@ -86,7 +87,7 @@ CMD ["jupyter-notebook", "--no-browser", "--port=8888"]
 - Create a `docker-compose.yml` file with something like:
 
 ```yml
-version: '2'
+version: "2"
 services:
   hydro:
     build: .
@@ -109,7 +110,6 @@ services:
 docker-compose up -d
 ```
 
-
 ### Run with Docker commands
 
 - Build your container:
@@ -124,7 +124,6 @@ docker build -t hydro .
 ```bash
 docker run -it --rm --name hydro -p 8888:8888 -e JUYTER_TOKEN=my_secret_token hydro
 ```
-
 
 ## Connect Atom
 

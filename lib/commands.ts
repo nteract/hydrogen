@@ -26,7 +26,7 @@ export function toggleInspector(store: store) {
   kernel.inspect(
     code,
     cursorPos,
-    (result: { data: Record<string, any>; found: Boolean }) => {
+    (result: { data: Record<string, any>; found: boolean }) => {
       log("Inspector: Result:", result);
 
       if (!result.found) {

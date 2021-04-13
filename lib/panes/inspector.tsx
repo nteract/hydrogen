@@ -1,8 +1,8 @@
 import { CompositeDisposable } from "atom";
 import React from "react";
-import { reactFactory, INSPECTOR_URI } from "./../utils";
+import { reactFactory, INSPECTOR_URI } from "../utils";
 type store = typeof import("../store").default;
-import Inspector from "./../components/inspector";
+import Inspector from "../components/inspector";
 export default class InspectorPane {
   element = document.createElement("div");
   disposer = new CompositeDisposable();

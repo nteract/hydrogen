@@ -33,11 +33,15 @@ class CustomListView {
         return element;
       },
       didConfirmSelection: (item) => {
-        if (this.onConfirmed) this.onConfirmed(item);
+        if (this.onConfirmed) {
+          this.onConfirmed(item);
+        }
       },
       didCancelSelection: () => {
         this.cancel();
-        if (this.onCancelled) this.onCancelled();
+        if (this.onCancelled) {
+          this.onCancelled();
+        }
       },
     });
   }
@@ -158,7 +162,7 @@ export default class WSKernelPicker {
     options.requestHeaders.Cookie = cookie;
 
     options.xhrFactory = () => {
-      let request = new xhr.XMLHttpRequest();
+      const request = new xhr.XMLHttpRequest();
       // Disable protections against setting the Cookie header
       request.setDisableHeaderCheck(true);
       return request;
@@ -166,7 +170,7 @@ export default class WSKernelPicker {
 
     options.wsFactory = (url, protocol) => {
       // Authentication requires requests to appear to be same-origin
-      let parsedUrl = new URL(url);
+      const parsedUrl = new URL(url);
 
       if (parsedUrl.protocol == "wss:") {
         parsedUrl.protocol = "https:";
@@ -329,11 +333,13 @@ export default class WSKernelPicker {
         });
         this.listView.onConfirmed = this.onSession.bind(this, gatewayInfo.name);
         await this.listView.selectListView.update({
-          items: items,
+          items,
           loadingMessage: null,
         });
       } catch (error) {
-        if (!error.xhr || error.xhr.status !== 403) throw error;
+        if (!error.xhr || error.xhr.status !== 403) {
+          throw error;
+        }
         // Gateways offer the option of never listing sessions, for security
         // reasons.
         // Assume this is the case and proceed to creating a new session.
@@ -375,7 +381,7 @@ export default class WSKernelPicker {
 
       this.listView.onConfirmed = this.startSession.bind(this, gatewayName);
       await this.listView.selectListView.update({
-        items: items,
+        items,
         emptyMessage: "No kernel specs available",
         infoMessage: "Select a session",
         loadingMessage: null,
@@ -397,7 +403,9 @@ export default class WSKernelPicker {
   async onSessionChosen(gatewayName: string, session: any) {
     this.listView.cancel();
     const kernelSpec = await session.kernel.getSpec();
-    if (!store.grammar) return;
+    if (!store.grammar) {
+      return;
+    }
     const kernel = new WSKernel(
       gatewayName,
       kernelSpec,

@@ -1,4 +1,4 @@
-import type ResultView from "./../components/result-view";
+import type ResultView from "../components/result-view";
 export default class MarkerStore {
   markers: Map<number, ResultView> = new Map();
 
@@ -26,7 +26,9 @@ export default class MarkerStore {
 
   delete(key: number) {
     const bubble = this.markers.get(key);
-    if (bubble) bubble.destroy();
+    if (bubble) {
+      bubble.destroy();
+    }
     this.markers.delete(key);
   }
 }
