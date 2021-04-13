@@ -85,69 +85,72 @@ export function activate() {
     })
   );
   store.subscriptions.add(
-    atom.commands.add<"atom-text-editor:not([mini])">("atom-text-editor:not([mini])", {
-      "hydrogen:run": () => run(),
-      "hydrogen:run-all": () => runAll(),
-      "hydrogen:run-all-above": () => runAllAbove(),
-      "hydrogen:run-and-move-down": () => run(true),
-      "hydrogen:run-cell": () => runCell(),
-      "hydrogen:run-cell-and-move-down": () => runCell(true),
-      "hydrogen:toggle-watches": () => atom.workspace.toggle(WATCHES_URI),
-      "hydrogen:toggle-output-area": () => commands.toggleOutputMode(),
-      "hydrogen:toggle-kernel-monitor": async () => {
-        const lastItem = atom.workspace.getActivePaneItem();
-        const lastPane = atom.workspace.paneForItem(lastItem);
-        await atom.workspace.toggle(KERNEL_MONITOR_URI);
-        if (lastPane) {
-          lastPane.activate();
-        }
-      },
-      "hydrogen:start-local-kernel": () => startZMQKernel(),
-      "hydrogen:connect-to-remote-kernel": () => connectToWSKernel(),
-      "hydrogen:connect-to-existing-kernel": () => connectToExistingKernel(),
-      "hydrogen:add-watch": () => {
-        if (store.kernel) {
-          store.kernel.watchesStore.addWatchFromEditor(store.editor);
-          openOrShowDock(WATCHES_URI);
-        }
-      },
-      "hydrogen:remove-watch": () => {
-        if (store.kernel) {
-          store.kernel.watchesStore.removeWatch();
-          openOrShowDock(WATCHES_URI);
-        }
-      },
-      "hydrogen:update-kernels": async () => {
-        await kernelManager.updateKernelSpecs();
-      },
-      "hydrogen:toggle-inspector": () => commands.toggleInspector(store),
-      "hydrogen:interrupt-kernel": () =>
-        handleKernelCommand(
-          {
-            command: "interrupt-kernel",
-          },
-          store
-        ),
-      "hydrogen:restart-kernel": () =>
-        handleKernelCommand(
-          {
-            command: "restart-kernel",
-          },
-          store
-        ),
-      "hydrogen:shutdown-kernel": () =>
-        handleKernelCommand(
-          {
-            command: "shutdown-kernel",
-          },
-          store
-        ),
-      "hydrogen:clear-result": () => result.clearResult(store),
-      "hydrogen:export-notebook": () => exportNotebook(),
-      "hydrogen:fold-current-cell": () => foldCurrentCell(),
-      "hydrogen:fold-all-but-current-cell": () => foldAllButCurrentCell(),
-      "hydrogen:clear-results": () => result.clearResults(store),
-    })
+    atom.commands.add<"atom-text-editor:not([mini])">(
+      "atom-text-editor:not([mini])",
+      {
+        "hydrogen:run": () => run(),
+        "hydrogen:run-all": () => runAll(),
+        "hydrogen:run-all-above": () => runAllAbove(),
+        "hydrogen:run-and-move-down": () => run(true),
+        "hydrogen:run-cell": () => runCell(),
+        "hydrogen:run-cell-and-move-down": () => runCell(true),
+        "hydrogen:toggle-watches": () => atom.workspace.toggle(WATCHES_URI),
+        "hydrogen:toggle-output-area": () => commands.toggleOutputMode(),
+        "hydrogen:toggle-kernel-monitor": async () => {
+          const lastItem = atom.workspace.getActivePaneItem();
+          const lastPane = atom.workspace.paneForItem(lastItem);
+          await atom.workspace.toggle(KERNEL_MONITOR_URI);
+          if (lastPane) {
+            lastPane.activate();
+          }
+        },
+        "hydrogen:start-local-kernel": () => startZMQKernel(),
+        "hydrogen:connect-to-remote-kernel": () => connectToWSKernel(),
+        "hydrogen:connect-to-existing-kernel": () => connectToExistingKernel(),
+        "hydrogen:add-watch": () => {
+          if (store.kernel) {
+            store.kernel.watchesStore.addWatchFromEditor(store.editor);
+            openOrShowDock(WATCHES_URI);
+          }
+        },
+        "hydrogen:remove-watch": () => {
+          if (store.kernel) {
+            store.kernel.watchesStore.removeWatch();
+            openOrShowDock(WATCHES_URI);
+          }
+        },
+        "hydrogen:update-kernels": async () => {
+          await kernelManager.updateKernelSpecs();
+        },
+        "hydrogen:toggle-inspector": () => commands.toggleInspector(store),
+        "hydrogen:interrupt-kernel": () =>
+          handleKernelCommand(
+            {
+              command: "interrupt-kernel",
+            },
+            store
+          ),
+        "hydrogen:restart-kernel": () =>
+          handleKernelCommand(
+            {
+              command: "restart-kernel",
+            },
+            store
+          ),
+        "hydrogen:shutdown-kernel": () =>
+          handleKernelCommand(
+            {
+              command: "shutdown-kernel",
+            },
+            store
+          ),
+        "hydrogen:clear-result": () => result.clearResult(store),
+        "hydrogen:export-notebook": () => exportNotebook(),
+        "hydrogen:fold-current-cell": () => foldCurrentCell(),
+        "hydrogen:fold-all-but-current-cell": () => foldAllButCurrentCell(),
+        "hydrogen:clear-results": () => result.clearResults(store),
+      }
+    )
   );
   store.subscriptions.add(
     atom.commands.add("atom-workspace", {
