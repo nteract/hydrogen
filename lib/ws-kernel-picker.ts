@@ -258,13 +258,11 @@ export default class WSKernelPicker {
       loadingMessage: "Loading sessions...",
       emptyMessage: "No sessions available",
     });
-    const gatewayOptions = Object.assign(
-      {
-        xhrFactory: () => new xhr.XMLHttpRequest(),
-        wsFactory: (url, protocol) => new ws(url, protocol),
-      },
-      gatewayInfo.options
-    );
+    const gatewayOptions = {
+      xhrFactory: () => new xhr.XMLHttpRequest(),
+      wsFactory: (url, protocol) => new ws(url, protocol),
+      ...gatewayInfo.options,
+    };
     let serverSettings = ServerConnection.makeSettings(gatewayOptions);
     let specModels: Kernel.ISpecModels | undefined;
     try {
