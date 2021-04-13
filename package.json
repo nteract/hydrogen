@@ -53,16 +53,6 @@
   "engines": {
     "atom": ">=1.28.0 <2.0.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "{lib,spec}/**/*": [
-      "npm run prettier"
-    ]
-  },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.0.0",
     "@jupyterlab/services": "^0.52.0",
@@ -137,8 +127,6 @@
     "electron": "^6",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
-    "husky": "^6.0.0",
-    "lint-staged": "^10.0.7",
     "markdox": "^0.1.10",
     "prettier-config-atomic": "^1.0.1",
     "react-test-renderer": "^16.0.0",
