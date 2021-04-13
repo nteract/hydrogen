@@ -130,6 +130,7 @@
     "electron": "^6",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
+    "eslint-config-atomic": "^1.14.0",
     "markdox": "^0.1.10",
     "prettier-config-atomic": "^1.0.1",
     "react-test-renderer": "^16.0.0",
