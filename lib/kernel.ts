@@ -305,7 +305,7 @@ export default class Kernel {
     this.firstMiddlewareAdapter.shutdown();
   }
 
-  restart(onRestarted: ((...args: Array<any>) => any) | null | undefined) {
+  restart(onRestarted?: ((...args: Array<any>) => any) | null | undefined) {
     this.firstMiddlewareAdapter.restart(onRestarted);
     this.setExecutionCount(0);
     this.setLastExecutionTime("No execution");
