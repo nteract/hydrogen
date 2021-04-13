@@ -177,7 +177,7 @@ export default class ZMQKernel extends KernelTransport {
   _socketShutdown(restart: boolean | null | undefined = false) {
     const requestId = `shutdown_${v4()}`;
 
-    const message = this._createMessage("shutdown_request", requestId);
+    const message = _createMessage("shutdown_request", requestId);
 
     message.content = {
       restart,
@@ -220,7 +220,7 @@ export default class ZMQKernel extends KernelTransport {
     log("ZMQKernel.execute:", code);
     const requestId = `execute_${v4()}`;
 
-    const message = this._createMessage("execute_request", requestId);
+    const message = _createMessage("execute_request", requestId);
 
     message.content = {
       code,
@@ -237,7 +237,7 @@ export default class ZMQKernel extends KernelTransport {
     log("ZMQKernel.complete:", code);
     const requestId = `complete_${v4()}`;
 
-    const message = this._createMessage("complete_request", requestId);
+    const message = _createMessage("complete_request", requestId);
 
     message.content = {
       code,
@@ -253,7 +253,7 @@ export default class ZMQKernel extends KernelTransport {
     log("ZMQKernel.inspect:", code, cursorPos);
     const requestId = `inspect_${v4()}`;
 
-    const message = this._createMessage("inspect_request", requestId);
+    const message = _createMessage("inspect_request", requestId);
 
     message.content = {
       code,
@@ -267,7 +267,7 @@ export default class ZMQKernel extends KernelTransport {
   inputReply(input: string) {
     const requestId = `input_reply_${v4()}`;
 
-    const message = this._createMessage("input_reply", requestId);
+    const message = _createMessage("input_reply", requestId);
 
     message.content = {
       value: input,
@@ -353,23 +353,6 @@ export default class ZMQKernel extends KernelTransport {
     this.stdinSocket.close();
     super.destroy();
   }
-
-  _createMessage(msgType: string, msgId: string = v4()) {
-    const message = {
-      header: {
-        username: _getUsername(),
-        session: "00000000-0000-0000-0000-000000000000",
-        msg_type: msgType,
-        msg_id: msgId,
-        date: new Date(),
-        version: "5.0",
-      },
-      metadata: {},
-      parent_header: {},
-      content: {},
-    };
-    return message;
-  }
 }
 
 function _isValidMessage(message: Message) {
@@ -429,4 +412,21 @@ function _getUsername() {
     process.env.LNAME ||
     process.env.USERNAME
   );
+}
+
+function _createMessage(msgType: string, msgId: string = v4()) {
+  const message = {
+    header: {
+      username: _getUsername(),
+      session: "00000000-0000-0000-0000-000000000000",
+      msg_type: msgType,
+      msg_id: msgId,
+      date: new Date(),
+      version: "5.0",
+    },
+    metadata: {},
+    parent_header: {},
+    content: {},
+  };
+  return message;
 }
