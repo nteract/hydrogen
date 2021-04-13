@@ -87,7 +87,11 @@ export default class WSKernelPicker {
     this.listView = new CustomListView();
   }
 
-  async toggle(_kernelSpecFilter: (kernelSpec: Kernel.ISpecModel) => boolean) {
+  async toggle(
+    _kernelSpecFilter: (
+      kernelSpec: Kernel.ISpecModel | KernelspecMetadata
+    ) => boolean
+  ) {
     setPreviouslyFocusedElement(this.listView);
     this._kernelSpecFilter = _kernelSpecFilter;
     const gateways = Config.getJson("gateways") || [];
