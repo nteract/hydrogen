@@ -16,8 +16,8 @@ import { importResult, convertMarkdownToOutput } from "./result";
 const linesep = process.platform === "win32" ? "\r\n" : "\n";
 
 /**
- * Determines if the provided uri is a valid file for Hydrogen to import.
- * Then it loads the notebook.
+ * Determines if the provided uri is a valid file for Hydrogen to import. Then
+ * it loads the notebook.
  *
  * @param {String} uri - Uri of the file to open.
  */
@@ -34,11 +34,9 @@ export function ipynbOpener(uri: string) {
 }
 
 /**
- * Determines if the provided event is trying to open
- * a valid file for Hydrogen to import.
- * Otherwise it will ask the user to chose
- * a valid file for Hydrogen to import.
- * Then it loads the notebook.
+ * Determines if the provided event is trying to open a valid file for Hydrogen
+ * to import. Otherwise it will ask the user to chose a valid file for Hydrogen
+ * to import. Then it loads the notebook.
  *
  * @param {Event} event - Atom Event from clicking in a treeview.
  */
@@ -161,7 +159,7 @@ export async function _loadNotebook(
  * Tries to determine the Atom Grammar of a notebook. Default is Python.
  *
  * @param {Notebook} nb - The Notebook to determine the Atom Grammar of.
- * @return {Grammar} - The grammar of the notebook.
+ * @returns {Grammar} - The grammar of the notebook.
  */
 function getGrammarForNotebook(nb: Notebook) {
   const metaData = nb.metadata;
@@ -232,7 +230,7 @@ function getGrammarForNotebook(nb: Notebook) {
  * Tries to find a matching Atom Grammar from a language name
  *
  * @param {String} name - The language name to find a grammar for.
- * @return {Grammar} - The matching Atom Grammar.
+ * @returns {Grammar} - The matching Atom Grammar.
  */
 function getGrammarForLanguageName(name: string) {
   if (!name) {
@@ -259,7 +257,7 @@ function getGrammarForLanguageName(name: string) {
  * Tries to find a matching Atom Grammar from a file extensions
  *
  * @param {String} ext - The file extension to find a grammar for.
- * @return {Grammar} - The matching Atom Grammar.
+ * @returns {Grammar} - The matching Atom Grammar.
  */
 function getGrammarForFileExtension(ext: string): Grammar | null | undefined {
   if (!ext) {
@@ -276,7 +274,7 @@ function getGrammarForFileExtension(ext: string): Grammar | null | undefined {
  * Tries to find a matching Atom Grammar from KernelspecMetadata name
  *
  * @param {String} name - The KernelspecMetadata name to find a grammar for.
- * @return {Grammar} - The matching Atom Grammar.
+ * @returns {Grammar} - The matching Atom Grammar.
  */
 function getGrammarForKernelspecName(name: string): Grammar | null | undefined {
   // Check if there exists an Atom grammar named source.${name}
@@ -303,7 +301,7 @@ function getGrammarForKernelspecName(name: string): Grammar | null | undefined {
  *
  * @param {Cell} cell - Notebook cell to convert
  * @param {String} commentStartString - The comment syntax of the code language.
- * @return {Object} - A Hydrogen Code Block.
+ * @returns {Object} - A Hydrogen Code Block.
  */
 function toHydrogenCodeBlock(
   cell: Cell,
@@ -339,7 +337,7 @@ function toHydrogenCodeBlock(
  *
  * @param {String} commentStartString - The comment syntax of the code language.
  * @param {String} keyword - The keyword relating to the cell type.
- * @return {String} - A Hydrogen Cell Header.
+ * @returns {String} - A Hydrogen Cell Header.
  */
 function getCellHeader(
   commentStartString: string,
@@ -350,12 +348,12 @@ function getCellHeader(
 }
 
 /**
- * Displays previous cell results inline of the provided editor.
- * nbCells and resultRows should be the same length.
+ * Displays previous cell results inline of the provided editor. nbCells and
+ * resultRows should be the same length.
  *
  * @param {TextEditor} editor - The editor to display the results in.
- * @param {Array<Cell>} nbCells - The original notebook cells.
- * @param {Array<Number>} resultRows - The rows to display the results on.
+ * @param {Cell[]} nbCells - The original notebook cells.
+ * @param {Number[]} resultRows - The rows to display the results on.
  */
 function importNotebookResults(
   editor: TextEditor,

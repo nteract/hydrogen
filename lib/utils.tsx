@@ -85,12 +85,13 @@ export function grammarToLanguage(grammar: Grammar | null | undefined) {
 }
 
 /**
- * Copied from https://github.com/nteract/nteract/blob/master/src/notebook/epics/execute.js#L37
+ * Copied from
+ * https://github.com/nteract/nteract/blob/master/src/notebook/epics/execute.js#L37
  * Create an object that adheres to the jupyter notebook specification.
  * http://jupyter-client.readthedocs.io/en/latest/messaging.html
  *
  * @param {Object} msg - Message that has content which can be converted to nbformat
- * @return {Object} formattedMsg  - Message with the associated output type
+ * @returns {Object} FormattedMsg - Message with the associated output type
  */
 export function msgSpecToNotebookFormat(message: Message) {
   return Object.assign({}, message.content, {
@@ -98,9 +99,7 @@ export function msgSpecToNotebookFormat(message: Message) {
   });
 }
 
-/**
- * A very basic converter for supporting jupyter messaging protocol v4 replies
- */
+/** A very basic converter for supporting jupyter messaging protocol v4 replies */
 export function msgSpecV4toV5(message: Message) {
   switch (message.header.msg_type) {
     case "pyout":
@@ -238,10 +237,12 @@ export const EmptyMessage = () => {
 // TODO: use npm package -- maybe it offers more robust implementation
 
 /**
- * Given a message whose type if `execute_reply`, calculates exection time and returns its string representation.
+ * Given a message whose type if `execute_reply`, calculates exection time and
+ * returns its string representation.
  *
  * @param {Message} message - A Message object whose type is `execute_reply`
- * @return {String} - A string representation of the execution time. Returns `NO_EXECTIME_STRING` if execution time is unavailable.
+ * @returns {String} - A string representation of the execution time. Returns
+ *   `NO_EXECTIME_STRING` if execution time is unavailable.
  */
 export function executionTime(message: Message): string {
   if (!message.parent_header.date || !message.header.date) {
@@ -304,7 +305,10 @@ export function char_idx_to_js_idx(char_idx: number, text: string | null) {
   return js_idx;
 }
 
-/** Sets the `previouslyFocusedElement` property of the given object to activeElement if it is an HTMLElement */
+/**
+ * Sets the `previouslyFocusedElement` property of the given object to
+ * activeElement if it is an HTMLElement
+ */
 export function setPreviouslyFocusedElement(obj: {
   previouslyFocusedElement: HTMLElement | null | undefined;
 }) {

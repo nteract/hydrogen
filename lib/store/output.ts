@@ -9,14 +9,14 @@ import { isTextOutputOnly } from "../components/result-view/display";
 const outputTypes = ["execute_result", "display_data", "stream", "error"];
 
 /**
- * https://github.com/nteract/hydrogen/issues/466#issuecomment-274822937
- * An output can be a stream of data that does not arrive at a single time. This
- * function handles the different types of outputs and accumulates the data
- * into a reduced output.
+ * https://github.com/nteract/hydrogen/issues/466#issuecomment-274822937 An
+ * output can be a stream of data that does not arrive at a single time. This
+ * function handles the different types of outputs and accumulates the data into
+ * a reduced output.
  *
- * @param {Array<Object>} outputs - Kernel output messages
+ * @param {Object[]} outputs - Kernel output messages
  * @param {Object} output - Outputted to be reduced into list of outputs
- * @return {Array<Object>} updated-outputs - Outputs + Output
+ * @returns {Object[]} Updated-outputs - Outputs + Output
  */
 export function reduceOutputs(
   outputs: Array<Record<string, any>>,
