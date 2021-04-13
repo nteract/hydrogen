@@ -25,7 +25,9 @@ export default class KernelPicker {
       },
       didConfirmSelection: (item) => {
         log("Selected kernel:", item);
-        if (this.onConfirmed) this.onConfirmed(item);
+        if (this.onConfirmed) {
+          this.onConfirmed(item);
+        }
         this.cancel();
       },
       didCancelSelection: () => this.cancel(),
@@ -53,10 +55,11 @@ export default class KernelPicker {
 
   attach() {
     setPreviouslyFocusedElement(this);
-    if (this.panel == null)
+    if (this.panel == null) {
       this.panel = atom.workspace.addModalPanel({
         item: this.selectListView,
       });
+    }
     this.selectListView.focus();
     this.selectListView.reset();
   }

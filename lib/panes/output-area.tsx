@@ -1,8 +1,8 @@
 import { CompositeDisposable, Disposable } from "atom";
 import React from "react";
-import { reactFactory, OUTPUT_AREA_URI } from "./../utils";
+import { reactFactory, OUTPUT_AREA_URI } from "../utils";
 type store = typeof import("../store").default;
-import OutputArea from "./../components/output-area";
+import OutputArea from "../components/output-area";
 export default class OutputPane {
   element = document.createElement("div");
   disposer = new CompositeDisposable();
@@ -11,7 +11,9 @@ export default class OutputPane {
     this.element.classList.add("hydrogen");
     this.disposer.add(
       new Disposable(() => {
-        if (store.kernel) store.kernel.outputStore.clear();
+        if (store.kernel) {
+          store.kernel.outputStore.clear();
+        }
       })
     );
     reactFactory(
@@ -33,7 +35,9 @@ export default class OutputPane {
     // is destroyed along with the OutputArea item. We mimic this here so that we can call
     //  outputArea.destroy() and fully clean up the OutputArea without user clicking
     const pane = atom.workspace.paneForURI(OUTPUT_AREA_URI);
-    if (!pane) return;
+    if (!pane) {
+      return;
+    }
     pane.destroyItem(this);
   }
 }

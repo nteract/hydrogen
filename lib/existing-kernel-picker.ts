@@ -14,12 +14,10 @@ function getName(kernel: Kernel) {
   const prefix = kernel.transport.gatewayName
     ? `${kernel.transport.gatewayName}: `
     : "";
-  return (
-    prefix +
-    kernel.displayName +
-    " - " +
-    store.getFilesForKernel(kernel).map(tildify).join(", ")
-  );
+  return `${prefix + kernel.displayName} - ${store
+    .getFilesForKernel(kernel)
+    .map(tildify)
+    .join(", ")}`;
 }
 
 export default class ExistingKernelPicker {
@@ -40,7 +38,9 @@ export default class ExistingKernelPicker {
       },
       didConfirmSelection: (kernel) => {
         const { filePath, editor, grammar } = store;
-        if (!filePath || !editor || !grammar) return this.cancel();
+        if (!filePath || !editor || !grammar) {
+          return this.cancel();
+        }
         store.newKernel(kernel, filePath, editor, grammar);
         this.cancel();
       },
@@ -69,10 +69,11 @@ export default class ExistingKernelPicker {
 
   attach() {
     setPreviouslyFocusedElement(this);
-    if (this.panel == null)
+    if (this.panel == null) {
       this.panel = atom.workspace.addModalPanel({
         item: this.selectListView,
       });
+    }
     this.selectListView.focus();
     this.selectListView.reset();
   }
@@ -87,7 +88,9 @@ export default class ExistingKernelPicker {
         ),
       });
       const markers = store.markers;
-      if (markers) markers.clear();
+      if (markers) {
+        markers.clear();
+      }
       this.attach();
     }
   }

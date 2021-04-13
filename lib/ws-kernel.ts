@@ -37,7 +37,9 @@ export default class WSKernel extends KernelTransport {
   restart(onRestarted: ((...args: Array<any>) => any) | null | undefined) {
     const future = this.session.kernel.restart();
     future.then(() => {
-      if (onRestarted) onRestarted();
+      if (onRestarted) {
+        onRestarted();
+      }
     });
   }
 

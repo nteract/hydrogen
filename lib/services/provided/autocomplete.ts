@@ -19,11 +19,11 @@ type CompleteReply = {
 const iconHTML = `<img src='${__dirname}/../../../static/logo.svg' style='width: 100%;'>`;
 const regexes = {
   // pretty dodgy, adapted from http://stackoverflow.com/a/8396658
-  r: /([^\d\W]|[.])[\w.$]*$/,
+  r: /([^\W\d]|\.)[\w$.]*$/,
   // adapted from http://stackoverflow.com/q/5474008
-  python: /([^\d\W]|[\u00A0-\uFFFF])[\w.\u00A0-\uFFFF]*$/,
+  python: /([^\W\d]|[\u00A0-\uFFFF])[\w.\u00A0-\uFFFF]*$/,
   // adapted from http://php.net/manual/en/language.variables.basics.php
-  php: /[$a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/,
+  php: /[$A-Z_a-z\x7f-\xff][\w\x7f-\xff]*$/,
 };
 
 function parseCompletions(results: CompleteReply, prefix: string) {
@@ -87,9 +87,13 @@ export function provideAutocompleteResults(store: Store): AutocompleteProvider {
 
     // Required: Return a promise, an array of suggestions, or null.
     getSuggestions({ editor, bufferPosition, prefix }) {
-      if (!this.enabled) return null;
+      if (!this.enabled) {
+        return null;
+      }
       const kernel = store.kernel;
-      if (!kernel || kernel.executionState !== "idle") return null;
+      if (!kernel || kernel.executionState !== "idle") {
+        return null;
+      }
       const line = editor.getTextInBufferRange([
         [bufferPosition.row, 0],
         bufferPosition,
@@ -103,7 +107,9 @@ export function provideAutocompleteResults(store: Store): AutocompleteProvider {
       }
 
       // return if cursor is at whitespace
-      if (prefix.trimRight().length < prefix.length) return null;
+      if (prefix.trimRight().length < prefix.length) {
+        return null;
+      }
       let minimumWordLength = atom.config.get(
         "autocomplete-plus.minimumWordLength"
       );
@@ -112,7 +118,9 @@ export function provideAutocompleteResults(store: Store): AutocompleteProvider {
         minimumWordLength = 3;
       }
 
-      if (prefix.trim().length < minimumWordLength) return null;
+      if (prefix.trim().length < minimumWordLength) {
+        return null;
+      }
       log("autocompleteProvider: request:", line, bufferPosition, prefix);
       const promise = new Promise((resolve) => {
         kernel.complete(prefix, (results) => {
@@ -129,9 +137,13 @@ export function provideAutocompleteResults(store: Store): AutocompleteProvider {
       iconHTML,
       type,
     }) {
-      if (!this.suggestionDetailsEnabled) return null;
+      if (!this.suggestionDetailsEnabled) {
+        return null;
+      }
       const kernel = store.kernel;
-      if (!kernel || kernel.executionState !== "idle") return null;
+      if (!kernel || kernel.executionState !== "idle") {
+        return null;
+      }
       const promise = new Promise((resolve) => {
         kernel.inspect(replacedText, replacedText.length, ({ found, data }) => {
           if (!found || !data["text/plain"]) {

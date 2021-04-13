@@ -1,8 +1,8 @@
 import { CompositeDisposable } from "atom";
 import React from "react";
-import { reactFactory, WATCHES_URI } from "./../utils";
+import { reactFactory, WATCHES_URI } from "../utils";
 type store = typeof import("../store").default;
-import Watches from "./../components/watch-sidebar";
+import Watches from "../components/watch-sidebar";
 export default class WatchesPane {
   element = document.createElement("div");
   disposer = new CompositeDisposable();

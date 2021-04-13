@@ -22,14 +22,18 @@ export default class InputView {
     this.onConfirmed = onConfirmed;
     this.element = document.createElement("div");
     this.element.classList.add("hydrogen", "input-view");
-    if (password) this.element.classList.add("password");
+    if (password) {
+      this.element.classList.add("password");
+    }
     const label = document.createElement("div");
     label.classList.add("label", "icon", "icon-arrow-right");
     label.textContent = prompt || "Kernel requires input";
     this.miniEditor = new TextEditor({
       mini: true,
     });
-    if (defaultText) this.miniEditor.setText(defaultText);
+    if (defaultText) {
+      this.miniEditor.setText(defaultText);
+    }
     this.element.appendChild(label);
     this.element.appendChild(this.miniEditor.element);
 
@@ -39,7 +43,9 @@ export default class InputView {
         "core:cancel": () => this.close(),
       });
       this.miniEditor.element.addEventListener("blur", () => {
-        if (document.hasFocus()) this.close();
+        if (document.hasFocus()) {
+          this.close();
+        }
       });
     } else {
       atom.commands.add(this.element, {
@@ -50,15 +56,21 @@ export default class InputView {
 
   confirm() {
     const text = this.miniEditor.getText();
-    if (this.onConfirmed) this.onConfirmed(text);
+    if (this.onConfirmed) {
+      this.onConfirmed(text);
+    }
     this.close();
   }
 
   close() {
-    if (this.panel) this.panel.destroy();
+    if (this.panel) {
+      this.panel.destroy();
+    }
     this.panel = null;
     this.element.remove();
-    if (this.previouslyFocusedElement) this.previouslyFocusedElement.focus();
+    if (this.previouslyFocusedElement) {
+      this.previouslyFocusedElement.focus();
+    }
   }
 
   attach() {

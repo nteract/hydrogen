@@ -1,8 +1,8 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { RichMedia, Media } from "@nteract/outputs";
-import { INSPECTOR_URI } from "./../utils";
-import type Kernel from "./../kernel";
+import { INSPECTOR_URI } from "../utils";
+import type Kernel from "../kernel";
 import Markdown from "./result-view/markdown";
 type Props = {
   store: {
@@ -16,7 +16,9 @@ function hide() {
 }
 
 const Inspector = observer(({ store: { kernel } }: Props) => {
-  if (!kernel) return hide();
+  if (!kernel) {
+    return hide();
+  }
   const bundle = kernel.inspector.bundle;
 
   if (

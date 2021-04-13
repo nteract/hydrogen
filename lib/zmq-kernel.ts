@@ -51,7 +51,9 @@ export default class ZMQKernel extends KernelTransport {
         this.connect(() => {
           this._executeStartupCode();
 
-          if (onStarted) onStarted(this);
+          if (onStarted) {
+            onStarted(this);
+          }
         });
       }
     );
@@ -101,23 +103,25 @@ export default class ZMQKernel extends KernelTransport {
 
   monitor(done: ((...args: Array<any>) => any) | null | undefined) {
     try {
-      let socketNames = ["shellSocket", "ioSocket"];
+      const socketNames = ["shellSocket", "ioSocket"];
       let waitGroup = socketNames.length;
 
       const onConnect = ({ socketName, socket }) => {
-        log("ZMQKernel: " + socketName + " connected");
+        log(`ZMQKernel: ${socketName} connected`);
         socket.unmonitor();
         waitGroup--;
 
         if (waitGroup === 0) {
           log("ZMQKernel: all main sockets connected");
           this.setExecutionState("idle");
-          if (done) done();
+          if (done) {
+            done();
+          }
         }
       };
 
       const monitor = (socketName, socket) => {
-        log("ZMQKernel: monitor " + socketName);
+        log(`ZMQKernel: monitor ${socketName}`);
         socket.on(
           "connect",
           onConnect.bind(this, {
@@ -204,7 +208,9 @@ export default class ZMQKernel extends KernelTransport {
     this.monitor(() => {
       this._executeStartupCode();
 
-      if (onRestarted) onRestarted();
+      if (onRestarted) {
+        onRestarted();
+      }
     });
   }
 

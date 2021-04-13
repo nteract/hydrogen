@@ -1,6 +1,6 @@
 import React from "react";
-import ReactTable from "react-table";
-import { ReactTableDefaults } from "react-table";
+import ReactTable, { ReactTableDefaults } from "react-table";
+
 import { observer } from "mobx-react";
 import _ from "lodash";
 import tildify from "tildify";
@@ -43,7 +43,9 @@ const openUnsavedEditor = (filePath: string) => {
   });
   // This path won't happen after https://github.com/nteract/hydrogen/pull/1662 since every deleted
   // editors would be deleted from `store.kernelMapping`. Just kept here for safety.
-  if (!editor) return;
+  if (!editor) {
+    return;
+  }
   atom.workspace.open(editor, {
     searchAllPanes: true,
   });
@@ -75,7 +77,7 @@ const kernelInfoCell = (props: KernelInfo) => {
       className="icon"
       onClick={showKernelSpec.bind(this, kernelSpec)}
       title="Show kernel spec"
-      key={displayName + "kernelInfo"}
+      key={`${displayName}kernelInfo`}
     >
       {displayName}
     </a>
@@ -114,7 +116,7 @@ const KernelMonitor = observer(({ store }: { store: store }) => {
       executionCount: kernel.executionCount,
       lastExecutionTime: kernel.lastExecutionTime,
       kernelKey: {
-        kernel: kernel,
+        kernel,
         key: String(key),
       },
       files: store.getFilesForKernel(kernel),
@@ -164,19 +166,19 @@ const KernelMonitor = observer(({ store }: { store: store }) => {
             className="icon icon-zap"
             onClick={interrupt.bind(this, kernel)}
             title="Interrupt kernel"
-            key={key + "interrupt"}
+            key={`${key}interrupt`}
           />,
           <a
             className="icon icon-sync"
             onClick={restart.bind(this, kernel)}
             title="Restart kernel"
-            key={key + "restart"}
+            key={`${key}restart`}
           />,
           <a
             className="icon icon-trashcan"
             onClick={shutdown.bind(this, kernel)}
             title="Shutdown kernel"
-            key={key + "shutdown"}
+            key={`${key}shutdown`}
           />,
         ];
       },
@@ -192,7 +194,7 @@ const KernelMonitor = observer(({ store }: { store: store }) => {
             <a
               onClick={openUnsavedEditor.bind(this, filePath)}
               title="Jump to file"
-              key={filePath + "jump"}
+              key={`${filePath}jump`}
             >
               {filePath}
             </a>
@@ -200,7 +202,7 @@ const KernelMonitor = observer(({ store }: { store: store }) => {
             <a
               onClick={openEditor.bind(this, filePath)}
               title="Jump to file"
-              key={filePath + "jump"}
+              key={`${filePath}jump`}
             >
               {tildify(filePath)}
             </a>

@@ -12,7 +12,7 @@ import {
   getEmbeddedScope,
   getEditorDirectory,
   msgSpecToNotebookFormat,
-} from "./../dist/utils";
+} from "../dist/utils";
 
 describe("utils", () => {
   describe("grammarToLanguage", () => {

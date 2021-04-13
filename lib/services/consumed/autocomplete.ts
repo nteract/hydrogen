@@ -29,12 +29,12 @@ export class AutocompleteWatchEditor {
     this.addAutocompleteToEditor = watchEditor;
 
     // Add autocomplete capabilities to already existing watches
-    for (let kernel of store.runningKernels) {
+    for (const kernel of store.runningKernels) {
       const watchesStoreDisposable = new CompositeDisposable();
       kernel.watchesStore.autocompleteDisposables = watchesStoreDisposable;
       this.disposables.add(watchesStoreDisposable);
 
-      for (let watch of kernel.watchesStore.watches) {
+      for (const watch of kernel.watchesStore.watches) {
         this.addAutocompleteToWatch(kernel.watchesStore, watch);
       }
     }
@@ -64,8 +64,8 @@ export class AutocompleteWatchEditor {
      * `this.disposables` to be disposed at the end).
      * Autocomplete is only actually disabled on dispose of `this.disposables`
      */
-    for (let kernel of store.runningKernels) {
-      for (let watch of kernel.watchesStore.watches) {
+    for (const kernel of store.runningKernels) {
+      for (const watch of kernel.watchesStore.watches) {
         watch.autocompleteDisposable = null;
       }
 
@@ -92,8 +92,9 @@ export class AutocompleteWatchEditor {
 
     if (disposable) {
       watch.autocompleteDisposable = disposable;
-      if (watchesStore.autocompleteDisposables)
+      if (watchesStore.autocompleteDisposables) {
         watchesStore.autocompleteDisposables.add(disposable);
+      }
     }
   }
 
@@ -107,8 +108,9 @@ export class AutocompleteWatchEditor {
     const disposable = watch.autocompleteDisposable;
 
     if (disposable) {
-      if (watchesStore.autocompleteDisposables)
+      if (watchesStore.autocompleteDisposables) {
         watchesStore.autocompleteDisposables.remove(disposable);
+      }
       disposable.dispose();
       watch.autocompleteDisposable = null;
     }

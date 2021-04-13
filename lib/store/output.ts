@@ -81,12 +81,16 @@ export default class OutputStore {
 
   @computed
   get isPlain(): boolean {
-    if (this.outputs.length !== 1) return false;
+    if (this.outputs.length !== 1) {
+      return false;
+    }
     const availableSpace = Math.floor(
       (this.position.editorWidth - this.position.lineLength) /
         this.position.charWidth
     );
-    if (availableSpace <= 0) return false;
+    if (availableSpace <= 0) {
+      return false;
+    }
     const output = this.outputs[0];
 
     switch (output.output_type) {

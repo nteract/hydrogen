@@ -68,9 +68,13 @@ export default class SignalListView {
       this.cancel();
     }
 
-    if (!this.store) return;
+    if (!this.store) {
+      return;
+    }
     const kernel = this.store.kernel;
-    if (!kernel) return;
+    if (!kernel) {
+      return;
+    }
     const commands =
       kernel.transport instanceof WSKernel
         ? [...basicCommands, ...wsKernelCommands]
@@ -87,10 +91,11 @@ export default class SignalListView {
 
   attach() {
     setPreviouslyFocusedElement(this);
-    if (this.panel == null)
+    if (this.panel == null) {
       this.panel = atom.workspace.addModalPanel({
         item: this.selectListView,
       });
+    }
     this.selectListView.focus();
     this.selectListView.reset();
   }

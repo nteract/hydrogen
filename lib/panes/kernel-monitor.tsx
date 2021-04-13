@@ -1,8 +1,8 @@
 import { CompositeDisposable } from "atom";
 import React from "react";
-import { reactFactory, KERNEL_MONITOR_URI } from "./../utils";
+import { reactFactory, KERNEL_MONITOR_URI } from "../utils";
 type store = typeof import("../store").default;
-import KernelMonitor from "./../components/kernel-monitor";
+import KernelMonitor from "../components/kernel-monitor";
 export default class KernelMonitorPane {
   element = document.createElement("div");
   disposer = new CompositeDisposable();

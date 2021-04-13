@@ -29,11 +29,11 @@ describe("Display output", () => {
 });
 
 describe("textOutputOnly", () => {
-  let plainBundle = {
+  const plainBundle = {
     "text/plain": "I'm very plain",
     "text/output-not-supported": "This should be ignored",
   };
-  let richerBundle = {
+  const richerBundle = {
     "text/plain": "I'm very plain",
     "text/html": "<div>I am a little <b>richer</b>!</div>",
   };
