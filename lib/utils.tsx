@@ -115,8 +115,10 @@ export function msgSpecV4toV5(message: Message) {
         message.content.text = message.content.data;
       }
       break;
+    default: {
+      // no conversion needed
+    }
   }
-
   return message;
 }
 const markupGrammars = new Set([
