@@ -339,12 +339,12 @@ export default class WSKernelPicker {
           return name ? kernelNames.includes(name) : true;
         });
         const items = sessionModels.map((model) => {
-          let name;
+          let name: string;
 
           if (model.path) {
             name = tildify(model.path);
-          } else if (model.notebook && model.notebook?.path) {
-            name = tildify(model.notebook?.path); // TODO fix the types
+          } else if (model.notebook?.path) {
+            name = tildify(model.notebook!.path); // TODO fix the types
           } else {
             name = `Session ${model.id}`;
           }
