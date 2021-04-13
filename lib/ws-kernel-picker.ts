@@ -32,14 +32,17 @@ export interface KernelGateway {
   options: KernelGatewayOptions;
 }
 
-// TODO why we accept boths using one API?
-export interface SessionInfo<T extends "startNew" | "connectTo"> {
-  name: string;
-  model?: T extends "startNew" ? Kernel.IModel : never;
+export interface SessionInfoWithModel {
+  model: Kernel.IModel;
+  options: Parameters<typeof Session.connectTo>[1];
+}
+
+export interface SessionInfoWithoutModel {
+  name?: string;
   kernelSpecs: Kernel.ISpecModel[];
-  options: T extends "startNew"
-    ? Parameters<typeof Session.startNew>[0]
-    : Parameters<typeof Session.connectTo>[1];
+  options: Parameters<typeof Session.startNew>[0];
+  // no model
+  model?: never | null | undefined;
 }
 
 class CustomListView {
@@ -386,51 +389,71 @@ export default class WSKernelPicker {
     }
   }
 
-  async onSession(
+  onSession(
     gatewayName: string,
-    sessionInfo: SessionInfo<"startNew" | "connectTo">
+    sessionInfo: SessionInfoWithModel | SessionInfoWithoutModel
   ) {
-    if (!sessionInfo.model) {
-      if (!sessionInfo.name) {
-        await this.listView.selectListView.update({
-          items: [],
-          errorMessage: "This gateway does not support listing sessions",
-          loadingMessage: null,
-          infoMessage: null,
-        });
-      }
-
-      const items = _.map(sessionInfo.kernelSpecs, (spec) => {
-        const options = {
-          serverSettings: sessionInfo.options,
-          kernelName: spec.name,
-          path: this._path,
-        };
-        return {
-          name: spec.display_name,
-          options,
-        };
-      });
-
-      this.listView.onConfirmed = this.startSession.bind(this, gatewayName);
-      await this.listView.selectListView.update({
-        items,
-        emptyMessage: "No kernel specs available",
-        infoMessage: "Select a session",
-        loadingMessage: null,
-      });
-    } else {
-      this.onSessionChosen(
+    const model = sessionInfo.model;
+    if (model === null || model === undefined) {
+      // model not provided
+      return this.onSessionWitouthModel(
         gatewayName,
-        await Session.connectTo(
-          sessionInfo.model.id,
-          (sessionInfo as SessionInfo<"connectTo">).options
-        )
+        sessionInfo as SessionInfoWithoutModel
+      );
+    } else {
+      // with model
+      return this.onSessionWithModel(
+        gatewayName,
+        sessionInfo as SessionInfoWithModel
       );
     }
   }
 
-  startSession(gatewayName: string, sessionInfo: SessionInfo<"startNew">) {
+  async onSessionWithModel(
+    gatewayName: string,
+    sessionInfo: SessionInfoWithModel
+  ) {
+    this.onSessionChosen(
+      gatewayName,
+      await Session.connectTo(sessionInfo.model.id, sessionInfo.options)
+    );
+  }
+
+  async onSessionWitouthModel(
+    gatewayName: string,
+    sessionInfo: SessionInfoWithoutModel
+  ) {
+    if (!sessionInfo.name) {
+      await this.listView.selectListView.update({
+        items: [],
+        errorMessage: "This gateway does not support listing sessions",
+        loadingMessage: null,
+        infoMessage: null,
+      });
+    }
+
+    const items = _.map(sessionInfo.kernelSpecs, (spec) => {
+      const options = {
+        serverSettings: sessionInfo.options,
+        kernelName: spec.name,
+        path: this._path,
+      };
+      return {
+        name: spec.display_name,
+        options,
+      };
+    });
+
+    this.listView.onConfirmed = this.startSession.bind(this, gatewayName);
+    await this.listView.selectListView.update({
+      items,
+      emptyMessage: "No kernel specs available",
+      infoMessage: "Select a session",
+      loadingMessage: null,
+    });
+  }
+
+  startSession(gatewayName: string, sessionInfo: SessionInfoWithoutModel) {
     Session.startNew(sessionInfo.options).then(
       this.onSessionChosen.bind(this, gatewayName)
     );
