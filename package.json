@@ -73,7 +73,7 @@
     "@nteract/plotly": "^1.48.3",
     "@nteract/transform-vega": "^7.0.0",
     "anser": "^2.0.1",
-    "atom-select-list": "^0.7.0",
+    "atom-select-list": "^0.8.0",
     "escape-carriage": "^1.2.0",
     "escape-string-regexp": "^4.0.0",
     "jmp": "^2.0.0",
