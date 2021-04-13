@@ -1,4 +1,4 @@
-import { TextEditor, Range } from "atom";
+import { TextEditor, Range, Emitter } from "atom";
 import store from "./../store";
 import type Kernel from "./../kernel";
 import type ZMQKernel from "./../zmq-kernel";
@@ -19,10 +19,9 @@ import { getCurrentCell } from "./../code-manager";
  */
 
 export default class HydrogenProvider {
-  _hydrogen: any;
-
-  constructor(_hydrogen: any) {
-    this._hydrogen = _hydrogen;
+  private _emitter: Emitter<{}, { "did-change-kernel": Kernel }> | undefined;
+  constructor(emitter: Emitter<{}, { "did-change-kernel": Kernel }>) {
+    this._emitter = emitter;
   }
 
   /*
@@ -30,7 +29,7 @@ export default class HydrogenProvider {
    * @param {Function} Callback
    */
   onDidChangeKernel(callback: (...args: Array<any>) => any) {
-    this._hydrogen.emitter.on(
+    this._emitter.on(
       "did-change-kernel",
       (kernel: Kernel | null | undefined) => {
         if (kernel) {
