@@ -80,7 +80,7 @@
     "kernelspecs": "^2.0.0",
     "lodash": "^4.14.0",
     "mathjax-electron": "^3.0.0",
-    "mobx": "^5.1.1",
+    "mobx": "^6.0.0",
     "mobx-react": "^6.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
