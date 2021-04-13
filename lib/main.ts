@@ -407,7 +407,7 @@ function _runAll(
     const row = codeManager.escapeBlankRows(
       editor,
       start.row,
-      end.row == editor.getLastBufferRow() ? end.row : end.row - 1
+      codeManager.getEscapeBlankRowsEndRow(editor, end)
     );
     const cellType = codeManager.getMetadataForRow(editor, start);
     const code =
@@ -461,7 +461,7 @@ function _runAllAbove(editor: TextEditor, kernel: Kernel) {
     const row = codeManager.escapeBlankRows(
       editor,
       start.row,
-      end.row == editor.getLastBufferRow() ? end.row : end.row - 1
+      codeManager.getEscapeBlankRowsEndRow(editor, end)
     );
     const cellType = codeManager.getMetadataForRow(editor, start);
 
@@ -500,7 +500,7 @@ function runCell(moveDown: boolean = false) {
   const row = codeManager.escapeBlankRows(
     editor,
     start.row,
-    end.row == editor.getLastBufferRow() ? end.row : end.row - 1
+    codeManager.getEscapeBlankRowsEndRow(editor, end)
   );
   const cellType = codeManager.getMetadataForRow(editor, start);
   const code =
