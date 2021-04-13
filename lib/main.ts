@@ -268,7 +268,7 @@ export function consumeStatusBar(statusBar: StatusBar) {
 }
 
 /*-----------------------------------------------*/
-export function connectToExistingKernel() {
+function connectToExistingKernel() {
   if (!existingKernelPicker) {
     existingKernelPicker = new ExistingKernelPicker();
   }
@@ -276,7 +276,7 @@ export function connectToExistingKernel() {
   existingKernelPicker.toggle();
 }
 
-export function handleKernelCommand(
+function handleKernelCommand(
   {
     command,
     payload,
@@ -320,7 +320,7 @@ export function handleKernelCommand(
   }
 }
 
-export function run(moveDown: boolean = false) {
+function run(moveDown: boolean = false) {
   const editor = store.editor;
   if (!editor) return;
   // https://github.com/nteract/hydrogen/issues/1452
@@ -353,7 +353,7 @@ export function run(moveDown: boolean = false) {
   });
 }
 
-export function runAll(breakpoints: Array<Point> | null | undefined) {
+function runAll(breakpoints?: Array<Point> | null | undefined) {
   const { editor, kernel, grammar, filePath } = store;
   if (!editor || !grammar || !filePath) return;
 
@@ -406,7 +406,7 @@ function _runAll(
   }
 }
 
-export function runAllAbove() {
+function runAllAbove() {
   const { editor, kernel, grammar, filePath } = store;
   if (!editor || !grammar || !filePath) return;
 
@@ -465,7 +465,7 @@ function _runAllAbove(editor: TextEditor, kernel: Kernel) {
   }
 }
 
-export function runCell(moveDown: boolean = false) {
+function runCell(moveDown: boolean = false) {
   const editor = store.editor;
   if (!editor) return;
   // https://github.com/nteract/hydrogen/issues/1452
@@ -497,19 +497,19 @@ export function runCell(moveDown: boolean = false) {
   });
 }
 
-export function foldCurrentCell() {
+function foldCurrentCell() {
   const editor = store.editor;
   if (!editor) return;
   codeManager.foldCurrentCell(editor);
 }
 
-export function foldAllButCurrentCell() {
+function foldAllButCurrentCell() {
   const editor = store.editor;
   if (!editor) return;
   codeManager.foldAllButCurrentCell(editor);
 }
 
-export function startZMQKernel() {
+function startZMQKernel() {
   kernelManager
     .getAllKernelSpecsForGrammar(store.grammar)
     .then((kernelSpecs) => {
@@ -530,7 +530,7 @@ export function startZMQKernel() {
     });
 }
 
-export function connectToWSKernel() {
+function connectToWSKernel() {
   if (!wsKernelPicker) {
     wsKernelPicker = new WSKernelPicker((transport: WSKernel) => {
       const kernel = new Kernel(transport);
@@ -548,7 +548,7 @@ export function connectToWSKernel() {
 }
 
 // Accepts store as an arg
-export function checkForKernel(
+function checkForKernel(
   {
     editor,
     grammar,
