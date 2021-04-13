@@ -4,7 +4,7 @@ import _ from "lodash";
 import tildify from "tildify";
 import { v4 } from "uuid";
 import ws from "ws";
-import xhr from "xmlhttprequest";
+import { XMLHttpRequest as NodeXMLHttpRequest } from "@nteract/xmlhttprequest";
 import { URL } from "url";
 import { Kernel, Session, ServerConnection } from "@jupyterlab/services";
 import Config from "./config";
@@ -168,10 +168,10 @@ export default class WSKernelPicker {
     options.requestHeaders.Cookie = cookie;
 
     options.xhrFactory = () => {
-      const request = new xhr.XMLHttpRequest();
+      const request = new NodeXMLHttpRequest();
       // Disable protections against setting the Cookie header
       request.setDisableHeaderCheck(true);
-      return request;
+      return request as XMLHttpRequest; // TODO fix the types
     };
 
     options.wsFactory = (url, protocol) => {
@@ -259,7 +259,7 @@ export default class WSKernelPicker {
       emptyMessage: "No sessions available",
     });
     const gatewayOptions = {
-      xhrFactory: () => new xhr.XMLHttpRequest(),
+      xhrFactory: () => new NodeXMLHttpRequest() as XMLHttpRequest, // TODO fix the types
       wsFactory: (url, protocol) => new ws(url, protocol),
       ...gatewayInfo.options,
     };

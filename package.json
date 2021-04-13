@@ -65,6 +65,7 @@
     "@nteract/outputs": "^3.0.0",
     "@nteract/plotly": "^1.48.3",
     "@nteract/transform-vega": "^7.0.0",
+    "@nteract/xmlhttprequest": "file:../node-XMLHttpRequest",
     "anser": "^2.0.1",
     "atom-select-list": "^0.7.0",
     "escape-carriage": "^1.2.0",
@@ -83,8 +84,7 @@
     "styled-components": "^5.0.1",
     "tildify": "^2.0.0",
     "uuid": "^8.0.0",
-    "ws": "^7.0.0",
-    "xmlhttprequest": "^1.8.0"
+    "ws": "^7.0.0"
   },
   "consumedServices": {
     "autocomplete.watchEditor": {
