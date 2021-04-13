@@ -12,9 +12,35 @@ import WSKernel from "./ws-kernel";
 import InputView from "./input-view";
 import store from "./store";
 import type { KernelspecMetadata } from "@nteract/types";
-import { setPreviouslyFocusedElement } from "./utils";
+import { setPreviouslyFocusedElement, DeepWriteable } from "./utils";
 
 type SelectListItem = any;
+
+export type KernelGatewayOptions = Parameters<
+  typeof ServerConnection["makeSettings"]
+>[0];
+
+// Based on the config documentation
+// TODO verify this
+export type MinimalServerConnectionSettings = Pick<
+  KernelGatewayOptions,
+  "baseUrl"
+>;
+
+export interface KernelGateway {
+  name: string;
+  options: KernelGatewayOptions;
+}
+
+// TODO why we accept boths using one API?
+export interface SessionInfo<T extends "startNew" | "connectTo"> {
+  name: string;
+  model?: T extends "startNew" ? Kernel.IModel : never;
+  kernelSpecs: Kernel.ISpecModel[];
+  options: T extends "startNew"
+    ? Parameters<typeof Session.startNew>[0]
+    : Parameters<typeof Session.connectTo>[1];
+}
 
 class CustomListView {
   onConfirmed: (item: SelectListItem) => void | null | undefined = null;
@@ -154,7 +180,7 @@ export default class WSKernelPicker {
     return response;
   }
 
-  async promptForCookie(options: any) {
+  async promptForCookie(options: DeepWriteable<KernelGatewayOptions>) {
     const cookie = await this.promptForText("Cookie:");
 
     if (cookie === null) {
@@ -178,7 +204,7 @@ export default class WSKernelPicker {
       // Authentication requires requests to appear to be same-origin
       const parsedUrl = new URL(url);
 
-      if (parsedUrl.protocol == "wss:") {
+      if (parsedUrl.protocol === "wss:") {
         parsedUrl.protocol = "https:";
       } else {
         parsedUrl.protocol = "http:";
@@ -199,7 +225,7 @@ export default class WSKernelPicker {
     return true;
   }
 
-  async promptForToken(options: any) {
+  async promptForToken(options: DeepWriteable<KernelGatewayOptions>) {
     const token = await this.promptForText("Token:");
 
     if (token === null) {
@@ -210,7 +236,7 @@ export default class WSKernelPicker {
     return true;
   }
 
-  async promptForCredentials(options: any) {
+  async promptForCredentials(options: DeepWriteable<KernelGatewayOptions>) {
     await this.listView.selectListView.update({
       items: [
         {
@@ -250,7 +276,7 @@ export default class WSKernelPicker {
     return false;
   }
 
-  async onGateway(gatewayInfo: any) {
+  async onGateway(gatewayInfo: KernelGateway) {
     this.listView.onConfirmed = null;
     await this.listView.selectListView.update({
       items: [],
@@ -360,7 +386,10 @@ export default class WSKernelPicker {
     }
   }
 
-  async onSession(gatewayName: string, sessionInfo: any) {
+  async onSession(
+    gatewayName: string,
+    sessionInfo: SessionInfo<"startNew" | "connectTo">
+  ) {
     if (!sessionInfo.model) {
       if (!sessionInfo.name) {
         await this.listView.selectListView.update({
@@ -393,12 +422,15 @@ export default class WSKernelPicker {
     } else {
       this.onSessionChosen(
         gatewayName,
-        await Session.connectTo(sessionInfo.model.id, sessionInfo.options)
+        await Session.connectTo(
+          sessionInfo.model.id,
+          (sessionInfo as SessionInfo<"connectTo">).options
+        )
       );
     }
   }
 
-  startSession(gatewayName: string, sessionInfo: any) {
+  startSession(gatewayName: string, sessionInfo: SessionInfo<"startNew">) {
     Session.startNew(sessionInfo.options).then(
       this.onSessionChosen.bind(this, gatewayName)
     );
