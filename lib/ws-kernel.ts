@@ -3,7 +3,7 @@ import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
 import InputView from "./input-view";
 import { log, js_idx_to_char_idx } from "./utils";
-import type { Session } from "@jupyterlab/services";
+import type { Session, Kernel } from "@jupyterlab/services";
 import type { Message } from "./hydrogen";
 import type { KernelspecMetadata } from "@nteract/types";
 
@@ -12,7 +12,7 @@ export default class WSKernel extends KernelTransport {
 
   constructor(
     gatewayName: string,
-    kernelSpec: KernelspecMetadata,
+    kernelSpec: Kernel.ISpecModel | KernelspecMetadata,
     grammar: Grammar,
     session: Session.ISession
   ) {
