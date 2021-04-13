@@ -117,7 +117,9 @@ export function activate() {
           openOrShowDock(WATCHES_URI);
         }
       },
-      "hydrogen:update-kernels": () => kernelManager.updateKernelSpecs(),
+      "hydrogen:update-kernels": async () => {
+        await kernelManager.updateKernelSpecs();
+      },
       "hydrogen:toggle-inspector": () => commands.toggleInspector(store),
       "hydrogen:interrupt-kernel": () =>
         handleKernelCommand(
