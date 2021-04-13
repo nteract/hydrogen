@@ -278,7 +278,7 @@ export default class ZMQKernel extends KernelTransport {
   onShellMessage(message: Message) {
     log("shell message:", message);
 
-    if (!this._isValidMessage(message)) {
+    if (!_isValidMessage(message)) {
       return;
     }
 
@@ -297,7 +297,7 @@ export default class ZMQKernel extends KernelTransport {
   onStdinMessage(message: Message) {
     log("stdin message:", message);
 
-    if (!this._isValidMessage(message)) {
+    if (!_isValidMessage(message)) {
       return;
     }
 
@@ -318,7 +318,7 @@ export default class ZMQKernel extends KernelTransport {
   onIOMessage(message: Message) {
     log("IO message:", message);
 
-    if (!this._isValidMessage(message)) {
+    if (!_isValidMessage(message)) {
       return;
     }
 
@@ -339,56 +339,6 @@ export default class ZMQKernel extends KernelTransport {
     if (callback) {
       callback(message, "iopub");
     }
-  }
-
-  _isValidMessage(message: Message) {
-    if (!message) {
-      log("Invalid message: null");
-      return false;
-    }
-
-    if (!message.content) {
-      log("Invalid message: Missing content");
-      return false;
-    }
-
-    if (message.content.execution_state === "starting") {
-      // Kernels send a starting status message with an empty parent_header
-      log("Dropped starting status IO message");
-      return false;
-    }
-
-    if (!message.parent_header) {
-      log("Invalid message: Missing parent_header");
-      return false;
-    }
-
-    if (!message.parent_header.msg_id) {
-      log("Invalid message: Missing parent_header.msg_id");
-      return false;
-    }
-
-    if (!message.parent_header.msg_type) {
-      log("Invalid message: Missing parent_header.msg_type");
-      return false;
-    }
-
-    if (!message.header) {
-      log("Invalid message: Missing header");
-      return false;
-    }
-
-    if (!message.header.msg_id) {
-      log("Invalid message: Missing header.msg_id");
-      return false;
-    }
-
-    if (!message.header.msg_type) {
-      log("Invalid message: Missing header.msg_type");
-      return false;
-    }
-
-    return true;
   }
 
   destroy() {
@@ -429,4 +379,54 @@ export default class ZMQKernel extends KernelTransport {
     };
     return message;
   }
+}
+
+function _isValidMessage(message: Message) {
+  if (!message) {
+    log("Invalid message: null");
+    return false;
+  }
+
+  if (!message.content) {
+    log("Invalid message: Missing content");
+    return false;
+  }
+
+  if (message.content.execution_state === "starting") {
+    // Kernels send a starting status message with an empty parent_header
+    log("Dropped starting status IO message");
+    return false;
+  }
+
+  if (!message.parent_header) {
+    log("Invalid message: Missing parent_header");
+    return false;
+  }
+
+  if (!message.parent_header.msg_id) {
+    log("Invalid message: Missing parent_header.msg_id");
+    return false;
+  }
+
+  if (!message.parent_header.msg_type) {
+    log("Invalid message: Missing parent_header.msg_type");
+    return false;
+  }
+
+  if (!message.header) {
+    log("Invalid message: Missing header");
+    return false;
+  }
+
+  if (!message.header.msg_id) {
+    log("Invalid message: Missing header.msg_id");
+    return false;
+  }
+
+  if (!message.header.msg_type) {
+    log("Invalid message: Missing header.msg_type");
+    return false;
+  }
+
+  return true;
 }
