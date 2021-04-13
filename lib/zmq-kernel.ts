@@ -354,19 +354,10 @@ export default class ZMQKernel extends KernelTransport {
     super.destroy();
   }
 
-  _getUsername() {
-    return (
-      process.env.LOGNAME ||
-      process.env.USER ||
-      process.env.LNAME ||
-      process.env.USERNAME
-    );
-  }
-
   _createMessage(msgType: string, msgId: string = v4()) {
     const message = {
       header: {
-        username: this._getUsername(),
+        username: _getUsername(),
         session: "00000000-0000-0000-0000-000000000000",
         msg_type: msgType,
         msg_id: msgId,
@@ -429,4 +420,13 @@ function _isValidMessage(message: Message) {
   }
 
   return true;
+}
+
+function _getUsername() {
+  return (
+    process.env.LOGNAME ||
+    process.env.USER ||
+    process.env.LNAME ||
+    process.env.USERNAME
+  );
 }
