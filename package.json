@@ -42,7 +42,7 @@
     "build.test": "npm run build && npm run test",
     "test": "echo 'test without rebuilding' && atom --test spec",
     "clean": "shx rm -rf dist",
-    "dev": "npm run clean && npm run build -- --watch",
+    "dev": "npm run clean && tsc -p lib/tsconfig.json --watch",
     "build": "npm run clean && tsc -p lib/tsconfig.json || echo done",
     "build:services-docs": "markdox lib/services/index.js -o lib/services/README.md",
     "build:plugin-docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
