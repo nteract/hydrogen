@@ -305,9 +305,7 @@ export class Store {
     this.configMapping.set(keyPath, newValue);
   }
 
-  /**
-   * Force mobx to recalculate filePath (which depends on editor observable)
-   */
+  /** Force mobx to recalculate filePath (which depends on editor observable) */
   forceEditorUpdate() {
     const currentEditor = this.editor;
     if (!currentEditor) {

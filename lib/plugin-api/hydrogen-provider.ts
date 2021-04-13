@@ -4,17 +4,14 @@ import type Kernel from "../kernel";
 import type ZMQKernel from "../zmq-kernel";
 import { getCurrentCell } from "../code-manager";
 /**
- * @version 1.0.0
+ * @version 1.0.0 The Plugin API allows you to make Hydrogen awesome. You will
+ *   be able to interact with this class in your Hydrogen Plugin using Atom's
+ *   [Service API](http://blog.atom.io/2015/03/25/new-services-API.html).
  *
- *
- * The Plugin API allows you to make Hydrogen awesome.
- * You will be able to interact with this class in your Hydrogen Plugin using
- * Atom's [Service API](http://blog.atom.io/2015/03/25/new-services-API.html).
- *
- * Take a look at our [Example Plugin](https://github.com/lgeiger/hydrogen-example-plugin)
- * and the [Atom Flight Manual](http://flight-manual.atom.io/hacking-atom/) for
- * learning how to interact with Hydrogen in your own plugin.
- *
+ *   Take a look at our [Example
+ *   Plugin](https://github.com/lgeiger/hydrogen-example-plugin) and the [Atom
+ *   Flight Manual](http://flight-manual.atom.io/hacking-atom/) for learning how
+ *   to interact with Hydrogen in your own plugin.
  * @class HydrogenProvider
  */
 

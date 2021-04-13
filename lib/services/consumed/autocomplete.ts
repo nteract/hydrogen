@@ -4,9 +4,7 @@ import type { Store } from "../../store";
 import type WatchesStore from "../../store/watches";
 import type WatchStore from "../../store/watch";
 
-/**
- * This acts as a global storage for the consumed service.
- */
+/** This acts as a global storage for the consumed service. */
 export class AutocompleteWatchEditor {
   disposables: CompositeDisposable;
 
@@ -17,12 +15,13 @@ export class AutocompleteWatchEditor {
   isEnabeled: boolean = false;
 
   /**
-   * This function is called on activation of autocomplete, or if autocomplete is
-   * already active, then it is called when hydrogen activates.
+   * This function is called on activation of autocomplete, or if autocomplete
+   * is already active, then it is called when hydrogen activates.
    *
    * @param {Store} store - The global Hydrogen store.
    * @param {Function} watchEditor - The function provided by `autocomplete.watchEditor`.
-   * @returns {Disposable} - This is for clean up when autocomplete or hydrogen deactivate.
+   * @returns {Disposable} - This is for clean up when autocomplete or hydrogen
+   *   deactivate.
    */
   consume(store: Store, watchEditor: AtomAutocompleteWatchEditor) {
     this.disposables = new CompositeDisposable();
@@ -46,7 +45,8 @@ export class AutocompleteWatchEditor {
   }
 
   /**
-   * This function is just for cleaning up when either autocomplete or hydrogen is deactivating.
+   * This function is just for cleaning up when either autocomplete or hydrogen
+   * is deactivating.
    *
    * @param {Store} store - The global Hydrogen store.
    */
@@ -80,7 +80,8 @@ export class AutocompleteWatchEditor {
   /**
    * This function is for adding autocomplete capabilities to a watch.
    *
-   * @param {WatchesStore} watchesStore - This should always be the parent `WatchesStore` of `watch`.
+   * @param {WatchesStore} watchesStore - This should always be the parent
+   *   `WatchesStore` of `watch`.
    * @param {WatchStore} watch - The watch to add autocomplete to.
    */
   addAutocompleteToWatch(watchesStore: WatchesStore, watch: WatchStore) {
@@ -101,7 +102,8 @@ export class AutocompleteWatchEditor {
   /**
    * This function is for removing autocomplete capabilities from a watch.
    *
-   * @param {WatchesStore} watchesStore - This should always be the parent `WatchesStore` of `watch`.
+   * @param {WatchesStore} watchesStore - This should always be the parent
+   *   `WatchesStore` of `watch`.
    * @param {WatchStore} watch - The watch to remove autocomplete from.
    */
   removeAutocompleteFromWatch(watchesStore: WatchesStore, watch: WatchStore) {

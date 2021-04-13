@@ -102,7 +102,7 @@ export function createResult(
  * @param {TextEditor} store.editor - The editor to display the results in.
  * @param {MarkerStore} store.markers - Should almost always be the editor's `MarkerStore`
  * @param {Object} bundle - The bundle to display.
- * @param {Array<Object>} bundle.outputs - The Kernel Responses to display.
+ * @param {Object[]} bundle.outputs - The Kernel Responses to display.
  * @param {Number} bundle.row - The editor row to display the results on.
  */
 export function importResult(
@@ -138,16 +138,16 @@ export function importResult(
 }
 
 /**
- * Clears a ResultView or selection of ResultViews.
- * To select a result to clear, put your cursor on the row on the ResultView.
- * To select multiple ResultViews, select text starting on the row of
- * the first ResultView to remove all the way to text on the row of the
- * last ResultView to remove. *This must be one selection and
- * the last selection made*
+ * Clears a ResultView or selection of ResultViews. To select a result to clear,
+ * put your cursor on the row on the ResultView. To select multiple ResultViews,
+ * select text starting on the row of the first ResultView to remove all the way
+ * to text on the row of the last ResultView to remove. *This must be one
+ * selection and the last selection made*
  *
  * @param {Object} store - Global Hydrogen Store
  * @param {TextEditor} store.editor - TextEditor associated with the ResultView.
- * @param {MarkerStore} store.markers - MarkerStore that belongs to `store.editor` and the ResultView.
+ * @param {MarkerStore} store.markers - MarkerStore that belongs to
+ *   `store.editor` and the ResultView.
  */
 export function clearResult({
   editor,
@@ -167,8 +167,7 @@ export function clearResult({
 }
 
 /**
- * Clears all ResultViews of a MarkerStore.
- * It also clears the currect kernel results.
+ * Clears all ResultViews of a MarkerStore. It also clears the currect kernel results.
  *
  * @param {Object} store - Global Hydrogen Store
  * @param {Kernel} store.kernel - Kernel to clear outputs.
@@ -191,12 +190,12 @@ export function clearResults({
 }
 
 /**
- * Converts a string of raw markdown to a display_data Kernel Response.
- * This allows for hydrogen to display markdown text as if is was any normal
- * result that came back from the kernel.
+ * Converts a string of raw markdown to a display_data Kernel Response. This
+ * allows for hydrogen to display markdown text as if is was any normal result
+ * that came back from the kernel.
  *
  * @param {String} markdownString - A string of raw markdown code.
- * @return {Object} A fake display_data Kernel Response.
+ * @returns {Object} A fake display_data Kernel Response.
  */
 export function convertMarkdownToOutput(markdownString: string) {
   return {

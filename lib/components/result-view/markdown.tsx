@@ -1,7 +1,7 @@
 /**
- * Adapted from https://github.com/nteract/nteract/blob/master/packages/outputs/src/components/media/markdown.tsx
- * Copyright (c) 2016 - present, nteract contributors
- * All rights reserved.
+ * Adapted from
+ * https://github.com/nteract/nteract/blob/master/packages/outputs/src/components/media/markdown.tsx
+ * Copyright (c) 2016 - present, nteract contributors All rights reserved.
  *
  * This source code is licensed under the license found in the LICENSE file in
  * the root directory of this source tree.
@@ -12,14 +12,12 @@
 import MarkdownComponent from "@nteract/markdown";
 import React from "react";
 interface Props {
-  /**
-   * Markdown text.
-   */
+  /** Markdown text. */
   data: string;
 
   /**
-   * Media type. Defaults to `text/markdown`.
-   * For more on media types, see: https://www.w3.org/TR/CSS21/media.html%23media-types.
+   * Media type. Defaults to `text/markdown`. For more on media types, see:
+   * https://www.w3.org/TR/CSS21/media.html%23media-types.
    */
   mediaType: "text/markdown";
 }
