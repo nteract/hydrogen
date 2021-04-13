@@ -46,19 +46,14 @@ jobs:
         name: Commit lint ✨
         uses: wagoid/commitlint-github-action@v2
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
-
       - name: Install dependencies
-        run: pnpm install
+        run: npm install --ignore-scripts
 
       - name: Format ✨
-        run: pnpm test.format
+        run: npm run test.format
 
-      # - name: Lint ✨
-      #   run: pnpm test.lint
+      - name: Lint ✨
+        run: npm run test.lint
 
   Skip:
     if: contains(github.event.head_commit.message, '[skip ci]')
