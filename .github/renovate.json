@@ -16,5 +16,6 @@
       "groupName": "dependencies",
       "semanticCommitType": "fix"
     }
-  ]
+  ],
+  "ignoreDeps": ["electron"]
 }
