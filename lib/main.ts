@@ -85,7 +85,7 @@ export function activate() {
     })
   );
   store.subscriptions.add(
-    atom.commands.add("atom-text-editor:not([mini])", {
+    atom.commands.add<"atom-text-editor:not([mini])">("atom-text-editor:not([mini])", {
       "hydrogen:run": () => run(),
       "hydrogen:run-all": () => runAll(),
       "hydrogen:run-all-above": () => runAllAbove(),
