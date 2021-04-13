@@ -32,6 +32,35 @@ jobs:
       - name: Run tests 👩🏾‍💻
         run: npm run test
 
+  Lint:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - if: "!contains(github.event.head_commit.message, 'Prepare')"
+        name: Commit lint ✨
+        uses: wagoid/commitlint-github-action@v2
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Format ✨
+        run: pnpm test.format
+
+      # - name: Lint ✨
+      #   run: pnpm test.lint
+
+
   Skip:
     if: contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest

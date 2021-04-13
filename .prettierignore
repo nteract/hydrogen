@@ -1,14 +1,16 @@
+node_modules
+pnpm-lock.yaml
+package-lock.json
+CHANGELOG.md
+dist
+
 .DS_Store
 npm-debug.log
-node_modules
 .ipynb_checkpoints
 *.ipynb
 kernel-configs/
 _book/
-package-lock.json
 !spec/helpers/*.ipynb
+
 .mypy_cache/
 .ropeproject/
-
-# Build directories
-dist
