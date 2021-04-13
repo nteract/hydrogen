@@ -3,16 +3,17 @@
 Hydrogen provides a selection of commands for running code. Press <kbd>⌘-⇧-P</kbd> (On Windows press <kbd>ctrl-⇧-P</kbd> instead) to open the Command Palette and type "hydrogen" and they will come up.
 
 ## "Hydrogen: Run"
+
 There are two ways to tell Hydrogen which code in your file to run.
 
 1. **Selected code:** If you have code selected when you hit Run, Hydrogen will run exactly that code.
 2. **Current block:** With no code selected, Hydrogen will try to find the complete block that's on or before the current line.
 
-    - If the line you're on is already a complete expression (like `s = "abracadabra"`), Hydrogen will run just that line.
+   - If the line you're on is already a complete expression (like `s = "abracadabra"`), Hydrogen will run just that line.
 
-    - If the line you're on is the start of a block like a `for` loop, Hydrogen will run the whole block.
+   - If the line you're on is the start of a block like a `for` loop, Hydrogen will run the whole block.
 
-    - If the line you're on is blank, Hydrogen will run the first block above that line.
+   - If the line you're on is blank, Hydrogen will run the first block above that line.
 
 It's easiest to see these interactions visually:
 
@@ -23,9 +24,11 @@ It's easiest to see these interactions visually:
 If your code starts getting cluttered up with results, run **"Hydrogen: Clear Results"** to remove them all at once.
 
 ## "Hydrogen: Run Cell"
-Cells are an easy way to separate your code. To learn more about them visit [Cells](Cells.md). 
+
+Cells are an easy way to separate your code. To learn more about them visit [Cells](Cells.md).
 
 #### Example:
+
 <img width=280 src="https://cloud.githubusercontent.com/assets/13285808/17094174/e8ec17b8-524d-11e6-9140-60b43e073619.png">
 
 When you place the cursor inside a cell and hit **"Hydrogen: Run Cell"**, Hydrogen will execute this cell. The command **"Hydrogen: Run Cell And Move Down"** will move the cursor to the next cell after execution.
@@ -33,9 +36,11 @@ When you place the cursor inside a cell and hit **"Hydrogen: Run Cell"**, Hydrog
 See [**Notebook Export**](NotebookFiles.md#notebook-export) for more details about exporting your Hydrogen Cells as a Jupyter Notebook.
 
 ## "Hydrogen: Run All" and "Hydrogen: Run All Above"
+
 These commands will run all code inside the editor or all code above the cursor.
 
 ## "Hydrogen: Toggle Output Area"
+
 An external output area can be used to display output instead of the inline result view.
 The output can be displayed either in a scrolling view or a sliding history.
 
@@ -52,7 +57,6 @@ After you've run some code with Hydrogen, you can use the **"Hydrogen: Toggle Wa
 ![watch](https://cloud.githubusercontent.com/assets/13285808/20361086/4434ab3e-ac04-11e6-8298-1fb925de4e78.gif)
 
 **IMPORTANT:** Be careful what you put in your watch expressions. If you write code that mutates state in a watch expression, that code will get run after every execute command and likely result in some _extremely confusing_ bugs.
-
 
 You can re-run the watch expressions by using the normal run shortcut (<kbd>⌘-↩</kbd> or <kbd>ctrl-↩</kbd> in Windows by default) inside a watch expression's edit field.
 

@@ -1,10 +1,9 @@
 ---
 name: Bug Report
 about: For reporting unexpected errors or behavior.
-title: ''
-labels: 'bug :bug:'
-assignees: ''
-
+title: ""
+labels: "bug :bug:"
+assignees: ""
 ---
 
 <!--
@@ -17,8 +16,8 @@ Do you want to ask a question ? Are you looking for support? The #hydrogen chann
 
 ### Prerequisites
 
-* [ ] Have you checked the solutions in our [troubleshooting guide](https://nteract.gitbooks.io/hydrogen/docs/Troubleshooting.html) for common problems ?
-* [ ] Have you checked that your issue [isn't already filed](https://github.com/nteract/hydrogen/issues) ?
+- [ ] Have you checked the solutions in our [troubleshooting guide](https://nteract.gitbooks.io/hydrogen/docs/Troubleshooting.html) for common problems ?
+- [ ] Have you checked that your issue [isn't already filed](https://github.com/nteract/hydrogen/issues) ?
 
 ### Description
 
@@ -38,24 +37,31 @@ OS version:
 [Your OS's version]
 
 > `atom --version`
+
 <!-- Paste the the output of `atom --version` in the backticks below -->
+
 ```
 
 ```
 
 > `apm --version`
+
 <!-- Paste the the output of `apm --version` in the backticks below -->
+
 ```
 
 ```
 
 Hydrogen version:
+
 <!-- You can check this information in the settings view or via running `apm show hydrogen` -->
+
 [Your Hydrogen's version]
 
 ### Plugins
 
 Have you installed and activated any of the Hydrogen plugins below ?
+
 - [ ] hydrogen-python
 - [ ] Hydrogen Launcher
 - [ ] Data Explorer

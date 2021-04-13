@@ -1,10 +1,9 @@
 ---
 name: Documentation Help
 about: For requesting explanations or changes of our documentation.
-title: ''
-labels: 'documentation :page_with_curl:'
-assignees: ''
-
+title: ""
+labels: "documentation :page_with_curl:"
+assignees: ""
 ---
 
 <!--

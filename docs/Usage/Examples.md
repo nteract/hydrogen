@@ -37,8 +37,11 @@ Interactive plots via PyQt/Pyside (creates separate window).
 {% codetabs name="Python", type="py" -%}
 import matplotlib
 matplotlib.use('Qt5Agg')
+
 # This should be done before `import matplotlib.pyplot`
+
 # 'Qt4Agg' for PyQt4 or PySide, 'Qt5Agg' for PyQt5
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -77,9 +80,9 @@ from vega_datasets import data
 iris = data.iris()
 
 alt.Chart(iris).mark_point().encode(
-    x='petalLength',
-    y='petalWidth',
-    color='species'
+x='petalLength',
+y='petalWidth',
+color='species'
 )
 {%- language name="Python using altair >= v1.3 < 2.0", type="py" -%}
 from altair import Chart, load_dataset, enable_mime_rendering
@@ -87,24 +90,24 @@ enable_mime_rendering()
 
 cars = load_dataset('cars')
 spec = Chart(cars).mark_point().encode(
-    x='Horsepower',
-    y='Miles_per_Gallon',
-    color='Origin',
+x='Horsepower',
+y='Miles_per_Gallon',
+color='Origin',
 )
 spec
 {%- language name="Python using altair < v1.3", type="py" -%}
 from IPython.display import display
 from altair import Chart, load_dataset
 def vegify(spec):
-    display({
-        'application/vnd.vegalite.v1+json': spec.to_dict()
-    }, raw=True)
+display({
+'application/vnd.vegalite.v1+json': spec.to_dict()
+}, raw=True)
 
 cars = load_dataset('cars')
 spec = Chart(cars).mark_point().encode(
-    x='Horsepower',
-    y='Miles_per_Gallon',
-    color='Origin',
+x='Horsepower',
+y='Miles_per_Gallon',
+color='Origin',
 )
 vegify(spec)
 {%- endcodetabs %}
@@ -116,7 +119,7 @@ import sympy as sp
 sp.init_printing(use_latex='mathjax')
 
 x, y, z = sp.symbols('x y z')
-f = sp.sin(x * y) + sp.cos(y * z)
+f = sp.sin(x _ y) + sp.cos(y _ z)
 sp.integrate(f, x)
 {%- language name="Python using Math", type="py" -%}
 from IPython.display import Math
@@ -143,11 +146,11 @@ import numpy as np
 import pandas as pd
 
 df = pd.DataFrame({'A': 1.,
-                   'B': pd.Timestamp('20130102'),
-                   'C': pd.Series(1, index=list(range(4)), dtype='float32'),
-                   'D': np.array([3] * 4, dtype='int32'),
-                   'E': pd.Categorical(["test", "train", "test", "train"]),
-                   'F': 'foo'})
+'B': pd.Timestamp('20130102'),
+'C': pd.Series(1, index=list(range(4)), dtype='float32'),
+'D': np.array([3] \* 4, dtype='int32'),
+'E': pd.Categorical(["test", "train", "test", "train"]),
+'F': 'foo'})
 
 df
 {%- language name="Python using numpy", type="py" -%}
@@ -163,7 +166,6 @@ t
 from IPython.display import Image
 Image('http://jakevdp.github.com/figures/xkcd_version.png')
 {%- endcodetabs %}
-
 
 ## HTML
 
@@ -187,7 +189,6 @@ import pandas as pd
 
 pd.options.display.html.table_schema = True
 pd.options.display.max_rows = None
-
 
 iris_url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
 
