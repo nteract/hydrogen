@@ -35,7 +35,10 @@
     ]
   },
   "scripts": {
-    "prettier": "prettier --write ./lib ./spec",
+    "format": "prettier --write .",
+    "test.format": "prettier . --check",
+    "lint": "eslint . --fix",
+    "test.lint": "eslint .",
     "build.test": "npm run build && npm run test",
     "test": "echo 'test without rebuilding' && atom --test spec",
     "clean": "shx rm -rf dist",
