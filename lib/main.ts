@@ -216,6 +216,9 @@ export function activate() {
 
         case KERNEL_MONITOR_URI:
           return new KernelMonitorPane(store);
+        default: {
+          return;
+        }
       }
     })
   );
