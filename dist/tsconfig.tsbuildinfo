@@ -1917,8 +1917,8 @@
         "affectsGlobalScope": false
       },
       "../lib/zmq-kernel.ts": {
-        "version": "4984f9b7157d5985f8eb0ceb92cb75b80933062719baed8ae118bb55ce0ac71c",
-        "signature": "1efc01ed23645e9577d9ced19ecdfe388dde8987dbe1fd0ca8a0cdb553548adc",
+        "version": "d28d28c5e15f057a191c460ea6e199e5c9aa55a1d341ae94608e5fc86a7cf86e",
+        "signature": "e6b895304d9fff2aa4e11420d9ac752f8aa6d6e7bcc8db9449f3a7d572ee081a",
         "affectsGlobalScope": false
       },
       "../lib/kernel-picker.ts": {

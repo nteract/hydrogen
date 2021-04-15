@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { Grammar } from "atom";
 import { ChildProcess } from "child_process";
-import { Message, Socket } from "jmp";
+import { Message, Socket } from "@aminya/jmp";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
 import type { KernelspecMetadata } from "@nteract/types";
