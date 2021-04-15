@@ -1,7 +1,7 @@
 {
   "name": "Hydrogen",
   "main": "./dist/main",
-  "version": "2.14.7",
+  "version": "2.15.0",
   "description": "Run code interactively, inspect data, and plot. All the power of Jupyter kernels, inside your favorite text editor.",
   "author": "nteract contributors",
   "keywords": [
