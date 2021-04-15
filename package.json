@@ -69,7 +69,7 @@
     "atom-select-list": "^0.7.0",
     "escape-carriage": "^1.2.0",
     "escape-string-regexp": "^4.0.0",
-    "jmp": "^2.0.0",
+    "jmp": "https://github.com/aminya/jmp",
     "kernelspecs": "^2.0.0",
     "lodash": "^4.14.0",
     "mathjax-electron": "^3.0.0",
