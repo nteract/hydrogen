@@ -1,7 +1,7 @@
 import { Grammar } from "atom";
 import { ChildProcess } from "child_process";
 import fs from "fs";
-import { Message, Socket } from "jmp";
+import { Message, Socket } from "@aminya/jmp";
 import { v4 } from "uuid";
 import { launchSpec, launchSpecFromConnectionInfo } from "spawnteract";
 import Config from "./config";
