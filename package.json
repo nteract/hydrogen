@@ -57,6 +57,7 @@
     "atom": ">=1.28.0 <2.0.0"
   },
   "dependencies": {
+    "@aminya/xmlhttprequest": "^1.8.2",
     "@babel/runtime-corejs2": "^7.0.0",
     "@jupyterlab/services": "^0.52.0",
     "@nteract/commutable": "^7.1.4",
@@ -65,7 +66,6 @@
     "@nteract/outputs": "^3.0.0",
     "@nteract/plotly": "^1.48.3",
     "@nteract/transform-vega": "^7.0.0",
-    "@nteract/xmlhttprequest": "file:../node-XMLHttpRequest",
     "anser": "^2.0.1",
     "atom-select-list": "^0.7.0",
     "escape-carriage": "^1.2.0",
