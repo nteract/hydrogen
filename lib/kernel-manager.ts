@@ -137,7 +137,7 @@ export class KernelManager {
     });
   }
 
-  async updateKernelSpecs(grammar: Grammar | null | undefined) {
+  async updateKernelSpecs(grammar?: Grammar | null | undefined) {
     const kernelSpecs = await this.update();
 
     if (kernelSpecs.length === 0) {

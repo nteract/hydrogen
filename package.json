@@ -42,7 +42,7 @@
     "build.test": "npm run build && npm run test",
     "test": "echo 'test without rebuilding' && atom --test spec",
     "clean": "shx rm -rf dist",
-    "dev": "npm run clean && npm run build -- --watch",
+    "dev": "npm run clean && tsc -p lib/tsconfig.json --watch",
     "build": "npm run clean && tsc -p lib/tsconfig.json || echo done",
     "build:services-docs": "markdox lib/services/index.js -o lib/services/README.md",
     "build:plugin-docs": "markdox lib/plugin-api/hydrogen-provider.js lib/plugin-api/hydrogen-kernel.js -o docs/PluginAPI.md",
@@ -57,6 +57,7 @@
     "atom": ">=1.28.0 <2.0.0"
   },
   "dependencies": {
+    "@aminya/xmlhttprequest": "^1.8.2",
     "@babel/runtime-corejs2": "^7.0.0",
     "@jupyterlab/services": "^0.52.0",
     "@nteract/commutable": "^7.1.4",
@@ -83,8 +84,7 @@
     "styled-components": "^5.0.1",
     "tildify": "^2.0.0",
     "uuid": "^8.0.0",
-    "ws": "^7.0.0",
-    "xmlhttprequest": "^1.8.0"
+    "ws": "^7.0.0"
   },
   "consumedServices": {
     "autocomplete.watchEditor": {
@@ -125,14 +125,14 @@
     "@types/styled-components": "^5.1.9",
     "@types/uuid": "^8.3.0",
     "@types/ws": "^7.4.1",
-    "atom-jasmine3-test-runner": "^5.2.2",
+    "atom-jasmine3-test-runner": "^5.2.5",
     "build-commit": "^0.1.4",
     "electron": "^6",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
-    "eslint-config-atomic": "^1.14.0",
+    "eslint-config-atomic": "^1.14.4",
     "markdox": "^0.1.10",
-    "prettier-config-atomic": "^2.0.1",
+    "prettier-config-atomic": "^2.0.5",
     "react-test-renderer": "^16.0.0",
     "shx": "^0.3.3",
     "typescript": "^4.2.4"

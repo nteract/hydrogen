@@ -498,3 +498,7 @@ function adjustCellFoldRange(editor: TextEditor, range: Range) {
     new Point(endRow, endWidth)
   );
 }
+
+export function getEscapeBlankRowsEndRow(editor: TextEditor, end: Point) {
+  return end.row === editor.getLastBufferRow() ? end.row : end.row - 1;
+}

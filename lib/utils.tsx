@@ -115,8 +115,10 @@ export function msgSpecV4toV5(message: Message) {
         message.content.text = message.content.data;
       }
       break;
+    default: {
+      // no conversion needed
+    }
   }
-
   return message;
 }
 const markupGrammars = new Set([
@@ -317,3 +319,11 @@ export function setPreviouslyFocusedElement(obj: {
     obj.previouslyFocusedElement = activeElement;
   }
 }
+
+/** Make the properties of a type Writable */
+export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+
+/** Make the properties of aexport type Writable recursively */
+export type DeepWriteable<T> = {
+  -readonly [P in keyof T]: DeepWriteable<T[P]>;
+};

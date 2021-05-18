@@ -20,6 +20,7 @@ import type {
 import InputView from "./input-view";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
+import type { Kernel as JupyterlabKernel } from "@jupyterlab/services";
 
 import type { Message } from "./hydrogen";
 import type { KernelspecMetadata } from "@nteract/types";
@@ -215,7 +216,7 @@ export default class Kernel {
     this.middleware = [delegateToTransport];
   }
 
-  get kernelSpec(): KernelspecMetadata {
+  get kernelSpec(): JupyterlabKernel.ISpecModel | KernelspecMetadata {
     return this.transport.kernelSpec;
   }
 
@@ -305,7 +306,7 @@ export default class Kernel {
     this.firstMiddlewareAdapter.shutdown();
   }
 
-  restart(onRestarted: ((...args: Array<any>) => any) | null | undefined) {
+  restart(onRestarted?: ((...args: Array<any>) => any) | null | undefined) {
     this.firstMiddlewareAdapter.restart(onRestarted);
     this.setExecutionCount(0);
     this.setLastExecutionTime("No execution");

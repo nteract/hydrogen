@@ -331,3 +331,8 @@ const store = new Store();
 export default store; // For debugging
 
 window.hydrogen_store = store;
+
+export interface StoreLike {
+  kernel?: Kernel | null | undefined;
+  markers?: MarkerStore | null | undefined;
+}

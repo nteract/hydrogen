@@ -4,7 +4,7 @@ import _ from "lodash";
 import tildify from "tildify";
 import { v4 } from "uuid";
 import ws from "ws";
-import xhr from "xmlhttprequest";
+import { XMLHttpRequest as NodeXMLHttpRequest } from "@aminya/xmlhttprequest";
 import { URL } from "url";
 import { Kernel, Session, ServerConnection } from "@jupyterlab/services";
 import Config from "./config";
@@ -12,11 +12,42 @@ import WSKernel from "./ws-kernel";
 import InputView from "./input-view";
 import store from "./store";
 import type { KernelspecMetadata } from "@nteract/types";
-import { setPreviouslyFocusedElement } from "./utils";
+import { setPreviouslyFocusedElement, DeepWriteable } from "./utils";
+
+type SelectListItem = any;
+
+export type KernelGatewayOptions = Parameters<
+  typeof ServerConnection["makeSettings"]
+>[0];
+
+// Based on the config documentation
+// TODO verify this
+export type MinimalServerConnectionSettings = Pick<
+  KernelGatewayOptions,
+  "baseUrl"
+>;
+
+export interface KernelGateway {
+  name: string;
+  options: KernelGatewayOptions;
+}
+
+export interface SessionInfoWithModel {
+  model: Kernel.IModel;
+  options: Parameters<typeof Session.connectTo>[1];
+}
+
+export interface SessionInfoWithoutModel {
+  name?: string;
+  kernelSpecs: Kernel.ISpecModel[];
+  options: Parameters<typeof Session.startNew>[0];
+  // no model
+  model?: never | null | undefined;
+}
 
 class CustomListView {
-  onConfirmed: ((...args: Array<any>) => any) | null | undefined = null;
-  onCancelled: ((...args: Array<any>) => any) | null | undefined = null;
+  onConfirmed: (item: SelectListItem) => void | null | undefined = null;
+  onCancelled: () => void | null | undefined = null;
   previouslyFocusedElement: HTMLElement | null | undefined;
   selectListView: SelectListView;
   panel: Panel | null | undefined;
@@ -26,13 +57,13 @@ class CustomListView {
     this.selectListView = new SelectListView({
       itemsClassList: ["mark-active"],
       items: [],
-      filterKeyForItem: (item) => item.name,
-      elementForItem: (item) => {
+      filterKeyForItem: (item: SelectListItem) => item.name,
+      elementForItem: (item: SelectListItem) => {
         const element = document.createElement("li");
         element.textContent = item.name;
         return element;
       },
-      didConfirmSelection: (item) => {
+      didConfirmSelection: (item: SelectListItem) => {
         if (this.onConfirmed) {
           this.onConfirmed(item);
         }
@@ -87,7 +118,11 @@ export default class WSKernelPicker {
     this.listView = new CustomListView();
   }
 
-  async toggle(_kernelSpecFilter: (kernelSpec: Kernel.ISpecModel) => boolean) {
+  async toggle(
+    _kernelSpecFilter: (
+      kernelSpec: Kernel.ISpecModel | KernelspecMetadata
+    ) => boolean
+  ) {
     setPreviouslyFocusedElement(this.listView);
     this._kernelSpecFilter = _kernelSpecFilter;
     const gateways = Config.getJson("gateways") || [];
@@ -148,7 +183,7 @@ export default class WSKernelPicker {
     return response;
   }
 
-  async promptForCookie(options: any) {
+  async promptForCookie(options: DeepWriteable<KernelGatewayOptions>) {
     const cookie = await this.promptForText("Cookie:");
 
     if (cookie === null) {
@@ -162,17 +197,17 @@ export default class WSKernelPicker {
     options.requestHeaders.Cookie = cookie;
 
     options.xhrFactory = () => {
-      const request = new xhr.XMLHttpRequest();
+      const request = new NodeXMLHttpRequest();
       // Disable protections against setting the Cookie header
       request.setDisableHeaderCheck(true);
-      return request;
+      return request as XMLHttpRequest; // TODO fix the types
     };
 
     options.wsFactory = (url, protocol) => {
       // Authentication requires requests to appear to be same-origin
       const parsedUrl = new URL(url);
 
-      if (parsedUrl.protocol == "wss:") {
+      if (parsedUrl.protocol === "wss:") {
         parsedUrl.protocol = "https:";
       } else {
         parsedUrl.protocol = "http:";
@@ -193,7 +228,7 @@ export default class WSKernelPicker {
     return true;
   }
 
-  async promptForToken(options: any) {
+  async promptForToken(options: DeepWriteable<KernelGatewayOptions>) {
     const token = await this.promptForText("Token:");
 
     if (token === null) {
@@ -204,7 +239,7 @@ export default class WSKernelPicker {
     return true;
   }
 
-  async promptForCredentials(options: any) {
+  async promptForCredentials(options: DeepWriteable<KernelGatewayOptions>) {
     await this.listView.selectListView.update({
       items: [
         {
@@ -244,7 +279,7 @@ export default class WSKernelPicker {
     return false;
   }
 
-  async onGateway(gatewayInfo: any) {
+  async onGateway(gatewayInfo: KernelGateway) {
     this.listView.onConfirmed = null;
     await this.listView.selectListView.update({
       items: [],
@@ -252,13 +287,11 @@ export default class WSKernelPicker {
       loadingMessage: "Loading sessions...",
       emptyMessage: "No sessions available",
     });
-    const gatewayOptions = Object.assign(
-      {
-        xhrFactory: () => new xhr.XMLHttpRequest(),
-        wsFactory: (url, protocol) => new ws(url, protocol),
-      },
-      gatewayInfo.options
-    );
+    const gatewayOptions = {
+      xhrFactory: () => new NodeXMLHttpRequest() as XMLHttpRequest, // TODO fix the types
+      wsFactory: (url, protocol) => new ws(url, protocol),
+      ...gatewayInfo.options,
+    };
     let serverSettings = ServerConnection.makeSettings(gatewayOptions);
     let specModels: Kernel.ISpecModels | undefined;
     try {
@@ -309,12 +342,12 @@ export default class WSKernelPicker {
           return name ? kernelNames.includes(name) : true;
         });
         const items = sessionModels.map((model) => {
-          let name;
+          let name: string;
 
           if (model.path) {
             name = tildify(model.path);
-          } else if (model.notebook && model.notebook?.path) {
-            name = tildify(model.notebook?.path); // TODO fix the types
+          } else if (model.notebook?.path) {
+            name = tildify(model.notebook!.path); // TODO fix the types
           } else {
             name = `Session ${model.id}`;
           }
@@ -356,51 +389,77 @@ export default class WSKernelPicker {
     }
   }
 
-  async onSession(gatewayName: string, sessionInfo: any) {
-    if (!sessionInfo.model) {
-      if (!sessionInfo.name) {
-        await this.listView.selectListView.update({
-          items: [],
-          errorMessage: "This gateway does not support listing sessions",
-          loadingMessage: null,
-          infoMessage: null,
-        });
-      }
-
-      const items = _.map(sessionInfo.kernelSpecs, (spec) => {
-        const options = {
-          serverSettings: sessionInfo.options,
-          kernelName: spec.name,
-          path: this._path,
-        };
-        return {
-          name: spec.display_name,
-          options,
-        };
-      });
-
-      this.listView.onConfirmed = this.startSession.bind(this, gatewayName);
-      await this.listView.selectListView.update({
-        items,
-        emptyMessage: "No kernel specs available",
-        infoMessage: "Select a session",
-        loadingMessage: null,
-      });
-    } else {
-      this.onSessionChosen(
+  onSession(
+    gatewayName: string,
+    sessionInfo: SessionInfoWithModel | SessionInfoWithoutModel
+  ) {
+    const model = sessionInfo.model;
+    if (model === null || model === undefined) {
+      // model not provided
+      return this.onSessionWitouthModel(
         gatewayName,
-        await Session.connectTo(sessionInfo.model.id, sessionInfo.options)
+        sessionInfo as SessionInfoWithoutModel
+      );
+    } else {
+      // with model
+      return this.onSessionWithModel(
+        gatewayName,
+        sessionInfo as SessionInfoWithModel
       );
     }
   }
 
-  startSession(gatewayName: string, sessionInfo: any) {
+  async onSessionWithModel(
+    gatewayName: string,
+    sessionInfo: SessionInfoWithModel
+  ) {
+    this.onSessionChosen(
+      gatewayName,
+      await Session.connectTo(sessionInfo.model.id, sessionInfo.options)
+    );
+  }
+
+  async onSessionWitouthModel(
+    gatewayName: string,
+    sessionInfo: SessionInfoWithoutModel
+  ) {
+    if (!sessionInfo.name) {
+      await this.listView.selectListView.update({
+        items: [],
+        errorMessage: "This gateway does not support listing sessions",
+        loadingMessage: null,
+        infoMessage: null,
+      });
+    }
+
+    const items = _.map(sessionInfo.kernelSpecs, (spec) => {
+      const options = {
+        serverSettings: sessionInfo.options,
+        kernelName: spec.name,
+        path: this._path,
+      };
+      return {
+        name: spec.display_name,
+        options,
+      };
+    });
+
+    this.listView.onConfirmed = this.startSession.bind(this, gatewayName);
+    await this.listView.selectListView.update({
+      items,
+      emptyMessage: "No kernel specs available",
+      infoMessage: "Select a session",
+      loadingMessage: null,
+    });
+  }
+
+  startSession(gatewayName: string, sessionInfo: SessionInfoWithoutModel) {
     Session.startNew(sessionInfo.options).then(
       this.onSessionChosen.bind(this, gatewayName)
     );
   }
 
-  async onSessionChosen(gatewayName: string, session: any) {
+  async onSessionChosen(gatewayName: string, session: Session.ISession) {
     this.listView.cancel();
     const kernelSpec = await session.kernel.getSpec();
     if (!store.grammar) {

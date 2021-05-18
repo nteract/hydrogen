@@ -22,7 +22,7 @@ import KernelPicker from "./kernel-picker";
 import WSKernelPicker from "./ws-kernel-picker";
 import ExistingKernelPicker from "./existing-kernel-picker";
 import HydrogenProvider from "./plugin-api/hydrogen-provider";
-import store from "./store";
+import store, { Store, StoreLike } from "./store";
 import kernelManager from "./kernel-manager";
 import services from "./services";
 import * as commands from "./commands";
@@ -85,67 +85,72 @@ export function activate() {
     })
   );
   store.subscriptions.add(
-    atom.commands.add("atom-text-editor:not([mini])", {
-      "hydrogen:run": () => run(),
-      "hydrogen:run-all": () => runAll(),
-      "hydrogen:run-all-above": () => runAllAbove(),
-      "hydrogen:run-and-move-down": () => run(true),
-      "hydrogen:run-cell": () => runCell(),
-      "hydrogen:run-cell-and-move-down": () => runCell(true),
-      "hydrogen:toggle-watches": () => atom.workspace.toggle(WATCHES_URI),
-      "hydrogen:toggle-output-area": () => commands.toggleOutputMode(),
-      "hydrogen:toggle-kernel-monitor": async () => {
-        const lastItem = atom.workspace.getActivePaneItem();
-        const lastPane = atom.workspace.paneForItem(lastItem);
-        await atom.workspace.toggle(KERNEL_MONITOR_URI);
-        if (lastPane) {
-          lastPane.activate();
-        }
-      },
-      "hydrogen:start-local-kernel": () => startZMQKernel(),
-      "hydrogen:connect-to-remote-kernel": () => connectToWSKernel(),
-      "hydrogen:connect-to-existing-kernel": () => connectToExistingKernel(),
-      "hydrogen:add-watch": () => {
-        if (store.kernel) {
-          store.kernel.watchesStore.addWatchFromEditor(store.editor);
-          openOrShowDock(WATCHES_URI);
-        }
-      },
-      "hydrogen:remove-watch": () => {
-        if (store.kernel) {
-          store.kernel.watchesStore.removeWatch();
-          openOrShowDock(WATCHES_URI);
-        }
-      },
-      "hydrogen:update-kernels": () => kernelManager.updateKernelSpecs(),
-      "hydrogen:toggle-inspector": () => commands.toggleInspector(store),
-      "hydrogen:interrupt-kernel": () =>
-        handleKernelCommand(
-          {
-            command: "interrupt-kernel",
-          },
-          store
-        ),
-      "hydrogen:restart-kernel": () =>
-        handleKernelCommand(
-          {
-            command: "restart-kernel",
-          },
-          store
-        ),
-      "hydrogen:shutdown-kernel": () =>
-        handleKernelCommand(
-          {
-            command: "shutdown-kernel",
-          },
-          store
-        ),
-      "hydrogen:clear-result": () => result.clearResult(store),
-      "hydrogen:export-notebook": () => exportNotebook(),
-      "hydrogen:fold-current-cell": () => foldCurrentCell(),
-      "hydrogen:fold-all-but-current-cell": () => foldAllButCurrentCell(),
-      "hydrogen:clear-results": () => result.clearResults(store),
-    })
+    atom.commands.add<"atom-text-editor:not([mini])">(
+      "atom-text-editor:not([mini])",
+      {
+        "hydrogen:run": () => run(),
+        "hydrogen:run-all": () => runAll(),
+        "hydrogen:run-all-above": () => runAllAbove(),
+        "hydrogen:run-and-move-down": () => run(true),
+        "hydrogen:run-cell": () => runCell(),
+        "hydrogen:run-cell-and-move-down": () => runCell(true),
+        "hydrogen:toggle-watches": () => atom.workspace.toggle(WATCHES_URI),
+        "hydrogen:toggle-output-area": () => commands.toggleOutputMode(),
+        "hydrogen:toggle-kernel-monitor": async () => {
+          const lastItem = atom.workspace.getActivePaneItem();
+          const lastPane = atom.workspace.paneForItem(lastItem);
+          await atom.workspace.toggle(KERNEL_MONITOR_URI);
+          if (lastPane) {
+            lastPane.activate();
+          }
+        },
+        "hydrogen:start-local-kernel": () => startZMQKernel(),
+        "hydrogen:connect-to-remote-kernel": () => connectToWSKernel(),
+        "hydrogen:connect-to-existing-kernel": () => connectToExistingKernel(),
+        "hydrogen:add-watch": () => {
+          if (store.kernel) {
+            store.kernel.watchesStore.addWatchFromEditor(store.editor);
+            openOrShowDock(WATCHES_URI);
+          }
+        },
+        "hydrogen:remove-watch": () => {
+          if (store.kernel) {
+            store.kernel.watchesStore.removeWatch();
+            openOrShowDock(WATCHES_URI);
+          }
+        },
+        "hydrogen:update-kernels": async () => {
+          await kernelManager.updateKernelSpecs();
+        },
+        "hydrogen:toggle-inspector": () => commands.toggleInspector(store),
+        "hydrogen:interrupt-kernel": () =>
+          handleKernelCommand(
+            {
+              command: "interrupt-kernel",
+            },
+            store
+          ),
+        "hydrogen:restart-kernel": () =>
+          handleKernelCommand(
+            {
+              command: "restart-kernel",
+            },
+            store
+          ),
+        "hydrogen:shutdown-kernel": () =>
+          handleKernelCommand(
+            {
+              command: "shutdown-kernel",
+            },
+            store
+          ),
+        "hydrogen:clear-result": () => result.clearResult(store),
+        "hydrogen:export-notebook": () => exportNotebook(),
+        "hydrogen:fold-current-cell": () => foldCurrentCell(),
+        "hydrogen:fold-all-but-current-cell": () => foldAllButCurrentCell(),
+        "hydrogen:clear-results": () => result.clearResults(store),
+      }
+    )
   );
   store.subscriptions.add(
     atom.commands.add("atom-workspace", {
@@ -211,6 +216,9 @@ export function activate() {
 
         case KERNEL_MONITOR_URI:
           return new KernelMonitorPane(store);
+        default: {
+          return;
+        }
       }
     })
   );
@@ -278,23 +286,19 @@ function connectToExistingKernel() {
   existingKernelPicker.toggle();
 }
 
+interface KernelCommand {
+  command: string;
+  payload?: KernelspecMetadata | null | undefined;
+}
+
 function handleKernelCommand(
-  {
-    command,
-    payload,
-  }: {
-    command: string;
-    payload: KernelspecMetadata | null | undefined;
-  },
-  {
-    kernel,
-    markers,
-  }: {
-    kernel: Kernel | null | undefined;
-    markers: MarkerStore | null | undefined;
-  }
+  { command, payload }: KernelCommand, // TODO payload is not used!
+  { kernel, markers }: Store | StoreLike
 ) {
-  log("handleKernelCommand:", arguments);
+  log("handleKernelCommand:", [
+    { command, payload },
+    { kernel, markers },
+  ]);
 
   if (!kernel) {
     const message = "No running kernel for grammar or editor found";
@@ -403,7 +407,7 @@ function _runAll(
     const row = codeManager.escapeBlankRows(
       editor,
       start.row,
-      end.row == editor.getLastBufferRow() ? end.row : end.row - 1
+      codeManager.getEscapeBlankRowsEndRow(editor, end)
     );
     const cellType = codeManager.getMetadataForRow(editor, start);
     const code =
@@ -457,7 +461,7 @@ function _runAllAbove(editor: TextEditor, kernel: Kernel) {
     const row = codeManager.escapeBlankRows(
       editor,
       start.row,
-      end.row == editor.getLastBufferRow() ? end.row : end.row - 1
+      codeManager.getEscapeBlankRowsEndRow(editor, end)
     );
     const cellType = codeManager.getMetadataForRow(editor, start);
 
@@ -496,7 +500,7 @@ function runCell(moveDown: boolean = false) {
   const row = codeManager.escapeBlankRows(
     editor,
     start.row,
-    end.row == editor.getLastBufferRow() ? end.row : end.row - 1
+    codeManager.getEscapeBlankRowsEndRow(editor, end)
   );
   const cellType = codeManager.getMetadataForRow(editor, start);
   const code =

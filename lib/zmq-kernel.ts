@@ -177,7 +177,7 @@ export default class ZMQKernel extends KernelTransport {
   _socketShutdown(restart: boolean | null | undefined = false) {
     const requestId = `shutdown_${v4()}`;
 
-    const message = this._createMessage("shutdown_request", requestId);
+    const message = _createMessage("shutdown_request", requestId);
 
     message.content = {
       restart,
@@ -220,7 +220,7 @@ export default class ZMQKernel extends KernelTransport {
     log("ZMQKernel.execute:", code);
     const requestId = `execute_${v4()}`;
 
-    const message = this._createMessage("execute_request", requestId);
+    const message = _createMessage("execute_request", requestId);
 
     message.content = {
       code,
@@ -237,7 +237,7 @@ export default class ZMQKernel extends KernelTransport {
     log("ZMQKernel.complete:", code);
     const requestId = `complete_${v4()}`;
 
-    const message = this._createMessage("complete_request", requestId);
+    const message = _createMessage("complete_request", requestId);
 
     message.content = {
       code,
@@ -253,7 +253,7 @@ export default class ZMQKernel extends KernelTransport {
     log("ZMQKernel.inspect:", code, cursorPos);
     const requestId = `inspect_${v4()}`;
 
-    const message = this._createMessage("inspect_request", requestId);
+    const message = _createMessage("inspect_request", requestId);
 
     message.content = {
       code,
@@ -267,7 +267,7 @@ export default class ZMQKernel extends KernelTransport {
   inputReply(input: string) {
     const requestId = `input_reply_${v4()}`;
 
-    const message = this._createMessage("input_reply", requestId);
+    const message = _createMessage("input_reply", requestId);
 
     message.content = {
       value: input,
@@ -278,7 +278,7 @@ export default class ZMQKernel extends KernelTransport {
   onShellMessage(message: Message) {
     log("shell message:", message);
 
-    if (!this._isValidMessage(message)) {
+    if (!_isValidMessage(message)) {
       return;
     }
 
@@ -297,7 +297,7 @@ export default class ZMQKernel extends KernelTransport {
   onStdinMessage(message: Message) {
     log("stdin message:", message);
 
-    if (!this._isValidMessage(message)) {
+    if (!_isValidMessage(message)) {
       return;
     }
 
@@ -318,7 +318,7 @@ export default class ZMQKernel extends KernelTransport {
   onIOMessage(message: Message) {
     log("IO message:", message);
 
-    if (!this._isValidMessage(message)) {
+    if (!_isValidMessage(message)) {
       return;
     }
 
@@ -341,56 +341,6 @@ export default class ZMQKernel extends KernelTransport {
     }
   }
 
-  _isValidMessage(message: Message) {
-    if (!message) {
-      log("Invalid message: null");
-      return false;
-    }
-
-    if (!message.content) {
-      log("Invalid message: Missing content");
-      return false;
-    }
-
-    if (message.content.execution_state === "starting") {
-      // Kernels send a starting status message with an empty parent_header
-      log("Dropped starting status IO message");
-      return false;
-    }
-
-    if (!message.parent_header) {
-      log("Invalid message: Missing parent_header");
-      return false;
-    }
-
-    if (!message.parent_header.msg_id) {
-      log("Invalid message: Missing parent_header.msg_id");
-      return false;
-    }
-
-    if (!message.parent_header.msg_type) {
-      log("Invalid message: Missing parent_header.msg_type");
-      return false;
-    }
-
-    if (!message.header) {
-      log("Invalid message: Missing header");
-      return false;
-    }
-
-    if (!message.header.msg_id) {
-      log("Invalid message: Missing header.msg_id");
-      return false;
-    }
-
-    if (!message.header.msg_type) {
-      log("Invalid message: Missing header.msg_type");
-      return false;
-    }
-
-    return true;
-  }
-
   destroy() {
     log("ZMQKernel: destroy:", this);
     this.shutdown();
@@ -403,30 +353,80 @@ export default class ZMQKernel extends KernelTransport {
     this.stdinSocket.close();
     super.destroy();
   }
+}
 
-  _getUsername() {
-    return (
-      process.env.LOGNAME ||
-      process.env.USER ||
-      process.env.LNAME ||
-      process.env.USERNAME
-    );
+function _isValidMessage(message: Message) {
+  if (!message) {
+    log("Invalid message: null");
+    return false;
   }
 
-  _createMessage(msgType: string, msgId: string = v4()) {
-    const message = {
-      header: {
-        username: this._getUsername(),
-        session: "00000000-0000-0000-0000-000000000000",
-        msg_type: msgType,
-        msg_id: msgId,
-        date: new Date(),
-        version: "5.0",
-      },
-      metadata: {},
-      parent_header: {},
-      content: {},
-    };
-    return message;
+  if (!message.content) {
+    log("Invalid message: Missing content");
+    return false;
   }
+
+  if (message.content.execution_state === "starting") {
+    // Kernels send a starting status message with an empty parent_header
+    log("Dropped starting status IO message");
+    return false;
+  }
+
+  if (!message.parent_header) {
+    log("Invalid message: Missing parent_header");
+    return false;
+  }
+
+  if (!message.parent_header.msg_id) {
+    log("Invalid message: Missing parent_header.msg_id");
+    return false;
+  }
+
+  if (!message.parent_header.msg_type) {
+    log("Invalid message: Missing parent_header.msg_type");
+    return false;
+  }
+
+  if (!message.header) {
+    log("Invalid message: Missing header");
+    return false;
+  }
+
+  if (!message.header.msg_id) {
+    log("Invalid message: Missing header.msg_id");
+    return false;
+  }
+
+  if (!message.header.msg_type) {
+    log("Invalid message: Missing header.msg_type");
+    return false;
+  }
+
+  return true;
+}
+
+function _getUsername() {
+  return (
+    process.env.LOGNAME ||
+    process.env.USER ||
+    process.env.LNAME ||
+    process.env.USERNAME
+  );
+}
+
+function _createMessage(msgType: string, msgId: string = v4()) {
+  const message = {
+    header: {
+      username: _getUsername(),
+      session: "00000000-0000-0000-0000-000000000000",
+      msg_type: msgType,
+      msg_id: msgId,
+      date: new Date(),
+      version: "5.0",
+    },
+    metadata: {},
+    parent_header: {},
+    content: {},
+  };
+  return message;
 }
