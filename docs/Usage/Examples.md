@@ -164,14 +164,14 @@ t
 
 {% codetabs name="Python", type="py" -%}
 from IPython.display import Image
-Image('http://jakevdp.github.com/figures/xkcd_version.png')
+Image('https://cloud.githubusercontent.com/assets/836375/15271096/98e4c102-19fe-11e6-999a-a74ffe6e2000.gif')
 {%- endcodetabs %}
 
 ## HTML
 
 {% codetabs name="Python", type="py" -%}
-from IPython.display import HTML
-HTML("<iframe src='https://nteract.io/' width='900' height='490'></iframe>")
+from IPython.display import IFrame
+IFrame('https://nteract.io/', width='900', height='490')
 {%- endcodetabs %}
 
 ## Plain Text
