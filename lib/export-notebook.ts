@@ -1,32 +1,44 @@
 import * as path from "path";
-import { writeFile } from "fs";
+import { promises } from "fs";
+const { writeFile } = promises;
 import { remote } from "electron";
 const { dialog } = remote;
 
 import { stringifyNotebook } from "@nteract/commutable";
 
 import store from "./store";
-export default function exportNotebook() {
-  // TODO: Refactor to use promises, this is a bit "nested".
-  const saveNotebook = function (filename) {
-    if (!filename) {
-      return;
-    }
+export async function exportNotebook() {
+  const editor = atom.workspace.getActiveTextEditor();
+  const editorPath = editor.getPath();
+  const directory = path.dirname(editorPath);
+  const rawFileName = path.basename(editorPath, path.extname(editorPath));
+  const noteBookPath = path.join(directory, `${rawFileName}.ipynb`);
 
-    const ext = path.extname(filename) === "" ? ".ipynb" : "";
-    const fname = `${filename}${ext}`;
-    writeFile(fname, stringifyNotebook(store.notebook), (err) => {
-      if (err) {
-        atom.notifications.addError("Error saving file", {
-          detail: err.message,
-        });
-      } else {
-        atom.notifications.addSuccess("Save successful", {
-          detail: `Saved notebook as ${fname}`,
-        });
-      }
+  const { canceled, filePath } = await dialog.showSaveDialog({
+    title: editor.getTitle(),
+    defaultPath: noteBookPath,
+  });
+  if (!canceled) {
+    await saveNoteBook(filePath);
+  }
+}
+
+async function saveNoteBook(filePath: string) {
+  if (filePath.length === 0) {
+    return;
+  }
+  // add default extension
+  const ext = path.extname(filePath) === "" ? ".ipynb" : "";
+  const fname = `${filePath}${ext}`;
+
+  try {
+    await writeFile(fname, stringifyNotebook(store.notebook));
+    atom.notifications.addSuccess("Save successful", {
+      detail: `Saved notebook as ${fname}`,
     });
-  };
-  // TODO this API is promisified -> should be fixed
-  dialog.showSaveDialog(saveNotebook);
+  } catch (err) {
+    atom.notifications.addError("Error saving file", {
+      detail: err.message,
+    });
+  }
 }

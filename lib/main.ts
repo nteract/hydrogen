@@ -41,7 +41,7 @@ import {
   openOrShowDock,
   kernelSpecProvidesGrammar,
 } from "./utils";
-import exportNotebook from "./export-notebook";
+import { exportNotebook } from "./export-notebook";
 import { importNotebook, ipynbOpener } from "./import-notebook";
 import type { KernelspecMetadata } from "@nteract/types";
 
