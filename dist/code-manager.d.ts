@@ -33,3 +33,4 @@ export declare function findCodeBlock(editor: TextEditor): {
 };
 export declare function foldCurrentCell(editor: TextEditor): void;
 export declare function foldAllButCurrentCell(editor: TextEditor): void;
+export declare function getEscapeBlankRowsEndRow(editor: TextEditor, end: Point): number;

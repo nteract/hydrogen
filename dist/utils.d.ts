@@ -30,3 +30,9 @@ export declare function char_idx_to_js_idx(char_idx: number, text: string | null
 export declare function setPreviouslyFocusedElement(obj: {
     previouslyFocusedElement: HTMLElement | null | undefined;
 }): void;
+export declare type Writeable<T> = {
+    -readonly [P in keyof T]: T[P];
+};
+export declare type DeepWriteable<T> = {
+    -readonly [P in keyof T]: DeepWriteable<T[P]>;
+};

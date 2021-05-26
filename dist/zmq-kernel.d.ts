@@ -44,20 +44,5 @@ export default class ZMQKernel extends KernelTransport {
     onShellMessage(message: Message): void;
     onStdinMessage(message: Message): void;
     onIOMessage(message: Message): void;
-    _isValidMessage(message: Message): boolean;
     destroy(): void;
-    _getUsername(): string;
-    _createMessage(msgType: string, msgId?: string): {
-        header: {
-            username: string;
-            session: string;
-            msg_type: string;
-            msg_id: string;
-            date: Date;
-            version: string;
-        };
-        metadata: {};
-        parent_header: {};
-        content: {};
-    };
 }

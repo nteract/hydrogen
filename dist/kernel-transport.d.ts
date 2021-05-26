@@ -1,5 +1,6 @@
 import { Grammar } from "atom";
 import type { KernelspecMetadata } from "@nteract/types";
+import type { Kernel } from "@jupyterlab/services";
 export declare type ResultsCallback = (message: any, channel: "shell" | "iopub" | "stdin") => void;
 export default class KernelTransport {
     executionState: string;
@@ -8,12 +9,12 @@ export default class KernelTransport {
     inspector: {
         bundle: {};
     };
-    kernelSpec: KernelspecMetadata;
+    kernelSpec: Kernel.ISpecModel | KernelspecMetadata;
     grammar: Grammar;
     language: string;
     displayName: string;
     gatewayName: string | null | undefined;
-    constructor(kernelSpec: KernelspecMetadata, grammar: Grammar);
+    constructor(kernelSpec: Kernel.ISpecModel | KernelspecMetadata, grammar: Grammar);
     setExecutionState(state: string): void;
     setExecutionCount(count: number): void;
     setLastExecutionTime(timeString: string): void;

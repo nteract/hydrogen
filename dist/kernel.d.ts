@@ -5,6 +5,7 @@ import HydrogenKernel from "./plugin-api/hydrogen-kernel";
 import type { HydrogenKernelMiddlewareThunk, HydrogenKernelMiddleware } from "./plugin-api/hydrogen-types";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
+import type { Kernel as JupyterlabKernel } from "@jupyterlab/services";
 import type { Message } from "./hydrogen";
 import type { KernelspecMetadata } from "@nteract/types";
 declare class MiddlewareAdapter implements HydrogenKernelMiddlewareThunk {
@@ -33,7 +34,7 @@ export default class Kernel {
     transport: KernelTransport;
     middleware: Array<MiddlewareAdapter>;
     constructor(kernel: KernelTransport);
-    get kernelSpec(): KernelspecMetadata;
+    get kernelSpec(): JupyterlabKernel.ISpecModel | KernelspecMetadata;
     get grammar(): Grammar;
     get language(): string;
     get displayName(): string;
@@ -50,7 +51,7 @@ export default class Kernel {
     addWatchCallback(watchCallback: (...args: Array<any>) => any): void;
     interrupt(): void;
     shutdown(): void;
-    restart(onRestarted: ((...args: Array<any>) => any) | null | undefined): void;
+    restart(onRestarted?: ((...args: Array<any>) => any) | null | undefined): void;
     execute(code: string, onResults: (...args: Array<any>) => any): void;
     executeWatch(code: string, onResults: (...args: Array<any>) => any): void;
     _callWatchCallbacks(): void;

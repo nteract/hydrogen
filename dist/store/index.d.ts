@@ -33,3 +33,7 @@ export declare class Store {
 }
 declare const store: Store;
 export default store;
+export interface StoreLike {
+    kernel?: Kernel | null | undefined;
+    markers?: MarkerStore | null | undefined;
+}

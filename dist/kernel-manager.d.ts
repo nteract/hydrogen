@@ -11,7 +11,7 @@ export declare class KernelManager {
     getAllKernelSpecs(grammar: Grammar | null | undefined): Promise<KernelspecMetadata[]>;
     getAllKernelSpecsForGrammar(grammar: Grammar | null | undefined): Promise<KernelspecMetadata[]>;
     getKernelSpecForGrammar(grammar: Grammar): Promise<KernelspecMetadata>;
-    updateKernelSpecs(grammar: Grammar | null | undefined): Promise<KernelspecMetadata[]>;
+    updateKernelSpecs(grammar?: Grammar | null | undefined): Promise<KernelspecMetadata[]>;
 }
 declare const _default: KernelManager;
 export default _default;
