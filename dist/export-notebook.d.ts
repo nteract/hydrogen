@@ -1,1 +1,1 @@
-export default function exportNotebook(): void;
+export declare function exportNotebook(): Promise<void>;
