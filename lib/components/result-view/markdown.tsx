@@ -35,4 +35,3 @@ export class Markdown extends React.PureComponent<Props> {
     );
   }
 }
-export default Markdown;

@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { RichMedia, Media } from "@nteract/outputs";
 import { INSPECTOR_URI } from "../utils";
 import type Kernel from "../kernel";
-import Markdown from "./result-view/markdown";
+import { Markdown } from "./result-view/markdown";
 type Props = {
   store: {
     kernel: Kernel | null | undefined;
