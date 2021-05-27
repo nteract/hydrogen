@@ -21,7 +21,7 @@ import {
   Vega4,
   Vega5,
 } from "@nteract/transform-vega";
-import Markdown from "./markdown";
+import { Markdown } from "./markdown";
 // All supported media types for output go here
 export const supportedMediaTypes = (
   <RichMedia>
