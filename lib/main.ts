@@ -23,7 +23,7 @@ import WSKernelPicker from "./ws-kernel-picker";
 import ExistingKernelPicker from "./existing-kernel-picker";
 import HydrogenProvider from "./plugin-api/hydrogen-provider";
 import store, { Store, StoreLike } from "./store";
-import kernelManager from "./kernel-manager";
+import { KernelManager } from "./kernel-manager";
 import services from "./services";
 import * as commands from "./commands";
 import * as codeManager from "./code-manager";
@@ -49,6 +49,7 @@ let kernelPicker: KernelPicker | undefined;
 let existingKernelPicker: ExistingKernelPicker | undefined;
 let wsKernelPicker: WSKernelPicker | undefined;
 let hydrogenProvider: HydrogenProvider | undefined;
+const kernelManager = new KernelManager();
 
 export function activate() {
   emitter = new Emitter();

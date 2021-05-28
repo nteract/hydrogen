@@ -178,7 +178,6 @@ export class KernelManager {
     return kernelSpecs;
   }
 }
-export default new KernelManager();
 
 // used in the tests
 if (atom.inSpecMode()) {
