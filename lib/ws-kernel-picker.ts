@@ -288,8 +288,8 @@ export default class WSKernelPicker {
       emptyMessage: "No sessions available",
     });
     const gatewayOptions = {
-      xhrFactory: () => new NodeXMLHttpRequest() as XMLHttpRequest, // TODO fix the types
-      wsFactory: (url, protocol) => new ws(url, protocol),
+      xhrFactory: () => new XMLHttpRequest(),
+      wsFactory: (url: string, protocol?: string | string[]) => new ws(url, protocol),
       ...gatewayInfo.options,
     };
     let serverSettings = ServerConnection.makeSettings(gatewayOptions);
