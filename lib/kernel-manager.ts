@@ -1,5 +1,7 @@
 import { TextEditor, Grammar } from "atom";
-import _ from "lodash";
+import map from "lodash/map";
+import mapKeys from "lodash/mapKeys";
+import sortBy from "lodash/sortBy";
 import { findAll as kernelSpecsFindAll } from "kernelspecs";
 import { shell } from "electron";
 import ZMQKernel from "./zmq-kernel";
@@ -81,13 +83,12 @@ export class KernelManager {
 
   async update(): Promise<KernelspecMetadata[]> {
     const kernelSpecs = await kernelSpecsFindAll();
-    this.kernelSpecs = _.sortBy(
-      _.map(
-        _.mapKeys(kernelSpecs, function (value, key) {
-          return (value.spec.name = key);
-        }),
-        "spec"
-      ),
+
+    const kernelResourcesDict = mapKeys(kernelSpecs, function (value, key) {
+      return (value.spec.name = key);
+    });
+    this.kernelSpecs = sortBy(
+      map(kernelResourcesDict, "spec"),
       (spec) => spec.display_name
     );
     return this.kernelSpecs;
@@ -169,8 +170,9 @@ export class KernelManager {
       atom.notifications.addError(message, options);
     } else {
       const message = "Hydrogen Kernels updated:";
+      const displayNames = map(kernelSpecs, "display_name"); // kernelSpecs.map((kernelSpec) => kernelSpec.display_name)
       const options = {
-        detail: _.map(kernelSpecs, "display_name").join("\n"),
+        detail: displayNames.join("\n"),
       };
       atom.notifications.addInfo(message, options);
     }
