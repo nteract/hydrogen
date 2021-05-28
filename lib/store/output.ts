@@ -1,5 +1,4 @@
 import { action, computed, observable } from "mobx";
-import _ from "lodash";
 import {
   escapeCarriageReturn,
   escapeCarriageReturnSafe,
