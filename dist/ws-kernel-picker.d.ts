@@ -39,7 +39,7 @@ export default class WSKernelPicker {
     listView: CustomListView;
     constructor(onChosen: (kernel: WSKernel) => void);
     toggle(_kernelSpecFilter: (kernelSpec: Kernel.ISpecModel | KernelspecMetadata) => boolean): Promise<void>;
-    promptForText(prompt: string): Promise<any>;
+    promptForText(prompt: string): Promise<string>;
     promptForCookie(options: DeepWriteable<KernelGatewayOptions>): Promise<boolean>;
     promptForToken(options: DeepWriteable<KernelGatewayOptions>): Promise<boolean>;
     promptForCredentials(options: DeepWriteable<KernelGatewayOptions>): Promise<boolean>;
