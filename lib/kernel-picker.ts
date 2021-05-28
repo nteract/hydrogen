@@ -1,6 +1,5 @@
 import { Panel } from "atom";
 import SelectListView, { SelectListProperties } from "atom-select-list";
-import _ from "lodash";
 import { log, setPreviouslyFocusedElement } from "./utils";
 import type { KernelspecMetadata } from "@nteract/types";
 
