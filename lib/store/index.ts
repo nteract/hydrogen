@@ -5,7 +5,6 @@ import {
   getEmbeddedScope,
   isUnsavedFilePath,
 } from "../utils";
-import _ from "lodash";
 import * as codeManager from "../code-manager";
 import MarkerStore from "./markers";
 import Kernel from "../kernel";
@@ -94,7 +93,7 @@ export class Store {
 
     const cellRanges = codeManager.getCells(editor);
 
-    _.forEach(cellRanges, (cell) => {
+    cellRanges.forEach((cell) => {
       const { start, end } = cell;
       let source = codeManager.getTextInRange(editor, start, end);
       source = source ? source : "";
