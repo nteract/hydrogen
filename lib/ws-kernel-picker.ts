@@ -1,5 +1,5 @@
 import { Panel } from "atom";
-import SelectListView from "atom-select-list";
+import SelectListView, { SelectListProperties } from "atom-select-list";
 import _ from "lodash";
 import tildify from "tildify";
 import { v4 } from "uuid";
@@ -13,8 +13,6 @@ import InputView from "./input-view";
 import store from "./store";
 import type { KernelspecMetadata } from "@nteract/types";
 import { setPreviouslyFocusedElement, DeepWriteable } from "./utils";
-
-type SelectListItem = any;
 
 export type KernelGatewayOptions = Parameters<
   typeof ServerConnection["makeSettings"]
@@ -44,6 +42,8 @@ export interface SessionInfoWithoutModel {
   // no model
   model?: never | null | undefined;
 }
+
+type SelectListItem = KernelGateway;
 
 class CustomListView {
   onConfirmed: (item: SelectListItem) => void | null | undefined = null;
@@ -141,8 +141,8 @@ export default class WSKernelPicker {
       items: gateways,
       infoMessage: "Select a gateway",
       emptyMessage: "No gateways available",
-      loadingMessage: null,
-    });
+      loadingMessage: undefined,
+    } as SelectListProperties);
     this.listView.show();
   }
 
@@ -259,9 +259,11 @@ export default class WSKernelPicker {
         "Connection to gateway failed. Your settings may be incorrect, the server may be unavailable, or you may lack sufficient privileges to complete the connection.",
       loadingMessage: null,
       emptyMessage: null,
-    });
+    } as SelectListProperties);
     const action = await new Promise<string>((resolve, reject) => {
-      this.listView.onConfirmed = (item: { action: string }) =>
+      // TODO reuses the SelectListView!
+      type NewSelectListItem = { action: string };
+      this.listView.onConfirmed = (item: NewSelectListItem) =>
         resolve(item.action);
 
       this.listView.onCancelled = () => resolve("cancel");
@@ -284,10 +286,10 @@ export default class WSKernelPicker {
     this.listView.onConfirmed = null;
     await this.listView.selectListView.update({
       items: [],
-      infoMessage: null,
+      infoMessage: undefined,
       loadingMessage: "Loading sessions...",
       emptyMessage: "No sessions available",
-    });
+    } as SelectListProperties);
     const gatewayOptions = {
       xhrFactory: () => new XMLHttpRequest(),
       wsFactory: (url: string, protocol?: string | string[]) =>
@@ -319,10 +321,10 @@ export default class WSKernelPicker {
         serverSettings = ServerConnection.makeSettings(gatewayOptions);
         await this.listView.selectListView.update({
           items: [],
-          infoMessage: null,
+          infoMessage: undefined,
           loadingMessage: "Loading sessions...",
           emptyMessage: "No sessions available",
-        });
+        } as SelectListProperties);
       }
     }
 
@@ -370,7 +372,7 @@ export default class WSKernelPicker {
         await this.listView.selectListView.update({
           items,
           loadingMessage: null,
-        });
+        } as SelectListProperties);
       } catch (error) {
         if (!error.xhr || error.xhr.status !== 403) {
           throw error;
@@ -429,9 +431,9 @@ export default class WSKernelPicker {
       await this.listView.selectListView.update({
         items: [],
         errorMessage: "This gateway does not support listing sessions",
-        loadingMessage: null,
-        infoMessage: null,
-      });
+        loadingMessage: undefined,
+        infoMessage: undefined,
+      } as SelectListProperties);
     }
 
     const items = _.map(sessionInfo.kernelSpecs, (spec) => {
@@ -451,8 +453,8 @@ export default class WSKernelPicker {
       items,
       emptyMessage: "No kernel specs available",
       infoMessage: "Select a session",
-      loadingMessage: null,
-    });
+      loadingMessage: undefined,
+    } as SelectListProperties);
   }
 
   startSession(gatewayName: string, sessionInfo: SessionInfoWithoutModel) {
