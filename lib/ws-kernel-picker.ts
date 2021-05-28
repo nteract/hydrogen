@@ -1,6 +1,7 @@
 import { Panel } from "atom";
 import SelectListView, { SelectListProperties } from "atom-select-list";
-import _ from "lodash";
+import filter from "lodash/filter";
+import isEmpty from "lodash/isEmpty";
 import tildify from "tildify";
 import { v4 } from "uuid";
 import ws from "ws";
@@ -127,7 +128,7 @@ export default class WSKernelPicker {
     this._kernelSpecFilter = _kernelSpecFilter;
     const gateways = Config.getJson("gateways") || [];
 
-    if (_.isEmpty(gateways)) {
+    if (isEmpty(gateways)) {
       atom.notifications.addError("No remote kernel gateways available", {
         description:
           "Use the Hydrogen package settings to specify the list of remote servers. Hydrogen can use remote kernels on either a Jupyter Kernel Gateway or Jupyter notebook server.",
@@ -333,11 +334,11 @@ export default class WSKernelPicker {
         specModels = await Kernel.getSpecs(serverSettings);
       }
 
-      const kernelSpecs = _.filter(specModels.kernelspecs, (spec) =>
+      const kernelSpecs = filter(specModels.kernelspecs, (spec) =>
         this._kernelSpecFilter(spec)
       );
 
-      const kernelNames = _.map(kernelSpecs, (specModel) => specModel.name);
+      const kernelNames = kernelSpecs.map((specModel) => specModel.name);
 
       try {
         let sessionModels = await Session.listRunning(serverSettings);
@@ -436,7 +437,7 @@ export default class WSKernelPicker {
       } as SelectListProperties);
     }
 
-    const items = _.map(sessionInfo.kernelSpecs, (spec) => {
+    const items = sessionInfo.kernelSpecs.map((spec) => {
       const options = {
         serverSettings: sessionInfo.options,
         kernelName: spec.name,
