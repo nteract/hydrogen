@@ -7,7 +7,7 @@ import {
   Grammar,
 } from "atom";
 import { StatusBar } from "atom/status-bar";
-import _ from "lodash";
+import debounce from "lodash/debounce";
 import { autorun } from "mobx";
 import React from "react";
 import InspectorPane from "./panes/inspector";
@@ -182,7 +182,7 @@ export function activate() {
       if (isMultilanguageGrammar(editor.getGrammar())) {
         editorSubscriptions.add(
           editor.onDidChangeCursorPosition(
-            _.debounce(() => {
+            debounce(() => {
               store.setGrammar(editor);
             }, 75)
           )
