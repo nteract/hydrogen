@@ -1,6 +1,6 @@
 import { Emitter, TextEditor, Grammar } from "atom";
 import { observable, action, computed } from "mobx";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import {
   log,
   focus,
