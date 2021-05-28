@@ -4,7 +4,7 @@ import _ from "lodash";
 import tildify from "tildify";
 import { v4 } from "uuid";
 import ws from "ws";
-import { XMLHttpRequest as NodeXMLHttpRequest } from "@aminya/xmlhttprequest";
+import { XMLHttpRequest as NodeXMLHttpRequest } from "xmlhttprequest"; // TODO use @aminya/xmlhttprequest
 import { URL } from "url";
 import { Kernel, Session, ServerConnection } from "@jupyterlab/services";
 import Config from "./config";
