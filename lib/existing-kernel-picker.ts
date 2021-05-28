@@ -1,7 +1,6 @@
 import { Panel } from "atom";
 import SelectListView, { SelectListProperties } from "atom-select-list";
 import store from "./store";
-import _ from "lodash";
 import tildify from "tildify";
 import {
   kernelSpecProvidesGrammar,
