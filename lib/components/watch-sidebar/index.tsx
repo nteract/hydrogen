@@ -1,9 +1,7 @@
-import { CompositeDisposable } from "atom";
 import React from "react";
 import { observer } from "mobx-react";
 import Watch from "./watch";
 import { WATCHES_URI, EmptyMessage } from "../../utils";
-import type Kernel from "../../kernel";
 type store = typeof import("../../store").default;
 const Watches = observer(({ store: { kernel } }: { store: store }) => {
   if (!kernel) {

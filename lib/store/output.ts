@@ -4,7 +4,6 @@ import {
   escapeCarriageReturn,
   escapeCarriageReturnSafe,
 } from "escape-carriage";
-import type { IObservableArray } from "mobx";
 import { isTextOutputOnly } from "../components/result-view/display";
 const outputTypes = ["execute_result", "display_data", "stream", "error"];
 

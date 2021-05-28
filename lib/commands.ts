@@ -1,10 +1,4 @@
-import {
-  log,
-  reactFactory,
-  INSPECTOR_URI,
-  OUTPUT_AREA_URI,
-  openOrShowDock,
-} from "./utils";
+import { log, INSPECTOR_URI, OUTPUT_AREA_URI, openOrShowDock } from "./utils";
 import { getCodeToInspect } from "./code-manager";
 import OutputPane from "./panes/output-area";
 type store = typeof import("./store").default;

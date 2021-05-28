@@ -7,7 +7,6 @@ import Kernel from "./kernel";
 import KernelPicker from "./kernel-picker";
 import store from "./store";
 import { getEditorDirectory, kernelSpecProvidesGrammar, log } from "./utils";
-import type { Connection } from "./zmq-kernel";
 import type { KernelspecMetadata } from "@nteract/types";
 
 export class KernelManager {

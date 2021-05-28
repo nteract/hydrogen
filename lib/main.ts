@@ -28,10 +28,8 @@ import services from "./services";
 import * as commands from "./commands";
 import * as codeManager from "./code-manager";
 import * as result from "./result";
-import type MarkerStore from "./store/markers";
 import {
   log,
-  reactFactory,
   isMultilanguageGrammar,
   INSPECTOR_URI,
   WATCHES_URI,

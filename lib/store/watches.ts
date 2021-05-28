@@ -5,7 +5,6 @@ import WatchStore from "./watch";
 import AutocompleteConsumer from "../services/consumed/autocomplete";
 import { setPreviouslyFocusedElement } from "../utils";
 import type Kernel from "../kernel";
-type store = typeof import("./index").default;
 
 interface SelectListItem {
   name: string;

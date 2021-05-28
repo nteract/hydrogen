@@ -1,5 +1,5 @@
 import { Panel } from "atom";
-import SelectListView, { SelectListProperties } from "atom-select-list";
+import SelectListView from "atom-select-list";
 import WSKernel from "../../../ws-kernel";
 import { log, setPreviouslyFocusedElement } from "../../../utils";
 import type { Store } from "../../../store";

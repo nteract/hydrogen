@@ -1,22 +1,13 @@
 import { TextEditor, CompositeDisposable, File, Grammar } from "atom";
-import {
-  observable,
-  computed,
-  action,
-  isObservableMap,
-  keys,
-  values,
-} from "mobx";
+import { observable, computed, action, keys } from "mobx";
 import {
   isMultilanguageGrammar,
   getEmbeddedScope,
   isUnsavedFilePath,
 } from "../utils";
 import _ from "lodash";
-import Config from "../config";
 import * as codeManager from "../code-manager";
 import MarkerStore from "./markers";
-import kernelManager from "../kernel-manager";
 import Kernel from "../kernel";
 import * as commutable from "@nteract/commutable";
 
