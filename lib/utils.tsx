@@ -8,7 +8,7 @@ import {
 } from "atom";
 import React from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import findKey from "lodash/findKey";
 import os from "os";
 import path from "path";
 import Config from "./config";
@@ -76,7 +76,7 @@ export function grammarToLanguage(grammar: Grammar | null | undefined) {
   const grammarLanguage = grammar.name.toLowerCase();
   const mappings = Config.getJson("languageMappings");
 
-  const kernelLanguage = _.findKey(
+  const kernelLanguage = findKey(
     mappings,
     (l) => l.toLowerCase() === grammarLanguage
   );
@@ -174,7 +174,7 @@ export function getEmbeddedScope(
   const scopes = editor
     .scopeDescriptorForBufferPosition(position)
     .getScopesArray();
-  return _.find(scopes, (s) => s.indexOf("source.embedded.") === 0);
+  return scopes.find((s) => s.indexOf("source.embedded.") === 0);
 }
 export function getEditorDirectory(editor: TextEditor | null | undefined) {
   if (!editor) {
