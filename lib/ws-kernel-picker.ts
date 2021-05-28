@@ -149,7 +149,7 @@ export default class WSKernelPicker {
   async promptForText(prompt: string) {
     const previouslyFocusedElement = this.listView.previouslyFocusedElement;
     this.listView.cancel();
-    const inputPromise = new Promise((resolve, reject) => {
+    const inputPromise = new Promise<string>((resolve, reject) => {
       const inputView = new InputView(
         {
           prompt,
@@ -164,7 +164,7 @@ export default class WSKernelPicker {
       });
       inputView.attach();
     });
-    let response;
+    let response: string | null | undefined = undefined;
 
     try {
       response = await inputPromise;
@@ -186,7 +186,7 @@ export default class WSKernelPicker {
   async promptForCookie(options: DeepWriteable<KernelGatewayOptions>) {
     const cookie = await this.promptForText("Cookie:");
 
-    if (cookie === null) {
+    if (cookie === null || cookie === undefined) {
       return false;
     }
 
@@ -203,7 +203,7 @@ export default class WSKernelPicker {
       return request as XMLHttpRequest; // TODO fix the types
     };
 
-    options.wsFactory = (url, protocol) => {
+    options.wsFactory = (url: string, protocol?: string | string[]) => {
       // Authentication requires requests to appear to be same-origin
       const parsedUrl = new URL(url);
 
@@ -260,18 +260,19 @@ export default class WSKernelPicker {
       loadingMessage: null,
       emptyMessage: null,
     });
-    const action = await new Promise((resolve, reject) => {
-      this.listView.onConfirmed = (item) => resolve(item.action);
+    const action = await new Promise<string>((resolve, reject) => {
+      this.listView.onConfirmed = (item: { action: string }) =>
+        resolve(item.action);
 
       this.listView.onCancelled = () => resolve("cancel");
     });
 
     if (action === "token") {
-      return await this.promptForToken(options);
+      return this.promptForToken(options);
     }
 
     if (action === "cookie") {
-      return await this.promptForCookie(options);
+      return this.promptForCookie(options);
     }
 
     // action === "cancel"
@@ -289,7 +290,8 @@ export default class WSKernelPicker {
     });
     const gatewayOptions = {
       xhrFactory: () => new XMLHttpRequest(),
-      wsFactory: (url: string, protocol?: string | string[]) => new ws(url, protocol),
+      wsFactory: (url: string, protocol?: string | string[]) =>
+        new ws(url, protocol),
       ...gatewayInfo.options,
     };
     let serverSettings = ServerConnection.makeSettings(gatewayOptions);
