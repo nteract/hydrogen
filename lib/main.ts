@@ -353,7 +353,7 @@ function run(moveDown: boolean = false) {
       ? codeManager.removeCommentsMarkdownCell(editor, codeNullable)
       : codeNullable;
 
-  if (moveDown === true) {
+  if (moveDown) {
     codeManager.moveDown(editor, row);
   }
 
@@ -507,7 +507,7 @@ function runCell(moveDown: boolean = false) {
       ? codeManager.removeCommentsMarkdownCell(editor, codeNullable)
       : codeNullable;
 
-  if (moveDown === true) {
+  if (moveDown) {
     codeManager.moveDown(editor, row);
   }
 

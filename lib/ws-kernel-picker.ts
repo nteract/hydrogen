@@ -350,7 +350,7 @@ export default class WSKernelPicker {
 
           if (model.path) {
             name = tildify(model.path);
-          } else if (model.notebook?.path) {
+          } else if (model.notebook.path) {
             name = tildify(model.notebook!.path); // TODO fix the types
           } else {
             name = `Session ${model.id}`;

@@ -31,7 +31,7 @@ export default class WSKernel extends KernelTransport {
 
   async shutdown() {
     // TODO 'shutdown' does not exist on type 'IKernelConnection'
-    await (this.session?.shutdown() ?? this.session.kernel?.shutdown());
+    await (this.session.shutdown() ?? this.session.kernel.shutdown());
   }
 
   restart(onRestarted: () => void | null | undefined) {
