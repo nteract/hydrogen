@@ -27,6 +27,7 @@ jobs:
       - name: Install dependencies and build
         run: |
           apm install
+          npm run tsc || echo done
           npm run build
 
       - name: Run tests 👩🏾‍💻
