@@ -1,6 +1,5 @@
 import React from "react";
 import { observer } from "mobx-react";
-import type Kernel from "../../../kernel";
 import type { Store } from "../../../store";
 import { NO_EXECTIME_STRING } from "../../../utils";
 type Props = {

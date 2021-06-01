@@ -5,7 +5,11 @@ import WatchStore from "./watch";
 import AutocompleteConsumer from "../services/consumed/autocomplete";
 import { setPreviouslyFocusedElement } from "../utils";
 import type Kernel from "../kernel";
-type store = typeof import("./index").default;
+
+interface SelectListItem {
+  name: string;
+  value: number;
+}
 
 export default class WatchesStore {
   kernel: Kernel;
@@ -70,13 +74,13 @@ export default class WatchesStore {
       }))
       .filter((obj) => obj.value !== 0 || obj.name !== "");
     const watchesPicker = new SelectListView({
-      items: watches,
-      elementForItem: (watch) => {
+      items: watches as SelectListItem[],
+      elementForItem: (watch: SelectListItem) => {
         const element = document.createElement("li");
         element.textContent = watch.name || "<empty>";
         return element;
       },
-      didConfirmSelection: (watch) => {
+      didConfirmSelection: (watch: SelectListItem) => {
         const selectedWatch = this.watches[watch.value];
         // This is for cleanup to improve performance
         if (AutocompleteConsumer.isEnabeled) {
@@ -91,7 +95,7 @@ export default class WatchesStore {
           this.previouslyFocusedElement.focus();
         }
       },
-      filterKeyForItem: (watch) => watch.name,
+      filterKeyForItem: (watch: SelectListItem) => watch.name,
       didCancelSelection: () => {
         modalPanel.destroy();
         if (this.previouslyFocusedElement) {

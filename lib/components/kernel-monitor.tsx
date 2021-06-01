@@ -2,7 +2,6 @@ import React from "react";
 import ReactTable, { ReactTableDefaults } from "react-table";
 
 import { observer } from "mobx-react";
-import _ from "lodash";
 import tildify from "tildify";
 type store = typeof import("../store").default;
 import Kernel from "../kernel";
@@ -105,7 +104,7 @@ const KernelMonitor = observer(({ store }: { store: store }) => {
     );
   }
 
-  const data = _.map(store.runningKernels, (kernel, key: number) => {
+  const data = store.runningKernels.map((kernel, key: number) => {
     return {
       gateway: kernel.transport.gatewayName || "Local",
       kernelInfo: {

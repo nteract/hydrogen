@@ -1,6 +1,7 @@
 import { Panel } from "atom";
-import SelectListView from "atom-select-list";
-import _ from "lodash";
+import SelectListView, { SelectListProperties } from "atom-select-list";
+import filter from "lodash/filter";
+import isEmpty from "lodash/isEmpty";
 import tildify from "tildify";
 import { v4 } from "uuid";
 import ws from "ws";
@@ -13,8 +14,6 @@ import InputView from "./input-view";
 import store from "./store";
 import type { KernelspecMetadata } from "@nteract/types";
 import { setPreviouslyFocusedElement, DeepWriteable } from "./utils";
-
-type SelectListItem = any;
 
 export type KernelGatewayOptions = Parameters<
   typeof ServerConnection["makeSettings"]
@@ -44,6 +43,8 @@ export interface SessionInfoWithoutModel {
   // no model
   model?: never | null | undefined;
 }
+
+type SelectListItem = KernelGateway;
 
 class CustomListView {
   onConfirmed: (item: SelectListItem) => void | null | undefined = null;
@@ -127,7 +128,7 @@ export default class WSKernelPicker {
     this._kernelSpecFilter = _kernelSpecFilter;
     const gateways = Config.getJson("gateways") || [];
 
-    if (_.isEmpty(gateways)) {
+    if (isEmpty(gateways)) {
       atom.notifications.addError("No remote kernel gateways available", {
         description:
           "Use the Hydrogen package settings to specify the list of remote servers. Hydrogen can use remote kernels on either a Jupyter Kernel Gateway or Jupyter notebook server.",
@@ -141,8 +142,8 @@ export default class WSKernelPicker {
       items: gateways,
       infoMessage: "Select a gateway",
       emptyMessage: "No gateways available",
-      loadingMessage: null,
-    });
+      loadingMessage: undefined,
+    } as SelectListProperties);
     this.listView.show();
   }
 
@@ -259,9 +260,11 @@ export default class WSKernelPicker {
         "Connection to gateway failed. Your settings may be incorrect, the server may be unavailable, or you may lack sufficient privileges to complete the connection.",
       loadingMessage: null,
       emptyMessage: null,
-    });
+    } as SelectListProperties);
     const action = await new Promise<string>((resolve, reject) => {
-      this.listView.onConfirmed = (item: { action: string }) =>
+      // TODO reuses the SelectListView!
+      type NewSelectListItem = { action: string };
+      this.listView.onConfirmed = (item: NewSelectListItem) =>
         resolve(item.action);
 
       this.listView.onCancelled = () => resolve("cancel");
@@ -284,10 +287,10 @@ export default class WSKernelPicker {
     this.listView.onConfirmed = null;
     await this.listView.selectListView.update({
       items: [],
-      infoMessage: null,
+      infoMessage: undefined,
       loadingMessage: "Loading sessions...",
       emptyMessage: "No sessions available",
-    });
+    } as SelectListProperties);
     const gatewayOptions = {
       xhrFactory: () => new XMLHttpRequest(),
       wsFactory: (url: string, protocol?: string | string[]) =>
@@ -319,10 +322,10 @@ export default class WSKernelPicker {
         serverSettings = ServerConnection.makeSettings(gatewayOptions);
         await this.listView.selectListView.update({
           items: [],
-          infoMessage: null,
+          infoMessage: undefined,
           loadingMessage: "Loading sessions...",
           emptyMessage: "No sessions available",
-        });
+        } as SelectListProperties);
       }
     }
 
@@ -331,11 +334,11 @@ export default class WSKernelPicker {
         specModels = await Kernel.getSpecs(serverSettings);
       }
 
-      const kernelSpecs = _.filter(specModels.kernelspecs, (spec) =>
+      const kernelSpecs = filter(specModels.kernelspecs, (spec) =>
         this._kernelSpecFilter(spec)
       );
 
-      const kernelNames = _.map(kernelSpecs, (specModel) => specModel.name);
+      const kernelNames = kernelSpecs.map((specModel) => specModel.name);
 
       try {
         let sessionModels = await Session.listRunning(serverSettings);
@@ -348,7 +351,7 @@ export default class WSKernelPicker {
 
           if (model.path) {
             name = tildify(model.path);
-          } else if (model.notebook?.path) {
+          } else if (model.notebook.path) {
             name = tildify(model.notebook!.path); // TODO fix the types
           } else {
             name = `Session ${model.id}`;
@@ -370,7 +373,7 @@ export default class WSKernelPicker {
         await this.listView.selectListView.update({
           items,
           loadingMessage: null,
-        });
+        } as SelectListProperties);
       } catch (error) {
         if (!error.xhr || error.xhr.status !== 403) {
           throw error;
@@ -429,12 +432,12 @@ export default class WSKernelPicker {
       await this.listView.selectListView.update({
         items: [],
         errorMessage: "This gateway does not support listing sessions",
-        loadingMessage: null,
-        infoMessage: null,
-      });
+        loadingMessage: undefined,
+        infoMessage: undefined,
+      } as SelectListProperties);
     }
 
-    const items = _.map(sessionInfo.kernelSpecs, (spec) => {
+    const items = sessionInfo.kernelSpecs.map((spec) => {
       const options = {
         serverSettings: sessionInfo.options,
         kernelName: spec.name,
@@ -451,8 +454,8 @@ export default class WSKernelPicker {
       items,
       emptyMessage: "No kernel specs available",
       infoMessage: "Select a session",
-      loadingMessage: null,
-    });
+      loadingMessage: undefined,
+    } as SelectListProperties);
   }
 
   startSession(gatewayName: string, sessionInfo: SessionInfoWithoutModel) {

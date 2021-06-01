@@ -7,7 +7,7 @@ import {
   Grammar,
 } from "atom";
 import { StatusBar } from "atom/status-bar";
-import _ from "lodash";
+import debounce from "lodash/debounce";
 import { autorun } from "mobx";
 import React from "react";
 import InspectorPane from "./panes/inspector";
@@ -23,15 +23,13 @@ import WSKernelPicker from "./ws-kernel-picker";
 import ExistingKernelPicker from "./existing-kernel-picker";
 import HydrogenProvider from "./plugin-api/hydrogen-provider";
 import store, { Store, StoreLike } from "./store";
-import kernelManager from "./kernel-manager";
+import { KernelManager } from "./kernel-manager";
 import services from "./services";
 import * as commands from "./commands";
 import * as codeManager from "./code-manager";
 import * as result from "./result";
-import type MarkerStore from "./store/markers";
 import {
   log,
-  reactFactory,
   isMultilanguageGrammar,
   INSPECTOR_URI,
   WATCHES_URI,
@@ -51,6 +49,7 @@ let kernelPicker: KernelPicker | undefined;
 let existingKernelPicker: ExistingKernelPicker | undefined;
 let wsKernelPicker: WSKernelPicker | undefined;
 let hydrogenProvider: HydrogenProvider | undefined;
+const kernelManager = new KernelManager();
 
 export function activate() {
   emitter = new Emitter();
@@ -183,7 +182,7 @@ export function activate() {
       if (isMultilanguageGrammar(editor.getGrammar())) {
         editorSubscriptions.add(
           editor.onDidChangeCursorPosition(
-            _.debounce(() => {
+            debounce(() => {
               store.setGrammar(editor);
             }, 75)
           )
@@ -354,7 +353,7 @@ function run(moveDown: boolean = false) {
       ? codeManager.removeCommentsMarkdownCell(editor, codeNullable)
       : codeNullable;
 
-  if (moveDown === true) {
+  if (moveDown) {
     codeManager.moveDown(editor, row);
   }
 
@@ -508,7 +507,7 @@ function runCell(moveDown: boolean = false) {
       ? codeManager.removeCommentsMarkdownCell(editor, codeNullable)
       : codeNullable;
 
-  if (moveDown === true) {
+  if (moveDown) {
     codeManager.moveDown(editor, row);
   }
 

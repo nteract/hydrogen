@@ -9,7 +9,7 @@
  * @NOTE: This `PlotlyTransform` component could be used exactly same as the original `PlotlyTransform` component of @nteract/transform-plotly,
  *        except that this file adds the ability to download a plot from an electron context.
  */
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import * as React from "react";
 interface Props {
   data: string | Record<string, any>;

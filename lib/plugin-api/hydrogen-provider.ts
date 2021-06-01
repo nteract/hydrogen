@@ -1,7 +1,6 @@
 import { TextEditor, Range, Emitter } from "atom";
 import store from "../store";
 import type Kernel from "../kernel";
-import type ZMQKernel from "../zmq-kernel";
 import { getCurrentCell } from "../code-manager";
 /**
  * @version 1.0.0 The Plugin API allows you to make Hydrogen awesome. You will

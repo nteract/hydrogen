@@ -1,10 +1,8 @@
 import { action, computed, observable } from "mobx";
-import _ from "lodash";
 import {
   escapeCarriageReturn,
   escapeCarriageReturnSafe,
 } from "escape-carriage";
-import type { IObservableArray } from "mobx";
 import { isTextOutputOnly } from "../components/result-view/display";
 const outputTypes = ["execute_result", "display_data", "stream", "error"];
 
@@ -56,9 +54,7 @@ export function isSingleLine(
 ) {
   // If it turns out escapeCarriageReturn is a bottleneck, we should remove it.
   return (
-    (!text ||
-      text.indexOf("\n") === -1 ||
-      text.indexOf("\n") === text.length - 1) &&
+    (!text || !text.includes("\n") || text.indexOf("\n") === text.length - 1) &&
     availableSpace > escapeCarriageReturn(text).length
   );
 }
@@ -118,7 +114,7 @@ export default class OutputStore {
       this.executionCount = message.data;
     } else if (message.stream === "status") {
       this.status = message.data;
-    } else if (outputTypes.indexOf(message.output_type) > -1) {
+    } else if (outputTypes.includes(message.output_type)) {
       reduceOutputs(this.outputs, message);
       this.setIndex(this.outputs.length - 1);
     }

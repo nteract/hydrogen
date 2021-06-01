@@ -1,5 +1,5 @@
 import { AutocompleteProvider } from "atom/autocomplete-plus";
-import _ from "lodash";
+import head from "lodash/head";
 import Anser from "anser";
 import { log, char_idx_to_js_idx } from "../../utils";
 import type { Store } from "../../store";
@@ -37,7 +37,7 @@ function parseCompletions(results: CompleteReply, prefix: string) {
     const comps = metadata._jupyter_types_experimental;
 
     if (comps.length > 0 && comps[0].text) {
-      return _.map(comps, (match) => {
+      return comps.map((match) => {
         const text = match.text;
         const start = match.start && match.end ? match.start : cursor_start;
         const end = match.start && match.end ? match.end : cursor_end;
@@ -56,7 +56,7 @@ function parseCompletions(results: CompleteReply, prefix: string) {
   }
 
   const replacementPrefix = prefix.slice(cursor_start, cursor_end);
-  return _.map(matches, (match) => {
+  return matches.map((match) => {
     const text = match;
     const replacedText = prefix.slice(0, cursor_start) + text;
     return {
@@ -101,7 +101,7 @@ export function provideAutocompleteResults(store: Store): AutocompleteProvider {
       const regex = regexes[kernel.language];
 
       if (regex) {
-        prefix = _.head(line.match(regex)) || "";
+        prefix = head(line.match(regex)) || "";
       } else {
         prefix = line;
       }

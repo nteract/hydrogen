@@ -1,7 +1,7 @@
 import { Point, Range, TextEditor } from "atom";
 import escapeStringRegexp from "escape-string-regexp";
 import stripIndent from "strip-indent";
-import _ from "lodash";
+import compact from "lodash/compact";
 import {
   log,
   isMultilanguageGrammar,
@@ -92,7 +92,7 @@ export function removeCommentsMarkdownCell(
   const lines = text.split("\n");
   const editedLines = [];
 
-  _.forEach(lines, (line) => {
+  lines.forEach((line) => {
     if (line.startsWith(commentStartString)) {
       // Remove comment from start of line
       editedLines.push(line.slice(commentStartString.length));
@@ -109,7 +109,7 @@ export function getSelectedText(editor: TextEditor) {
 export function isComment(editor: TextEditor, position: Point) {
   const scope = editor.scopeDescriptorForBufferPosition(position);
   const scopeString = scope.getScopeChain();
-  return _.includes(scopeString, "comment.line");
+  return scopeString.includes("comment.line");
 }
 export function isBlank(editor: TextEditor, row: number) {
   return editor.getBuffer().isRowBlank(row);
@@ -272,7 +272,7 @@ function isEmbeddedCode(
   const scopes = editor
     .scopeDescriptorForBufferPosition(new Point(row, 0))
     .getScopesArray();
-  return _.includes(scopes, referenceScope);
+  return scopes.includes(referenceScope);
 }
 
 function getCurrentFencedCodeBlock(editor: TextEditor) {
@@ -323,8 +323,8 @@ export function getCellsForBreakPoints(
     start = new Point(match.range.start.row, 0);
     match.stop();
   });
-  return _.compact(
-    _.map(breakpoints, (end) => {
+  return compact(
+    breakpoints.map((end) => {
       const cell = end.isEqual(start) ? null : new Range(start, end);
       start = new Point(end.row + 1, 0);
       return cell;

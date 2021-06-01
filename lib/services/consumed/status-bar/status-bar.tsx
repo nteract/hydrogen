@@ -5,8 +5,7 @@ import StatusBar from "./status-bar-component";
 import SignalListView from "./signal-list-view";
 import { reactFactory } from "../../../utils";
 import type { Store } from "../../../store";
-import type Kernel from "../../../kernel";
-import type MarkerStore from "../../../store/markers";
+
 export class StatusBarConsumer {
   signalListView: SignalListView;
 

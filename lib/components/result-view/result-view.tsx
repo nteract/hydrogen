@@ -122,7 +122,7 @@ class ResultViewComponent extends React.Component<Props> {
       userSelect: "text",
     };
 
-    if (outputs.length === 0 || this.props.showResult === false) {
+    if (outputs.length === 0 || !this.props.showResult) {
       const kernel = this.props.kernel;
       return (
         <Status
@@ -220,8 +220,8 @@ class ResultViewComponent extends React.Component<Props> {
   scrollToBottom() {
     if (
       !this.el ||
-      this.expanded === true ||
-      this.props.store.isPlain === true ||
+      this.expanded ||
+      this.props.store.isPlain ||
       atom.config.get(`Hydrogen.autoScroll`) === false
     ) {
       return;

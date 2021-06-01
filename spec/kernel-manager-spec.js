@@ -59,6 +59,7 @@ describe("Kernel manager", () => {
 
   describe("getAllKernelSpecs", () => {
     it("should update kernelspecs if no kernelspecs are stored", async () => {
+      // TODO why does the unit tests mock kernelSpecs with a string
       spyOn(manager, "update").and.returnValue("specs");
       expect(await manager.getAllKernelSpecs()).toBe("specs");
       expect(manager.update).toHaveBeenCalled();

@@ -2,7 +2,6 @@ import { TextEditor, Grammar } from "atom";
 import * as path from "path";
 import { promises } from "fs";
 const { readFile } = promises;
-import _ from "lodash";
 import type { HydrogenCellType } from "./hydrogen";
 
 import { remote } from "electron";
@@ -42,7 +41,7 @@ export function ipynbOpener(uri: string) {
  */
 export function importNotebook(event?: CustomEvent) {
   // Use selected filepath if called from tree-view context menu
-  const filenameFromTreeView = _.get(event, "target.dataset.path");
+  const filenameFromTreeView = event.target.dataset?.path;
 
   if (filenameFromTreeView && path.extname(filenameFromTreeView) === ".ipynb") {
     return _loadNotebook(
@@ -265,8 +264,8 @@ function getGrammarForFileExtension(ext: string): Grammar | null | undefined {
   }
   ext = ext.startsWith(".") ? ext.slice(1) : ext;
   const grammars = atom.grammars.getGrammars();
-  return _.find(grammars, (grammar) => {
-    return _.includes(grammar.fileTypes, ext);
+  return grammars.find((grammar) => {
+    return grammar.fileTypes.includes(ext);
   });
 }
 

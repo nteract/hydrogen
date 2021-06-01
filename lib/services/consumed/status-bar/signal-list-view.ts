@@ -28,6 +28,11 @@ const wsKernelCommands = [
     value: "disconnect-kernel",
   },
 ];
+
+interface SelectListItem {
+  name: string;
+  command: string;
+}
 export default class SignalListView {
   panel: Panel | null | undefined;
   previouslyFocusedElement: HTMLElement | null | undefined;
@@ -40,14 +45,14 @@ export default class SignalListView {
     this.handleKernelCommand = handleKernelCommand;
     this.selectListView = new SelectListView({
       itemsClassList: ["mark-active"],
-      items: [],
-      filterKeyForItem: (item) => item.name,
-      elementForItem: (item) => {
+      items: [] as SelectListItem[],
+      filterKeyForItem: (item: SelectListItem) => item.name,
+      elementForItem: (item: SelectListItem) => {
         const element = document.createElement("li");
         element.textContent = item.name;
         return element;
       },
-      didConfirmSelection: (item) => {
+      didConfirmSelection: (item: SelectListItem) => {
         log("Selected command:", item);
         this.onConfirmed(item);
         this.cancel();
