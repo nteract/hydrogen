@@ -2,7 +2,7 @@ import { Grammar } from "atom";
 import { observable, action } from "mobx";
 import { log } from "./utils";
 import type { KernelspecMetadata } from "@nteract/types";
-import type { Kernel } from "@jupyterlab/services";
+import type { ISpecModel } from "@jupyterlab/services/lib/kernelspec/kernelspec";
 
 export type ResultsCallback = (
   message: any,
@@ -19,7 +19,7 @@ export default class KernelTransport {
   inspector = {
     bundle: {},
   };
-  kernelSpec: Kernel.ISpecModel | KernelspecMetadata;
+  kernelSpec: ISpecModel | KernelspecMetadata;
   grammar: Grammar;
   language: string;
   displayName: string;
@@ -27,10 +27,7 @@ export default class KernelTransport {
   // still `KernelTransport` is better to have `gatewayName` property for code simplicity in the other parts of code
   gatewayName: string | null | undefined;
 
-  constructor(
-    kernelSpec: Kernel.ISpecModel | KernelspecMetadata,
-    grammar: Grammar
-  ) {
+  constructor(kernelSpec: ISpecModel | KernelspecMetadata, grammar: Grammar) {
     this.kernelSpec = kernelSpec;
     this.grammar = grammar;
     this.language = kernelSpec.language.toLowerCase();

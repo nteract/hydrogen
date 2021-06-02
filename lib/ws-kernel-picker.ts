@@ -8,6 +8,10 @@ import ws from "ws";
 import { XMLHttpRequest as NodeXMLHttpRequest } from "xmlhttprequest"; // TODO use @aminya/xmlhttprequest
 import { URL } from "url";
 import { Kernel, Session, ServerConnection } from "@jupyterlab/services";
+import type {
+  ISpecModel,
+  ISpecModels,
+} from "@jupyterlab/services/lib/kernelspec/kernelspec";
 import Config from "./config";
 import WSKernel from "./ws-kernel";
 import InputView from "./input-view";
@@ -38,7 +42,7 @@ export interface SessionInfoWithModel {
 
 export interface SessionInfoWithoutModel {
   name?: string;
-  kernelSpecs: Kernel.ISpecModel[];
+  kernelSpecs: ISpecModel[];
   options: Parameters<typeof Session.startNew>[0];
   // no model
   model?: never | null | undefined;
@@ -110,7 +114,7 @@ class CustomListView {
 
 export default class WSKernelPicker {
   _onChosen: (kernel: WSKernel) => void;
-  _kernelSpecFilter: (kernelSpec: Kernel.ISpecModel) => boolean;
+  _kernelSpecFilter: (kernelSpec: ISpecModel) => boolean;
   _path: string;
   listView: CustomListView;
 
@@ -120,9 +124,7 @@ export default class WSKernelPicker {
   }
 
   async toggle(
-    _kernelSpecFilter: (
-      kernelSpec: Kernel.ISpecModel | KernelspecMetadata
-    ) => boolean
+    _kernelSpecFilter: (kernelSpec: ISpecModel | KernelspecMetadata) => boolean
   ) {
     setPreviouslyFocusedElement(this.listView);
     this._kernelSpecFilter = _kernelSpecFilter;
@@ -231,7 +233,7 @@ export default class WSKernelPicker {
 
   async promptForToken(options: DeepWriteable<KernelGatewayOptions>) {
     const token = await this.promptForText("Token:");
-
+    debugger;
     if (token === null) {
       return false;
     }
@@ -298,7 +300,7 @@ export default class WSKernelPicker {
       ...gatewayInfo.options,
     };
     let serverSettings = ServerConnection.makeSettings(gatewayOptions);
-    let specModels: Kernel.ISpecModels | undefined;
+    let specModels: ISpecModels | undefined;
     try {
       specModels = await Kernel.getSpecs(serverSettings);
     } catch (error) {
