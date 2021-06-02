@@ -158,12 +158,21 @@
         "react-refresh": false,
         "mobx-react": false,
         "@nteract/plotly": false,
-        "refractor": false
+        "refractor": false,
+        "highlight.js": false
       },
       "isLibrary": true
     }
   },
   "alias": {
-    "moment": "moment/src/moment.js"
+    "async": "async/index.js",
+    "moment": "moment/src/moment.js",
+    "mobx": "mobx/lib/mobx.module.js",
+    "immutable": "immutable/dist/immutable.es.js",
+    "@emotion/stylis": "@emotion/stylis/dist/stylis.esm.js",
+    "re-resizable": "re-resizable/lib/index.js",
+    "react-syntax-highlighter": "react-syntax-highlighter/dist/esm/index.js",
+    "react-syntax-highlighter/dist/cjs/styles/prism/vs": "react-syntax-highlighter/dist/esm/styles/prism/vs.js",
+    "react-syntax-highlighter/dist/cjs/styles/prism/xonokai": "react-syntax-highlighter/dist/esm/styles/prism/xonokai.js"
   }
 }
