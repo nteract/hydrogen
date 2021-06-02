@@ -257,7 +257,7 @@ export default class WSKernelPicker {
         },
       ],
       infoMessage:
-        "Connection to gateway failed. Your settings may be incorrect, the server may be unavailable, or you may lack sufficient privileges to complete the connection.",
+        "You may need to authenticate to complete the connection, or your settings may be incorrect, or the server may be unavailable.",
       loadingMessage: null,
       emptyMessage: null,
     } as SelectListProperties);
@@ -352,6 +352,13 @@ export default class WSKernelPicker {
 
       try {
         let sessionModels = await Session.listRunning(serverSettings);
+        // if no seession propmt for the crendials
+        // if the kernel still refused, then go to catch block
+        if (sessionModels.length === 0) {
+          await this.promptForCredentials(gatewayOptions);
+          serverSettings = ServerConnection.makeSettings(gatewayOptions);
+          sessionModels = await Session.listRunning(serverSettings);
+        }
         sessionModels = sessionModels.filter((model) => {
           const name = model.kernel ? model.kernel.name : null;
           return name ? kernelNames.includes(name) : true;
