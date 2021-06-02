@@ -159,7 +159,8 @@
         "mobx-react": false,
         "@nteract/plotly": false,
         "refractor": false,
-        "highlight.js": false
+        "highlight.js": false,
+        "xmlhttprequest": false
       },
       "isLibrary": true
     }
