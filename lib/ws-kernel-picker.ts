@@ -338,6 +338,16 @@ export default class WSKernelPicker {
         this._kernelSpecFilter(spec)
       );
 
+      if (kernelSpecs.length === 0) {
+        this.listView.cancel();
+        atom.notifications.addError(
+          `Therer are no kernels that matches the grammar of the currently open file.
+           Open the file you intend to use the remote kernel for and try again.
+           You might also need to choose the correct grammar for the file.`
+        );
+        return;
+      }
+
       const kernelNames = kernelSpecs.map((specModel) => specModel.name);
 
       try {
