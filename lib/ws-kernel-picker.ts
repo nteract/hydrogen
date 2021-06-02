@@ -466,7 +466,7 @@ export default class WSKernelPicker {
     );
   }
 
-  async onSessionChosen(gatewayName: string, session: Session.ISession) {
+  async onSessionChosen(gatewayName: string, session: Session.ISessionConnection) {
     this.listView.cancel();
     const kernelSpec = await session.kernel.getSpec();
     if (!store.grammar) {

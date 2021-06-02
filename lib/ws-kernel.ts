@@ -9,21 +9,21 @@ import type { KernelspecMetadata } from "@nteract/types";
 import type { ISpecModel } from "@jupyterlab/services/lib/kernelspec/kernelspec";
 
 export default class WSKernel extends KernelTransport {
-  session: Session.ISession;
+  session: Session.ISessionConnection;
 
   constructor(
     gatewayName: string,
     kernelSpec: ISpecModel | KernelspecMetadata,
     grammar: Grammar,
-    session: Session.ISession
+    session: Session.ISessionConnection
   ) {
     super(kernelSpec, grammar);
     this.session = session;
     this.gatewayName = gatewayName;
     this.session.statusChanged.connect(() =>
-      this.setExecutionState(this.session.status)
+      this.setExecutionState(this.session.kernel.status)
     );
-    this.setExecutionState(this.session.status); // Set initial status correctly
+    this.setExecutionState(this.session.kernel.status); // Set initial status correctly
   }
 
   interrupt() {
