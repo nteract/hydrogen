@@ -6,8 +6,40 @@ on:
     #   - master
 
 jobs:
+  Build:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        atom_channel:
+          - stable
+    steps:
+      - uses: actions/checkout@v2
+      - uses: atom-community/action-setup-atom@v1
+        with:
+          channel: ${{ matrix.atom_channel }}
+
+      - name: Install dependencies and build
+        run: |
+          apm install
+
+          npm run clean
+          npm run tsc || echo done
+
+          npm run build
+
+      - name: Upload built files
+        uses: actions/upload-artifact@v2
+        with:
+          path: |
+            ./dist
+
   Test:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    needs: Build
     name: ${{ matrix.os }} - Atom ${{ matrix.atom_channel }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -24,10 +56,19 @@ jobs:
         with:
           channel: ${{ matrix.atom_channel }}
 
-      - name: Install dependencies and build
+      - name: Download articats
+        uses: actions/download-artifact@v2
+      - name: Place artifacts
+        shell: bash
+        run: |
+          rm -rf ./dist
+          mkdir ./dist
+          cp -r ./artifact/* ./dist
+          rm -rf ./artifact
+
+      - name: Install dependencies
         run: |
           apm install
-          npm run build
 
       - name: Run tests 👩🏾‍💻
         run: npm run test
@@ -54,10 +95,3 @@ jobs:
 
       - name: Lint ✨
         run: npm run test.lint
-
-  Skip:
-    if: contains(github.event.head_commit.message, '[skip ci]')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip CI 🚫
-        run: echo skip ci
