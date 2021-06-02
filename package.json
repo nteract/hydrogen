@@ -160,6 +160,7 @@
         "@nteract/plotly": false,
         "refractor": false,
         "highlight.js": false,
+        "mathjax-electron": false,
         "xmlhttprequest": false
       },
       "isLibrary": true
