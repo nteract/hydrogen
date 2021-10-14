@@ -68,7 +68,7 @@ print("bar");
 
 #### Markdown Cells
 
-Just as for code cells](#code-cells), there are a range of allowed markers to delimit the start of a markdown cell:
+Just as for [code cells](#code-cells), there are a range of allowed markers to delimit the start of a markdown cell:
 
 - `%% md`
 - `%% [md]`
