@@ -14,17 +14,14 @@
     'shift-alt-enter': 'hydrogen:run-cell-and-move-down'
     'alt-i': 'hydrogen:toggle-inspector'
 
-# Override shift-enter and cmd-enter
+# Override cmd-enter
 '.platform-darwin atom-text-editor:not([mini])':
-    'shift-enter': 'hydrogen:run-and-move-down'
     'cmd-alt-enter': 'hydrogen:run-cell'
     'cmd-enter': 'hydrogen:run'
     'cmd-ctrl-enter': 'hydrogen:run-all'
 
 # Override ctrl-enter
 '.platform-win32 atom-text-editor:not([mini]), .platform-linux atom-text-editor:not([mini])':
-    'ctrl-enter': 'hydrogen:run'
-    'ctrl-shift-backspace': 'hydrogen:clear-results'
     'ctrl-alt-enter': 'hydrogen:run-cell'
     'ctrl-enter': 'hydrogen:run'
     'ctrl-shift-alt-enter': 'hydrogen:run-all'
