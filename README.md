@@ -1,4 +1,4 @@
-# Hydrogen <img src="https://cdn.rawgit.com/nteract/hydrogen/17eda245/static/animate-logo.svg" alt="hydrogen animated logo" height="50px" align="right" />
+# Hydrogen <img src="https://cdn.jsdelivr.net/gh/nteract/hydrogen@17eda24547a2195b4a21c883af3dd12ec50bd442/static/animate-logo.svg" alt="hydrogen animated logo" height="50px" align="right" />
 
 [![CI](https://github.com/nteract/hydrogen/actions/workflows/CI.yml/badge.svg)](https://github.com/nteract/hydrogen/actions/workflows/CI.yml)
 
