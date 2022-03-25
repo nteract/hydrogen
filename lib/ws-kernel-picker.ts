@@ -5,7 +5,6 @@ import isEmpty from "lodash/isEmpty";
 import tildify from "tildify";
 import { v4 } from "uuid";
 import ws from "ws";
-import { XMLHttpRequest as NodeXMLHttpRequest } from "xmlhttprequest"; // TODO use @aminya/xmlhttprequest
 import { URL } from "url";
 import { Kernel, Session, ServerConnection } from "@jupyterlab/services";
 import Config from "./config";
@@ -198,7 +197,9 @@ export default class WSKernelPicker {
     options.requestHeaders.Cookie = cookie;
 
     options.xhrFactory = () => {
-      const request = new NodeXMLHttpRequest();
+      // we use xmlhttprequest because it allows disabling header protection
+      const { XMLHttpRequest } = require("xmlhttprequest"); // TODO use @aminya/xmlhttprequest
+      const request = new XMLHttpRequest();
       // Disable protections against setting the Cookie header
       request.setDisableHeaderCheck(true);
       return request as XMLHttpRequest; // TODO fix the types
