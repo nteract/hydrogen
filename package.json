@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@aminya/jmp": "^2.0.9",
-    "@jupyterlab/services": "^0.52.0",
+    "@jupyterlab/services": "^6.0.9",
     "@nteract/commutable": "^7.1.4",
     "@nteract/markdown": "^4.5.1",
     "@nteract/mathjax": "^4.0.2",

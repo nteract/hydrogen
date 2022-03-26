@@ -20,7 +20,7 @@ import type {
 import InputView from "./input-view";
 import KernelTransport from "./kernel-transport";
 import type { ResultsCallback } from "./kernel-transport";
-import type { Kernel as JupyterlabKernel } from "@jupyterlab/services";
+import type { ISpecModel } from "@jupyterlab/services/lib/kernelspec/kernelspec";
 
 import type { Message } from "./hydrogen";
 import type { KernelspecMetadata } from "@nteract/types";
@@ -216,7 +216,7 @@ export default class Kernel {
     this.middleware = [delegateToTransport];
   }
 
-  get kernelSpec(): JupyterlabKernel.ISpecModel | KernelspecMetadata {
+  get kernelSpec(): ISpecModel | KernelspecMetadata {
     return this.transport.kernelSpec;
   }
 
