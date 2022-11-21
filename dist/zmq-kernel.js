@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
-const jmp_1 = require("@aminya/jmp");
+const jmp_1 = require("jmp");
 const uuid_1 = require("uuid");
 const spawnteract_1 = require("spawnteract");
 const config_1 = __importDefault(require("./config"));

@@ -59,7 +59,7 @@
     "atom": ">=1.28.0 <2.0.0"
   },
   "dependencies": {
-    "@aminya/jmp": "^2.0.9",
+    "jmp": "^2.0.0",
     "@jupyterlab/services": "^0.52.0",
     "@nteract/commutable": "^7.1.4",
     "@nteract/markdown": "^4.5.1",
