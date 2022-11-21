@@ -141,8 +141,8 @@ export function importResult(
  * Clears a ResultView or selection of ResultViews. To select a result to clear,
  * put your cursor on the row on the ResultView. To select multiple ResultViews,
  * select text starting on the row of the first ResultView to remove all the way
- * to text on the row of the last ResultView to remove. *This must be one
- * selection and the last selection made*
+ * to text on the row of the last ResultView to remove. _This must be one
+ * selection and the last selection made_
  *
  * @param {Object} store - Global Hydrogen Store
  * @param {TextEditor} store.editor - TextEditor associated with the ResultView.

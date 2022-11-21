@@ -395,7 +395,9 @@ describe("Store", () => {
   });
 
   describe("get kernel", () => {
-    let editor, grammar, kernel;
+    let editor;
+    let grammar;
+    let kernel;
     beforeEach(() => {
       editor = atom.workspace.buildTextEditor();
       grammar = {
@@ -451,7 +453,12 @@ describe("Store", () => {
   });
 
   describe("global mode", () => {
-    let mockStore, kernelSpec, grammar, editor1, editor2, kernel1;
+    let mockStore;
+    let kernelSpec;
+    let grammar;
+    let editor1;
+    let editor2;
+    let kernel1;
 
     beforeEach(() => {
       atom.config.set("Hydrogen.globalMode", true);
