@@ -59,7 +59,6 @@
     "atom": ">=1.28.0 <2.0.0"
   },
   "dependencies": {
-    "jmp": "^2.0.0",
     "@jupyterlab/services": "^0.52.0",
     "@nteract/commutable": "^7.1.4",
     "@nteract/markdown": "^4.5.1",
@@ -71,6 +70,7 @@
     "atom-select-list": "^0.8.1",
     "escape-carriage": "^1.2.0",
     "escape-string-regexp": "^4.0.0",
+    "jmp": "^2.0.0",
     "kernelspecs": "^2.0.0",
     "lodash": "^4.14.0",
     "mathjax-electron": "^3.0.0",
@@ -131,6 +131,7 @@
     "electron": "^6",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
+    "eslint": "7",
     "eslint-config-atomic": "^1.14.4",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.12.0",
     "markdox": "^0.1.10",
