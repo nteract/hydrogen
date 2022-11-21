@@ -8,7 +8,11 @@ import { OUTPUT_AREA_URI } from "../dist/utils";
 import OutputPane from "../dist/panes/output-area";
 
 describe("commands", () => {
-  let storeMock, mockKernel, filePath, grammar, editor;
+  let storeMock;
+  let mockKernel;
+  let filePath;
+  let grammar;
+  let editor;
 
   beforeAll(() => {
     storeMock = new Store();
@@ -28,7 +32,9 @@ describe("commands", () => {
   });
 
   describe("toggleInspector", () => {
-    let codeText, cursorPos, bundle;
+    let codeText;
+    let cursorPos;
+    let bundle;
     beforeEach(() => {
       codeText = `print('hello world')`;
       bundle = { "text/plain": "Mockstring: so helpful" };
