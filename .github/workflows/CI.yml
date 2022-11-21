@@ -20,6 +20,8 @@ jobs:
         atom_channel: [stable, beta]
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: atom-community/action-setup-atom@v1
         with:
           channel: ${{ matrix.atom_channel }}
@@ -32,32 +34,12 @@ jobs:
       - name: Run tests 👩🏾‍💻
         run: npm run test
 
-  Lint:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
       - if: "!contains(github.event.head_commit.message, 'Prepare')"
         name: Commit lint ✨
         uses: wagoid/commitlint-github-action@v2
-
-      - name: Install dependencies
-        run: npm install --ignore-scripts
 
       - name: Format ✨
         run: npm run test.format
 
       - name: Lint ✨
         run: npm run test.lint
-
-  Skip:
-    if: contains(github.event.head_commit.message, '[skip ci]')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip CI 🚫
-        run: echo skip ci
