@@ -34,11 +34,12 @@ jobs:
       - name: Run tests 👩🏾‍💻
         run: npm run test
 
-      - if: "!contains(github.event.head_commit.message, 'Prepare')"
+      - if: "!contains(github.event.head_commit.message, 'Prepare') && contains(matrix.os, 'ubuntu')"
         name: Commit lint ✨
         uses: wagoid/commitlint-github-action@v2
 
-      - name: Format ✨
+      - if: "contains(matrix.os, 'ubuntu')"
+        name: Format ✨
         run: npm run test.format
 
       - name: Lint ✨
