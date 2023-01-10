@@ -218,16 +218,12 @@ export function rowRangeForCodeFoldAtBufferRow(
   editor: TextEditor,
   row: number
 ) {
-  if (parseFloat(atom.getVersion()) < 1.22) {
-    return editor.languageMode.rowRangeForCodeFoldAtBufferRow(row);
-  } else {
-    // $FlowFixMe
-    const range = editor.tokenizedBuffer.getFoldableRangeContainingPoint(
-      new Point(row, Infinity),
-      editor.getTabLength()
-    );
-    return range ? [range.start.row, range.end.row] : null;
-  }
+  // $FlowFixMe
+  const range = editor.tokenizedBuffer.getFoldableRangeContainingPoint(
+    new Point(row, Infinity),
+    editor.getTabLength()
+  );
+  return range ? [range.start.row, range.end.row] : null;
 }
 export const EmptyMessage = () => {
   return (
