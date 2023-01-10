@@ -8,6 +8,22 @@ Checkout our [Documentation](https://nteract.gitbooks.io/hydrogen/) and [Medium 
 
 ![hero](https://cloud.githubusercontent.com/assets/13285808/20360886/7e03e524-ac03-11e6-9176-37677f226619.gif)
 
+# Atom Sunset Notice
+
+Atom is [sunsetted](https://github.blog/2022-06-08-sunsetting-atom/).  It is not possible to publish new packages anymore. If you have Atom working offline locally, it should continue to work, but the servers are down.
+
+You can export `ipynb` from Hydrogen using [this method](https://github.com/nteract/hydrogen/blob/master/docs/Usage/NotebookFiles.md#notebook-export) and migrate to the following alternatives:
+
+- Nteract, which is directly inspired by Hydrogen. 
+https://nteract.io/
+
+- VsCode with its Jupyter integration
+https://code.visualstudio.com/docs/datascience/jupyter-notebooks
+
+- Pycharm with Jupyter Notebook integration
+https://www.jetbrains.com/pycharm/
+
+
 ## Contents
 
 1. [Background](#background)
