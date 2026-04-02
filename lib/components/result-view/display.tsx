@@ -35,8 +35,6 @@ export const supportedMediaTypes = (
     <VegaLite2 />
     <VegaLite1 />
     <Media.Json />
-    <Media.JavaScript />
-    <Media.HTML />
     <Markdown />
     <Media.LaTeX />
     <Media.SVG />
