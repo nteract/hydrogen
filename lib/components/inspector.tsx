@@ -21,11 +21,7 @@ const Inspector = observer(({ store: { kernel } }: Props) => {
   }
   const bundle = kernel.inspector.bundle;
 
-  if (
-    !bundle["text/html"] &&
-    !bundle["text/markdown"] &&
-    !bundle["text/plain"]
-  ) {
+  if (!bundle["text/markdown"] && !bundle["text/plain"]) {
     return hide();
   }
 
@@ -38,7 +34,6 @@ const Inspector = observer(({ store: { kernel } }: Props) => {
       }}
     >
       <RichMedia data={bundle}>
-        <Media.HTML />
         <Markdown />
         <Media.Plain />
       </RichMedia>
