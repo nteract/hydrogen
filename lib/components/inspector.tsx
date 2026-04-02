@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import { RichMedia, Media } from "@nteract/outputs";
 import { INSPECTOR_URI } from "../utils";
 import type Kernel from "../kernel";
-import Markdown from "./result-view/markdown";
 type Props = {
   store: {
     kernel: Kernel | null | undefined;
@@ -21,11 +20,7 @@ const Inspector = observer(({ store: { kernel } }: Props) => {
   }
   const bundle = kernel.inspector.bundle;
 
-  if (
-    !bundle["text/html"] &&
-    !bundle["text/markdown"] &&
-    !bundle["text/plain"]
-  ) {
+  if (!bundle["text/plain"]) {
     return hide();
   }
 
@@ -38,8 +33,6 @@ const Inspector = observer(({ store: { kernel } }: Props) => {
       }}
     >
       <RichMedia data={bundle}>
-        <Media.HTML />
-        <Markdown />
         <Media.Plain />
       </RichMedia>
     </div>
