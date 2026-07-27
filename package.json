@@ -128,7 +128,7 @@
     "@types/ws": "^7.4.1",
     "atom-jasmine3-test-runner": "^5.2.5",
     "build-commit": "^0.1.4",
-    "electron": "^6",
+    "electron": "^22",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "7",
